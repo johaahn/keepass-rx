@@ -1,0 +1,23 @@
+[package]
+name = "keepassrx"
+version = "1.0.0"
+authors = ["projectmoon <projectmoon@agnos.is>"]
+edition = "2024"
+build = "src/build.rs"
+
+[dependencies]
+qmetaobject = "0.2.9"
+gettext-rs = "0.7"
+cstr = "0.2.11"
+cpp = "0.5"
+dirs = "6.0.0"
+anyhow = "1.0.100"
+keepass = {version = "0.8.12", features = [ "totp" ] }
+humanize-duration = "0.0.7"
+uriparse = "0.6.4"
+querystring = "1.1.0"
+totp-rs = { version = "5.7.0", features = ["steam"] }
+uuid = { version = "1.18.1", features = ["zerocopy"] }
+
+[build-dependencies]
+cpp_build = "0.5"

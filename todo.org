@@ -1,0 +1,11 @@
+now:
+ - fix lockup (async?)
+ - load images (or at least always show placeholder)
+ - easy unlock (encrypt db password into file using user password)
+ - not visible icon
+ - settings do not get persisted (which also causes the issue w/ the missing db on start)
+ - instead of full path, print only the filename when it's been picked from contentpicker.
+
+later:
+ - gpl compliance
+ - ci pipeline

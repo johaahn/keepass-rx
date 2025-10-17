@@ -1,0 +1,71 @@
+/*
+ * Copyright (C) 2025 projectmoon
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 3.
+ *
+ * keepassrx is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#[macro_use]
+extern crate cstr;
+#[macro_use]
+extern crate qmetaobject;
+
+use cpp::cpp;
+use gettextrs::{bindtextdomain, textdomain};
+use qmetaobject::{qml_register_type, QObjectBox, QQuickStyle, QmlEngine};
+use std::env;
+use std::path::PathBuf;
+
+use crate::gui::KeepassRX;
+
+mod gui;
+mod qrc;
+mod rx;
+
+fn main() {
+    init_gettext();
+    unsafe {
+        cpp! {{
+            #include <QtCore/QCoreApplication>
+            #include <QtCore/QString>
+        }}
+        cpp! {[]{
+            QCoreApplication::setApplicationName(QStringLiteral("keepassrx.projectmoon"));
+            QCoreApplication::setOrganizationName(QStringLiteral("Moonbase"));
+            QCoreApplication::setOrganizationDomain(QStringLiteral("agnos.is"));
+        }}
+    }
+    QQuickStyle::set_style("Suru");
+    qrc::load();
+    qml_register_type::<KeepassRX>(cstr!("KeepassRx"), 1, 0, cstr!("KeepassRx"));
+
+    let keepassrx = QObjectBox::new(KeepassRX::default());
+
+    let mut engine = QmlEngine::new();
+    engine.set_property("keepassrx".into(), keepassrx.pinned().into());
+    engine.load_file("qrc:/qml/Main.qml".into());
+    engine.exec();
+}
+
+fn init_gettext() {
+    let domain = "keepassrx.projectmoon";
+    textdomain(domain).expect("Failed to set gettext domain");
+
+    let mut app_dir_path = env::current_dir().expect("Failed to get the app working directory");
+    if !app_dir_path.is_absolute() {
+        app_dir_path = PathBuf::from("/usr");
+    }
+
+    let path = app_dir_path.join("share/locale");
+
+    bindtextdomain(domain, path.to_str().unwrap()).expect("Failed to bind gettext domain");
+}

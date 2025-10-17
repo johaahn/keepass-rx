@@ -1,0 +1,9 @@
+clickable_minimum_required: 8.0.0
+builder: rust
+kill: keepassrx
+install_root_data:
+- manifest.json
+- keepassrx.apparmor
+- keepassrx.desktop
+- assets
+- test.kdbx

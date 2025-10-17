@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=KeepassRX
+Exec=keepassrx %U
+Icon=assets/logo.png
+Terminal=false
+Type=Application
+X-Lomiri-Touch=true

@@ -6,4 +6,3 @@ install_root_data:
 - keepassrx.apparmor
 - keepassrx.desktop
 - assets
-- test.kdbx

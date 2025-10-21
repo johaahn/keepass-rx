@@ -1,11 +1,14 @@
-use anyhow::{anyhow, Result};
+use actix::prelude::*;
+use anyhow::{Result, anyhow};
 use dirs::data_dir;
 use keepass::{Database, DatabaseKey};
+use qmeta_async::with_executor;
 use qmetaobject::*;
 use std::collections::HashMap;
-use std::fs::{create_dir_all, File};
+use std::fs::{File, create_dir_all};
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
+use std::sync::Arc;
 
 use crate::rx::RxDatabase;
 
@@ -16,25 +19,21 @@ fn app_data_path() -> PathBuf {
     PathBuf::from(data_dir).join(APP_ID)
 }
 
-#[derive(QObject, Default)]
-#[allow(non_snake_case)]
-pub struct KeepassRX {
-    base: qt_base_class!(trait QObject),
-
+#[derive(Clone, Default)]
+pub struct KeepassRxActor {
+    gui: Arc<QObjectBox<KeepassRX>>,
     curr_db: Rc<Option<RxDatabase>>,
-
-    setFile: qt_method!(fn(&self, path: String, is_db: bool)),
-    openDatabase: qt_method!(fn(&mut self, path: String, password: String, key_path: QString)),
-    getGroups: qt_method!(fn(&self) -> QStringList),
-    getEntries: qt_method!(fn(&self, search_term: QString) -> QVariantMap),
-    getTotp: qt_method!(fn(&self, entry_uuid: QString) -> QVariantMap),
-    databaseOpened: qt_signal!(),
-    databaseOpenFailure: qt_signal!(message: String),
 }
 
-#[allow(non_snake_case)]
-impl KeepassRX {
-    pub fn set_file(&self, path: String, is_db: bool) -> Result<()> {
+impl KeepassRxActor {
+    pub fn new(gui: &Arc<QObjectBox<KeepassRX>>) -> Self {
+        Self {
+            gui: gui.clone(),
+            curr_db: Default::default(),
+        }
+    }
+
+    pub fn set_file(&self, path: &str, _is_db: bool) -> Result<()> {
         let source = Path::new(&path);
         let dest_dir = app_data_path();
         let dest = dest_dir.join("db.kdbx");
@@ -57,70 +56,152 @@ impl KeepassRX {
         Ok(())
     }
 
-    pub fn setFile(&self, path: String, is_db: bool) {
-        if let Err(err) = self.set_file(path, is_db) {
-            println!("Error copying data: {:?}", err);
+    fn db(&self) -> Result<&RxDatabase> {
+        // rc as_ref -> option as_ref
+        Ok(self
+            .curr_db
+            .as_ref()
+            .as_ref()
+            .ok_or(anyhow!("Database not open"))?)
+    }
+}
+
+impl Actor for KeepassRxActor {
+    type Context = actix::Context<Self>;
+
+    fn started(&mut self, ctx: &mut Self::Context) {
+        self.gui.pinned().borrow_mut().actor = Some(ctx.address());
+    }
+}
+
+#[derive(Message)]
+#[rtype(result = "()")]
+struct SetFile {
+    path: String,
+    picking_db: bool,
+}
+
+#[derive(Message)]
+#[rtype(result = "anyhow::Result<()>")]
+struct OpenDatabase {
+    path: String,
+    password: String,
+    key_path: Option<String>,
+}
+
+#[derive(Message)]
+#[rtype(result = "()")]
+struct GetEntries {
+    search_term: Option<String>,
+}
+
+#[derive(Message)]
+#[rtype(result = "()")]
+struct GetGroups;
+
+#[derive(Message)]
+#[rtype(result = "()")]
+struct GetTotp {
+    entry_uuid: String,
+}
+
+impl Handler<SetFile> for KeepassRxActor {
+    type Result = ();
+
+    fn handle(&mut self, msg: SetFile, _: &mut Self::Context) -> Self::Result {
+        let binding = self.gui.clone();
+        let binding = binding.pinned();
+        let gui = binding.borrow();
+
+        match self.set_file(&msg.path, msg.picking_db) {
+            Ok(_) => gui.fileSet(msg.path),
+            Err(err) => gui.databaseOpenFailed(format!("{}", err)),
         }
     }
+}
 
-    pub fn open_database(
-        &mut self,
-        path: String,
-        password: String,
-        key_path: Option<String>,
-    ) -> Result<()> {
-        let mut db_file = File::open(path)?;
-        let key_file = key_path.map(|p| File::open(p));
+impl Handler<OpenDatabase> for KeepassRxActor {
+    type Result = AtomicResponse<Self, anyhow::Result<()>>;
+    fn handle(&mut self, msg: OpenDatabase, _: &mut Self::Context) -> Self::Result {
+        AtomicResponse::new(Box::pin(
+            async move {
+                let mut db_file = File::open(msg.path)?;
+                let key_file = msg.key_path.map(|p| File::open(p));
 
-        let db_key = DatabaseKey::new().with_password(&password);
-        let db_key = match key_file {
-            // the double ? coerces File::open result and with_keyfile result.
-            Some(file) => db_key.with_keyfile(&mut file?)?,
-            None => db_key,
+                let db_key = DatabaseKey::new().with_password(&msg.password);
+                let db_key = match key_file {
+                    // the double ? coerces File::open result and with_keyfile result.
+                    Some(file) => db_key.with_keyfile(&mut file?)?,
+                    None => db_key,
+                };
+
+                let open_result =
+                    tokio::task::spawn_blocking(move || -> Result<RxDatabase> {
+                        let db = Database::open(&mut db_file, db_key)?;
+                        let mut rx_db = RxDatabase::new(db);
+                        rx_db.load_data();
+                        Ok(rx_db)
+                    })
+                    .await??;
+
+                Ok(open_result)
+            }
+            .into_actor(self)
+            .map(|result: Result<RxDatabase>, this, _| {
+                let binding = this.gui.clone();
+                let binding = binding.pinned();
+                let gui = binding.borrow();
+
+                match result {
+                    Ok(rx_db) => {
+                        this.curr_db = Rc::new(Some(rx_db));
+                        gui.databaseOpened();
+                    }
+                    Err(err) => gui.databaseOpenFailed(format!("{}", err)),
+                }
+
+                Ok(())
+            }),
+        ))
+    }
+}
+
+impl Handler<GetGroups> for KeepassRxActor {
+    type Result = ();
+
+    fn handle(&mut self, _: GetGroups, _: &mut Self::Context) -> Self::Result {
+        let binding = self.gui.clone();
+        let binding = binding.pinned();
+        let gui = binding.borrow();
+
+        let db = match self.db() {
+            Ok(db) => db,
+            Err(err) => return gui.errorReceived(format!("{}", err)),
         };
 
-        let db = Database::open(&mut db_file, db_key)?;
-        let mut rx_db = RxDatabase::new(db);
-        rx_db.load_data();
-
-        self.curr_db = Rc::new(Some(rx_db));
-
-        Ok(())
-    }
-
-    pub fn openDatabase(&mut self, path: String, password: String, key_path: QString) {
-        let key_path = match key_path {
-            kp if !kp.is_null() && !kp.is_empty() => Some(kp.to_string()),
-            _ => None,
-        };
-
-        match self.open_database(path, password, key_path) {
-            Ok(_) => self.databaseOpened(),
-            Err(err) => self.databaseOpenFailure(err.to_string()),
-        };
-    }
-
-    fn db(&self) -> &RxDatabase {
-        // rc as_ref -> option as_ref
-        self.curr_db.as_ref().as_ref().expect("Database not open")
-    }
-
-    pub fn getGroups(&self) -> QStringList {
-        self.db()
+        let groups: QStringList = db
             .groups()
             .into_iter()
             .map(|group| group.name.clone())
-            .collect()
-    }
+            .collect();
 
-    pub fn getEntries(&self, search_term: QString) -> QVariantMap {
-        let search_term = match search_term {
-            term if !term.is_null() => Some(term.to_string()),
-            _ => None,
+        gui.groupsReceived(groups);
+    }
+}
+
+impl Handler<GetEntries> for KeepassRxActor {
+    type Result = ();
+    fn handle(&mut self, msg: GetEntries, _: &mut Self::Context) -> Self::Result {
+        let binding = self.gui.clone();
+        let binding = binding.pinned();
+        let gui = binding.borrow();
+
+        let db = match self.db() {
+            Ok(db) => db,
+            Err(err) => return gui.errorReceived(format!("{}", err)),
         };
 
-        let entries = self.db().get_entries(search_term.as_deref());
-
+        let entries = db.get_entries(msg.search_term.as_deref());
         let map: HashMap<String, QVariantList> = entries
             .into_iter()
             .map(|(group_name, entries)| {
@@ -130,11 +211,23 @@ impl KeepassRX {
             })
             .collect();
 
-        QVariantMap::from(map)
+        gui.entriesReceived(QVariantMap::from(map));
     }
+}
 
-    pub fn getTotp(&self, entry_uuid: QString) -> QVariantMap {
-        let totp = self.db().get_totp(&entry_uuid.to_string());
+impl Handler<GetTotp> for KeepassRxActor {
+    type Result = ();
+    fn handle(&mut self, msg: GetTotp, _: &mut Self::Context) -> Self::Result {
+        let binding = self.gui.clone();
+        let binding = binding.pinned();
+        let gui = binding.borrow();
+
+        let db = match self.db() {
+            Ok(db) => db,
+            Err(err) => return gui.errorReceived(format!("{}", err)),
+        };
+
+        let totp = db.get_totp(&msg.entry_uuid);
 
         let mut map: HashMap<String, QVariant> = HashMap::new();
         match totp {
@@ -153,6 +246,79 @@ impl KeepassRX {
             }
         }
 
-        QVariantMap::from(map)
+        gui.totpReceived(QVariantMap::from(map));
+    }
+}
+
+#[derive(QObject, Default)]
+#[allow(non_snake_case)]
+pub struct KeepassRX {
+    base: qt_base_class!(trait QObject),
+    actor: Option<Addr<KeepassRxActor>>,
+
+    setFile: qt_method!(fn(&self, path: String, is_db: bool)),
+    openDatabase: qt_method!(fn(&mut self, path: String, password: String, key_path: QString)),
+    getGroups: qt_method!(fn(&self)),
+    getEntries: qt_method!(fn(&self, search_term: QString)),
+    getTotp: qt_method!(fn(&self, entry_uuid: QString)),
+
+    // signals
+    fileSet: qt_signal!(path: String),
+    databaseOpened: qt_signal!(),
+    databaseOpenFailed: qt_signal!(message: String),
+    groupsReceived: qt_signal!(groups: QStringList),
+    entriesReceived: qt_signal!(entries: QVariantMap),
+    errorReceived: qt_signal!(error: String),
+    totpReceived: qt_signal!(totp: QVariantMap),
+}
+
+#[allow(non_snake_case)]
+impl KeepassRX {
+    #[with_executor]
+    pub fn setFile(&self, path: String, is_db: bool) {
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(SetFile {
+            path,
+            picking_db: is_db,
+        }));
+    }
+
+    #[with_executor]
+    pub fn openDatabase(&mut self, path: String, password: String, key_path: QString) {
+        let key_path = match key_path {
+            kp if !kp.is_null() && !kp.is_empty() => Some(kp.to_string()),
+            _ => None,
+        };
+
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(OpenDatabase {
+            path,
+            password,
+            key_path,
+        }));
+    }
+
+    #[with_executor]
+    pub fn getGroups(&self) {
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(GetGroups));
+    }
+
+    #[with_executor]
+    pub fn getEntries(&self, search_term: QString) {
+        let search_term = match search_term {
+            term if !term.is_null() => Some(term.to_string()),
+            _ => None,
+        };
+
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(GetEntries { search_term }));
+    }
+
+    #[with_executor]
+    pub fn getTotp(&self, entry_uuid: QString) {
+        let entry_uuid = entry_uuid.to_string();
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(GetTotp { entry_uuid }));
     }
 }

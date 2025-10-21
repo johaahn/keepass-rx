@@ -18,6 +18,9 @@ uriparse = "0.6.4"
 querystring = "1.1.0"
 totp-rs = { version = "5.7.0", features = ["steam"] }
 uuid = { version = "1.18.1", features = ["zerocopy"] }
+tokio = { version = "1.48.0", features = ["full"] }
+actix = "0.13.5"
+qmeta-async = { git = "https://gitlab.com/rubdos/qmeta-async", version = "0.1.0" }
 
 [build-dependencies]
 cpp_build = "0.5"

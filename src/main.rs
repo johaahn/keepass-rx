@@ -19,11 +19,16 @@ extern crate cstr;
 #[macro_use]
 extern crate qmetaobject;
 
+use actix::Actor;
+use anyhow::Result;
 use cpp::cpp;
 use gettextrs::{bindtextdomain, textdomain};
+use gui::KeepassRxActor;
+use qmeta_async::with_executor;
 use qmetaobject::{qml_register_type, QObjectBox, QQuickStyle, QmlEngine};
 use std::env;
 use std::path::PathBuf;
+use std::sync::Arc;
 
 use crate::gui::KeepassRX;
 
@@ -48,12 +53,21 @@ fn main() {
     qrc::load();
     qml_register_type::<KeepassRX>(cstr!("KeepassRx"), 1, 0, cstr!("KeepassRx"));
 
-    let keepassrx = QObjectBox::new(KeepassRX::default());
+    qmeta_async::run(|| {
+        let engine = with_executor(|| -> Result<QmlEngine> {
+            // TODO store these in some global state?
+            let keepassrx = Arc::new(QObjectBox::new(KeepassRX::default()));
+            let _keepassrx_actor = KeepassRxActor::new(&keepassrx).start();
+            let mut engine = QmlEngine::new();
+            engine.set_property("keepassrx".into(), keepassrx.pinned().into());
+            engine.load_file("qrc:/qml/Main.qml".into());
+            Ok(engine)
+        })
+        .expect("app initialization failed");
 
-    let mut engine = QmlEngine::new();
-    engine.set_property("keepassrx".into(), keepassrx.pinned().into());
-    engine.load_file("qrc:/qml/Main.qml".into());
-    engine.exec();
+        engine.exec();
+    })
+    .expect("running application");
 }
 
 fn init_gettext() {

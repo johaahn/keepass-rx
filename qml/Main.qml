@@ -37,7 +37,7 @@ ApplicationWindow {
 	    root.push_entries(); // root = application window
 	}
 
-	onDatabaseOpenFailure: (error) => {
+	onDatabaseOpenFailed: (error) => {
 	    console.error(error);
 	}
     }

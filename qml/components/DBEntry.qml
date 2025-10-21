@@ -27,8 +27,9 @@ UITK.ListItem {
                 visible: username
                 iconSource: "../../assets/user.svg"
                 onTriggered: {
-                    UITK.Clipboard.push(username)
-                    toast.show("Username copied to clipboard")
+                    UITK.Clipboard.push(username);
+                    toast.show("Username copied to clipboard (30 secs)");
+		    clearClipboardTimer.start();
                 }
             },
             UITK.Action {
@@ -36,7 +37,8 @@ UITK.ListItem {
                 iconSource: "../../assets/key.svg"
                 onTriggered: {
                     UITK.Clipboard.push(password)
-                    toast.show("Password copied to clipboard")
+                    toast.show("Password copied to clipboard (30 secs)")
+		    clearClipboardTimer.start();
                 }
             },
             UITK.Action {
@@ -61,7 +63,8 @@ UITK.ListItem {
 
 		    if (!totp.error) {
 			UITK.Clipboard.push(totp.digits);
-			toast.show("Token '" + totp.digits + "' copied. Valid for " + totp.validFor);
+			toast.show("Token '" + totp.digits + "' copied (30 secs). Valid for " + totp.validFor);
+			clearClipboardTimer.start();
 		    } else {
 			toast.show(totp.error);
 		    }
@@ -136,5 +139,16 @@ UITK.ListItem {
         repeat: false
         interval: 1500
         onTriggered: passwordVisible = false
+    }
+
+    Timer {
+        id: clearClipboardTimer
+        repeat: false
+	running: false
+        interval: 30000
+        onTriggered: {
+	    UITK.Clipboard.clear();
+	    toast.show('KeepassRX: Clipboard cleared.');
+	}
     }
 }

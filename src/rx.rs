@@ -1,9 +1,9 @@
-use anyhow::{anyhow, Result};
-use humanize_duration::prelude::DurationExt;
+use anyhow::{Result, anyhow};
 use humanize_duration::Truncate;
+use humanize_duration::prelude::DurationExt;
 use keepass::{
-    db::{Entry, Group, Icon, Meta},
     Database,
+    db::{Entry, Group, Meta},
 };
 use qmetaobject::{QString, QVariant, QVariantMap};
 use querystring::querify;
@@ -17,16 +17,16 @@ pub struct RxTotp {
     pub valid_for: String,
 }
 
-pub struct RxEntry<'a>(pub &'a Entry, pub &'a [Icon]);
+pub struct RxEntry(Entry);
 
 #[allow(dead_code)]
-impl<'a> RxEntry<'a> {
-    pub fn new_without_icons(entry: &'a Entry) -> Self {
-        Self(entry, &[])
+impl RxEntry {
+    pub fn new_without_icons(entry: Entry) -> Self {
+        Self(entry)
     }
 
-    pub fn new(entry: &'a Entry, icons: &'a [Icon]) -> Self {
-        Self(entry, icons)
+    pub fn new(entry: Entry) -> Self {
+        Self(entry)
     }
 
     pub fn has_steam_otp(&self) -> bool {
@@ -80,13 +80,13 @@ impl<'a> RxEntry<'a> {
     }
 }
 
-impl<'a> Into<QVariantMap> for RxEntry<'a> {
+impl Into<QVariantMap> for RxEntry {
     fn into(self) -> QVariantMap {
         // TODO make use of icon
-        let _icon = self
-            .0
-            .custom_icon_uuid
-            .and_then(|id| self.1.iter().find(|icon| icon.uuid == id));
+        // let _icon = self
+        //     .0
+        //     .custom_icon_uuid
+        //     .and_then(|id| self.1.iter().find(|icon| icon.uuid == id));
 
         let mapper = |text: &str| QString::from(text);
 
@@ -102,7 +102,7 @@ impl<'a> Into<QVariantMap> for RxEntry<'a> {
         map.insert("username".to_string(), username.into());
         map.insert("title".to_string(), title.into());
         map.insert("password".to_string(), password.into());
-        map.insert("iconPath".to_string(), QVariant::default());
+        map.insert("iconPath".to_string(), QString::from("").into());
 
         let totp = self.totp();
 
@@ -116,7 +116,7 @@ impl<'a> Into<QVariantMap> for RxEntry<'a> {
     }
 }
 
-impl<'a> Into<QVariant> for RxEntry<'a> {
+impl Into<QVariant> for RxEntry {
     fn into(self) -> QVariant {
         Into::<QVariantMap>::into(self).into()
     }
@@ -128,6 +128,24 @@ pub struct RxDatabase {
     groups: Vec<Group>,
     entries: Vec<Entry>,
     meta: Meta,
+}
+
+// Manual impl because otherwise printing debug will dump the raw
+// contents of the ENTIRE database and crash the terminal.
+impl std::fmt::Debug for RxDatabase {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("RxDatabase")
+            .field(
+                "db",
+                match self.db {
+                    Some(_) => &"loaded",
+                    None => &"not loaded",
+                },
+            )
+            .field("groups", &self.groups.len())
+            .field("entries", &self.entries.len())
+            .finish()
+    }
 }
 
 impl RxDatabase {
@@ -161,14 +179,16 @@ impl RxDatabase {
             .collect();
     }
 
-    pub fn get_entries(&self, search_term: Option<&str>) -> HashMap<String, Vec<RxEntry<'_>>> {
+    pub fn get_entries(&self, search_term: Option<&str>) -> HashMap<String, Vec<RxEntry>> {
         let search_term = search_term.map(|term| term.to_lowercase());
-        let custom_icons = self.meta.custom_icons.icons.as_slice(); // TODO
+        //let custom_icons = self.meta.custom_icons.icons.as_slice(); // TODO
 
-        let groups_and_entries = self
-            .groups
-            .iter()
-            .map(|group| (group, group.entries().into_iter().collect::<Vec<_>>()));
+        let groups_and_entries = self.groups.iter().map(|group| {
+            (
+                group.clone(),
+                group.entries().into_iter().cloned().collect::<Vec<_>>(),
+            )
+        });
 
         // Determine if an entry should show up in search results, if
         // a search term was specified. term is already lowecase here.
@@ -184,7 +204,7 @@ impl RxDatabase {
                 .into_iter()
                 .filter_map(|entry| {
                     if let Some(term) = &search_term {
-                        match search_entry(entry, term) {
+                        match search_entry(&entry, term) {
                             true => Some(entry),
                             false => None,
                         }
@@ -192,7 +212,7 @@ impl RxDatabase {
                         Some(entry)
                     }
                 })
-                .map(|entry| RxEntry(entry, custom_icons))
+                .map(|entry| RxEntry(entry))
                 .collect::<Vec<_>>();
 
             (group, filtered_entries)
@@ -218,7 +238,11 @@ impl RxDatabase {
 
     pub fn get_totp(&self, entry_uuid: &str) -> Result<RxTotp> {
         let entry_uuid = Uuid::from_str(entry_uuid)?;
-        let entry = self.entries.iter().find(|&entry| entry.uuid == entry_uuid);
+        let entry = self
+            .entries
+            .iter()
+            .find(|&entry| entry.uuid == entry_uuid)
+            .cloned();
 
         let otp = entry
             .map(|ent| RxEntry::new_without_icons(ent))

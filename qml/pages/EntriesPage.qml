@@ -128,30 +128,45 @@ UITK.Page {
         }
     }
 
+    // Welcome to async hell:
+    // 1. getGroups
+    // 2. onGroupsReceived
+    // 3. getEntries
+    // 4. onEntriesReceived
     function populate() {
-	const groups = keepassrx.getGroups();
-	sections.model = groups;
-	getEntries();
+	keepassrx.getGroups();
     }
 
     function getEntries() {
         const group = sections.model[sections.selectedIndex]
-	const items = keepassrx.getEntries(searchField.text);
+	keepassrx.getEntries(searchField.text);
+    }
 
-        listmodel.clear();
-        let entries = items[group] || [];
+    Connections {
+	target: keepassrx
 
-        if (settings.changeGroupOnSearch && !entries.length) {
-            const keys = Object.keys(items);
-            if (keys.length) {
-                sections.selectedIndex = sections.model.indexOf(keys[0])
-                return;
+	onGroupsReceived: (groups) => {
+	    sections.model = groups;
+	    getEntries();
+	}
+
+	onEntriesReceived: (items) => {
+	    const group = sections.model[sections.selectedIndex];
+	    listmodel.clear();
+            let entries = items[group] || [];
+
+            if (settings.changeGroupOnSearch && !entries.length) {
+		const keys = Object.keys(items);
+		if (keys.length) {
+                    sections.selectedIndex = sections.model.indexOf(keys[0])
+                    return;
+		}
             }
-        }
 
-        for (var i = 0; i < entries.length; i++) {
-            listmodel.append(entries[i]);
-        }
+            for (var i = 0; i < entries.length; i++) {
+		listmodel.append(entries[i]);
+            }
+	}
     }
 
     Component.onCompleted: populate()

@@ -9,6 +9,8 @@ import KeepassRx 1.0
 import "../components"
 
 UITK.Page {
+    property bool manualPath
+    property bool copyingDB
     property bool pickingDB
     property bool busy
     property string errorMsg
@@ -53,8 +55,15 @@ UITK.Page {
 
     Connections {
 	target: keepassrx
+	onFileSet: (path) => {
+	    copyingDB = false;
+	    settings.lastDB = path;
+	}
 	onDatabaseOpened: { busy = false; }
-	onDatabaseOpenFailure: (error) => { busy = false; }
+	onDatabaseOpenFailed: (error) => {
+	    busy = false;
+	    errorMsg = `Error: ${error}`;
+	}
     }
 
     Connections {
@@ -70,7 +79,8 @@ UITK.Page {
             }
 
             const filePath = String(target.items[0].url).replace('file://', '')
-	    dbPath.text = filePath;
+	    dbPath.text = filePath.split('/').pop();
+	    copyingDB = true;
 	    keepassrx.setFile(filePath, pickingDB);
 	    stack.pop(); // Close content picker
         }
@@ -104,16 +114,40 @@ UITK.Page {
         anchors.verticalCenter: parent.verticalCenter
         spacing: units.gu(1)
 
+	RowLayout {
+	    Layout.fillWidth: true
+
+	    Rectangle {
+		height: units.gu(25)
+		Layout.fillWidth: true
+		Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
+
+		Image {
+		    id: logo
+		    width: units.gu(25)
+		    height: units.gu(25)
+		    fillMode: Image.PreserveAspectFit
+		    source: '../../assets/keepass-rx.png'
+		    x: parent.width / 2 - width / 2
+		    y: parent.height / 2 - height / 2
+		}
+	    }
+	}
+
         RowLayout {
             Layout.fillWidth: true
             UITK.TextField {
                 enabled: true
 		id: dbPath
-                text: settings.lastDB
+                text: settings.lastDB.split('/').pop()
 		Layout.fillWidth: true
-                onTextChanged: settings.lastDB = text
 		onAccepted: {
-		    keepassrx.setFile(text, pickingDB);
+		    errorMsg = '';
+		    copyingDB = true;
+		    settings.lastDB = text;
+		    text = settings.lastDB.split('/').pop();
+		    manualPath = true;
+		    keepassrx.setFile(settings.lastDB, pickingDB);
 		}
             }
 
@@ -129,6 +163,20 @@ UITK.Page {
                 }
             }
         }
+
+	RowLayout {
+            UITK.Label {
+		Layout.fillWidth: true
+		id: manualPathLabel
+		color: "gray"
+		// TRANSLATORS: When the user has manually typed a file path.
+		text: i18n.tr('Manual path set.')
+		visible: manualPath === true
+		wrapMode: Text.WordWrap
+            }
+	}
+
+
         RowLayout {
             UITK.TextField {
                 enabled: false
@@ -139,6 +187,7 @@ UITK.Page {
 
             UITK.Button {
                 visible: !settings.lastKey
+		// TRANSLATORS: Pick a key file to open the password database.
                 text: i18n.tr("Pick Key")
                 onClicked: {
                     pickingDB = false
@@ -149,6 +198,7 @@ UITK.Page {
             }
             UITK.Button {
                 visible: settings.lastKey
+		// TRANSLATORS: Clear the selected key file.
                 text: i18n.tr("Clear Key")
                 onClicked: {
                     settings.lastKey = ''
@@ -161,12 +211,16 @@ UITK.Page {
 
             UITK.TextField {
                 id: password
-                enabled: true
+                enabled: (settings.lastDB !== undefined &&
+			  settings.lastDB != null &&
+			  settings.lastDB.length > 0 &&
+			  dbPath.text.length > 0)
                 text: ''
+		// TRANSLATORS: The keepass database master password
                 placeholderText: i18n.tr("Password")
                 echoMode: showPasswordAction.checked ? TextInput.Normal : TextInput.Password
                 Layout.fillWidth: true
-                Keys.onReturnPressed: open_db()
+                Keys.onReturnPressed: openDatabase()
 
                 onTextChanged: {
                     errorMsg = ''
@@ -190,18 +244,22 @@ UITK.Page {
             enabled: (
 		(dbPath.text != null && dbPath.text.length > 0) || settings.lastDB) &&
 		(settings.lastKey || password.text)
-            // TRANSLATORS: DB is the abbreviation for database
-            text: i18n.tr("Open DB")
-            onClicked: open_db()
+            // TRANSLATORS: Open the password database
+            text: i18n.tr("Open")
+            onClicked: openDatabase()
         }
         UITK.ActivityIndicator {
             Layout.fillWidth: true
             running: busy
             visible: busy
         }
+
         UITK.Label {
             Layout.fillWidth: true
+	    id: errorLabel
             text: errorMsg
+	    color: "red"
+	    visible: errorMsg !== undefined && errorMsg.length > 0
             wrapMode: Text.WordWrap
         }
     }
@@ -224,7 +282,7 @@ UITK.Page {
         }
     }
 
-    function open_db() {
+    function openDatabase() {
         busy = true
 	keepassrx.openDatabase(settings.lastDB, password.text, settings.lastKey);
     }

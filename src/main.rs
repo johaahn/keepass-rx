@@ -25,7 +25,7 @@ use cpp::cpp;
 use gettextrs::{bindtextdomain, textdomain};
 use gui::KeepassRxActor;
 use qmeta_async::with_executor;
-use qmetaobject::{qml_register_type, QObjectBox, QQuickStyle, QmlEngine};
+use qmetaobject::{QObjectBox, QQuickStyle, QmlEngine, qml_register_type};
 use std::env;
 use std::path::PathBuf;
 use std::sync::Arc;
@@ -45,8 +45,8 @@ fn main() {
         }}
         cpp! {[]{
             QCoreApplication::setApplicationName(QStringLiteral("keepassrx.projectmoon"));
-            QCoreApplication::setOrganizationName(QStringLiteral("Moonbase"));
-            QCoreApplication::setOrganizationDomain(QStringLiteral("agnos.is"));
+            QCoreApplication::setOrganizationName(QStringLiteral("keepassrx.projectmoon"));
+            QCoreApplication::setOrganizationDomain(QStringLiteral("keepassrx.projectmoon"));
         }}
     }
     QQuickStyle::set_style("Suru");
@@ -74,7 +74,8 @@ fn init_gettext() {
     let domain = "keepassrx.projectmoon";
     textdomain(domain).expect("Failed to set gettext domain");
 
-    let mut app_dir_path = env::current_dir().expect("Failed to get the app working directory");
+    let mut app_dir_path =
+        env::current_dir().expect("Failed to get the app working directory");
     if !app_dir_path.is_absolute() {
         app_dir_path = PathBuf::from("/usr");
     }

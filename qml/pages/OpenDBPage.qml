@@ -121,6 +121,7 @@ UITK.Page {
 		height: units.gu(25)
 		Layout.fillWidth: true
 		Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
+	        color: "transparent"
 
 		Image {
 		    id: logo

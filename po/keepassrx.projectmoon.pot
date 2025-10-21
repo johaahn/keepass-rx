@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-21 17:02+0200\n"
+"POT-Creation-Date: 2025-10-21 20:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,31 +21,31 @@ msgstr ""
 msgid "Passwords"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:157
+#: qml/pages/OpenDBPage.qml:158
 msgid "Pick DB"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:173
+#: qml/pages/OpenDBPage.qml:174
 msgid "Manual path set."
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:191
+#: qml/pages/OpenDBPage.qml:192
 msgid "Pick Key"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:202
+#: qml/pages/OpenDBPage.qml:203
 msgid "Clear Key"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:220
+#: qml/pages/OpenDBPage.qml:221
 msgid "Password"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:248
+#: qml/pages/OpenDBPage.qml:249
 msgid "Open"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:274
+#: qml/pages/OpenDBPage.qml:275
 msgid ""
 "You are running on an ARMv7 device in which databases version 3 (kdbx3) are "
 "<b>extremely</b> slow.<br/>For your sanity, make sure your database is "

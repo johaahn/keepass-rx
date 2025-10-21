@@ -5,7 +5,7 @@ use keepass::{Database, DatabaseKey};
 use qmeta_async::with_executor;
 use qmetaobject::*;
 use std::collections::HashMap;
-use std::fs::{File, create_dir_all};
+use std::fs::{File, create_dir_all, remove_dir_all};
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
 use std::sync::Arc;
@@ -21,12 +21,12 @@ fn app_data_path() -> PathBuf {
 
 #[derive(Clone, Default)]
 pub struct KeepassRxActor {
-    gui: Arc<QObjectBox<KeepassRX>>,
+    gui: Arc<QObjectBox<KeepassRx>>,
     curr_db: Rc<Option<RxDatabase>>,
 }
 
 impl KeepassRxActor {
-    pub fn new(gui: &Arc<QObjectBox<KeepassRX>>) -> Self {
+    pub fn new(gui: &Arc<QObjectBox<KeepassRx>>) -> Self {
         Self {
             gui: gui.clone(),
             curr_db: Default::default(),
@@ -50,6 +50,16 @@ impl KeepassRxActor {
             source.display(),
             dest.display()
         );
+
+        // Nuke db.kdbx if it exists and is a directory for some
+        // reason.
+        if dest.exists() && dest.is_dir() {
+            println!(
+                "{} is a directory for some reason. Removing.",
+                dest.display()
+            );
+            remove_dir_all(&dest)?;
+        }
 
         let bytes_copied = std::fs::copy(&source, &dest)?;
         println!("Copied {} bytes", bytes_copied);
@@ -252,7 +262,7 @@ impl Handler<GetTotp> for KeepassRxActor {
 
 #[derive(QObject, Default)]
 #[allow(non_snake_case)]
-pub struct KeepassRX {
+pub struct KeepassRx {
     base: qt_base_class!(trait QObject),
     actor: Option<Addr<KeepassRxActor>>,
 
@@ -273,7 +283,7 @@ pub struct KeepassRX {
 }
 
 #[allow(non_snake_case)]
-impl KeepassRX {
+impl KeepassRx {
     #[with_executor]
     pub fn setFile(&self, path: String, is_db: bool) {
         let actor = self.actor.clone().expect("Actor not initialized");

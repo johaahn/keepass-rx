@@ -17,24 +17,31 @@ An app that is rough around the edges but ready for daily use.
  - [X] Open databases.
  - [X] Copy usernames, passwords, and TOTP codes.
  - [X] Updated for 24.04 Noble.
- - [ ] App settings working and persisted.
- - [ ] Key file support (might already work).
- - [ ] Close database after period of time.
- - [ ] Opening database does not lock up main GUI thread.
+ - [X] App settings and previous database persisted.
+ - [X] Opening database does not lock up main GUI thread.
 
 ## 1.x - Functional Parity
 
 Achieve functional **readonly** parity with the original Keepass app
 for Ubuntu Touch, plus a few extras.
- - [X] Support Steam OTP codes.
  - [ ] Display icons for password entries.
+ - [ ] Support all appp settings (that we want to support).
+ - [ ] Key file support (might already work).
+ - [ ] Close database after period of time.
+
+## 2.x - Enhanced Features
+
+Add additional feaures beyond what the original app supported, but
+still only supporting read-only database access.
+ - [X] Support Steam OTP codes.
  - [ ] "Easy lock" to re-open database without typing the whole password.
  - [ ] Improved password search UX (across groups).
+ - [ ] Clear clipboard after 30 seconds (partially implemented).
 
-## 2.x - Writable Databases
+## 3.x - Writable Databases
 
 Implement updating and saving of databases, either using the
-experimental kdbx4 save features of keepass-rs, or via the KeepassXC
+experimental kdbx4 save feature of keepass-rs, or via the KeepassXC
 CLI.
 
 ## Development

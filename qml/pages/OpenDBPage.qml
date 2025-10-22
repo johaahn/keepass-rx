@@ -18,6 +18,10 @@ UITK.Page {
 
     anchors.fill: parent
 
+    Component.onCompleted: {
+	keepassrx.closeDatabase();
+    }
+
     header: UITK.PageHeader {
         id: header
         title: "KeepassRX"

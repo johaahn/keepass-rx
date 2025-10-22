@@ -52,49 +52,48 @@ UITK.Page {
 		}
 	    }
 	]
-    }
 
-    ColumnLayout {
-	id: opsBar
-	Layout.fillWidth: true
-
-	anchors {
-	    margins: units.gu(1)
-	    top: header.bottom
-	    left: parent.left
-	    right: parent.right
-	}
-
-	RowLayout {
-	    id: searchBar
+	extension: ColumnLayout {
+	    id: opsBar
 	    Layout.fillWidth: true
-	    width: parent.width
 
-	    UITK.TextField {
-		width: parent.width
+	    anchors {
+		margins: units.gu(1)
+		left: parent.left
+		right: parent.right
+	    }
+
+	    RowLayout {
+		id: searchBar
 		Layout.fillWidth: true
-		visible: searchMode
-		id: searchField
-		placeholderText: i18n.ctr("text for search placeholder", "Search")
-		inputMethodHints: Qt.ImhNoPredictiveText
-		onTextChanged: {
-		    getEntries();
+		width: parent.width
+
+		UITK.TextField {
+		    width: parent.width
+		    Layout.fillWidth: true
+		    visible: searchMode
+		    id: searchField
+		    placeholderText: i18n.ctr("text for search placeholder", "Search")
+		    inputMethodHints: Qt.ImhNoPredictiveText
+		    onTextChanged: {
+			getEntries();
+		    }
 		}
 	    }
-	}
 
-	RowLayout {
-	    id: groupsBar
-	    Layout.fillWidth: true
-	    width: parent.width
-
-	    UITK.Sections {
-		id: sections
-		width: parent.width
+	    RowLayout {
+		id: groupsBar
 		Layout.fillWidth: true
-		model: []
-		onSelectedIndexChanged: {
-		    getEntries();
+		width: parent.width
+
+		UITK.Sections {
+		    id: sections
+		    width: parent.width
+		    Layout.fillWidth: true
+		    model: []
+		    onSelectedIndexChanged: {
+			getEntries();
+		    }
 		}
 	    }
 	}
@@ -104,7 +103,7 @@ UITK.Page {
     ListView {
 	clip: true
 	z: 1
-	anchors.top: opsBar.bottom
+	anchors.top: header.bottom
 	anchors.left: parent.left
 	anchors.right: parent.right
 	anchors.bottom: parent.bottom

@@ -1,9 +1,10 @@
 use anyhow::{Result, anyhow};
+use base64::{Engine, prelude::BASE64_STANDARD};
 use humanize_duration::Truncate;
 use humanize_duration::prelude::DurationExt;
 use keepass::{
     Database,
-    db::{Entry, Group, Meta},
+    db::{Entry, Group, Icon, Meta},
 };
 use qmetaobject::{QString, QVariant, QVariantMap};
 use querystring::querify;
@@ -17,16 +18,16 @@ pub struct RxTotp {
     pub valid_for: String,
 }
 
-pub struct RxEntry(Entry);
+pub struct RxEntry(Entry, Vec<Icon>);
 
 #[allow(dead_code)]
 impl RxEntry {
     pub fn new_without_icons(entry: Entry) -> Self {
-        Self(entry)
+        Self(entry, vec![])
     }
 
-    pub fn new(entry: Entry) -> Self {
-        Self(entry)
+    pub fn new(entry: Entry, icons: Vec<Icon>) -> Self {
+        Self(entry, icons)
     }
 
     pub fn has_steam_otp(&self) -> bool {
@@ -64,8 +65,8 @@ impl RxEntry {
 
     pub fn totp(&self) -> Result<RxTotp> {
         let otp = self.0.get_otp()?;
-
         let otp_code = otp.value_now()?;
+
         let otp_digits = match self.has_steam_otp() {
             true => self.steam_otp_digits()?,
             false => otp_code.code.clone(),
@@ -83,10 +84,15 @@ impl RxEntry {
 impl Into<QVariantMap> for RxEntry {
     fn into(self) -> QVariantMap {
         // TODO make use of icon
-        // let _icon = self
-        //     .0
-        //     .custom_icon_uuid
-        //     .and_then(|id| self.1.iter().find(|icon| icon.uuid == id));
+        let icon = self
+            .0
+            .custom_icon_uuid
+            .and_then(|id| self.1.iter().find(|icon| icon.uuid == id));
+
+        let icon_data_url = icon
+            .map(|i| BASE64_STANDARD.encode(&i.data))
+            .map(|data| format!("data:image/jpeg;base64,{}", data))
+            .unwrap_or_default();
 
         let mapper = |text: &str| QString::from(text);
 
@@ -102,7 +108,7 @@ impl Into<QVariantMap> for RxEntry {
         map.insert("username".to_string(), username.into());
         map.insert("title".to_string(), title.into());
         map.insert("password".to_string(), password.into());
-        map.insert("iconPath".to_string(), QString::from("").into());
+        map.insert("iconPath".to_string(), icon_data_url.into());
 
         let totp = self.totp();
 
@@ -180,6 +186,9 @@ impl RxDatabase {
     }
 
     pub fn get_entries(&self, search_term: Option<&str>) -> HashMap<String, Vec<RxEntry>> {
+        // Cloning this over and over would be very bad...
+        //let icons = self.meta.custom_icons.icons;
+
         let search_term = search_term.map(|term| term.to_lowercase());
         //let custom_icons = self.meta.custom_icons.icons.as_slice(); // TODO
 
@@ -212,7 +221,7 @@ impl RxDatabase {
                         Some(entry)
                     }
                 })
-                .map(|entry| RxEntry(entry))
+                .map(|entry| RxEntry::new_without_icons(entry))
                 .collect::<Vec<_>>();
 
             (group, filtered_entries)

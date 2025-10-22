@@ -56,6 +56,11 @@ ApplicationWindow {
         id: settingsPage
     }
 
+    AboutPage {
+        visible: false
+        id: aboutPage
+    }
+
     function push_entries() {
         stack.push(Qt.resolvedUrl("pages/EntriesPage.qml"))
     }

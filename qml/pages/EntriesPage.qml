@@ -15,27 +15,37 @@ UITK.Page {
         property bool changeGroupOnSearch: true
     }
 
-    property bool searchMode: true
+    property bool searchMode: false
 
     id: sectionFlickable
 
     header: UITK.PageHeader {
         id: header
 	title: "KeepassRX"
-	trailingActionBar.numberOfSlots: 2
+	trailingActionBar.numberOfSlots: 3
 	trailingActionBar.actions: [
 	    UITK.Action {
 		name: "Settings"
 		text: i18n.tr("Settings")
 		iconName: "settings"
-		onTriggered: { console.log('settings button') }
+		onTriggered: { stack.push(settingsPage) }
 	    },
 
 	    UITK.Action {
 		name: "About"
 		text: i18n.tr("About")
 		iconName: "info"
-		onTriggered: { console.log('about button') }
+		onTriggered: { stack.push(aboutPage) }
+	    },
+
+	    UITK.Action {
+		name: "Search"
+		text: i18n.tr("Search")
+		iconName: "search"
+		onTriggered: {
+		    searchField.text = '';
+		    searchMode = !searchMode;
+		}
 	    }
 	]
     }
@@ -66,13 +76,6 @@ UITK.Page {
 		onTextChanged: {
 		    getEntries();
 		}
-	    }
-
-	    UITK.Label {
-		id: searchLabel
-		visible: !searchMode
-		verticalAlignment: Qt.AlignVCenter
-		text: i18n.tr("Passwords")
 	    }
 	}
 

@@ -1,9 +1,5 @@
-<!-- KeePass-style banner with aubergine background + ORANGE RIM LIGHT + GEOMETRIC NETWORK LINES
-     - Adds a very faint orange rim light behind the white squircle lock icon
-     - Adds a techno-web of faint gray geometric lines with network nodes in the background
-     - Preserves micro-noise, Suru planes, soft-flat lock, and refined phone UI -->
-
-<svg width="3840" height="2160" viewBox="0 0 3840 2160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="KeePass-style banner with rim light and geometric network lines">
+<!-- KeePass banner for Ubuntu Touch with updated refined lock icon -->
+<svg width="3840" height="2160" viewBox="0 0 3840 2160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="KeePass banner with refined orange lock and phone mockup">
   <defs>
     <!-- Aubergine gradient background -->
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
@@ -11,7 +7,7 @@
       <stop offset="100%" stop-color="#5E2750"/>
     </linearGradient>
 
-    <!-- Suru plane gradients -->
+    <!-- Suru planes -->
     <linearGradient id="plane1" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.04"/>
       <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
@@ -21,17 +17,26 @@
       <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
     </linearGradient>
 
-    <!-- Soft-flat lock gradients -->
+    <!-- Gradients for lock -->
     <linearGradient id="lockBody" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#EF6C33"/>
+      <stop offset="0%" stop-color="#F37335"/>
       <stop offset="100%" stop-color="#E95420"/>
     </linearGradient>
     <linearGradient id="lockShackle" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#F08347"/>
-      <stop offset="100%" stop-color="#E95420"/>
+      <stop offset="0%" stop-color="#FDBF71"/>
+      <stop offset="100%" stop-color="#F08347"/>
+    </linearGradient>
+    <linearGradient id="shackleShade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#000000" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.18"/>
+    </linearGradient>
+    <linearGradient id="bodyHighlight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.15"/>
+      <stop offset="40%" stop-color="#FFFFFF" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
     </linearGradient>
 
-    <!-- Phone screen and rows -->
+    <!-- Screen and UI elements -->
     <linearGradient id="screen" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#fafafa"/>
       <stop offset="100%" stop-color="#eaeaea"/>
@@ -46,144 +51,127 @@
       <feDropShadow dx="0" dy="12" stdDeviation="20" flood-color="#000000" flood-opacity="0.1"/>
     </filter>
 
-    <!-- MICRO-NOISE filter -->
-    <filter id="microNoise" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
-      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" stitchTiles="stitch" result="noise"/>
-      <feColorMatrix in="noise" type="saturate" values="0" result="grayNoise"/>
-      <feComponentTransfer in="grayNoise" result="softNoise">
+    <!-- MICRO-NOISE -->
+    <filter id="microNoise" x="0%" y="0%" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" stitchTiles="stitch" result="n"/>
+      <feColorMatrix in="n" type="saturate" values="0" result="ng"/>
+      <feComponentTransfer in="ng">
         <feFuncR type="linear" slope="0.25" intercept="0.375"/>
         <feFuncG type="linear" slope="0.25" intercept="0.375"/>
         <feFuncB type="linear" slope="0.25" intercept="0.375"/>
         <feFuncA type="linear" slope="1"/>
       </feComponentTransfer>
     </filter>
-
-    <!-- Very faint orange rim light (radial) -->
-    <radialGradient id="rimGlowGrad" cx="50%" cy="50%" r="50%">
-      <stop offset="60%" stop-color="#E95420" stop-opacity="0.14"/>
-      <stop offset="100%" stop-color="#E95420" stop-opacity="0"/>
-    </radialGradient>
-
-    <!-- Optional blur for the rim glow stroke version -->
-    <filter id="rimBlur" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="24"/>
-    </filter>
   </defs>
 
-  <!-- BACKGROUND LAYER -->
-  <g id="aubergine-bg">
-    <rect width="100%" height="100%" fill="url(#bg)"/>
+  <!-- BACKGROUND -->
+  <rect width="100%" height="100%" fill="url(#bg)"/>
 
-    <!-- Faint Suru planes -->
-    <polygon points="0,600 2400,0 3840,0 1440,1080" fill="url(#plane1)"/>
-    <polygon points="3840,2160 1440,1080 3840,800 3840,2160" fill="url(#plane2)"/>
+  <!-- Suru planes -->
+  <polygon points="0,600 2400,0 3840,0 1440,1080" fill="url(#plane1)" />
+  <polygon points="3840,2160 1440,1080 3840,800 3840,2160" fill="url(#plane2)" />
 
-    <!-- GEOMETRIC NETWORK LINES + NODES (faint techno-web) -->
-    <g opacity="0.12" stroke="#d0cfd6" stroke-width="2" fill="none">
-      <!-- Diagonal web -->
-      <path d="M 1200,200 L 3600,1400"/>
-      <path d="M 1000,500 L 3400,1700"/>
-      <path d="M 800,900 L 3200,2100"/>
-      <path d="M 1500,0 L 3000,1300"/>
-      <path d="M 2200,200 L 3800,1300"/>
-
-      <!-- Counter-diagonal web -->
-      <path d="M 2000,200 L 360,1500"/>
-      <path d="M 2600,100 L 1000,1600"/>
-      <path d="M 3200,0 L 1600,1600"/>
-      <path d="M 3600,300 L 1900,1900"/>
-      <path d="M 3800,700 L 2200,2100"/>
-
-      <!-- Hex-ish horizontals -->
-      <path d="M 1200,1000 L 3600,1000"/>
-      <path d="M 1000,1400 L 3400,1400"/>
-      <path d="M 1400,600 L 3800,600"/>
-    </g>
-
-    <!-- Network nodes (slightly stronger than lines, still subtle) -->
-    <g fill="#d0cfd6" opacity="0.18">
-      <!-- Place nodes roughly on intersections -->
-      <circle cx="2000" cy="200" r="5"/>
-      <circle cx="2600" cy="100" r="5"/>
-      <circle cx="3200" cy="0" r="5"/>
-      <circle cx="3600" cy="300" r="5"/>
-      <circle cx="3800" cy="700" r="5"/>
-
-      <circle cx="1200" cy="1000" r="5"/>
-      <circle cx="3600" cy="1000" r="5"/>
-      <circle cx="1000" cy="1400" r="5"/>
-      <circle cx="3400" cy="1400" r="5"/>
-      <circle cx="1400" cy="600" r="5"/>
-      <circle cx="3800" cy="600" r="5"/>
-
-      <circle cx="1200" cy="200" r="5"/>
-      <circle cx="3600" cy="1400" r="5"/>
-      <circle cx="1000" cy="500" r="5"/>
-      <circle cx="3400" cy="1700" r="5"/>
-      <circle cx="800" cy="900" r="5"/>
-      <circle cx="3200" cy="2100" r="5"/>
-    </g>
-
-    <!-- MICRO-NOISE OVERLAY (very subtle) -->
-    <rect width="100%" height="100%" filter="url(#microNoise)" opacity="0.03" pointer-events="none"/>
+  <!-- Geometric network pattern -->
+  <g opacity="0.12" stroke="#d0cfd6" stroke-width="2" fill="none">
+    <path d="M 1200,200 L 3600,1400"/>
+    <path d="M 1000,500 L 3400,1700"/>
+    <path d="M 800,900 L 3200,2100"/>
+    <path d="M 1500,0 L 3000,1300"/>
+    <path d="M 2200,200 L 3800,1300"/>
+    <path d="M 2000,200 L 360,1500"/>
+    <path d="M 2600,100 L 1000,1600"/>
+    <path d="M 3200,0 L 1600,1600"/>
+    <path d="M 3600,300 L 1900,1900"/>
+    <path d="M 3800,700 L 2200,2100"/>
+    <path d="M 1200,1000 L 3600,1000"/>
+    <path d="M 1000,1400 L 3400,1400"/>
+    <path d="M 1400,600 L 3800,600"/>
+  </g>
+  <g fill="#d0cfd6" opacity="0.18">
+    <circle cx="2000" cy="200" r="5"/>
+    <circle cx="2600" cy="100" r="5"/>
+    <circle cx="3200" cy="0" r="5"/>
+    <circle cx="3600" cy="300" r="5"/>
+    <circle cx="3800" cy="700" r="5"/>
+    <circle cx="1200" cy="1000" r="5"/>
+    <circle cx="3600" cy="1000" r="5"/>
+    <circle cx="1000" cy="1400" r="5"/>
+    <circle cx="3400" cy="1400" r="5"/>
+    <circle cx="1400" cy="600" r="5"/>
+    <circle cx="3800" cy="600" r="5"/>
+    <circle cx="1200" cy="200" r="5"/>
+    <circle cx="3600" cy="1400" r="5"/>
+    <circle cx="1000" cy="500" r="5"/>
+    <circle cx="3400" cy="1700" r="5"/>
+    <circle cx="800" cy="900" r="5"/>
+    <circle cx="3200" cy="2100" r="5"/>
   </g>
 
-  <!-- ORANGE RIM LIGHT behind the squircle (center at 960,1080) -->
-  <!-- Combo of radial gradient fill and a blurred stroke for a soft halo -->
-  <g transform="translate(960,1080)">
-    <circle cx="0" cy="0" r="620" fill="url(#rimGlowGrad)"/>
-    <circle cx="0" cy="0" r="560" fill="none" stroke="#E95420" stroke-width="24" opacity="0.10" filter="url(#rimBlur)"/>
-  </g>
+  <!-- MICRO-NOISE -->
+  <rect width="100%" height="100%" filter="url(#microNoise)" opacity="0.03"/>
 
-  <!-- White squircle lock icon (left, soft-flat) -->
+  <!-- Updated Lock Icon -->
   <g transform="translate(960,1080)">
-    <rect x="-520" y="-520" width="1040" height="1040" rx="220" ry="220" fill="#FFFFFF" filter="url(#softShadow)"/>
-    <g transform="translate(0,-90)" filter="url(#softShadow)">
+    <rect x="-520" y="-520" width="1040" height="1040" rx="220" ry="220" fill="#FFFFFF"/>
+    <g transform="translate(0,-90)">
       <!-- Shackle -->
       <path d="M -150 60 V -80 A 150 150 0 0 1 150 -80 V 60"
-            fill="none" stroke="url(#lockShackle)" stroke-width="90" stroke-linecap="round" stroke-linejoin="round"/>
+            fill="none" stroke="url(#lockShackle)" stroke-width="90"
+            stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Shackle subtle shadow -->
+      <path d="M -150 60 V -80 A 150 150 0 0 1 150 -80 V 60"
+            fill="none" stroke="url(#shackleShade)" stroke-width="20" opacity="0.4"/>
       <!-- Body -->
-      <path d="M -240 60 h 480 a 36 36 0 0 1 36 36 v 240
-               c 0 90 -135 150 -276 150 c -141 0 -276 -60 -276 -150
-               v -240 a 36 36 0 0 1 36 -36 z" fill="url(#lockBody)"/>
-      <!-- Mortise keyhole (rounded bottom corners) -->
-      <g fill="#1E1E1E" transform="translate(0,206)">
+      <path d="
+        M -240 60
+        h 480
+        a 36 36 0 0 1 36 36
+        v 240
+        c 0 90 -135 150 -276 150
+        c -141 0 -276 -60 -276 -150
+        v -240
+        a 36 36 0 0 1 36 -36
+        z"
+        fill="url(#lockBody)"/>
+      <!-- Top edge highlight -->
+      <path d="M -240 60 h 480"
+            stroke="url(#bodyHighlight)" stroke-width="10" opacity="0.4"/>
+      <!-- Gentle highlight overlay -->
+      <rect x="-240" y="60" width="480" height="380" fill="url(#bodyHighlight)"/>
+      <!-- Seam -->
+      <path d="M -240 60 h 480" stroke="#C9451E" stroke-width="2" opacity="0.5"/>
+      <!-- Keyhole (soft tone) -->
+      <g fill="#4B2B1A" opacity="0.85" transform="translate(0,206)">
         <circle r="50"/>
         <path d="M -20 46 L -36 106 Q -36 114 -30 118 Q 0 122 30 118 Q 36 114 36 106 L 20 46 Z"/>
       </g>
     </g>
   </g>
 
-  <!-- Stylized password manager phone mockup (lowered, extends off bottom) -->
+  <!-- Phone Mockup -->
   <g transform="translate(2600,1560) scale(1.35)">
-    <!-- Body with faint border -->
+    <!-- Phone Body -->
     <rect x="-420" y="-880" width="840" height="1900" rx="140" ry="140"
           fill="#f5f5f5" stroke="#cfcfcf" stroke-width="8" filter="url(#softShadow)"/>
-
-    <!-- Screen with bezel separator -->
+    <!-- Screen -->
     <rect x="-380" y="-840" width="760" height="1820" rx="100" ry="100"
           fill="url(#screen)" stroke="#d6d6d6" stroke-width="3"/>
-
-    <!-- Orange header (thin, straight bottom, rounded top corners) -->
+    <!-- Orange Header -->
     <path d="M -280 -840 H 280 A 100 100 0 0 1 380 -740 V -760 H -380 V -740 A 100 100 0 0 1 -280 -840 Z"
           fill="#E95420" opacity="0.95"/>
-
-    <!-- Camera notch (balanced) -->
+    <!-- Camera Notch -->
     <circle cx="0" cy="-800" r="22" fill="#2c2c2c" opacity="0.85"/>
-
-    <!-- Search bar aligned with avatar circle edges -->
+    <!-- Search Bar -->
     <g transform="translate(0,-720)">
       <rect x="-320" y="0" width="640" height="80" rx="40" ry="40"
-            fill="#ffffff" stroke="#d8d8d8" stroke-width="2" filter="url(#softShadow)"/>
-      <!-- Magnifying glass -->
+            fill="#ffffff" stroke="#d8d8d8" stroke-width="2"/>
       <g transform="translate(-270,40)">
         <circle r="14" stroke="#bbbbbb" stroke-width="5" fill="none"/>
         <line x1="10" y1="10" x2="24" y2="24" stroke="#bbbbbb" stroke-width="5" stroke-linecap="round"/>
       </g>
       <rect x="-220" y="24" width="420" height="32" rx="16" ry="16" fill="#efefef"/>
     </g>
-
-    <!-- Password entry list (inside screen) -->
+    <!-- Entry List -->
     <g transform="translate(0,-600)">
       <circle cx="-294" cy="40" r="26" fill="#d0d0d0" opacity="0.7"/>
       <rect x="-250" y="5" width="570" height="70" rx="16" ry="16" fill="url(#row)"/>

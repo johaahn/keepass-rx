@@ -2,6 +2,7 @@ use anyhow::{Result, anyhow};
 use base64::{Engine, prelude::BASE64_STANDARD};
 use humanize_duration::Truncate;
 use humanize_duration::prelude::DurationExt;
+use infer;
 use keepass::{
     Database,
     db::{Entry, Group, Icon, Meta},
@@ -18,16 +19,16 @@ pub struct RxTotp {
     pub valid_for: String,
 }
 
-pub struct RxEntry(Entry, Vec<Icon>);
+pub struct RxEntry(Entry, Option<Icon>);
 
 #[allow(dead_code)]
 impl RxEntry {
-    pub fn new_without_icons(entry: Entry) -> Self {
-        Self(entry, vec![])
+    pub fn new_without_icon(entry: Entry) -> Self {
+        Self(entry, None)
     }
 
-    pub fn new(entry: Entry, icons: Vec<Icon>) -> Self {
-        Self(entry, icons)
+    pub fn new(entry: Entry, icon: Option<Icon>) -> Self {
+        Self(entry, icon)
     }
 
     pub fn has_steam_otp(&self) -> bool {
@@ -83,15 +84,21 @@ impl RxEntry {
 
 impl Into<QVariantMap> for RxEntry {
     fn into(self) -> QVariantMap {
-        // TODO make use of icon
-        let icon = self
-            .0
-            .custom_icon_uuid
-            .and_then(|id| self.1.iter().find(|icon| icon.uuid == id));
-
-        let icon_data_url = icon
-            .map(|i| BASE64_STANDARD.encode(&i.data))
-            .map(|data| format!("data:image/jpeg;base64,{}", data))
+        // TODO support standard KeePass icons? (Icon IDs)
+        let icon_data_url: QString = self
+            .1
+            .as_ref()
+            .and_then(|icon| {
+                // create qstring here so it will be null after unwrap
+                // if no icon.
+                infer::get(&icon.data).map(|k| {
+                    QString::from(format!(
+                        "data:{};base64,{}",
+                        k.mime_type(),
+                        BASE64_STANDARD.encode(&icon.data)
+                    ))
+                })
+            })
             .unwrap_or_default();
 
         let mapper = |text: &str| QString::from(text);
@@ -134,6 +141,7 @@ pub struct RxDatabase {
     groups: Vec<Group>,
     entries: Vec<Entry>,
     meta: Meta,
+    icons: HashMap<Uuid, Icon>,
 }
 
 // Manual impl because otherwise printing debug will dump the raw
@@ -171,9 +179,20 @@ impl RxDatabase {
         self.groups.as_slice()
     }
 
+    fn load_icons(&mut self) {
+        self.icons = self
+            .meta
+            .custom_icons
+            .icons
+            .iter()
+            .map(|icon| (icon.uuid, icon.to_owned()))
+            .collect();
+    }
+
     pub fn load_data(&mut self) {
         self.meta = self.db().meta.clone();
         self.groups = self.db().root.groups().into_iter().cloned().collect();
+        self.load_icons();
 
         self.entries = self
             .db()
@@ -186,11 +205,7 @@ impl RxDatabase {
     }
 
     pub fn get_entries(&self, search_term: Option<&str>) -> HashMap<String, Vec<RxEntry>> {
-        // Cloning this over and over would be very bad...
-        //let icons = self.meta.custom_icons.icons;
-
         let search_term = search_term.map(|term| term.to_lowercase());
-        //let custom_icons = self.meta.custom_icons.icons.as_slice(); // TODO
 
         let groups_and_entries = self.groups.iter().map(|group| {
             (
@@ -221,7 +236,12 @@ impl RxDatabase {
                         Some(entry)
                     }
                 })
-                .map(|entry| RxEntry::new_without_icons(entry))
+                .map(|entry| {
+                    let icon = entry
+                        .custom_icon_uuid
+                        .and_then(|icon_uuid| self.icons.get(&icon_uuid));
+                    RxEntry::new(entry, icon.cloned())
+                })
                 .collect::<Vec<_>>();
 
             (group, filtered_entries)
@@ -254,7 +274,7 @@ impl RxDatabase {
             .cloned();
 
         let otp = entry
-            .map(|ent| RxEntry::new_without_icons(ent))
+            .map(|ent| RxEntry::new_without_icon(ent))
             .map(|kp_ent| kp_ent.totp())
             .transpose();
 

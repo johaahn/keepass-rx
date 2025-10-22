@@ -22,7 +22,6 @@ UITK.ListItem {
 
     trailingActions: UITK.ListItemActions {
         actions: [
-
             UITK.Action {
                 visible: username
                 iconSource: "../../assets/user.svg"
@@ -89,7 +88,7 @@ UITK.ListItem {
         Image {
             id: entryImg
             fillMode: Image.PreserveAspectFit
-            source: '../../assets/placeholder.png'
+            source: iconPath ? iconPath : '../../assets/placeholder.png'
             width: units.gu(5)
             height: parent.height
             y: parent.height / 2 - height / 2

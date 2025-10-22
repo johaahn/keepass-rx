@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-22 14:50+0000\n"
+"POT-Creation-Date: 2025-10-22 21:06+0200\n"
 "PO-Revision-Date: 2025-10-22 17:53+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: \n"
@@ -17,6 +17,22 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.7\n"
+
+#: qml/pages/AboutPage.qml:56
+msgid ""
+"KeepassRX is a work-in-progress password manager for KeePasspassword "
+"databases. It is licensed under the GNU GPL v3 license."
+msgstr ""
+"KeepassRX is een ontwikkeling zijnde wachtwoordbeheerder voor KeePass-"
+"databanken, uitgebracht onder de GNU GPL v3-licentie."
+
+#: qml/pages/AboutPage.qml:67
+msgid ""
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
+"git.agnos.is/projectmoon/keepass-rx</a>"
+msgstr ""
+"Broncode: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
+"git.agnos.is/projectmoon/keepass-rx</a>"
 
 #: qml/pages/EntriesPage.qml:29 qml/pages/OpenDBPage.qml:27
 msgid "Settings"
@@ -63,19 +79,3 @@ msgstr ""
 "Let op: je maakt gebruik van een ARMv7-apparaat. Databanken met versie 3 "
 "(kdbx3) zijn <b>ontzettend</b> langzaam hierop.<br/>Maak bij voorkeur "
 "gebruik van een databank met versie 4 (kdbx4)."
-
-#: qml/pages/AboutPage.qml:56
-msgid ""
-"KeepassRX is a work-in-progress password manager for KeePasspassword "
-"databases. It is licensed under the GNU GPL v3 license."
-msgstr ""
-"KeepassRX is een ontwikkeling zijnde wachtwoordbeheerder voor KeePass-"
-"databanken, uitgebracht onder de GNU GPL v3-licentie."
-
-#: qml/pages/AboutPage.qml:67
-msgid ""
-"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
-"git.agnos.is/projectmoon/keepass-rx</a>"
-msgstr ""
-"Broncode: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
-"git.agnos.is/projectmoon/keepass-rx</a>"

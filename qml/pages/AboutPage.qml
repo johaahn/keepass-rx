@@ -16,6 +16,8 @@ UITK.Page {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.topMargin: units.gu(2)
+	anchors.leftMargin: units.gu(2)
+	anchors.rightMargin: units.gu(2)
 	contentWidth: width
 
 	Column {

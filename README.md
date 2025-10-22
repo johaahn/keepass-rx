@@ -39,11 +39,12 @@ for Ubuntu Touch, plus a few extras.
 
 Add additional feaures beyond what the original app supported, but
 still only supporting read-only database access.
+ - [X] Securely zero out memory when closing database.
  - [X] Support Steam OTP codes.
+ - [x] Clear clipboard after 30 seconds (partially implemented).
  - [ ] Improved database selection UX.
  - [ ] "Easy lock" to re-open database without typing the whole password.
  - [ ] Improved password search UX (across groups).
- - [ ] Clear clipboard after 30 seconds (partially implemented).
 
 ## 3.x - Writable Databases
 

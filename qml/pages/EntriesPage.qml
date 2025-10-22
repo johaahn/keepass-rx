@@ -45,6 +45,9 @@ UITK.Page {
 		onTriggered: {
 		    searchField.text = '';
 		    searchMode = !searchMode;
+		    if (searchMode) {
+			searchField.focus = true;
+		    }
 		}
 	    }
 	]

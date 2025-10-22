@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-22 14:04+0000\n"
+"POT-Creation-Date: 2025-10-22 14:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -60,10 +60,14 @@ msgid ""
 "version 4 (kdbx4)"
 msgstr ""
 
-#: qml/pages/AboutPage.qml:36
+#: qml/pages/AboutPage.qml:56
 msgid ""
 "KeepassRX is a work-in-progress password manager for KeePasspassword "
-"databases. It is licensed under the GNU GPL v3 license.<br/><br/>Source: <a "
-"href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
+"databases. It is licensed under the GNU GPL v3 license."
+msgstr ""
+
+#: qml/pages/AboutPage.qml:67
+msgid ""
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
+"agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""

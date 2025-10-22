@@ -1,5 +1,11 @@
 # KeepassRX
 
+<p align="center">
+	<img src="./assets/banner.svg" width="600">
+	<br/>
+	<i>Password manager for Ubuntu Touch compatible with KeePass databases.</i>
+</p>
+
 KeePass password manager app, aiming to be a complete local password
 management solution for Ubuntu Touch. This is **alpha quality
 software** with a defined development roadmap for new functionality

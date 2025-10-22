@@ -189,6 +189,14 @@ impl RxDatabase {
             .collect();
     }
 
+    pub fn close(&mut self) {
+        self.db = Default::default();
+        self.meta = Default::default();
+        self.entries = Default::default();
+        self.groups = Default::default();
+        self.icons = Default::default();
+    }
+
     pub fn load_data(&mut self) {
         self.meta = self.db().meta.clone();
         self.groups = self.db().root.groups().into_iter().cloned().collect();

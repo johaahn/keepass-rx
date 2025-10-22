@@ -30,8 +30,8 @@ An app that is rough around the edges but ready for daily use.
 
 Achieve functional **readonly** parity with the original Keepass app
 for Ubuntu Touch, plus a few extras.
- - [ ] Display icons for password entries.
- - [ ] Support all appp settings (that we want to support).
+ - [X] Display icons for password entries.
+ - [ ] Support all app settings (that we want to support).
  - [ ] Key file support (might already work).
  - [ ] Close database after period of time.
 
@@ -40,6 +40,7 @@ for Ubuntu Touch, plus a few extras.
 Add additional feaures beyond what the original app supported, but
 still only supporting read-only database access.
  - [X] Support Steam OTP codes.
+ - [ ] Improved database selection UX.
  - [ ] "Easy lock" to re-open database without typing the whole password.
  - [ ] Improved password search UX (across groups).
  - [ ] Clear clipboard after 30 seconds (partially implemented).

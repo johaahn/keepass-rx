@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-22 15:10+0200\n"
+"POT-Creation-Date: 2025-10-22 14:04+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: qml/pages/EntriesPage.qml:29
+#: qml/pages/EntriesPage.qml:29 qml/pages/OpenDBPage.qml:27
 msgid "Settings"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:36
+#: qml/pages/EntriesPage.qml:36 qml/pages/OpenDBPage.qml:34
 msgid "About"
 msgstr ""
 
@@ -29,33 +29,41 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:158
+#: qml/pages/OpenDBPage.qml:165
 msgid "Pick DB"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:174
+#: qml/pages/OpenDBPage.qml:181
 msgid "Manual path set."
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:192
+#: qml/pages/OpenDBPage.qml:199
 msgid "Pick Key"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:203
+#: qml/pages/OpenDBPage.qml:210
 msgid "Clear Key"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:221
+#: qml/pages/OpenDBPage.qml:228
 msgid "Password"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:249
+#: qml/pages/OpenDBPage.qml:256
 msgid "Open"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:275
+#: qml/pages/OpenDBPage.qml:282
 msgid ""
 "You are running on an ARMv7 device in which databases version 3 (kdbx3) are "
 "<b>extremely</b> slow.<br/>For your sanity, make sure your database is "
 "version 4 (kdbx4)"
+msgstr ""
+
+#: qml/pages/AboutPage.qml:36
+msgid ""
+"KeepassRX is a work-in-progress password manager for KeePasspassword "
+"databases. It is licensed under the GNU GPL v3 license.<br/><br/>Source: <a "
+"href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
 msgstr ""

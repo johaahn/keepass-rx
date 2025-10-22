@@ -149,8 +149,7 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                 let open_result =
                     tokio::task::spawn_blocking(move || -> Result<RxDatabase> {
                         let db = Database::open(&mut db_file, db_key)?;
-                        let mut rx_db = RxDatabase::new(db);
-                        rx_db.load_data();
+                        let rx_db = RxDatabase::new(db);
                         Ok(rx_db)
                     })
                     .await??;

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-22 21:06+0200\n"
+"POT-Creation-Date: 2025-10-22 21:37+0000\n"
 "PO-Revision-Date: 2025-10-22 17:53+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: \n"
@@ -28,49 +28,58 @@ msgstr ""
 
 #: qml/pages/AboutPage.qml:67
 msgid ""
-"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
-"git.agnos.is/projectmoon/keepass-rx</a>"
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
+"agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
-"Broncode: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
-"git.agnos.is/projectmoon/keepass-rx</a>"
+"Broncode: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
+"agnos.is/projectmoon/keepass-rx</a>"
 
-#: qml/pages/EntriesPage.qml:29 qml/pages/OpenDBPage.qml:27
+#: qml/pages/EntriesPage.qml:30
+msgid "Lock"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:44 qml/pages/OpenDBPage.qml:34
 msgid "Settings"
 msgstr "Instellingen"
 
-#: qml/pages/EntriesPage.qml:36 qml/pages/OpenDBPage.qml:34
+#: qml/pages/EntriesPage.qml:51 qml/pages/OpenDBPage.qml:41
 msgid "About"
 msgstr "Over"
 
-#: qml/pages/EntriesPage.qml:43
+#: qml/pages/EntriesPage.qml:59
 msgid "Search"
 msgstr "Zoeken"
 
-#: qml/pages/OpenDBPage.qml:165
+#: qml/pages/EntriesPage.qml:59
+#, fuzzy
+msgid "Cancel Search"
+msgstr "Zoeken"
+
+#: qml/pages/OpenDBPage.qml:172
 msgid "Pick DB"
 msgstr "Kies een databank"
 
-#: qml/pages/OpenDBPage.qml:181
+#: qml/pages/OpenDBPage.qml:188
 msgid "Manual path set."
 msgstr "Stel de locatie handmatig in."
 
-#: qml/pages/OpenDBPage.qml:199
+#: qml/pages/OpenDBPage.qml:206
 msgid "Pick Key"
 msgstr "Kies een sleutel"
 
-#: qml/pages/OpenDBPage.qml:210
+#: qml/pages/OpenDBPage.qml:217
 msgid "Clear Key"
 msgstr "Sleutel wissen"
 
-#: qml/pages/OpenDBPage.qml:228
+#: qml/pages/OpenDBPage.qml:235
 msgid "Password"
 msgstr "Wachtwoord"
 
-#: qml/pages/OpenDBPage.qml:256
+#: qml/pages/OpenDBPage.qml:265
 msgid "Open"
 msgstr "Openen"
 
-#: qml/pages/OpenDBPage.qml:282
+#: qml/pages/OpenDBPage.qml:292
 msgid ""
 "You are running on an ARMv7 device in which databases version 3 (kdbx3) are "
 "<b>extremely</b> slow.<br/>For your sanity, make sure your database is "

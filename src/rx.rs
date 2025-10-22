@@ -5,7 +5,7 @@ use humanize_duration::prelude::DurationExt;
 use infer;
 use keepass::{
     Database,
-    db::{Entry, Group, Icon, Meta},
+    db::{Entry, Group, Icon, Meta, TOTP as KeePassTOTP},
 };
 use qmetaobject::{QString, QVariant, QVariantMap};
 use querystring::querify;
@@ -13,26 +13,65 @@ use std::{collections::HashMap, str::FromStr};
 use totp_rs::{Secret, TOTP};
 use uriparse::URI;
 use uuid::Uuid;
+use zeroize::{Zeroize, ZeroizeOnDrop};
 
+#[derive(Zeroize, Default, Clone)]
 pub struct RxTotp {
     pub code: String,
     pub valid_for: String,
 }
 
-pub struct RxEntry(Entry, Option<Icon>);
+#[derive(Zeroize, ZeroizeOnDrop, Default, Clone)]
+pub struct RxGroup {
+    #[zeroize(skip)]
+    pub uuid: Uuid,
+    pub name: String,
+    pub entries: Vec<RxEntry>,
+}
+
+impl RxGroup {
+    pub fn new(group: Group, entries: Vec<RxEntry>) -> Self {
+        Self {
+            uuid: group.uuid,
+            name: group.name,
+            entries: entries,
+        }
+    }
+}
+
+#[derive(Zeroize, ZeroizeOnDrop, Default, Clone)]
+pub struct RxEntry {
+    #[zeroize(skip)]
+    uuid: Uuid,
+
+    title: Option<String>,
+    username: Option<String>,
+    password: Option<String>,
+    url: Option<String>,
+    raw_otp_value: Option<String>,
+    icon_data: Option<Vec<u8>>,
+}
 
 #[allow(dead_code)]
 impl RxEntry {
     pub fn new_without_icon(entry: Entry) -> Self {
-        Self(entry, None)
+        Self::new(entry, None)
     }
 
     pub fn new(entry: Entry, icon: Option<Icon>) -> Self {
-        Self(entry, icon)
+        Self {
+            uuid: entry.uuid,
+            title: entry.get_title().map(String::from),
+            username: entry.get_username().map(String::from),
+            password: entry.get_password().map(String::from),
+            url: entry.get_url().map(String::from),
+            raw_otp_value: entry.get_raw_otp_value().map(String::from),
+            icon_data: icon.map(|i| i.data),
+        }
     }
 
     pub fn has_steam_otp(&self) -> bool {
-        let raw_otp = self.0.get_raw_otp_value().unwrap_or_default();
+        let raw_otp = self.raw_otp_value.as_deref().unwrap_or_default();
         raw_otp.starts_with("otpauth://totp/Steam:")
     }
 
@@ -41,7 +80,7 @@ impl RxEntry {
             return Err(anyhow!("Not a Steam OTP entry"));
         }
 
-        let raw_otp = self.0.get_raw_otp_value().unwrap_or_default();
+        let raw_otp = self.raw_otp_value.as_deref().unwrap_or_default();
         let uri = URI::try_from(raw_otp)?;
 
         let query = uri
@@ -65,7 +104,12 @@ impl RxEntry {
     }
 
     pub fn totp(&self) -> Result<RxTotp> {
-        let otp = self.0.get_otp()?;
+        let otp = self
+            .raw_otp_value
+            .as_deref()
+            .map(|value| KeePassTOTP::from_str(value))
+            .ok_or(anyhow!("Unable to parse OTP"))??;
+
         let otp_code = otp.value_now()?;
 
         let otp_digits = match self.has_steam_otp() {
@@ -86,28 +130,29 @@ impl Into<QVariantMap> for RxEntry {
     fn into(self) -> QVariantMap {
         // TODO support standard KeePass icons? (Icon IDs)
         let icon_data_url: QString = self
-            .1
-            .as_ref()
-            .and_then(|icon| {
+            .icon_data
+            .as_deref()
+            .and_then(|data| {
                 // create qstring here so it will be null after unwrap
                 // if no icon.
-                infer::get(&icon.data).map(|k| {
+                infer::get(data).map(|k| {
                     QString::from(format!(
                         "data:{};base64,{}",
                         k.mime_type(),
-                        BASE64_STANDARD.encode(&icon.data)
+                        BASE64_STANDARD.encode(data)
                     ))
                 })
             })
             .unwrap_or_default();
 
-        let mapper = |text: &str| QString::from(text);
+        let mapper =
+            |value: &Option<String>| value.as_deref().map(QString::from).unwrap_or_default();
 
-        let uuid: QString = self.0.uuid.to_string().into();
-        let url: QString = self.0.get_url().map(mapper).unwrap_or_default();
-        let username: QString = self.0.get_username().map(mapper).unwrap_or_default();
-        let title: QString = self.0.get_title().map(mapper).unwrap_or_default();
-        let password: QString = self.0.get_password().map(mapper).unwrap_or_default();
+        let uuid: QString = self.uuid.to_string().into();
+        let url: QString = mapper(&self.url);
+        let username: QString = mapper(&self.username);
+        let title: QString = mapper(&self.title);
+        let password: QString = mapper(&self.password);
 
         let mut map: HashMap<String, QVariant> = HashMap::new();
         map.insert("uuid".to_string(), uuid.into());
@@ -135,13 +180,9 @@ impl Into<QVariant> for RxEntry {
     }
 }
 
-#[derive(Default, Clone)]
+#[derive(Zeroize, ZeroizeOnDrop, Default, Clone)]
 pub struct RxDatabase {
-    db: Option<Database>,
-    groups: Vec<Group>,
-    entries: Vec<Entry>,
-    meta: Meta,
-    icons: HashMap<Uuid, Icon>,
+    groups: Vec<RxGroup>,
 }
 
 // Manual impl because otherwise printing debug will dump the raw
@@ -149,86 +190,75 @@ pub struct RxDatabase {
 impl std::fmt::Debug for RxDatabase {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("RxDatabase")
-            .field(
-                "db",
-                match self.db {
-                    Some(_) => &"loaded",
-                    None => &"not loaded",
-                },
-            )
             .field("groups", &self.groups.len())
-            .field("entries", &self.entries.len())
+            .field(
+                "entries",
+                &self
+                    .groups
+                    .iter()
+                    .map(|group| group.entries.len())
+                    .sum::<usize>(),
+            )
             .finish()
     }
 }
 
 impl RxDatabase {
     pub fn new(db: Database) -> Self {
-        Self {
-            db: Some(db),
-            ..Default::default()
-        }
-    }
-
-    fn db(&self) -> &Database {
-        // rc as_ref -> option as_ref
-        self.db.as_ref().as_ref().expect("No database")
-    }
-
-    pub fn groups(&self) -> &[Group] {
-        self.groups.as_slice()
-    }
-
-    fn load_icons(&mut self) {
-        self.icons = self
+        let icons: HashMap<Uuid, Icon> = db
             .meta
             .custom_icons
             .icons
             .iter()
             .map(|icon| (icon.uuid, icon.to_owned()))
             .collect();
-    }
 
-    pub fn close(&mut self) {
-        println!("Closing database.");
-        self.db = Default::default();
-        self.meta = Default::default();
-        self.entries = Default::default();
-        self.groups = Default::default();
-        self.icons = Default::default();
-    }
-
-    pub fn load_data(&mut self) {
-        self.meta = self.db().meta.clone();
-        self.groups = self.db().root.groups().into_iter().cloned().collect();
-        self.load_icons();
-
-        self.entries = self
-            .db()
+        let rx_groups: Vec<_> = db
             .root
             .groups()
             .into_iter()
-            .flat_map(|group| group.entries())
             .cloned()
+            .map(|group| {
+                let entries_iter = group.entries().into_iter().cloned();
+
+                let entries = entries_iter
+                    .map(|entry| {
+                        let icon = entry
+                            .custom_icon_uuid
+                            .and_then(|icon_uuid| icons.get(&icon_uuid));
+                        RxEntry::new(entry, icon.cloned())
+                    })
+                    .collect();
+
+                RxGroup::new(group, entries)
+            })
             .collect();
+
+        Self { groups: rx_groups }
+    }
+
+    pub fn close(&mut self) {
+        self.zeroize();
+    }
+
+    pub fn groups(&self) -> &[RxGroup] {
+        self.groups.as_slice()
     }
 
     pub fn get_entries(&self, search_term: Option<&str>) -> HashMap<String, Vec<RxEntry>> {
         let search_term = search_term.map(|term| term.to_lowercase());
 
-        let groups_and_entries = self.groups.iter().map(|group| {
-            (
-                group.clone(),
-                group.entries().into_iter().cloned().collect::<Vec<_>>(),
-            )
-        });
+        let groups_and_entries = self
+            .groups
+            .iter()
+            .map(|group| (group.clone(), group.entries.as_slice()));
 
         // Determine if an entry should show up in search results, if
         // a search term was specified. term is already lowecase here.
-        let search_entry = |entry: &Entry, term: &str| {
-            let username = entry.get_username().unwrap_or_default().to_lowercase();
-            let url = entry.get_url().unwrap_or_default().to_lowercase();
-            let title = entry.get_title().unwrap_or_default().to_lowercase();
+        let search_entry = |entry: &RxEntry, term: &str| {
+            let username = entry.username.as_deref().unwrap_or_default().to_lowercase();
+            let url = entry.url.as_deref().unwrap_or_default().to_lowercase();
+            let title = entry.title.as_deref().unwrap_or_default().to_lowercase();
             username.contains(term) || url.contains(term) || title.contains(term)
         };
 
@@ -245,12 +275,6 @@ impl RxDatabase {
                         Some(entry)
                     }
                 })
-                .map(|entry| {
-                    let icon = entry
-                        .custom_icon_uuid
-                        .and_then(|icon_uuid| self.icons.get(&icon_uuid));
-                    RxEntry::new(entry, icon.cloned())
-                })
                 .collect::<Vec<_>>();
 
             (group, filtered_entries)
@@ -263,9 +287,8 @@ impl RxDatabase {
                 let group_name = group.name.clone();
                 let values = acc.entry(group_name).or_insert_with(|| vec![]);
 
-                // converts into qvariant
                 for entry in entries {
-                    values.push(entry);
+                    values.push(entry.clone());
                 }
                 acc
             },
@@ -277,15 +300,12 @@ impl RxDatabase {
     pub fn get_totp(&self, entry_uuid: &str) -> Result<RxTotp> {
         let entry_uuid = Uuid::from_str(entry_uuid)?;
         let entry = self
-            .entries
+            .groups
             .iter()
-            .find(|&entry| entry.uuid == entry_uuid)
-            .cloned();
+            .flat_map(|group| group.entries.as_slice())
+            .find(|&entry| entry.uuid == entry_uuid);
 
-        let otp = entry
-            .map(|ent| RxEntry::new_without_icon(ent))
-            .map(|kp_ent| kp_ent.totp())
-            .transpose();
+        let otp = entry.map(|ent| ent.totp()).transpose();
 
         match otp {
             Ok(Some(otp)) => Ok(otp),

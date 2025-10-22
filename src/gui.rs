@@ -4,10 +4,10 @@ use dirs::data_dir;
 use keepass::{Database, DatabaseKey};
 use qmeta_async::with_executor;
 use qmetaobject::*;
+use std::cell::RefCell;
 use std::collections::HashMap;
 use std::fs::{File, create_dir_all, remove_dir_all};
 use std::path::{Path, PathBuf};
-use std::rc::Rc;
 use std::sync::Arc;
 
 use crate::rx::RxDatabase;
@@ -22,7 +22,7 @@ fn app_data_path() -> PathBuf {
 #[derive(Clone, Default)]
 pub struct KeepassRxActor {
     gui: Arc<QObjectBox<KeepassRx>>,
-    curr_db: Rc<Option<RxDatabase>>,
+    curr_db: RefCell<Option<RxDatabase>>,
 }
 
 impl KeepassRxActor {
@@ -66,14 +66,11 @@ impl KeepassRxActor {
         Ok(())
     }
 
-    fn db(&self) -> Result<&RxDatabase> {
-        // rc as_ref -> option as_ref
-        Ok(self
-            .curr_db
-            .as_ref()
-            .as_ref()
-            .ok_or(anyhow!("Database not open"))?)
-    }
+    // fn db(&self) -> Result<&RxDatabase> {
+    //     // rc as_ref -> option as_ref
+    //     let binding = self.curr_db.borrow();
+    //     Ok(binding.as_ref().ok_or(anyhow!("Database not open"))?)
+    // }
 }
 
 impl Actor for KeepassRxActor {
@@ -98,6 +95,10 @@ struct OpenDatabase {
     password: String,
     key_path: Option<String>,
 }
+
+#[derive(Message)]
+#[rtype(result = "()")]
+struct CloseDatabase;
 
 #[derive(Message)]
 #[rtype(result = "()")]
@@ -160,11 +161,12 @@ impl Handler<OpenDatabase> for KeepassRxActor {
             .map(|result: Result<RxDatabase>, this, _| {
                 let binding = this.gui.clone();
                 let binding = binding.pinned();
-                let gui = binding.borrow();
+                let mut gui = binding.borrow_mut();
 
                 match result {
                     Ok(rx_db) => {
-                        this.curr_db = Rc::new(Some(rx_db));
+                        this.curr_db = RefCell::new(Some(rx_db));
+                        gui.databaseOpen = true;
                         gui.databaseOpened();
                     }
                     Err(err) => gui.databaseOpenFailed(format!("{}", err)),
@@ -176,6 +178,26 @@ impl Handler<OpenDatabase> for KeepassRxActor {
     }
 }
 
+impl Handler<CloseDatabase> for KeepassRxActor {
+    type Result = ();
+
+    fn handle(&mut self, _: CloseDatabase, _: &mut Self::Context) -> Self::Result {
+        let binding = self.gui.clone();
+        let binding = binding.pinned();
+        let mut gui = binding.borrow_mut();
+
+        let mut db_binding = self.curr_db.borrow_mut();
+        let db = match db_binding.as_mut().ok_or(anyhow!("Database not open")) {
+            Ok(db) => db,
+            Err(err) => return gui.errorReceived(format!("{}", err)),
+        };
+
+        db.close();
+        gui.databaseOpen = false;
+        gui.databaseClosed();
+    }
+}
+
 impl Handler<GetGroups> for KeepassRxActor {
     type Result = ();
 
@@ -184,7 +206,8 @@ impl Handler<GetGroups> for KeepassRxActor {
         let binding = binding.pinned();
         let gui = binding.borrow();
 
-        let db = match self.db() {
+        let db_binding = self.curr_db.borrow();
+        let db = match db_binding.as_ref().ok_or(anyhow!("Database not open")) {
             Ok(db) => db,
             Err(err) => return gui.errorReceived(format!("{}", err)),
         };
@@ -206,7 +229,8 @@ impl Handler<GetEntries> for KeepassRxActor {
         let binding = binding.pinned();
         let gui = binding.borrow();
 
-        let db = match self.db() {
+        let db_binding = self.curr_db.borrow();
+        let db = match db_binding.as_ref().ok_or(anyhow!("Database not open")) {
             Ok(db) => db,
             Err(err) => return gui.errorReceived(format!("{}", err)),
         };
@@ -232,7 +256,8 @@ impl Handler<GetTotp> for KeepassRxActor {
         let binding = binding.pinned();
         let gui = binding.borrow();
 
-        let db = match self.db() {
+        let db_binding = self.curr_db.borrow();
+        let db = match db_binding.as_ref().ok_or(anyhow!("Database not open")) {
             Ok(db) => db,
             Err(err) => return gui.errorReceived(format!("{}", err)),
         };
@@ -265,9 +290,11 @@ impl Handler<GetTotp> for KeepassRxActor {
 pub struct KeepassRx {
     base: qt_base_class!(trait QObject),
     actor: Option<Addr<KeepassRxActor>>,
+    databaseOpen: qt_property!(bool),
 
     setFile: qt_method!(fn(&self, path: String, is_db: bool)),
     openDatabase: qt_method!(fn(&mut self, path: String, password: String, key_path: QString)),
+    closeDatabase: qt_method!(fn(&mut self)),
     getGroups: qt_method!(fn(&self)),
     getEntries: qt_method!(fn(&self, search_term: QString)),
     getTotp: qt_method!(fn(&self, entry_uuid: QString)),
@@ -275,6 +302,7 @@ pub struct KeepassRx {
     // signals
     fileSet: qt_signal!(path: String),
     databaseOpened: qt_signal!(),
+    databaseClosed: qt_signal!(),
     databaseOpenFailed: qt_signal!(message: String),
     groupsReceived: qt_signal!(groups: QStringList),
     entriesReceived: qt_signal!(entries: QVariantMap),
@@ -306,6 +334,12 @@ impl KeepassRx {
             password,
             key_path,
         }));
+    }
+
+    #[with_executor]
+    pub fn closeDatabase(&mut self) {
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(CloseDatabase));
     }
 
     #[with_executor]

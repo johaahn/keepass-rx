@@ -22,6 +22,21 @@ UITK.Page {
     header: UITK.PageHeader {
         id: header
 	title: "KeepassRX"
+
+	leadingActionBar.actions: [
+	    UITK.Action {
+		name: "Lock"
+		//TRANSLATORS: Lock/close the database.
+		text: i18n.tr("Lock")
+		iconName: "lock"
+		onTriggered: {
+		    stack.clear();
+		    stack.push(opendbPage);
+		    keepassrx.closeDatabase();
+		}
+	    }
+	]
+
 	trailingActionBar.numberOfSlots: 3
 	trailingActionBar.actions: [
 	    UITK.Action {

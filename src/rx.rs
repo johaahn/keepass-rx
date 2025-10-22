@@ -190,6 +190,7 @@ impl RxDatabase {
     }
 
     pub fn close(&mut self) {
+        println!("Closing database.");
         self.db = Default::default();
         self.meta = Default::default();
         self.entries = Default::default();

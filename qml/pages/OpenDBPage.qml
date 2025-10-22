@@ -19,7 +19,10 @@ UITK.Page {
     anchors.fill: parent
 
     Component.onCompleted: {
-	keepassrx.closeDatabase();
+	if (keepassrx.databaseOpen) {
+	    console.log('Locking database.');
+	    keepassrx.closeDatabase();
+	}
     }
 
     header: UITK.PageHeader {
@@ -298,7 +301,7 @@ UITK.Page {
     }
 
     function openDatabase() {
-        busy = true
+        busy = true;
 	keepassrx.openDatabase(settings.lastDB, password.text, settings.lastKey);
     }
 }

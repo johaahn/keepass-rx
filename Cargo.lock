@@ -854,6 +854,7 @@ dependencies = [
  "totp-rs",
  "uriparse",
  "uuid",
+ "zeroize",
 ]
 
 [[package]]

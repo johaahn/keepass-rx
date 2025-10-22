@@ -33,8 +33,7 @@ ApplicationWindow {
     Connections {
 	target: keepassrx
 	onDatabaseOpened: {
-	    //busy = false;
-	    root.push_entries(); // root = application window
+	    root.openEntries(); // root = application window
 	}
 
 	onDatabaseOpenFailed: (error) => {
@@ -61,8 +60,10 @@ ApplicationWindow {
         id: aboutPage
     }
 
-    function push_entries() {
+    function openEntries() {
+	stack.clear();
         stack.push(Qt.resolvedUrl("pages/EntriesPage.qml"))
     }
+
     Component.onCompleted: stack.push(opendbPage)
 }

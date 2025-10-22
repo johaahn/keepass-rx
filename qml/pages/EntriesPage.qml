@@ -40,8 +40,9 @@ UITK.Page {
 
 	    UITK.Action {
 		name: "Search"
-		text: i18n.tr("Search")
-		iconName: "search"
+		// TRANSLATORS: Initiate (or stop) the search action.
+		text: !searchMode ? i18n.tr("Search") : i18n.tr("Cancel Search")
+		iconName: !searchMode ? "search" : "close"
 		onTriggered: {
 		    searchField.text = '';
 		    searchMode = !searchMode;

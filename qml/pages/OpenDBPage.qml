@@ -42,7 +42,7 @@ UITK.Page {
         id: settings
         property string lastKey
         property string lastDB
-        property int autoCloseInterval: 15
+        property int autoCloseInterval: 5
         property bool showSlowDBWarning: true
     }
 
@@ -145,7 +145,7 @@ UITK.Page {
         RowLayout {
             Layout.fillWidth: true
             UITK.TextField {
-                enabled: true
+                enabled: !busy
 		id: dbPath
                 text: settings.lastDB.split('/').pop()
 		Layout.fillWidth: true
@@ -222,11 +222,12 @@ UITK.Page {
                 enabled: (settings.lastDB !== undefined &&
 			  settings.lastDB != null &&
 			  settings.lastDB.length > 0 &&
-			  dbPath.text.length > 0)
+			  dbPath.text.length > 0) && !busy
                 text: ''
 		// TRANSLATORS: The keepass database master password
                 placeholderText: i18n.tr("Password")
                 echoMode: showPasswordAction.checked ? TextInput.Normal : TextInput.Password
+		inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
                 Layout.fillWidth: true
                 Keys.onReturnPressed: openDatabase()
 
@@ -249,6 +250,7 @@ UITK.Page {
 
         UITK.Button {
             Layout.fillWidth: true
+	    visible: !busy
             enabled: (
 		(dbPath.text != null && dbPath.text.length > 0) || settings.lastDB) &&
 		(settings.lastKey || password.text)
@@ -256,6 +258,7 @@ UITK.Page {
             text: i18n.tr("Open")
             onClicked: openDatabase()
         }
+
         UITK.ActivityIndicator {
             Layout.fillWidth: true
             running: busy

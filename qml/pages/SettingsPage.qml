@@ -21,8 +21,7 @@ UITK.Page {
         Column {
             Settings {
                 id: settings
-                property bool fetchOnOpen: false
-                property int autoCloseInterval: 15
+                property int autoCloseInterval: 5
                 property bool tapToReveal: true
                 property bool showRecycleBin: false
                 property bool changeGroupOnSearch: true
@@ -31,17 +30,9 @@ UITK.Page {
             id: col
             anchors.fill: parent
             spacing: units.gu(2)
+
             SettingsItem {
-                title: i18n.ctr("download icon setting", "Download icons")
-                description: i18n.ctr("description for icon download setting",
-                                      "Download page icons on database open")
-                control: UITK.Switch {
-                    onCheckedChanged: settings.fetchOnOpen = checked
-                    checked: settings.fetchOnOpen
-                }
-            }
-            SettingsItem {
-                title: i18n.ctr("tap to reveal passwort setting",
+                title: i18n.ctr("tap to reveal password setting",
                                 "Tap on entries to reveal password")
                 description: i18n.ctr(
                                  "description for tap to reveal passwort setting",

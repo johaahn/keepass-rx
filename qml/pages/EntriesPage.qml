@@ -1,5 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
+import QtQuick.Layouts 1.3
 import Lomiri.Components 1.3 as UITK
 import Qt.labs.settings 1.0
 
@@ -13,119 +14,138 @@ UITK.Page {
         property bool showRecycleBin: false
         property bool changeGroupOnSearch: true
     }
-    property bool searchMode: true
-    header: UITK.PageHeader {
-        id: header
-        z: 2
-        contents: Item {
-            anchors.fill: parent
 
-            UITK.TextField {
-                visible: searchMode
-                id: searchField
-                placeholderText: i18n.ctr("text for search placeholder",
-                                          "Search")
-                anchors.fill: parent
-                anchors.topMargin: units.gu(1)
-                anchors.bottomMargin: units.gu(1)
-                inputMethodHints: Qt.ImhNoPredictiveText
-                onTextChanged: {
-                    getEntries();
-                }
-            }
-            UITK.Label {
-                visible: !searchMode
-                anchors.fill: parent
-                verticalAlignment: Qt.AlignVCenter
-                text: i18n.tr("Passwords")
-            }
-        }
-    }
+    property bool searchMode: true
 
     id: sectionFlickable
-    UITK.Sections {
-        z: 3
-        anchors.top: header.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        id: sections
-        model: []
-        onSelectedIndexChanged: {
-            getEntries();
-        }
 
-        onImplicitWidthChanged: {
+    header: UITK.PageHeader {
+        id: header
+	title: "KeepassRX"
+	trailingActionBar.numberOfSlots: 2
+	trailingActionBar.actions: [
+	    UITK.Action {
+		name: "Settings"
+		text: i18n.tr("Settings")
+		iconName: "settings"
+		onTriggered: { console.log('settings button') }
+	    },
 
-            // Can't get this to center without screwing up for longer content
-            //            if (implicitWidth >= parent.width) {
-            //                anchors.left = parent.left
-            //                anchors.right = parent.right
-            //            } else {
-            //           n     anchors.left = undefined
-            //                anchors.right = undefined
-            //                x = parent.width / 2 - implicitWidth / 2
-            //            }
-        }
+	    UITK.Action {
+		name: "About"
+		text: i18n.tr("About")
+		iconName: "info"
+		onTriggered: { console.log('about button') }
+	    }
+	]
     }
-    Rectangle {
-        z: 2
-        anchors.top: sections.top
-        anchors.bottom: sections.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        color: theme.palette.normal.background
+
+    ColumnLayout {
+	id: opsBar
+	Layout.fillWidth: true
+
+	anchors {
+	    margins: units.gu(1)
+	    top: header.bottom
+	    left: parent.left
+	    right: parent.right
+	}
+
+	RowLayout {
+	    id: searchBar
+	    Layout.fillWidth: true
+	    width: parent.width
+
+	    UITK.TextField {
+		width: parent.width
+		Layout.fillWidth: true
+		visible: searchMode
+		id: searchField
+		placeholderText: i18n.ctr("text for search placeholder", "Search")
+		inputMethodHints: Qt.ImhNoPredictiveText
+		onTextChanged: {
+		    getEntries();
+		}
+	    }
+
+	    UITK.Label {
+		id: searchLabel
+		visible: !searchMode
+		verticalAlignment: Qt.AlignVCenter
+		text: i18n.tr("Passwords")
+	    }
+	}
+
+	RowLayout {
+	    id: groupsBar
+	    Layout.fillWidth: true
+	    width: parent.width
+
+	    UITK.Sections {
+		id: sections
+		width: parent.width
+		Layout.fillWidth: true
+		model: []
+		onSelectedIndexChanged: {
+		    getEntries();
+		}
+	    }
+	}
     }
+
 
     ListView {
-        z: 1
-        anchors.top: sections.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        spacing: units.gu(0.1)
+	clip: true
+	z: 1
+	anchors.top: opsBar.bottom
+	anchors.left: parent.left
+	anchors.right: parent.right
+	anchors.bottom: parent.bottom
+	spacing: units.gu(0.1)
 
-        id: lv
-        model: ListModel {
+	id: lv
+	model: ListModel {
             id: listmodel
-        }
+	}
 
-        delegate: DBEntry {}
+	delegate: DBEntry {}
     }
+
     Popup {
-        id: toast
-        padding: units.dp(12)
+	id: toast
+	padding: units.dp(12)
 
-        x: parent.width / 2 - width / 2
-        y: parent.height - height - units.dp(20)
+	x: parent.width / 2 - width / 2
+	y: parent.height - height - units.dp(20)
 
-        background: Rectangle {
+	background: Rectangle {
             color: "#111111"
             opacity: 0.7
             radius: units.dp(10)
-        }
+	}
 
-        Text {
+	Text {
             id: popupLabel
             anchors.fill: parent
             horizontalAlignment: Text.AlignHCenter
             color: "#ffffff"
             font.pixelSize: units.dp(14)
-        }
+	}
 
-        Timer {
+	Timer {
             id: popupTimer
             interval: 3000
             running: true
             onTriggered: {
-                toast.close()
+		toast.close()
             }
-        }
+	}
 
-        function show(text) {
+	function show(text) {
             popupLabel.text = text
             open()
             popupTimer.start()
-        }
+	}
     }
 
     // Welcome to async hell:
@@ -138,7 +158,7 @@ UITK.Page {
     }
 
     function getEntries() {
-        const group = sections.model[sections.selectedIndex]
+	const group = sections.model[sections.selectedIndex]
 	keepassrx.getEntries(searchField.text);
     }
 

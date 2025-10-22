@@ -1,0 +1,71 @@
+<!-- KeePass-style flat icon: white squircle with centered orange lock
+     Softer keyhole tone to reduce contrast against the shackle, keeping cohesive warm balance -->
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="KeePass-style icon with softened keyhole">
+  <defs>
+    <!-- Gradients for lock body -->
+    <linearGradient id="lockBody" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F37335"/>
+      <stop offset="100%" stop-color="#E95420"/>
+    </linearGradient>
+    <!-- Gradients for shackle (lighter tone) -->
+    <linearGradient id="lockShackle" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FDBF71"/>
+      <stop offset="100%" stop-color="#F08347"/>
+    </linearGradient>
+    <!-- Inner shading for shackle -->
+    <linearGradient id="shackleShade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#000000" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.18"/>
+    </linearGradient>
+    <!-- Gentle highlight for body -->
+    <linearGradient id="bodyHighlight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.15"/>
+      <stop offset="40%" stop-color="#FFFFFF" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- White squircle background -->
+  <rect width="1024" height="1024" rx="220" ry="220" fill="#FFFFFF"/>
+
+  <!-- Lock group -->
+  <g transform="translate(512,442)">
+    <!-- Shackle base -->
+    <path d="M -150 60 V -80 A 150 150 0 0 1 150 -80 V 60"
+          fill="none" stroke="url(#lockShackle)" stroke-width="90"
+          stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Shackle subtle shadow -->
+    <path d="M -150 60 V -80 A 150 150 0 0 1 150 -80 V 60"
+          fill="none" stroke="url(#shackleShade)" stroke-width="20" opacity="0.4"/>
+
+    <!-- Body -->
+    <path d="
+      M -240 60
+      h 480
+      a 36 36 0 0 1 36 36
+      v 240
+      c 0 90 -135 150 -276 150
+      c -141 0 -276 -60 -276 -150
+      v -240
+      a 36 36 0 0 1 36 -36
+      z"
+      fill="url(#lockBody)"/>
+
+    <!-- Top edge highlight -->
+    <path d="M -240 60 h 480"
+          stroke="url(#bodyHighlight)" stroke-width="10" opacity="0.4"/>
+
+    <!-- Gentle highlight overlay -->
+    <rect x="-240" y="60" width="480" height="380" fill="url(#bodyHighlight)"/>
+
+    <!-- Shackle-body seam -->
+    <path d="M -240 60 h 480" stroke="#C9451E" stroke-width="2" opacity="0.5"/>
+
+    <!-- Keyhole (softened warm neutral tone) -->
+    <g fill="#4B2B1A" opacity="0.85" transform="translate(0,206)">
+      <circle r="50"/>
+      <path d="M -20 46 L -36 106 Q -36 114 -30 118 Q 0 122 30 118 Q 36 114 36 106 L 20 46 Z"/>
+    </g>
+  </g>
+</svg>

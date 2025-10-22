@@ -142,7 +142,7 @@ UITK.Page {
 		    width: units.gu(25)
 		    height: units.gu(25)
 		    fillMode: Image.PreserveAspectFit
-		    source: '../../assets/keepass-rx.png'
+		    source: '../../assets/keepass-rx.svg'
 		    x: parent.width / 2 - width / 2
 		    y: parent.height / 2 - height / 2
 		}

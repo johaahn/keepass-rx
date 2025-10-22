@@ -5,7 +5,7 @@ use humanize_duration::prelude::DurationExt;
 use infer;
 use keepass::{
     Database,
-    db::{Entry, Group, Icon, Meta, TOTP as KeePassTOTP},
+    db::{Entry, Group, Icon, TOTP as KeePassTOTP},
 };
 use qmetaobject::{QString, QVariant, QVariantMap};
 use querystring::querify;
@@ -238,6 +238,7 @@ impl RxDatabase {
     }
 
     pub fn close(&mut self) {
+        println!("Closing database.");
         self.zeroize();
     }
 

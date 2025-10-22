@@ -20,16 +20,16 @@ UITK.Page {
 	    Layout.fillWidth: true
 
 	    Rectangle {
-		height: units.gu(25)
+		height: units.gu(35)
 		Layout.fillWidth: true
 		Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
 	        color: "transparent"
 
 		Image {
-		    width: units.gu(25)
-		    height: units.gu(25)
+		    width: units.gu(35)
+		    height: units.gu(35)
 		    fillMode: Image.PreserveAspectFit
-		    source: '../../assets/keepass-rx.png'
+		    source: '../../assets/keepass-rx.svg'
 		    x: parent.width / 2 - width / 2
 		    y: parent.height / 2 - height / 2
 		}

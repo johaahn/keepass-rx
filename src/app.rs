@@ -1,5 +1,5 @@
 use actix::Addr;
-use qmetaobject::{QObject, QObjectBox};
+use qmetaobject::QObjectBox;
 use std::sync::Arc;
 
 use crate::gui::{KeepassRx, KeepassRxActor};

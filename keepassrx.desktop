@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=KeepassRX
 Exec=keepassrx %U
-Icon=assets/logo.png
+Icon=assets/logo.svg
 Terminal=false
 Type=Application
 X-Lomiri-Touch=true

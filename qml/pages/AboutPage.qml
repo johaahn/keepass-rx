@@ -1,8 +1,11 @@
 import QtQuick 2.0
+import QtQuick.Layouts 1.12
 import Lomiri.Components 1.3 as UITK
 import "../components"
 import Qt.labs.settings 1.0
 
+/* width: parent.width */
+/*             Layout.preferredWidth: width // this plus the explicit width and wrapmode will wrap the long text. */
 UITK.Page {
     property bool isARMv7: false
     header: UITK.PageHeader {
@@ -10,23 +13,37 @@ UITK.Page {
         title: i18n.ctr("page header", "About")
     }
 
-    Flickable {
-	anchors.top: header.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        anchors.topMargin: units.gu(2)
-	anchors.leftMargin: units.gu(2)
-	anchors.rightMargin: units.gu(2)
-	contentWidth: width
+    ColumnLayout {
+	spacing: units.gu(2)
 
-	Column {
-	    spacing: units.gu(2)
+	anchors {
+            margins: units.gu(2)
+            top: header.bottom
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+        }
 
-	    UITK.Label {
-		anchors.fill: parent
-		text: "This is the about page."
-	    }
+	Item {
+            Layout.fillHeight: false
+        }
+
+	UITK.Label {
+	    width: parent.width
+	    Layout.preferredWidth: width
+	    wrapMode: Text.Wrap
+	    text: i18n.tr(
+		"" +
+		    "KeepassRX is a work-in-progress password manager for KeePass" +
+		    "password databases. It is licensed under the GNU GPL v3 license." +
+		    "<br/><br/>" +
+		    "Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>" +
+		    "https://git.agnos.is/projectmoon/keepass-rx</a>"
+	    )
 	}
+
+	Item {
+            Layout.fillHeight: true
+        }
     }
 }

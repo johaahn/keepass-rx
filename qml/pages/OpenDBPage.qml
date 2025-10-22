@@ -22,12 +22,19 @@ UITK.Page {
         id: header
         title: "KeepassRX"
         trailingActionBar.actions: [
-            UITK.Action {
-                iconName: "settings"
-                onTriggered: {
-                    stack.push(settingsPage)
-                }
-            }
+	    UITK.Action {
+		name: "Settings"
+		text: i18n.tr("Settings")
+		iconName: "settings"
+		onTriggered: { stack.push(settingsPage) }
+	    },
+
+	    UITK.Action {
+		name: "About"
+		text: i18n.tr("About")
+		iconName: "info"
+		onTriggered: { stack.push(aboutPage) }
+	    }
         ]
     }
 

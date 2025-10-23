@@ -2,7 +2,6 @@ qrc!(qml_resources,
      "/" {
          "assets/visibility.png",
          "assets/visibility_off.png",
-         "assets/logo.png",
          "assets/logo.svg",
          "assets/keepass-rx.png",
          "assets/keepass-rx.svg",

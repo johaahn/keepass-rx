@@ -30,8 +30,8 @@ UITK.Page {
 		text: i18n.tr("Lock")
 		iconName: "lock"
 		onTriggered: {
-		    stack.clear();
-		    stack.push(opendbPage);
+		    pageStack.removePages(adaptiveLayout.primaryPageSource);
+		    adaptiveLayout.primaryPage = opendbPage;
 		    keepassrx.closeDatabase();
 		}
 	    }
@@ -43,14 +43,14 @@ UITK.Page {
 		name: "Settings"
 		text: i18n.tr("Settings")
 		iconName: "settings"
-		onTriggered: { stack.push(settingsPage) }
+		onTriggered: { pageStack.addPageToNextColumn(adaptiveLayout.primaryPage, settingsPage) }
 	    },
 
 	    UITK.Action {
 		name: "About"
 		text: i18n.tr("About")
 		iconName: "info"
-		onTriggered: { stack.push(aboutPage) }
+		onTriggered: { pageStack.addPageToNextColumn(adaptiveLayout.primaryPage, aboutPage) }
 	    },
 
 	    UITK.Action {

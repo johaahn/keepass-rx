@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-23 09:58+0000\n"
+"POT-Creation-Date: 2025-10-23 23:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,19 +25,23 @@ msgstr ""
 
 #: qml/pages/AboutPage.qml:67
 msgid ""
-"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
-"agnos.is/projectmoon/keepass-rx</a>"
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
+"git.agnos.is/projectmoon/keepass-rx</a>"
+msgstr ""
+
+#: qml/pages/BlankPage.qml:47
+msgid "Blank page thing"
 msgstr ""
 
 #: qml/pages/EntriesPage.qml:30
 msgid "Lock"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:44 qml/pages/OpenDBPage.qml:34
+#: qml/pages/EntriesPage.qml:44 qml/pages/OpenDBPage.qml:32
 msgid "Settings"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:51 qml/pages/OpenDBPage.qml:41
+#: qml/pages/EntriesPage.qml:51 qml/pages/OpenDBPage.qml:39
 msgid "About"
 msgstr ""
 
@@ -49,31 +53,31 @@ msgstr ""
 msgid "Cancel Search"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:172
+#: qml/pages/OpenDBPage.qml:170
 msgid "Pick DB"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:188
+#: qml/pages/OpenDBPage.qml:186
 msgid "Manual path set."
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:206
+#: qml/pages/OpenDBPage.qml:204
 msgid "Pick Key"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:217
+#: qml/pages/OpenDBPage.qml:215
 msgid "Clear Key"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:235
+#: qml/pages/OpenDBPage.qml:233
 msgid "Password"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:265
+#: qml/pages/OpenDBPage.qml:264
 msgid "Open"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:292
+#: qml/pages/OpenDBPage.qml:291
 msgid ""
 "You are running on an ARMv7 device in which databases version 3 (kdbx3) are "
 "<b>extremely</b> slow.<br/>For your sanity, make sure your database is "

@@ -12,6 +12,19 @@ UITK.ListItem {
 
     id: entireItem
 
+    Connections {
+	target: keepassrx
+	onTotpReceived: (totp) => {
+	    if (!totp.error) {
+		UITK.Clipboard.push(totp.digits);
+		toast.show("Token '" + totp.digits + "' copied. Valid for " + totp.validFor);
+		clearClipboardTimer.start();
+	    } else {
+		toast.show(totp.error);
+	    }
+	}
+    }
+
     //override the trailing action panels defaul colors. use #808080
     //for icon color, this is the default keycolor of `Icon` and will
     //then be changed to the themed color
@@ -24,7 +37,7 @@ UITK.ListItem {
         actions: [
             UITK.Action {
                 visible: username
-                iconSource: "../../assets/user.svg"
+                iconName: "account"
                 onTriggered: {
                     UITK.Clipboard.push(username);
                     toast.show("Username copied to clipboard (30 secs)");
@@ -33,7 +46,7 @@ UITK.ListItem {
             },
             UITK.Action {
                 visible: password
-                iconSource: "../../assets/key.svg"
+                iconName: "stock_key"
                 onTriggered: {
                     UITK.Clipboard.push(password)
                     toast.show("Password copied to clipboard (30 secs)")
@@ -57,16 +70,10 @@ UITK.ListItem {
                 iconSource: "../../assets/2fa.svg"
                 iconName: "totp-code"
                 onTriggered: {
-		    // Need to fetch current TOTP because it shifts with time.
-		    const totp = keepassrx.getTotp(uuid);
-
-		    if (!totp.error) {
-			UITK.Clipboard.push(totp.digits);
-			toast.show("Token '" + totp.digits + "' copied (30 secs). Valid for " + totp.validFor);
-			clearClipboardTimer.start();
-		    } else {
-			toast.show(totp.error);
-		    }
+		    // Need to fetch current TOTP because it shifts
+		    // with time. Response is handled by the
+		    // onTotpReceived event.
+		    keepassrx.getTotp(uuid);
                 }
             }
         ]
@@ -111,11 +118,6 @@ UITK.ListItem {
                 color: theme.palette.normal.backgroundTertiaryText
                 text: username
             }
-
-            Text {
-                text: passwordVisible ? password : '••••••••'
-                color: theme.palette.normal.backgroundTertiaryText
-            }
         }
     }
 
@@ -124,12 +126,22 @@ UITK.ListItem {
         width: entryImg.width + detailsColumn.width
         height: parent.height
         onClicked: {
-            if (!settings.tapToReveal) {
-                return
-            }
+            /* if (!settings.tapToReveal) { */
+            /*     return */
+            /* } */
 
-            passwordVisible = true
-            timer.restart()
+            /* passwordVisible = true */
+            /* timer.restart() */
+	    pageStack.addPageToNextColumn(
+		adaptiveLayout.primaryPage,
+		Qt.resolvedUrl("../pages/SingleEntry.qml"),
+		{
+		    entryTitle: title,
+		    entryUsername: username,
+		    entryPassword: password,
+		    entryUrl: url
+		}
+	    )
         }
     }
 

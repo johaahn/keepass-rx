@@ -26,7 +26,7 @@ use cpp::cpp;
 use gettextrs::{bindtextdomain, textdomain};
 use gui::KeepassRxActor;
 use qmeta_async::with_executor;
-use qmetaobject::{QObjectBox, QQuickStyle, QmlEngine, qml_register_type};
+use qmetaobject::{QObjectBox, QQuickStyle, QQuickView, qml_register_type};
 use std::env;
 use std::path::PathBuf;
 use std::sync::Arc;
@@ -56,8 +56,9 @@ fn main() {
     qml_register_type::<KeepassRx>(cstr!("KeepassRx"), 1, 0, cstr!("KeepassRx"));
 
     qmeta_async::run(|| {
-        let engine = with_executor(|| -> Result<QmlEngine> {
+        let mut view = with_executor(|| -> Result<QQuickView> {
             // TODO store these in some global state?
+
             let keepassrx = Arc::new(QObjectBox::new(KeepassRx::default()));
             let keepassrx_actor = KeepassRxActor::new(&keepassrx).start();
 
@@ -66,14 +67,18 @@ fn main() {
                 gui_actor: keepassrx_actor,
             };
 
-            let mut engine = QmlEngine::new();
+            let mut view = QQuickView::new();
+
+            let engine = view.engine();
             engine.set_property("keepassrx".into(), app.gui.pinned().into());
-            engine.load_file("qrc:/qml/Main.qml".into());
-            Ok(engine)
+            //engine.load_file("qrc:/qml/Main.qml".into());
+            view.set_source("qrc:/qml/Main.qml".into());
+            Ok(view)
         })
         .expect("app initialization failed");
 
-        engine.exec();
+        view.show();
+        view.engine().exec();
     })
     .expect("running application");
 }

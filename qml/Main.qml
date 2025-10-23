@@ -23,9 +23,10 @@ import KeepassRx 1.0
 
 import "./pages"
 
-ApplicationWindow {
+MainView {
     id: root
     objectName: 'mainView'
+
     visible: true
     width: units.gu(45)
     height: units.gu(75)
@@ -33,7 +34,7 @@ ApplicationWindow {
     Connections {
 	target: keepassrx
 	onDatabaseOpened: {
-	    root.openEntries(); // root = application window
+	    adaptiveLayout.primaryPageSource = Qt.resolvedUrl("pages/EntriesPage.qml");
 	}
 
 	onDatabaseOpenFailed: (error) => {
@@ -41,29 +42,23 @@ ApplicationWindow {
 	}
     }
 
-    OpenDBPage {
-        visible: false
-        id: opendbPage
-    }
+    AdaptivePageLayout {
+	id: adaptiveLayout
+	primaryPage: opendbPage
+	anchors.fill: parent
 
-    PageStack {
-        id: stack
-    }
+	OpenDBPage {
+	    id: opendbPage
+	}
 
-    SettingsPage {
-        visible: false
-        id: settingsPage
-    }
+	SettingsPage {
+	    visible: false
+	    id: settingsPage
+	}
 
-    AboutPage {
-        visible: false
-        id: aboutPage
+	AboutPage {
+	    visible: false
+	    id: aboutPage
+	}
     }
-
-    function openEntries() {
-	stack.clear();
-        stack.push(Qt.resolvedUrl("pages/EntriesPage.qml"))
-    }
-
-    Component.onCompleted: stack.push(opendbPage)
 }

@@ -16,8 +16,6 @@ UITK.Page {
     property string errorMsg
     property double lastHeartbeat: 0
 
-    anchors.fill: parent
-
     Component.onCompleted: {
 	if (keepassrx.databaseOpen) {
 	    console.log('Locking database.');
@@ -33,14 +31,14 @@ UITK.Page {
 		name: "Settings"
 		text: i18n.tr("Settings")
 		iconName: "settings"
-		onTriggered: { stack.push(settingsPage) }
+		onTriggered: { pageStack.addPageToNextColumn(opendbPage, settingsPage) }
 	    },
 
 	    UITK.Action {
 		name: "About"
 		text: i18n.tr("About")
 		iconName: "info"
-		onTriggered: { stack.push(aboutPage) }
+		onTriggered: { pageStack.addPageToNextColumn(opendbPage, aboutPage) }
 	    }
         ]
     }
@@ -64,7 +62,7 @@ UITK.Page {
             peer.selectionType = ContentHub.ContentTransfer.Single
             signalConnections.target = peer.request()
         }
-        onCancelPressed: stack.pop()
+        onCancelPressed: pageStack.pop()
     }
 
     Connections {
@@ -96,7 +94,7 @@ UITK.Page {
 	    dbPath.text = filePath.split('/').pop();
 	    copyingDB = true;
 	    keepassrx.setFile(filePath, pickingDB);
-	    stack.pop(); // Close content picker
+	    pageStack.pop(); // Close content picker
         }
     }
 
@@ -112,9 +110,9 @@ UITK.Page {
 
             const delta = now - lastHeartbeat
             lastHeartbeat = now
-            if (stack.depth > 1
+            if (pageStack.depth > 1
                     && delta >= settings.autoCloseInterval * 60 * 1000) {
-                stack.pop(null)
+                pageStack.pop(null)
             }
         }
     }
@@ -174,7 +172,7 @@ UITK.Page {
                     pickingDB = true
                     errorMsg = ''
                     busy = false
-                    stack.push(peerPicker)
+                    pageStack.addPageToNextColumn(opendbPage, peerPicker)
                 }
             }
         }
@@ -206,7 +204,7 @@ UITK.Page {
                 text: i18n.tr("Pick Key")
                 onClicked: {
                     pickingDB = false
-                    stack.push(peerPicker)
+                    pageStack.addPageToNextColumn(opendbPage, peerPicker)
                     busy = false
                     errorMsg = ''
                 }
@@ -261,6 +259,7 @@ UITK.Page {
             enabled: (
 		(dbPath.text != null && dbPath.text.length > 0) || settings.lastDB) &&
 		(settings.lastKey || password.text)
+	    color: enabled ? UITK.LomiriColors.green : LomiriColors.warmgrey
             // TRANSLATORS: Open the password database
             text: i18n.tr("Open")
             onClicked: openDatabase()
@@ -301,6 +300,7 @@ UITK.Page {
     }
 
     function openDatabase() {
+	showPasswordAction.checked = false;
         busy = true;
 	keepassrx.openDatabase(settings.lastDB, password.text, settings.lastKey);
     }

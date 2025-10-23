@@ -3,10 +3,7 @@ use base64::{Engine, prelude::BASE64_STANDARD};
 use humanize_duration::Truncate;
 use humanize_duration::prelude::DurationExt;
 use infer;
-use keepass::{
-    Database,
-    db::{Entry, Group, Icon, TOTP as KeePassTOTP},
-};
+use keepass::db::{Entry, Group, Icon, TOTP as KeePassTOTP};
 use qmetaobject::{QString, QVariant, QVariantMap};
 use querystring::querify;
 use secrecy::{ExposeSecret, SecretString};
@@ -14,7 +11,11 @@ use std::{collections::HashMap, str::FromStr};
 use totp_rs::{Secret, TOTP};
 use uriparse::URI;
 use uuid::Uuid;
-use zeroize::{Zeroize, ZeroizeOnDrop};
+use zeroize::{Zeroize, ZeroizeOnDrop, Zeroizing};
+
+mod zeroable_db;
+
+pub use zeroable_db::ZeroableDatabase;
 
 macro_rules! expose {
     ($secret:expr) => {{
@@ -218,7 +219,7 @@ impl std::fmt::Debug for RxDatabase {
 }
 
 impl RxDatabase {
-    pub fn new(db: Database) -> Self {
+    pub fn new(db: Zeroizing<ZeroableDatabase>) -> Self {
         let icons: HashMap<Uuid, Icon> = db
             .meta
             .custom_icons

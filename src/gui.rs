@@ -9,8 +9,9 @@ use std::collections::HashMap;
 use std::fs::{File, create_dir_all, remove_dir_all};
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
+use zeroize::Zeroizing;
 
-use crate::rx::RxDatabase;
+use crate::rx::{RxDatabase, ZeroableDatabase};
 
 const APP_ID: &'static str = "keepassrx.projectmoon";
 
@@ -149,7 +150,8 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                 let open_result =
                     tokio::task::spawn_blocking(move || -> Result<RxDatabase> {
                         let db = Database::open(&mut db_file, db_key)?;
-                        let rx_db = RxDatabase::new(db);
+                        let wrapped_db = Zeroizing::new(ZeroableDatabase(db));
+                        let rx_db = RxDatabase::new(wrapped_db);
                         Ok(rx_db)
                     })
                     .await??;

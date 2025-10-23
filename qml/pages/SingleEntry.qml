@@ -44,6 +44,7 @@ Page {
 	id: entryDelegate
 	ListItem {
 	    width: parent.width
+	    color: "transparent"
 
 	    contentItem.anchors {
 		bottomMargin: units.gu(0.25)
@@ -72,7 +73,7 @@ Page {
 			Column {
 			    anchors.left: parent.left
 			    anchors.right: parent.right
-			    y: units.gu(-2)
+			    y: units.gu(-2.5)
 
 			    Row {
 				id: nameRow
@@ -129,6 +130,9 @@ Page {
             anchors.fill: parent
             model: entryModel
 	    delegate: entryDelegate
+	    highlight: Rectangle {
+		color: "transparent"
+	    }
 	}
     }
 

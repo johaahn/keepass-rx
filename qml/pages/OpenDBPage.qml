@@ -259,7 +259,7 @@ UITK.Page {
             enabled: (
 		(dbPath.text != null && dbPath.text.length > 0) || settings.lastDB) &&
 		(settings.lastKey || password.text)
-	    color: enabled ? UITK.LomiriColors.green : LomiriColors.warmgrey
+	    color: UITK.LomiriColors.green
             // TRANSLATORS: Open the password database
             text: i18n.tr("Open")
             onClicked: openDatabase()

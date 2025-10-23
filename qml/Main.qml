@@ -26,6 +26,7 @@ import "./pages"
 MainView {
     id: root
     objectName: 'mainView'
+    anchorToKeyboard: true
 
     visible: true
     width: units.gu(45)

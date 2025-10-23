@@ -9,11 +9,21 @@ use keepass::{
 };
 use qmetaobject::{QString, QVariant, QVariantMap};
 use querystring::querify;
+use secrecy::{ExposeSecret, SecretString};
 use std::{collections::HashMap, str::FromStr};
 use totp_rs::{Secret, TOTP};
 use uriparse::URI;
 use uuid::Uuid;
 use zeroize::{Zeroize, ZeroizeOnDrop};
+
+macro_rules! expose {
+    ($secret:expr) => {{
+        $secret
+            .as_ref()
+            .map(SecretString::expose_secret)
+            .unwrap_or_default()
+    }};
+}
 
 #[derive(Zeroize, Default, Clone)]
 pub struct RxTotp {
@@ -44,11 +54,11 @@ pub struct RxEntry {
     #[zeroize(skip)]
     uuid: Uuid,
 
-    title: Option<String>,
-    username: Option<String>,
-    password: Option<String>,
-    url: Option<String>,
-    raw_otp_value: Option<String>,
+    title: Option<SecretString>,
+    username: Option<SecretString>,
+    password: Option<SecretString>,
+    url: Option<SecretString>,
+    raw_otp_value: Option<SecretString>,
     icon_data: Option<Vec<u8>>,
 }
 
@@ -61,18 +71,17 @@ impl RxEntry {
     pub fn new(entry: Entry, icon: Option<Icon>) -> Self {
         Self {
             uuid: entry.uuid,
-            title: entry.get_title().map(String::from),
-            username: entry.get_username().map(String::from),
-            password: entry.get_password().map(String::from),
-            url: entry.get_url().map(String::from),
-            raw_otp_value: entry.get_raw_otp_value().map(String::from),
+            title: entry.get_title().map(SecretString::from),
+            username: entry.get_username().map(SecretString::from),
+            password: entry.get_password().map(SecretString::from),
+            url: entry.get_url().map(SecretString::from),
+            raw_otp_value: entry.get_raw_otp_value().map(SecretString::from),
             icon_data: icon.map(|i| i.data),
         }
     }
 
     pub fn has_steam_otp(&self) -> bool {
-        let raw_otp = self.raw_otp_value.as_deref().unwrap_or_default();
-        raw_otp.starts_with("otpauth://totp/Steam:")
+        expose!(self.raw_otp_value).starts_with("otpauth://totp/Steam:")
     }
 
     pub fn steam_otp_digits(&self) -> Result<String> {
@@ -80,7 +89,7 @@ impl RxEntry {
             return Err(anyhow!("Not a Steam OTP entry"));
         }
 
-        let raw_otp = self.raw_otp_value.as_deref().unwrap_or_default();
+        let raw_otp = expose!(self.raw_otp_value);
         let uri = URI::try_from(raw_otp)?;
 
         let query = uri
@@ -106,7 +115,8 @@ impl RxEntry {
     pub fn totp(&self) -> Result<RxTotp> {
         let otp = self
             .raw_otp_value
-            .as_deref()
+            .as_ref()
+            .map(|otp| otp.expose_secret())
             .map(|value| KeePassTOTP::from_str(value))
             .ok_or(anyhow!("Unable to parse OTP"))??;
 
@@ -145,8 +155,12 @@ impl Into<QVariantMap> for RxEntry {
             })
             .unwrap_or_default();
 
-        let mapper =
-            |value: &Option<String>| value.as_deref().map(QString::from).unwrap_or_default();
+        let mapper = |value: &Option<SecretString>| {
+            value
+                .as_ref()
+                .map(|secret| QString::from(secret.expose_secret()))
+                .unwrap_or_default()
+        };
 
         let uuid: QString = self.uuid.to_string().into();
         let url: QString = mapper(&self.url);
@@ -257,9 +271,9 @@ impl RxDatabase {
         // Determine if an entry should show up in search results, if
         // a search term was specified. term is already lowecase here.
         let search_entry = |entry: &RxEntry, term: &str| {
-            let username = entry.username.as_deref().unwrap_or_default().to_lowercase();
-            let url = entry.url.as_deref().unwrap_or_default().to_lowercase();
-            let title = entry.title.as_deref().unwrap_or_default().to_lowercase();
+            let username = expose!(entry.username).to_lowercase();
+            let url = expose!(entry.url).to_lowercase();
+            let title = expose!(entry.title).to_lowercase();
             username.contains(term) || url.contains(term) || title.contains(term)
         };
 

@@ -54,7 +54,7 @@ UITK.Page {
 	    wrapMode: Text.Wrap
 	    text: i18n.tr(
 		"" +
-		    "KeepassRX is a work-in-progress password manager for KeePass" +
+		    "KeepassRX is a work-in-progress password manager for KeePass " +
 		    "password databases. It is licensed under the GNU GPL v3 license."
 	    )
 	}

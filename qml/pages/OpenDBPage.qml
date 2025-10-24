@@ -307,7 +307,7 @@ Page {
     function openDatabase() {
 	busy = true;
 	showPasswordAction.checked = false;
-	const pw = password.tex;
+	const pw = password.text;
 	password.text = '';
 	keepassrx.openDatabase(settings.lastDB, pw, settings.lastKey);
     }

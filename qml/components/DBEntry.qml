@@ -7,9 +7,6 @@ import QtGraphicalEffects 1.0
 UITK.ListItem {
     property bool passwordVisible: false
     height: units.gu(10)
-    anchors.left: parent.left
-    anchors.right: parent.right
-
     id: entireItem
 
     Connections {

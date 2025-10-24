@@ -1,14 +1,14 @@
-import Lomiri.Components 1.3 as UITK
-import Lomiri.Components.Popups 1.3 as UC
-import Lomiri.Content 1.3 as ContentHub
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import QtQuick.Controls 2.12
 import Qt.labs.settings 1.0
+import Lomiri.Components 1.3
+import Lomiri.Components.Popups 1.3
+import Lomiri.Content 1.3
 import KeepassRx 1.0
 import "../components"
 
-UITK.Page {
+Page {
     property bool manualPath
     property bool copyingDB
     property bool pickingDB
@@ -23,18 +23,18 @@ UITK.Page {
 	}
     }
 
-    header: UITK.PageHeader {
+    header: PageHeader {
         id: header
         title: "KeepassRX"
         trailingActionBar.actions: [
-	    UITK.Action {
+	    Action {
 		name: "Settings"
 		text: i18n.tr("Settings")
 		iconName: "settings"
 		onTriggered: { pageStack.addPageToNextColumn(opendbPage, settingsPage) }
 	    },
 
-	    UITK.Action {
+	    Action {
 		name: "About"
 		text: i18n.tr("About")
 		iconName: "info"
@@ -51,18 +51,23 @@ UITK.Page {
         property bool showSlowDBWarning: true
     }
 
-    ContentHub.ContentPeerPicker {
+    ContentPeerPicker {
         id: peerPicker
         visible: false
         showTitle: true
-        handler: ContentHub.ContentHandler.Source
-        contentType: ContentHub.ContentType.All
+	//TRANSLATORS: The user is chosing a KeePass database to open.
+	headerText: i18n.tr("Select Database")
+	z: 10 // make sure to show above everything else.
+        handler: ContentHandler.Source
+        contentType: ContentType.All
 
+	// Picker is closed by signalConnections after DB copied.
         onPeerSelected: {
-            peer.selectionType = ContentHub.ContentTransfer.Single
-            signalConnections.target = peer.request()
+            peer.selectionType = ContentTransfer.Single
+            copyDatabase.target = peer.request()
         }
-        onCancelPressed: pageStack.pop()
+
+        onCancelPressed: peerPicker.visible = false;
     }
 
     Connections {
@@ -79,9 +84,9 @@ UITK.Page {
     }
 
     Connections {
-        id: signalConnections
+        id: copyDatabase
         onStateChanged: {
-            var done = (target.state === ContentHub.ContentTransfer.Charged)
+            var done = (target.state === ContentTransfer.Charged)
 
             if (!done) {
                 return
@@ -94,7 +99,7 @@ UITK.Page {
 	    dbPath.text = filePath.split('/').pop();
 	    copyingDB = true;
 	    keepassrx.setFile(filePath, pickingDB);
-	    pageStack.pop(); // Close content picker
+	    peerPicker.visible = false;
         }
     }
 
@@ -149,7 +154,7 @@ UITK.Page {
 
         RowLayout {
             Layout.fillWidth: true
-            UITK.TextField {
+            TextField {
                 enabled: !busy
 		id: dbPath
                 text: settings.lastDB.split('/').pop()
@@ -164,7 +169,7 @@ UITK.Page {
 		}
             }
 
-            UITK.Button {
+            Button {
                 id: pickDB
                 // TRANSLATORS: DB is the abbreviation for database
                 text: i18n.tr("Pick DB")
@@ -172,13 +177,13 @@ UITK.Page {
                     pickingDB = true
                     errorMsg = ''
                     busy = false
-                    pageStack.addPageToNextColumn(opendbPage, peerPicker)
+                    peerPicker.visible = true;
                 }
             }
         }
 
 	RowLayout {
-            UITK.Label {
+            Label {
 		Layout.fillWidth: true
 		id: manualPathLabel
 		color: "gray"
@@ -191,25 +196,25 @@ UITK.Page {
 
 
         RowLayout {
-            UITK.TextField {
+            TextField {
                 enabled: false
                 text: settings.lastKey
                 Layout.fillWidth: true
                 onTextChanged: settings.lastKey = text
             }
 
-            UITK.Button {
+            Button {
                 visible: !settings.lastKey
 		// TRANSLATORS: Pick a key file to open the password database.
                 text: i18n.tr("Pick Key")
                 onClicked: {
                     pickingDB = false
-                    pageStack.addPageToNextColumn(opendbPage, peerPicker)
+                    peerPicker.visible = true;
                     busy = false
                     errorMsg = ''
                 }
             }
-            UITK.Button {
+            Button {
                 visible: settings.lastKey
 		// TRANSLATORS: Clear the selected key file.
                 text: i18n.tr("Clear Key")
@@ -222,7 +227,7 @@ UITK.Page {
         RowLayout {
             Layout.fillWidth: true
 
-            UITK.TextField {
+            TextField {
                 id: password
                 enabled: (settings.lastDB !== undefined &&
 			  settings.lastDB != null &&
@@ -241,10 +246,10 @@ UITK.Page {
                 }
             }
 
-            UITK.ActionBar {
+            ActionBar {
                 numberOfSlots: 1
                 actions: [
-                    UITK.Action {
+                    Action {
                         id: showPasswordAction
                         checkable: true
                         iconSource: checked ? "../../assets/visibility_off.png" : "../../assets/visibility.png"
@@ -253,25 +258,25 @@ UITK.Page {
             }
         }
 
-        UITK.Button {
+        Button {
             Layout.fillWidth: true
 	    visible: !busy
             enabled: (
 		(dbPath.text != null && dbPath.text.length > 0) || settings.lastDB) &&
 		(settings.lastKey || password.text)
-	    color: UITK.LomiriColors.green
+	    color: LomiriColors.green
             // TRANSLATORS: Open the password database
             text: i18n.tr("Open")
             onClicked: openDatabase()
         }
 
-        UITK.ActivityIndicator {
+        ActivityIndicator {
             Layout.fillWidth: true
             running: busy
             visible: busy
         }
 
-        UITK.Label {
+        Label {
             Layout.fillWidth: true
 	    id: errorLabel
             text: errorMsg
@@ -283,14 +288,14 @@ UITK.Page {
 
     Component {
         id: cpu_version_component
-        UC.Dialog {
+        Dialog {
             id: cpu_version_popup
             title: "Database version compatibility"
             modal: true
             text: i18n.tr(
                       "You are running on an ARMv7 device in which databases version 3 (kdbx3) are <b>extremely</b> slow.<br/>For your sanity, make sure your database is version 4 (kdbx4)")
 
-            UITK.Button {
+            Button {
                 text: "Ok"
                 onClicked: {
                     PopupUtils.close(cpu_version_popup)

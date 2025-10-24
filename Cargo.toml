@@ -1,6 +1,6 @@
 [package]
 name = "keepassrx"
-version = "0.2.4"
+version = "0.3.0"
 authors = ["projectmoon <projectmoon@agnos.is>"]
 edition = "2024"
 build = "src/build.rs"

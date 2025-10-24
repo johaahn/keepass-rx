@@ -25,6 +25,7 @@ An app that is rough around the edges but ready for daily use.
  - [X] Updated for 24.04 Noble.
  - [X] App settings and previous database persisted.
  - [X] Opening database does not lock up main GUI thread.
+ - [X] Load all groups and entries.
 
 ## 1.x - Functional Parity
 
@@ -45,6 +46,8 @@ still only supporting read-only database access.
  - [ ] Improved database selection UX.
  - [ ] "Easy lock" to re-open database without typing the whole password.
  - [ ] Improved password search UX (across groups).
+ - [ ] New UI layout to support nested groups.
+ - [ ] Display custom fields and values.
 
 ## 3.x - Writable Databases
 

@@ -1,8 +1,8 @@
 {
     "name": "keepassrx.projectmoon",
-    "description": "Keepass app for Ubuntu Touch",
+    "description": "KeePass app for Ubuntu Touch",
     "architecture": "@CLICK_ARCH@",
-    "title": "KeepassRX",
+    "title": "KeePassRX",
     "hooks": {
         "keepassrx": {
             "apparmor": "keepassrx.apparmor",

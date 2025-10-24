@@ -27,7 +27,7 @@ Page {
 
     header: PageHeader {
         id: header
-        title: ""
+        title: "KeePassRX"
         trailingActionBar.actions: [
 	    Action {
 		name: "Settings"
@@ -137,19 +137,6 @@ Page {
         anchors.rightMargin: units.gu(7)
         anchors.verticalCenter: parent.verticalCenter
         spacing: units.gu(1)
-
-	RowLayout {
-	    Layout.fillWidth: true
-
-	    Text {
-		Layout.fillWidth: true
-		Layout.preferredWidth: parent.width
-		horizontalAlignment: Qt.AlignHCenter
-		font.pointSize: 20
-		text: 'KeePassRX'
-		color: LomiriColors.slate
-	    }
-	}
 
 	RowLayout {
 	    Layout.fillWidth: true

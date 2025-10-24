@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-24 21:55+0000\n"
+"POT-Creation-Date: 2025-10-24 22:52+0000\n"
 "PO-Revision-Date: 2025-10-22 17:53+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: \n"
@@ -18,10 +18,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.7\n"
 
+#: qml/pages/BlankPage.qml:47
+msgid "Blank page thing"
+msgstr ""
+
 #: qml/pages/AboutPage.qml:56
 #, fuzzy
 msgid ""
-"KeepassRX is a work-in-progress password manager for KeePass password "
+"KeePassRX is a work-in-progress password manager for KeePass password "
 "databases. It is licensed under the GNU GPL v3 license."
 msgstr ""
 "KeepassRX is een ontwikkeling zijnde wachtwoordbeheerder voor KeePass-"
@@ -35,40 +39,15 @@ msgstr ""
 "Broncode: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
 "agnos.is/projectmoon/keepass-rx</a>"
 
-#: qml/pages/BlankPage.qml:47
-msgid "Blank page thing"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:46
-msgid "Lock"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:58
-msgid "Close"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:71
-msgid "Search"
-msgstr "Zoeken"
-
-#: qml/pages/EntriesPage.qml:71
-#, fuzzy
-msgid "Cancel Search"
-msgstr "Zoeken"
-
-#: qml/pages/EntriesPage.qml:84 qml/pages/OpenDBPage.qml:34
-#: qml/pages/UnlockPage.qml:34
+#: qml/pages/OpenDBPage.qml:34 qml/pages/UnlockPage.qml:34
+#: qml/pages/EntriesPage.qml:83
 msgid "Settings"
 msgstr "Instellingen"
 
-#: qml/pages/EntriesPage.qml:93 qml/pages/OpenDBPage.qml:41
-#: qml/pages/UnlockPage.qml:41
+#: qml/pages/OpenDBPage.qml:41 qml/pages/UnlockPage.qml:41
+#: qml/pages/EntriesPage.qml:92
 msgid "About"
 msgstr "Over"
-
-#: qml/pages/EntriesPage.qml:105
-msgid "Close Database"
-msgstr ""
 
 #: qml/pages/OpenDBPage.qml:61
 msgid "Select Database"
@@ -78,35 +57,43 @@ msgstr ""
 msgid "Cannot open another database when one is locked"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:184
+#: qml/pages/OpenDBPage.qml:197
 msgid "Pick DB"
 msgstr "Kies een databank"
 
-#: qml/pages/OpenDBPage.qml:200 qml/pages/UnlockPage.qml:142
+#: qml/pages/OpenDBPage.qml:213 qml/pages/UnlockPage.qml:154
 msgid "Manual path set."
 msgstr "Stel de locatie handmatig in."
 
-#: qml/pages/OpenDBPage.qml:218
+#: qml/pages/OpenDBPage.qml:231
 msgid "Pick Key"
 msgstr "Kies een sleutel"
 
-#: qml/pages/OpenDBPage.qml:229
+#: qml/pages/OpenDBPage.qml:242
 msgid "Clear Key"
 msgstr "Sleutel wissen"
 
-#: qml/pages/OpenDBPage.qml:247
+#: qml/pages/OpenDBPage.qml:261
 msgid "Password"
 msgstr "Wachtwoord"
 
-#: qml/pages/OpenDBPage.qml:278
+#: qml/pages/OpenDBPage.qml:295
 msgid "Open"
 msgstr "Openen"
 
-#: qml/pages/OpenDBPage.qml:278 qml/pages/UnlockPage.qml:206
+#: qml/pages/OpenDBPage.qml:295 qml/pages/UnlockPage.qml:221
 msgid "Unlock"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:305
+#: qml/pages/OpenDBPage.qml:313
+msgid "Opening Database"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:334
+msgid "Database version compatibility"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:337
 msgid ""
 "You are running on an ARMv7 device in which databases version 3 (kdbx3) are "
 "<b>extremely</b> slow.<br/>For your sanity, make sure your database is "
@@ -116,19 +103,46 @@ msgstr ""
 "(kdbx3) zijn <b>ontzettend</b> langzaam hierop.<br/>Maak bij voorkeur "
 "gebruik van een databank met versie 4 (kdbx4)."
 
-#: qml/pages/UnlockPage.qml:158
-msgid "The passcode is the first five characters of the database password."
+#: qml/pages/UnlockPage.qml:171
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:174
+#: qml/pages/UnlockPage.qml:189
 #, fuzzy
 msgid "Passcode"
 msgstr "Wachtwoord"
 
-#: qml/pages/UnlockPage.qml:225
-msgid "Securely Unlocking..."
+#: qml/pages/UnlockPage.qml:240
+msgid "Securely Unlocking"
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:226
-msgid "Securely Locking..."
+#: qml/pages/UnlockPage.qml:241
+msgid "Securely Locking"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:252
+msgid "Database Not Opening?"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:45
+msgid "Lock"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:57
+msgid "Close"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:70
+msgid "Search"
+msgstr "Zoeken"
+
+#: qml/pages/EntriesPage.qml:70
+#, fuzzy
+msgid "Cancel Search"
+msgstr "Zoeken"
+
+#: qml/pages/EntriesPage.qml:104
+msgid "Close Database"
 msgstr ""

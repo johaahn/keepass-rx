@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-24 22:53+0000\n"
+"POT-Creation-Date: 2025-10-24 23:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -51,43 +51,43 @@ msgstr ""
 msgid "Cannot open another database when one is locked"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:197
+#: qml/pages/OpenDBPage.qml:184
 msgid "Pick DB"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:213 qml/pages/UnlockPage.qml:154
+#: qml/pages/OpenDBPage.qml:200 qml/pages/UnlockPage.qml:154
 msgid "Manual path set."
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:231
+#: qml/pages/OpenDBPage.qml:218
 msgid "Pick Key"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:242
+#: qml/pages/OpenDBPage.qml:229
 msgid "Clear Key"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:261
+#: qml/pages/OpenDBPage.qml:248
 msgid "Password"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:295
+#: qml/pages/OpenDBPage.qml:282
 msgid "Open"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:295 qml/pages/UnlockPage.qml:221
+#: qml/pages/OpenDBPage.qml:282 qml/pages/UnlockPage.qml:221
 msgid "Unlock"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:313
+#: qml/pages/OpenDBPage.qml:300
 msgid "Opening Database"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:334
+#: qml/pages/OpenDBPage.qml:321
 msgid "Database version compatibility"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:337
+#: qml/pages/OpenDBPage.qml:324
 msgid ""
 "You are running on an ARMv7 device in which databases version 3 (kdbx3) are "
 "<b>extremely</b> slow.<br/>For your sanity, make sure your database is "

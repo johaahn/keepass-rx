@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=KeepassRX
+Name=KeePassRX
 Exec=keepassrx %U
 Icon=assets/logo.svg
 Terminal=false

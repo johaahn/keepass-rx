@@ -136,21 +136,21 @@ Page {
         anchors.leftMargin: units.gu(7)
         anchors.rightMargin: units.gu(7)
         anchors.verticalCenter: parent.verticalCenter
-        spacing: units.gu(1)
+        spacing: units.gu(2)
 
 	RowLayout {
 	    Layout.fillWidth: true
 
 	    Rectangle {
-		height: units.gu(25)
+		height: units.gu(35)
 		Layout.fillWidth: true
 		Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
 	        color: "transparent"
 
 		Image {
 		    id: logo
-		    width: units.gu(25)
-		    height: units.gu(25)
+		    width: units.gu(35)
+		    height: units.gu(35)
 		    fillMode: Image.PreserveAspectFit
 		    source: '../../assets/keepass-rx.svg'
 		    x: parent.width / 2 - width / 2

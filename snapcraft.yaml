@@ -1,8 +1,8 @@
 name: keepassrx
 version: 0.1
 base: core24
-summary: KeepassRX
-description: Keepass app for Ubuntu Touch
+summary: KeePassRX
+description: KeePass app for Ubuntu Touch
 confinement: strict
 grade: stable
 

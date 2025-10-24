@@ -123,12 +123,6 @@ UITK.ListItem {
         width: entryImg.width + detailsColumn.width
         height: parent.height
         onClicked: {
-            /* if (!settings.tapToReveal) { */
-            /*     return */
-            /* } */
-
-            /* passwordVisible = true */
-            /* timer.restart() */
 	    pageStack.addPageToNextColumn(
 		adaptiveLayout.primaryPage,
 		Qt.resolvedUrl("../pages/SingleEntry.qml"),
@@ -156,7 +150,7 @@ UITK.ListItem {
         interval: 30000
         onTriggered: {
 	    UITK.Clipboard.clear();
-	    toast.show('KeepassRX: Clipboard cleared.');
+	    toast.show('KeePassRX: Clipboard cleared.');
 	}
     }
 }

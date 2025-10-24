@@ -10,49 +10,60 @@ UITK.Page {
     Settings {
         id: settings
         property bool fetchOnOpen: false
-        property bool tapToReveal: true
         property bool showRecycleBin: false
         property bool changeGroupOnSearch: true
+	property bool databaseLocking: true
     }
 
     property bool searchMode: false
 
     id: sectionFlickable
 
+    function lockDatabase() {
+	pageStack.removePages(adaptiveLayout.primaryPageSource);
+	adaptiveLayout.primaryPageSource = Qt.resolvedUrl("./UnlockPage.qml");
+	keepassrx.closeDatabase();
+    }
+
+    function closeDatabase() {
+	pageStack.removePages(adaptiveLayout.primaryPageSource);
+	adaptiveLayout.primaryPageSource = Qt.resolvedUrl("./OpenDBPage.qml");
+	keepassrx.invalidateMasterPassword();
+	keepassrx.closeDatabase();
+    }
+
     header: UITK.PageHeader {
         id: header
-	title: "KeepassRX"
+	title: "KeePassRX"
 
 	leadingActionBar.actions: [
 	    UITK.Action {
+		enabled: settings.databaseLocking
+		visible: settings.databaseLocking
 		name: "Lock"
-		//TRANSLATORS: Lock/close the database.
+		//TRANSLATORS: Securely lock (NOT close) an open database.
 		text: i18n.tr("Lock")
 		iconName: "lock"
 		onTriggered: {
-		    pageStack.removePages(adaptiveLayout.primaryPageSource);
-		    adaptiveLayout.primaryPage = opendbPage;
-		    keepassrx.closeDatabase();
+		    lockDatabase();
+		}
+	    },
+
+	    UITK.Action {
+		enabled: !settings.databaseLocking
+		visible: !settings.databaseLocking
+		name: "Close"
+		//TRANSLATORS: Securely close (NOT lock) an open database.
+		text: i18n.tr("Close")
+		iconName: "close"
+		onTriggered: {
+		    closeDatabase();
 		}
 	    }
 	]
 
-	trailingActionBar.numberOfSlots: 3
+	trailingActionBar.numberOfSlots: 2
 	trailingActionBar.actions: [
-	    UITK.Action {
-		name: "Settings"
-		text: i18n.tr("Settings")
-		iconName: "settings"
-		onTriggered: { pageStack.addPageToNextColumn(adaptiveLayout.primaryPage, settingsPage) }
-	    },
-
-	    UITK.Action {
-		name: "About"
-		text: i18n.tr("About")
-		iconName: "info"
-		onTriggered: { pageStack.addPageToNextColumn(adaptiveLayout.primaryPage, aboutPage) }
-	    },
-
 	    UITK.Action {
 		name: "Search"
 		// TRANSLATORS: Initiate (or stop) the search action.
@@ -64,6 +75,36 @@ UITK.Page {
 		    if (searchMode) {
 			searchField.focus = true;
 		    }
+		}
+	    },
+
+	    UITK.Action {
+		name: "Settings"
+		text: i18n.tr("Settings")
+		iconName: "settings"
+		onTriggered: {
+		    pageStack.addPageToNextColumn(adaptiveLayout.primaryPage, settingsPage)
+		}
+	    },
+
+	    UITK.Action {
+		name: "About"
+		text: i18n.tr("About")
+		iconName: "info"
+		onTriggered: {
+		    pageStack.addPageToNextColumn(adaptiveLayout.primaryPage, aboutPage)
+		}
+	    },
+
+	    UITK.Action {
+		name: "Close"
+		enabled: settings.databaseLocking
+		visible: settings.databaseLocking
+		// TRANSLATORS: Close (NOT lock) an open database.
+		text: i18n.tr('Close Database')
+		iconName: "close"
+		onTriggered: {
+		    closeDatabase();
 		}
 	    }
 	]
@@ -210,5 +251,8 @@ UITK.Page {
 	}
     }
 
-    Component.onCompleted: populate()
+  Component.onCompleted: {
+      keepassrx.encryptMasterPassword();
+      populate();
+    }
 }

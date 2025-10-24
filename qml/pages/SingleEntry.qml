@@ -143,7 +143,7 @@ Page {
         interval: 30000
         onTriggered: {
 	    Clipboard.clear();
-	    toast.show('KeepassRX: Clipboard cleared.');
+	    toast.show('KeePassRX: Clipboard cleared.');
 	}
     }
 

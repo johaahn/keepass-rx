@@ -34,23 +34,22 @@ MainView {
 
     Connections {
 	target: keepassrx
-	onDatabaseOpened: {
-	    adaptiveLayout.primaryPageSource = Qt.resolvedUrl("pages/EntriesPage.qml");
-	}
+        onErrorReceived: (error) => {
+            console.error('Uncaught error (put me in a popup):', error);
+        }
+    }
 
-	onDatabaseOpenFailed: (error) => {
-	    console.error(error);
+    Component.onCompleted: {
+	if (keepassrx.isMasterPasswordEncrypted) {
+	    adaptiveLayout.primaryPageSource = Qt.resolvedUrl("./pages/UnlockPage.qml");
+	} else {
+	    adaptiveLayout.primaryPageSource = Qt.resolvedUrl("./pages/OpenDBPage.qml");
 	}
     }
 
     AdaptivePageLayout {
 	id: adaptiveLayout
-	primaryPage: opendbPage
 	anchors.fill: parent
-
-	OpenDBPage {
-	    id: opendbPage
-	}
 
 	SettingsPage {
 	    visible: false

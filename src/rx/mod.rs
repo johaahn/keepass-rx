@@ -13,8 +13,10 @@ use uriparse::URI;
 use uuid::Uuid;
 use zeroize::{Zeroize, ZeroizeOnDrop, Zeroizing};
 
+mod easy_open;
 mod zeroable_db;
 
+pub use easy_open::EncryptedPassword;
 pub use zeroable_db::ZeroableDatabase;
 
 macro_rules! expose {

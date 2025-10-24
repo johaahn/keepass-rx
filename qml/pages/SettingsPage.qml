@@ -9,6 +9,7 @@ UITK.Page {
         id: header
         title: i18n.ctr("page header", "Settings")
     }
+
     Flickable {
         id: flick
         anchors.top: header.bottom
@@ -18,28 +19,32 @@ UITK.Page {
         anchors.topMargin: units.gu(2)
         contentHeight: col.height
         contentWidth: width
+
         Column {
             Settings {
                 id: settings
                 property int autoCloseInterval: 5
-                property bool tapToReveal: true
                 property bool showRecycleBin: false
                 property bool changeGroupOnSearch: true
                 property bool showSlowDBWarning: true
+		property bool databaseLocking: true
             }
             id: col
             anchors.fill: parent
             spacing: units.gu(2)
 
+	    // TODO Currently requires a restart because we have
+	    // several Settings instances floating around. Make them
+	    // into a singleton!
             SettingsItem {
-                title: i18n.ctr("tap to reveal password setting",
-                                "Tap on entries to reveal password")
+                title: i18n.ctr("enable easy locking and unlocking of the database",
+                                "Enable database locking (ALPHA)")
                 description: i18n.ctr(
-                                 "description for tap to reveal passwort setting",
-                                 "They will stay on screen for one second")
+                                 "description for database locking",
+                                 "Securely lock and unlock database with a short passcode. Requires restart to take effect.")
                 control: UITK.Switch {
-                    onCheckedChanged: settings.tapToReveal = checked
-                    checked: settings.tapToReveal
+                    onCheckedChanged: settings.databaseLocking = checked
+                    checked: settings.databaseLocking
                 }
             }
 
@@ -110,16 +115,4 @@ search value in the current section, and there are results in another section')
             }
         }
     }
-    /* Python { */
-    /*     id: python */
-    /*     Component.onCompleted: { */
-    /*         addImportPath(Qt.resolvedUrl('../../src/')) */
-    /*         importModule('kp', function () { */
-
-    /*             python.call('kp.is_armv7', [], function (result) { */
-    /*                 isARMv7 = result */
-    /*             }) */
-    /*         }) */
-    /*     } */
-    /* } */
 }

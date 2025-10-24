@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-24 09:45+0200\n"
+"POT-Creation-Date: 2025-10-24 21:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,65 +25,99 @@ msgstr ""
 
 #: qml/pages/AboutPage.qml:67
 msgid ""
-"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
-"git.agnos.is/projectmoon/keepass-rx</a>"
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
+"agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
 
 #: qml/pages/BlankPage.qml:47
 msgid "Blank page thing"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:30
+#: qml/pages/EntriesPage.qml:46
 msgid "Lock"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:44 qml/pages/OpenDBPage.qml:32
-msgid "Settings"
+#: qml/pages/EntriesPage.qml:58
+msgid "Close"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:51 qml/pages/OpenDBPage.qml:39
-msgid "About"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:59
+#: qml/pages/EntriesPage.qml:71
 msgid "Search"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:59
+#: qml/pages/EntriesPage.qml:71
 msgid "Cancel Search"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:59
+#: qml/pages/EntriesPage.qml:84 qml/pages/OpenDBPage.qml:34
+#: qml/pages/UnlockPage.qml:34
+msgid "Settings"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:93 qml/pages/OpenDBPage.qml:41
+#: qml/pages/UnlockPage.qml:41
+msgid "About"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:105
+msgid "Close Database"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:61
 msgid "Select Database"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:175
+#: qml/pages/OpenDBPage.qml:81
+msgid "Cannot open another database when one is locked"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:184
 msgid "Pick DB"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:191
+#: qml/pages/OpenDBPage.qml:200 qml/pages/UnlockPage.qml:142
 msgid "Manual path set."
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:209
+#: qml/pages/OpenDBPage.qml:218
 msgid "Pick Key"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:220
+#: qml/pages/OpenDBPage.qml:229
 msgid "Clear Key"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:238
+#: qml/pages/OpenDBPage.qml:247
 msgid "Password"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:269
+#: qml/pages/OpenDBPage.qml:278
 msgid "Open"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:296
+#: qml/pages/OpenDBPage.qml:278 qml/pages/UnlockPage.qml:206
+msgid "Unlock"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:305
 msgid ""
 "You are running on an ARMv7 device in which databases version 3 (kdbx3) are "
 "<b>extremely</b> slow.<br/>For your sanity, make sure your database is "
 "version 4 (kdbx4)"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:158
+msgid "The passcode is the first five characters of the database password."
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:174
+msgid "Passcode"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:225
+msgid "Securely Unlocking..."
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:226
+msgid "Securely Locking..."
 msgstr ""

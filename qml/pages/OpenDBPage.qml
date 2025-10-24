@@ -9,6 +9,8 @@ import KeepassRx 1.0
 import "../components"
 
 Page {
+    id: openDbPage
+
     property bool manualPath
     property bool copyingDB
     property bool pickingDB
@@ -18,27 +20,27 @@ Page {
 
     Component.onCompleted: {
 	if (keepassrx.databaseOpen) {
-	    console.log('Locking database.');
+	    console.log('OpenDBPage: Closing an already open database. This is an anomaly.');
 	    keepassrx.closeDatabase();
 	}
     }
 
     header: PageHeader {
         id: header
-        title: "KeepassRX"
+        title: ""
         trailingActionBar.actions: [
 	    Action {
 		name: "Settings"
 		text: i18n.tr("Settings")
 		iconName: "settings"
-		onTriggered: { pageStack.addPageToNextColumn(opendbPage, settingsPage) }
+		onTriggered: { pageStack.addPageToNextColumn(openDbPage, settingsPage) }
 	    },
 
 	    Action {
 		name: "About"
 		text: i18n.tr("About")
 		iconName: "info"
-		onTriggered: { pageStack.addPageToNextColumn(opendbPage, aboutPage) }
+		onTriggered: { pageStack.addPageToNextColumn(openDbPage, aboutPage) }
 	    }
         ]
     }
@@ -70,17 +72,41 @@ Page {
         onCancelPressed: peerPicker.visible = false;
     }
 
+    function openDatabase() {
+        busy = true;
+        showPasswordAction.checked = false;
+
+        if (keepassrx.isMasterPasswordEncrypted) {
+	    //TRANSLATORS: Error indicating that a DB is open and locked.
+	    errorMsg = i18n.tr('Cannot open another database when one is locked');
+        } else {
+            keepassrx.storeMasterPassword(password.text);
+        }
+
+        password.text = '';
+    }
+
     Connections {
 	target: keepassrx
 	onFileSet: (path) => {
 	    copyingDB = false;
 	    settings.lastDB = path;
 	}
-	onDatabaseOpened: { busy = false; }
+
+	onDatabaseOpened: {
+	    busy = false;
+            adaptiveLayout.primaryPageSource = Qt.resolvedUrl("./EntriesPage.qml");
+	}
+
 	onDatabaseOpenFailed: (error) => {
 	    busy = false;
 	    errorMsg = `Error: ${error}`;
+            keepassrx.invalidateMasterPassword();
 	}
+
+        onMasterPasswordStored: {
+	    keepassrx.openDatabase(settings.lastDB, settings.lastKey);
+        }
     }
 
     Connections {
@@ -103,25 +129,6 @@ Page {
         }
     }
 
-    Timer {
-        interval: 2000
-        running: settings.autoCloseInterval > 0
-        repeat: true
-        onTriggered: {
-            const now = new Date().getTime()
-            if (lastHeartbeat === 0) {
-                lastHeartbeat = now
-            }
-
-            const delta = now - lastHeartbeat
-            lastHeartbeat = now
-            if (pageStack.depth > 1
-                    && delta >= settings.autoCloseInterval * 60 * 1000) {
-                pageStack.pop(null)
-            }
-        }
-    }
-
     ColumnLayout {
         anchors.left: parent.left
         anchors.right: parent.right
@@ -130,6 +137,19 @@ Page {
         anchors.rightMargin: units.gu(7)
         anchors.verticalCenter: parent.verticalCenter
         spacing: units.gu(1)
+
+	RowLayout {
+	    Layout.fillWidth: true
+
+	    Text {
+		Layout.fillWidth: true
+		Layout.preferredWidth: parent.width
+		horizontalAlignment: Qt.AlignHCenter
+		font.pointSize: 20
+		text: 'KeePassRX'
+		color: LomiriColors.slate
+	    }
+	}
 
 	RowLayout {
 	    Layout.fillWidth: true
@@ -154,6 +174,8 @@ Page {
 
         RowLayout {
             Layout.fillWidth: true
+
+	    // The DB path when first picking a database.
             TextField {
                 enabled: !busy
 		id: dbPath
@@ -226,6 +248,7 @@ Page {
 
         RowLayout {
             Layout.fillWidth: true
+	    visible: !busy
 
             TextField {
                 id: password
@@ -258,23 +281,38 @@ Page {
             }
         }
 
-        Button {
-            Layout.fillWidth: true
+	RowLayout {
+	    Layout.fillWidth: true
 	    visible: !busy
-            enabled: (
-		(dbPath.text != null && dbPath.text.length > 0) || settings.lastDB) &&
-		(settings.lastKey || password.text)
-	    color: LomiriColors.green
-            // TRANSLATORS: Open the password database
-            text: i18n.tr("Open")
-            onClicked: openDatabase()
-        }
+
+            Button {
+		Layout.fillWidth: true
+		enabled: (
+		    (dbPath.text != null && dbPath.text.length > 0) || settings.lastDB) &&
+		    (settings.lastKey || password.text)
+		color: LomiriColors.green
+		// TRANSLATORS: Open the password database.
+		text: !keepassrx.isMasterPasswordEncrypted ? i18n.tr("Open") : i18n.tr("Unlock")
+		onClicked: openDatabase()
+            }
+	}
 
         ActivityIndicator {
             Layout.fillWidth: true
             running: busy
             visible: busy
         }
+
+	Text {
+	    Layout.fillWidth: true
+	    Layout.preferredWidth: parent.width
+	    horizontalAlignment: Qt.AlignHCenter
+	    visible: busy
+	    // TRANSLATORS: The database is in the process of being
+	    // opened.
+	    text: i18n.tr('Opening Database')
+	    color: LomiriColors.slate
+	}
 
         Label {
             Layout.fillWidth: true
@@ -290,7 +328,10 @@ Page {
         id: cpu_version_component
         Dialog {
             id: cpu_version_popup
-            title: "Database version compatibility"
+	    // TRANSLATORS: Checking if the user's device has an ARMv7
+	    // CPU, and if the password database is a kdbx version 3
+	    // file.
+            title: i18n.tr("Database version compatibility")
             modal: true
             text: i18n.tr(
                       "You are running on an ARMv7 device in which databases version 3 (kdbx3) are <b>extremely</b> slow.<br/>For your sanity, make sure your database is version 4 (kdbx4)")
@@ -302,13 +343,5 @@ Page {
                 }
             }
         }
-    }
-
-    function openDatabase() {
-	busy = true;
-	showPasswordAction.checked = false;
-	const pw = password.text;
-	password.text = '';
-	keepassrx.openDatabase(settings.lastDB, pw, settings.lastKey);
     }
 }

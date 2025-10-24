@@ -3,7 +3,7 @@ use base64::{Engine, prelude::BASE64_STANDARD};
 use humanize_duration::Truncate;
 use humanize_duration::prelude::DurationExt;
 use infer;
-use keepass::db::{Entry, Group, Icon, TOTP as KeePassTOTP};
+use keepass::db::{Entry, Group, Icon, NodeRef, TOTP as KeePassTOTP};
 use qmetaobject::{QString, QVariant, QVariantMap};
 use querystring::querify;
 use secrecy::{ExposeSecret, SecretString};
@@ -218,6 +218,38 @@ impl std::fmt::Debug for RxDatabase {
     }
 }
 
+fn load_groups_recursive(group: &Group, icons: &HashMap<Uuid, Icon>) -> Vec<RxGroup> {
+    let load_entry = |entry: &Entry| {
+        let icon = entry
+            .custom_icon_uuid
+            .and_then(|icon_uuid| icons.get(&icon_uuid));
+
+        RxEntry::new(entry.clone(), icon.cloned())
+    };
+
+    let mut groups = vec![];
+    let mut entries = vec![];
+
+    for node in group.children.iter() {
+        match node.as_ref() {
+            NodeRef::Group(group) => {
+                let mut rx_groups = load_groups_recursive(group, icons);
+                groups.append(&mut rx_groups);
+            }
+            NodeRef::Entry(entry) => {
+                entries.push(load_entry(entry));
+            }
+        }
+    }
+
+    // Currently this will hide groups with no entries. Revisit
+    // after new layout/once editing is enabled.
+    if entries.len() > 0 {
+        groups.push(RxGroup::new(&group, entries));
+    }
+    groups
+}
+
 impl RxDatabase {
     pub fn new(db: Zeroizing<ZeroableDatabase>) -> Self {
         let icons: HashMap<Uuid, Icon> = db
@@ -228,38 +260,7 @@ impl RxDatabase {
             .map(|icon| (icon.uuid, icon.to_owned()))
             .collect();
 
-        // Currently this will hide groups with no entries. Revisit
-        // once editing is enabled.
-        let load_group = |group: &Group| {
-            let entries_iter = group.entries().into_iter().cloned();
-
-            let entries: Vec<_> = entries_iter
-                .map(|entry| {
-                    let icon = entry
-                        .custom_icon_uuid
-                        .and_then(|icon_uuid| icons.get(&icon_uuid));
-                    RxEntry::new(entry, icon.cloned())
-                })
-                .collect();
-
-            match entries.len() {
-                len if len > 0 => Some(RxGroup::new(&group, entries)),
-                _ => None,
-            }
-        };
-
-        let mut rx_groups = load_group(&db.root)
-            .map(|root| vec![root])
-            .unwrap_or_default();
-
-        let mut other_groups: Vec<_> = db
-            .root
-            .groups()
-            .into_iter()
-            .filter_map(load_group)
-            .collect();
-
-        rx_groups.append(&mut other_groups);
+        let rx_groups = load_groups_recursive(&db.root, &icons);
 
         Self { groups: rx_groups }
     }

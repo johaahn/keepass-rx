@@ -11,7 +11,8 @@ management solution for Ubuntu Touch. This is **alpha quality
 software** with a defined development roadmap for new functionality
 and features.
 
-**Current Status:** Functional readonly opening of KeePass databases.
+**Current Status:** Functional **readonly** opening of KeePass
+databases, with additional features beyond the original app.
 
 ## Roadmap
 
@@ -33,7 +34,7 @@ Achieve functional **readonly** parity with the original Keepass app
 for Ubuntu Touch, plus a few extras.
  - [X] Display icons for password entries.
  - [ ] Support all app settings (that we want to support).
- - [ ] Key file support (might already work).
+ - [ ] Key file support (may or may not work currently).
  - [ ] Close database after period of time.
 
 ## 2.x - Enhanced Features
@@ -43,11 +44,15 @@ still only supporting read-only database access.
  - [X] Securely zero out memory when closing database.
  - [X] Support Steam OTP codes.
  - [x] Clear clipboard after 30 seconds (partially implemented).
- - [ ] Improved database selection UX.
- - [ ] "Easy lock" to re-open database without typing the whole password.
+ - [x] "Easy lock" to re-open database without typing the whole password.
  - [ ] Improved password search UX (across groups).
  - [ ] New UI layout to support nested groups.
  - [ ] Display custom fields and values.
+ - [ ] Improved database selection UX.
+   - [ ] Support adding multiple databases.
+   - [ ] Make a clear distinction between "imported" databases (from
+         ContentHub) and "synced" databases (via external unconfined
+         program).
 
 ## 3.x - Writable Databases
 

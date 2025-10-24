@@ -52,7 +52,7 @@ fn zero_entry(entry: &mut Entry) {
 fn zero_value(value: &mut Value) {
     match value {
         Value::Bytes(bytes) => take(bytes, |mut bytes| zero_out!(bytes)),
-        Value::Protected(_) => (), // library zeroes it out on drop.
+        Value::Protected(value) => value.zero_out(),
         Value::Unprotected(value) => take(value, |mut value| zero_out!(value)),
     }
 }

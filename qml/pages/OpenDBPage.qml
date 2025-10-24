@@ -252,7 +252,7 @@ Page {
                     Action {
                         id: showPasswordAction
                         checkable: true
-                        iconSource: checked ? "../../assets/visibility_off.png" : "../../assets/visibility.png"
+                        iconName: checked ? "view-off" : "view-on"
                     }
                 ]
             }
@@ -305,8 +305,10 @@ Page {
     }
 
     function openDatabase() {
+	busy = true;
 	showPasswordAction.checked = false;
-        busy = true;
-	keepassrx.openDatabase(settings.lastDB, password.text, settings.lastKey);
+	const pw = password.tex;
+	password.text = '';
+	keepassrx.openDatabase(settings.lastDB, pw, settings.lastKey);
     }
 }

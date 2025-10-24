@@ -228,10 +228,12 @@ impl RxDatabase {
             .map(|icon| (icon.uuid, icon.to_owned()))
             .collect();
 
+        // Currently this will hide groups with no entries. Revisit
+        // once editing is enabled.
         let load_group = |group: &Group| {
             let entries_iter = group.entries().into_iter().cloned();
 
-            let entries = entries_iter
+            let entries: Vec<_> = entries_iter
                 .map(|entry| {
                     let icon = entry
                         .custom_icon_uuid
@@ -240,12 +242,23 @@ impl RxDatabase {
                 })
                 .collect();
 
-            RxGroup::new(&group, entries)
+            match entries.len() {
+                len if len > 0 => Some(RxGroup::new(&group, entries)),
+                _ => None,
+            }
         };
 
-        let root_group = load_group(&db.root);
-        let mut other_groups: Vec<_> = db.root.groups().into_iter().map(load_group).collect();
-        let mut rx_groups = vec![root_group];
+        let mut rx_groups = load_group(&db.root)
+            .map(|root| vec![root])
+            .unwrap_or_default();
+
+        let mut other_groups: Vec<_> = db
+            .root
+            .groups()
+            .into_iter()
+            .filter_map(load_group)
+            .collect();
+
         rx_groups.append(&mut other_groups);
 
         Self { groups: rx_groups }

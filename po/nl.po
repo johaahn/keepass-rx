@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-23 23:04+0200\n"
+"POT-Creation-Date: 2025-10-23 21:53+0000\n"
 "PO-Revision-Date: 2025-10-22 17:53+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: \n"
@@ -19,8 +19,9 @@ msgstr ""
 "X-Generator: Poedit 3.7\n"
 
 #: qml/pages/AboutPage.qml:56
+#, fuzzy
 msgid ""
-"KeepassRX is a work-in-progress password manager for KeePasspassword "
+"KeepassRX is a work-in-progress password manager for KeePass password "
 "databases. It is licensed under the GNU GPL v3 license."
 msgstr ""
 "KeepassRX is een ontwikkeling zijnde wachtwoordbeheerder voor KeePass-"
@@ -28,11 +29,11 @@ msgstr ""
 
 #: qml/pages/AboutPage.qml:67
 msgid ""
-"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
-"git.agnos.is/projectmoon/keepass-rx</a>"
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
+"agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
-"Broncode: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
-"git.agnos.is/projectmoon/keepass-rx</a>"
+"Broncode: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
+"agnos.is/projectmoon/keepass-rx</a>"
 
 #: qml/pages/BlankPage.qml:47
 msgid "Blank page thing"

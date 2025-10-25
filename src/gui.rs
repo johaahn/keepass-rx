@@ -51,39 +51,6 @@ impl KeepassRxActor {
             }
         }
     }
-
-    pub fn set_file(&self, path: &str, _is_db: bool) -> Result<()> {
-        let source = Path::new(&path);
-        let dest_dir = app_data_path();
-        let dest = dest_dir.join("db.kdbx");
-
-        if source == dest {
-            return Err(anyhow!("Trying to copy source to the same destination"));
-        }
-
-        println!("Making directory: {}", dest_dir.display());
-        create_dir_all(&dest_dir)?;
-
-        println!(
-            "Copying database from {} to {}",
-            source.display(),
-            dest.display()
-        );
-
-        // Nuke db.kdbx if it exists and is a directory for some
-        // reason. Can result from corruption or weirdness.
-        if dest.exists() && dest.is_dir() {
-            println!(
-                "{} is a directory for some reason. Removing.",
-                dest.display()
-            );
-            remove_dir_all(&dest)?;
-        }
-
-        let bytes_copied = std::fs::copy(&source, &dest)?;
-        println!("Copied {} bytes", bytes_copied);
-        Ok(())
-    }
 }
 
 impl Actor for KeepassRxActor {
@@ -92,13 +59,6 @@ impl Actor for KeepassRxActor {
     fn started(&mut self, ctx: &mut Self::Context) {
         self.gui.pinned().borrow_mut().actor = Some(ctx.address());
     }
-}
-
-#[derive(Message)]
-#[rtype(result = "()")]
-struct SetFile {
-    path: String,
-    picking_db: bool,
 }
 
 #[derive(Message)]
@@ -151,21 +111,6 @@ struct InvalidateMasterPassword;
 #[derive(Message)]
 #[rtype(result = "()")]
 struct CheckLockingStatus;
-
-impl Handler<SetFile> for KeepassRxActor {
-    type Result = ();
-
-    fn handle(&mut self, msg: SetFile, _: &mut Self::Context) -> Self::Result {
-        let binding = self.gui.clone();
-        let binding = binding.pinned();
-        let gui = binding.borrow();
-
-        match self.set_file(&msg.path, msg.picking_db) {
-            Ok(_) => gui.fileSet(msg.path),
-            Err(err) => gui.databaseOpenFailed(format!("{}", err)),
-        }
-    }
-}
 
 impl Handler<OpenDatabase> for KeepassRxActor {
     type Result = AtomicResponse<Self, anyhow::Result<()>>;
@@ -555,13 +500,50 @@ pub struct KeepassRx {
 
 #[allow(non_snake_case)]
 impl KeepassRx {
+    /// Copy a chosen databse file into the local data structure. This
+    /// is completely sync because we need to finalize() the transfer
+    /// in QML.
     #[with_executor]
     pub fn setFile(&self, path: String, is_db: bool) {
-        let actor = self.actor.clone().expect("Actor not initialized");
-        actix::spawn(actor.send(SetFile {
-            path,
-            picking_db: is_db,
-        }));
+        let path_string = path.to_string();
+
+        let copy_file = move || {
+            let source = Path::new(&path);
+            let dest_dir = app_data_path();
+            let dest = dest_dir.join("db.kdbx");
+
+            if source == dest {
+                return Err(anyhow!("Trying to copy source to the same destination"));
+            }
+
+            println!("Making directory: {}", dest_dir.display());
+            create_dir_all(&dest_dir)?;
+
+            println!(
+                "Copying database from {} to {}",
+                source.display(),
+                dest.display()
+            );
+
+            // Nuke db.kdbx if it exists and is a directory for some
+            // reason. Can result from corruption or weirdness.
+            if dest.exists() && dest.is_dir() {
+                println!(
+                    "{} is a directory for some reason. Removing.",
+                    dest.display()
+                );
+                remove_dir_all(&dest)?;
+            }
+
+            let bytes_copied = std::fs::copy(&source, &dest)?;
+            println!("Copied {} bytes", bytes_copied);
+            Ok(())
+        };
+
+        match copy_file() {
+            Ok(_) => self.fileSet(path_string),
+            Err(err) => self.databaseOpenFailed(format!("{}", err)),
+        }
     }
 
     #[with_executor]

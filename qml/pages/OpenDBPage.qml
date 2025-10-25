@@ -65,8 +65,8 @@ Page {
 
 	// Picker is closed by signalConnections after DB copied.
         onPeerSelected: {
-            peer.selectionType = ContentTransfer.Single
-            copyDatabase.target = peer.request()
+            peer.selectionType = ContentTransfer.Single;
+            copyDatabase.target = peer.request();
         }
 
         onCancelPressed: peerPicker.visible = false;
@@ -112,19 +112,20 @@ Page {
     Connections {
         id: copyDatabase
         onStateChanged: {
-            var done = (target.state === ContentTransfer.Charged)
+            var done = target.state === ContentTransfer.Charged;
 
             if (!done) {
-                return
+                return;
             }
             if (target.items.length === 0) {
-                return
+                return;
             }
 
-            const filePath = String(target.items[0].url).replace('file://', '')
+            const filePath = String(target.items[0].url).replace('file://', '');
 	    dbPath.text = filePath.split('/').pop();
 	    copyingDB = true;
 	    keepassrx.setFile(filePath, pickingDB);
+	    target.finalize();
 	    peerPicker.visible = false;
         }
     }

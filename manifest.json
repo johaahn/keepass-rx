@@ -1,6 +1,6 @@
 {
     "name": "keepassrx.projectmoon",
-    "description": "KeePass app for Ubuntu Touch",
+    "description": "KeePass for Ubuntu Touch",
     "architecture": "@CLICK_ARCH@",
     "title": "KeePassRX",
     "hooks": {
@@ -9,7 +9,7 @@
             "desktop":  "keepassrx.desktop"
         }
     },
-    "version": "0.3.0",
+    "version": "0.4.0",
     "maintainer": "projectmoon <projectmoon@agnos.is>",
     "framework" : "@CLICK_FRAMEWORK@"
 }

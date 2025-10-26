@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-26 20:51+0000\n"
+"POT-Creation-Date: 2025-10-26 20:58+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,44 +33,34 @@ msgid ""
 "agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:34 qml/pages/EntriesPage.qml:83
-#: qml/pages/OpenDBPage.qml:44 qml/pages/DBList.qml:98
+#: qml/pages/DBList.qml:91
+msgid "Add Database"
+msgstr ""
+
+#: qml/pages/DBList.qml:98 qml/pages/EntriesPage.qml:83
+#: qml/pages/OpenDBPage.qml:44 qml/pages/UnlockPage.qml:34
 msgid "Settings"
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:41 qml/pages/EntriesPage.qml:92
-#: qml/pages/OpenDBPage.qml:51 qml/pages/DBList.qml:105
+#: qml/pages/DBList.qml:105 qml/pages/EntriesPage.qml:92
+#: qml/pages/OpenDBPage.qml:51 qml/pages/UnlockPage.qml:41
 msgid "About"
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:159
-msgid "Manual path set."
+#: qml/pages/DBList.qml:125
+msgid "Loading last database:"
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:176
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
+#: qml/pages/DBList.qml:136
+msgid "Select Database"
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:194
-msgid "Passcode"
+#: qml/pages/DBList.qml:192
+msgid "Tap + to import a database."
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:226
-msgid "Unlock"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:245
-msgid "Securely Unlocking"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:246
-msgid "Securely Locking"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:257
-msgid "Database Not Opening?"
+#: qml/pages/DBList.qml:294
+msgid "It will only be removed from the app, not your device."
 msgstr ""
 
 #: qml/pages/EntriesPage.qml:45
@@ -113,22 +103,32 @@ msgstr ""
 msgid "Opening"
 msgstr ""
 
-#: qml/pages/DBList.qml:91
-msgid "Add Database"
+#: qml/pages/UnlockPage.qml:159
+msgid "Manual path set."
 msgstr ""
 
-#: qml/pages/DBList.qml:125
-msgid "Loading last database:"
+#: qml/pages/UnlockPage.qml:176
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
 msgstr ""
 
-#: qml/pages/DBList.qml:136
-msgid "Select Database"
+#: qml/pages/UnlockPage.qml:194
+msgid "Passcode"
 msgstr ""
 
-#: qml/pages/DBList.qml:192
-msgid "Tap + to import a database."
+#: qml/pages/UnlockPage.qml:226
+msgid "Unlock"
 msgstr ""
 
-#: qml/pages/DBList.qml:294
-msgid "It will only be removed from the app, not your device."
+#: qml/pages/UnlockPage.qml:245
+msgid "Securely Unlocking"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:246
+msgid "Securely Locking"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:257
+msgid "Database Not Opening?"
 msgstr ""

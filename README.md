@@ -34,7 +34,7 @@ Achieve functional **readonly** parity with the original Keepass app
 for Ubuntu Touch, plus a few extras.
  - [X] Display icons for password entries.
  - [ ] Support all app settings (that we want to support).
- - [ ] Key file support (may or may not work currently).
+ - [ ] Key file support..
  - [ ] Close database after period of time.
 
 ## 2.x - Enhanced Features
@@ -48,8 +48,8 @@ still only supporting read-only database access.
  - [ ] Improved password search UX (across groups).
  - [ ] New UI layout to support nested groups.
  - [ ] Display custom fields and values.
- - [ ] Improved database selection UX.
-   - [ ] Support adding multiple databases.
+ - [-] Improved database selection UX.
+   - [X] Support adding multiple databases.
    - [ ] Make a clear distinction between "imported" databases (from
          ContentHub) and "synced" databases (via external unconfined
          program).

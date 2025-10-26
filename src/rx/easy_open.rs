@@ -5,6 +5,8 @@ use anyhow::{Result, anyhow};
 use keyring::Entry as KeyringEntry;
 use scrypt::password_hash::{SaltString, rand_core::OsRng};
 use scrypt::{Params, scrypt};
+use std::rc::Rc;
+use std::sync::Arc;
 
 use secstr::SecUtf8;
 use zeroize::Zeroize;
@@ -56,21 +58,27 @@ fn encrypt(value: SecUtf8) -> Result<(Vec<u8>, Nonce<U12>, SaltString)> {
 
 /// Simple wrapper around the keyring library to store credentials in
 /// a secure(ish?) place.
-struct KernelBackedSecret {
-    secret: KeyringEntry,
+#[derive(Clone)]
+pub struct KernelBackedSecret {
+    secret: Arc<KeyringEntry>,
 }
 
 impl KernelBackedSecret {
     pub fn new(pw: Vec<u8>) -> Result<Self> {
         let entry = KeyringEntry::new("keepassrx", "keepassrx")?;
         entry.set_secret(&pw.as_ref())?;
-        Ok(Self { secret: entry })
+        Ok(Self {
+            secret: Arc::new(entry),
+        })
     }
 
-    pub fn retrieve(self) -> Result<Vec<u8>> {
+    pub fn retrieve(&self) -> Result<Vec<u8>> {
         let value = self.secret.get_secret()?;
-        self.secret.delete_credential()?;
         Ok(value.into())
+    }
+
+    pub fn destroy(self) -> Result<()> {
+        Ok(self.secret.delete_credential()?)
     }
 }
 
@@ -85,7 +93,7 @@ impl Zeroize for KernelBackedSecret {
 /// memory, while the encrypted password is passed off to the kernel
 /// keyring service. Ideally, the nonce would also be given to the
 /// kernel keyring service, but trait bounds seem tricky.
-#[derive(Zeroize)]
+#[derive(Zeroize, Clone)]
 pub struct EncryptedPassword {
     #[zeroize(skip)]
     salt: SaltString,
@@ -103,7 +111,7 @@ impl EncryptedPassword {
         })
     }
 
-    pub fn decrypt(self, short_password: &SecUtf8) -> Result<SecUtf8> {
+    pub fn decrypt(&self, short_password: &SecUtf8) -> Result<SecUtf8> {
         let encrypted_password = self.secret.retrieve()?;
         let short_password = short_password.unsecure();
         let key = derive_key(short_password, &self.salt)?;

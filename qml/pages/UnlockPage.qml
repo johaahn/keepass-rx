@@ -86,13 +86,18 @@ Page {
             keepassrx.invalidateMasterPassword();
 	}
 
+	onDecryptionFailed: (error) => {
+	    busy = false;
+	    errorMsg = `Error: ${error}. Wrong passcode?`;
+	}
+
         onMasterPasswordStored: {
-	    keepassrx.openDatabase(settings.lastDB, settings.lastKey);
+	    keepassrx.openDatabase(keepassrx.lastDB, settings.lastKey);
         }
 
 	onMasterPasswordDecrypted: {
             console.log('Re-opening database from locked state.');
-	    keepassrx.openDatabase(settings.lastDB,  settings.lastKey);
+	    keepassrx.openDatabase(keepassrx.lastDB,  settings.lastKey);
 	}
 
 	onLockingStatusReceived: (status) => {
@@ -141,7 +146,7 @@ Page {
 		Layout.preferredWidth: parent.width
 		horizontalAlignment: Qt.AlignHCenter
 		width: parent.width
-		text: settings.lastDB.split('/').pop()
+		text: keepassrx.lastDB
 	    }
         }
 
@@ -181,9 +186,9 @@ Page {
                 id: shortPassword
 		visible: keepassrx.isMasterPasswordEncrypted
                 enabled: (keepassrx.isMasterPasswordEncrypted &&
-			  settings.lastDB !== undefined &&
-			  settings.lastDB != null &&
-			  settings.lastDB.length > 0 && !busy)
+			  keepassrx.lastDB !== undefined &&
+			  keepassrx.lastDB != null &&
+			  keepassrx.lastDB.length > 0 && !busy)
                 text: ''
 		// TRANSLATORS: The short password for unlocking the database.
                 placeholderText: i18n.tr("Passcode")
@@ -214,7 +219,7 @@ Page {
             Layout.fillWidth: true
 	    visible: !busy && keepassrx.isMasterPasswordEncrypted
             enabled: (keepassrx.isMasterPasswordEncrypted &&
-		      settings.lastDB &&
+		      keepassrx.lastDB &&
 		      (settings.lastKey || shortPassword.text))
 	    color: LomiriColors.green
             // TRANSLATORS: Unlock a previously-opened password database.

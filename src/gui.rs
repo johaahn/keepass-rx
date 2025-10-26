@@ -17,9 +17,30 @@ use crate::rx::{EncryptedPassword, RxDatabase, ZeroableDatabase};
 
 const APP_ID: &'static str = "keepassrx.projectmoon";
 
-fn app_data_path() -> PathBuf {
+pub fn app_data_path() -> PathBuf {
     let data_dir = data_dir().expect("no data dir?");
     PathBuf::from(data_dir).join(APP_ID)
+}
+
+pub fn imported_databases_path() -> PathBuf {
+    PathBuf::from(app_data_path()).join(APP_ID).join("imported")
+}
+
+pub fn move_old_db() {
+    let db_path = app_data_path().join("db.kdbx");
+
+    if db_path.exists() {
+        let dest = imported_databases_path().join("db.kdbx");
+        match std::fs::copy(&db_path, dest) {
+            Ok(_) => {
+                println!("Copied old db.kdbx to imported directory");
+                if let Err(err) = std::fs::remove_file(db_path) {
+                    println!("Failed to remove old db.kdbx: {}", err);
+                }
+            }
+            Err(err) => println!("Failed to copy old db.kdbx: {}", err),
+        }
+    }
 }
 
 #[derive(Default)]
@@ -64,8 +85,14 @@ impl Actor for KeepassRxActor {
 #[derive(Message)]
 #[rtype(result = "anyhow::Result<()>")]
 struct OpenDatabase {
-    path: String,
+    db_name: String,
     key_path: Option<String>,
+}
+
+#[derive(Message)]
+#[rtype(result = "anyhow::Result<()>")]
+struct DeleteDatabase {
+    db_name: String,
 }
 
 #[derive(Message)]
@@ -117,9 +144,12 @@ impl Handler<OpenDatabase> for KeepassRxActor {
     fn handle(&mut self, msg: OpenDatabase, _: &mut Self::Context) -> Self::Result {
         // Opening the database is synchronous I/O, which means it
         // must be done on a separate thread.
+        let db_path = imported_databases_path().join(msg.db_name);
 
         // Clone here so we can encrypt later.
         let stored_pw = self.stored_master_password.clone();
+
+        println!("Opening DB: {}", db_path.display());
 
         AtomicResponse::new(Box::pin(
             async move {
@@ -129,7 +159,7 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                     .as_deref()
                     .ok_or(anyhow!("No master password stored"))?;
 
-                let mut db_file = File::open(msg.path)?;
+                let mut db_file = File::open(db_path)?;
                 let key_file = msg.key_path.map(|p| File::open(p));
 
                 let db_key = DatabaseKey::new().with_password(pw_binding.unsecure());
@@ -198,6 +228,26 @@ impl Handler<CloseDatabase> for KeepassRxActor {
                 };
             }),
         ))
+    }
+}
+
+impl Handler<DeleteDatabase> for KeepassRxActor {
+    type Result = Result<()>;
+
+    fn handle(&mut self, msg: DeleteDatabase, _: &mut Self::Context) -> Self::Result {
+        println!("Deleting db {}", msg.db_name);
+        let binding = self.gui.clone();
+        let binding = binding.pinned();
+        let gui = binding.borrow();
+
+        let db_path = imported_databases_path().join(&msg.db_name);
+
+        match std::fs::remove_file(&db_path) {
+            Ok(_) => gui.databaseDeleted(QString::from(msg.db_name)),
+            Err(err) => gui.errorReceived(format!("{}", err)),
+        }
+
+        Ok(())
     }
 }
 
@@ -412,6 +462,9 @@ impl Handler<DecryptMasterPassword> for KeepassRxActor {
             // Remove from RefCell.
             let mut maybe_master_pw = encrypted_master_pw.take();
 
+            // In case we need to retain it because of error.
+            let backup = maybe_master_pw.clone();
+
             // Extract from inner option.
             let master_pw = maybe_master_pw
                 .take()
@@ -443,7 +496,9 @@ impl Handler<DecryptMasterPassword> for KeepassRxActor {
                     println!("Master password decrypted.");
                 }
                 Err(err) => {
-                    gui.errorReceived(format!("{}", err));
+                    // Here, we put the encrypted pw back into the secret.
+                    encrypted_master_pw.replace(backup);
+                    gui.decryptionFailed(QString::from(format!("{}", err)));
                 }
             }
 
@@ -455,18 +510,22 @@ impl Handler<DecryptMasterPassword> for KeepassRxActor {
 }
 
 #[derive(QObject, Default)]
-#[allow(non_snake_case)]
+#[allow(non_snake_case, dead_code)]
 pub struct KeepassRx {
     base: qt_base_class!(trait QObject),
     actor: Option<Addr<KeepassRxActor>>,
+    last_db: Option<String>,
 
+    lastDB: qt_property!(QString; READ getLastDB WRITE setLastDB NOTIFY lastDbChanged),
     databaseOpen: qt_property!(bool),
     isMasterPasswordEncrypted: qt_property!(bool; NOTIFY masterPasswordStateChanged),
 
     // database management
-    setFile: qt_method!(fn(&self, path: String, is_db: bool)),
-    openDatabase: qt_method!(fn(&mut self, path: String, key_path: QString)),
+    listImportedDatabases: qt_method!(fn(&self)),
+    importDatabase: qt_method!(fn(&self, path: String)),
+    openDatabase: qt_method!(fn(&mut self, db_name: String, key_path: QString)),
     closeDatabase: qt_method!(fn(&mut self)),
+    deleteDatabase: qt_method!(fn(&self, db_name: String)),
 
     // group and entry management
     getGroups: qt_method!(fn(&self)),
@@ -481,9 +540,12 @@ pub struct KeepassRx {
     checkLockingStatus: qt_method!(fn(&self)),
 
     // signals
-    fileSet: qt_signal!(path: String),
+    lastDbChanged: qt_signal!(value: QString),
+    fileListingCompleted: qt_signal!(),
+    databaseImported: qt_signal!(db_name: QString),
     databaseOpened: qt_signal!(),
     databaseClosed: qt_signal!(),
+    databaseDeleted: qt_signal!(db_name: QString),
     databaseOpenFailed: qt_signal!(message: String),
     groupsReceived: qt_signal!(groups: QStringList),
     entriesReceived: qt_signal!(entries: QVariantMap),
@@ -496,21 +558,82 @@ pub struct KeepassRx {
     masterPasswordStateChanged: qt_signal!(encrypted: bool),
     masterPasswordDecrypted: qt_signal!(),
     lockingStatusReceived: qt_signal!(status: String),
+    decryptionFailed: qt_signal!(error: QString),
 }
 
 #[allow(non_snake_case)]
 impl KeepassRx {
+    pub fn new(last_db: Option<String>) -> Self {
+        KeepassRx {
+            last_db: last_db,
+            ..Default::default()
+        }
+    }
+
+    pub fn getLastDB(&self) -> QString {
+        self.last_db.clone().map(QString::from).unwrap_or_default()
+    }
+
+    pub fn setLastDB(&mut self, last_db: QString) {
+        let new_last_db = if !last_db.is_null() {
+            Some(last_db.to_string())
+        } else {
+            None
+        };
+
+        let change = self.last_db != new_last_db;
+
+        if change {
+            let last_db_file = app_data_path().join("last-db");
+            let result = match new_last_db {
+                Some(ref db) => std::fs::write(last_db_file, db),
+                None => std::fs::write(last_db_file, "".to_string()),
+            };
+
+            if let Err(err) = result {
+                println!("Unable to write last-db file: {}", err);
+            }
+
+            self.last_db = new_last_db.clone();
+            self.lastDbChanged(new_last_db.map(QString::from).unwrap_or_default());
+        }
+    }
+
+    #[with_executor]
+    pub fn listImportedDatabases(&self) {
+        let list_dbs = || -> Result<()> {
+            let dbs = std::fs::read_dir(imported_databases_path())?;
+
+            for db in dbs {
+                self.databaseImported(QString::from(
+                    db?.file_name().to_string_lossy().to_string(),
+                ));
+            }
+
+            Ok(())
+        };
+
+        match list_dbs() {
+            Ok(_) => self.fileListingCompleted(),
+            Err(err) => self.errorReceived(format!("{}", err)),
+        }
+    }
+
     /// Copy a chosen databse file into the local data structure. This
     /// is completely sync because we need to finalize() the transfer
     /// in QML.
     #[with_executor]
-    pub fn setFile(&self, path: String, is_db: bool) {
-        let path_string = path.to_string();
-
-        let copy_file = move || {
+    pub fn importDatabase(&self, path: String) {
+        let copy_file = move || -> Result<String> {
             let source = Path::new(&path);
-            let dest_dir = app_data_path();
-            let dest = dest_dir.join("db.kdbx");
+            let db_name = source
+                .file_name()
+                .ok_or(anyhow!("No filename found"))?
+                .to_string_lossy()
+                .into_owned();
+
+            let dest_dir = imported_databases_path();
+            let dest = dest_dir.join(&db_name);
 
             if source == dest {
                 return Err(anyhow!("Trying to copy source to the same destination"));
@@ -537,30 +660,36 @@ impl KeepassRx {
 
             let bytes_copied = std::fs::copy(&source, &dest)?;
             println!("Copied {} bytes", bytes_copied);
-            Ok(())
+            Ok(db_name)
         };
 
         match copy_file() {
-            Ok(_) => self.fileSet(path_string),
+            Ok(db_name) => self.databaseImported(QString::from(db_name)),
             Err(err) => self.databaseOpenFailed(format!("{}", err)),
         }
     }
 
     #[with_executor]
-    pub fn openDatabase(&mut self, path: String, key_path: QString) {
+    pub fn openDatabase(&mut self, db_name: String, key_path: QString) {
         let key_path = match key_path {
             kp if !kp.is_null() && !kp.is_empty() => Some(kp.to_string()),
             _ => None,
         };
 
         let actor = self.actor.clone().expect("Actor not initialized");
-        actix::spawn(actor.send(OpenDatabase { path, key_path }));
+        actix::spawn(actor.send(OpenDatabase { db_name, key_path }));
     }
 
     #[with_executor]
     pub fn closeDatabase(&mut self) {
         let actor = self.actor.clone().expect("Actor not initialized");
         actix::spawn(actor.send(CloseDatabase));
+    }
+
+    #[with_executor]
+    pub fn deleteDatabase(&self, db_name: String) {
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(DeleteDatabase { db_name }));
     }
 
     #[with_executor]

@@ -27,7 +27,7 @@ UITK.Page {
 
     function closeDatabase() {
 	pageStack.removePages(adaptiveLayout.primaryPageSource);
-	adaptiveLayout.primaryPageSource = Qt.resolvedUrl("./OpenDBPage.qml");
+	adaptiveLayout.primaryPageSource = Qt.resolvedUrl("./DBList.qml");
 	keepassrx.invalidateMasterPassword();
 	keepassrx.closeDatabase();
     }

@@ -24,21 +24,21 @@ use anyhow::Result;
 use app::KeepassRxApp;
 use cpp::cpp;
 use gettextrs::{bindtextdomain, textdomain};
-use gui::KeepassRxActor;
+use gui::{KeepassRxActor, imported_databases_path, move_old_db};
 use qmeta_async::with_executor;
 use qmetaobject::{QObjectBox, QQuickStyle, QQuickView, qml_register_type};
 use std::env;
 use std::path::PathBuf;
 use std::sync::Arc;
 
-use crate::gui::KeepassRx;
+use crate::gui::{KeepassRx, app_data_path};
 
 mod app;
 mod gui;
 mod qrc;
 mod rx;
 
-fn main() {
+fn main() -> Result<()> {
     init_gettext();
     unsafe {
         cpp! {{
@@ -51,15 +51,34 @@ fn main() {
             QCoreApplication::setOrganizationDomain(QStringLiteral("keepassrx.projectmoon"));
         }}
     }
+
     QQuickStyle::set_style("Suru");
     qrc::load();
     qml_register_type::<KeepassRx>(cstr!("KeepassRx"), 1, 0, cstr!("KeepassRx"));
+
+    // Load last db
+    // TODO this is a hack and should be more properly done with QT
+    // settings.
+    let last_db_file = app_data_path().join("last-db");
+    let last_db = match last_db_file {
+        file if file.exists() => Some(std::fs::read_to_string(file)?),
+        _ => None,
+    };
+
+    // Check to make sure last DB actually exists.
+    let last_db = match last_db {
+        Some(db) if imported_databases_path().join(db.clone()).exists() => Some(db),
+        _ => None,
+    };
+
+    // "Data migration": Move any db.kdbx from the data directory to imported.
+    move_old_db();
 
     qmeta_async::run(|| {
         let mut view = with_executor(|| -> Result<QQuickView> {
             // TODO store these in some global state?
 
-            let keepassrx = Arc::new(QObjectBox::new(KeepassRx::default()));
+            let keepassrx = Arc::new(QObjectBox::new(KeepassRx::new(last_db)));
             let keepassrx_actor = KeepassRxActor::new(&keepassrx).start();
 
             let app = KeepassRxApp {
@@ -71,7 +90,6 @@ fn main() {
 
             let engine = view.engine();
             engine.set_property("keepassrx".into(), app.gui.pinned().into());
-            //engine.load_file("qrc:/qml/Main.qml".into());
             view.set_source("qrc:/qml/Main.qml".into());
             Ok(view)
         })
@@ -81,6 +99,8 @@ fn main() {
         view.engine().exec();
     })
     .expect("running application");
+
+    Ok(())
 }
 
 fn init_gettext() {

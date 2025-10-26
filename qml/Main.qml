@@ -18,6 +18,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.3
+import Qt.labs.settings 1.0
 import Lomiri.Components 1.3
 import KeepassRx 1.0
 
@@ -32,6 +33,11 @@ MainView {
     width: units.gu(45)
     height: units.gu(75)
 
+    Settings {
+        id: settings
+        property string lastDB
+    }
+
     Connections {
 	target: keepassrx
         onErrorReceived: (error) => {
@@ -43,7 +49,7 @@ MainView {
 	if (keepassrx.isMasterPasswordEncrypted) {
 	    adaptiveLayout.primaryPageSource = Qt.resolvedUrl("./pages/UnlockPage.qml");
 	} else {
-	    adaptiveLayout.primaryPageSource = Qt.resolvedUrl("./pages/OpenDBPage.qml");
+	    adaptiveLayout.primaryPageSource = Qt.resolvedUrl("./pages/DBList.qml");
 	}
     }
 

@@ -10,24 +10,34 @@ import "../components"
 
 Page {
     id: openDbPage
-
-    property bool manualPath
-    property bool copyingDB
-    property bool pickingDB
+    property string databaseName
     property bool busy
     property string errorMsg
     property double lastHeartbeat: 0
 
     Component.onCompleted: {
-	if (keepassrx.databaseOpen) {
-	    console.log('OpenDBPage: Closing an already open database. This is an anomaly.');
-	    keepassrx.closeDatabase();
+	if (databaseName) {
+	    keepassrx.lastDB = databaseName;
 	}
     }
 
     header: PageHeader {
         id: header
-        title: "KeePassRX"
+        title: databaseName || keepassrx.lastDB
+	leadingActionBar.actions: [
+	    Action {
+		name: "Back"
+		text: i18n.tr("Back")
+		iconName: "previous"
+		onTriggered: {
+		    // When going back, remove the setting.
+		    keepassrx.lastDB = null;
+		    adaptiveLayout.primaryPageSource = Qt.resolvedUrl("./DBList.qml");
+		    pageStack.removePages(openDbPage);
+		}
+	    }
+	]
+
         trailingActionBar.actions: [
 	    Action {
 		name: "Settings"
@@ -51,25 +61,7 @@ Page {
         property string lastDB
         property int autoCloseInterval: 5
         property bool showSlowDBWarning: true
-    }
-
-    ContentPeerPicker {
-        id: peerPicker
-        visible: false
-        showTitle: true
-	//TRANSLATORS: The user is chosing a KeePass database to open.
-	headerText: i18n.tr("Select Database")
-	z: 10 // make sure to show above everything else.
-        handler: ContentHandler.Source
-        contentType: ContentType.All
-
-	// Picker is closed by signalConnections after DB copied.
-        onPeerSelected: {
-            peer.selectionType = ContentTransfer.Single;
-            copyDatabase.target = peer.request();
-        }
-
-        onCancelPressed: peerPicker.visible = false;
+	property bool easyOpen: true
     }
 
     function openDatabase() {
@@ -77,8 +69,7 @@ Page {
         showPasswordAction.checked = false;
 
         if (keepassrx.isMasterPasswordEncrypted) {
-	    //TRANSLATORS: Error indicating that a DB is open and locked.
-	    errorMsg = i18n.tr('Cannot open another database when one is locked');
+            // TODO should not be able to be in this state
         } else {
             keepassrx.storeMasterPassword(password.text);
         }
@@ -88,13 +79,9 @@ Page {
 
     Connections {
 	target: keepassrx
-	onFileSet: (path) => {
-	    copyingDB = false;
-	    settings.lastDB = path;
-	}
-
 	onDatabaseOpened: {
 	    busy = false;
+	    keepassrx.lastDB = databaseName;
             adaptiveLayout.primaryPageSource = Qt.resolvedUrl("./EntriesPage.qml");
 	}
 
@@ -105,29 +92,14 @@ Page {
 	}
 
         onMasterPasswordStored: {
-	    keepassrx.openDatabase(settings.lastDB, settings.lastKey);
+	    keepassrx.openDatabase(databaseName, settings.lastKey);
         }
-    }
 
-    Connections {
-        id: copyDatabase
-        onStateChanged: {
-            var done = target.state === ContentTransfer.Charged;
-
-            if (!done) {
-                return;
-            }
-            if (target.items.length === 0) {
-                return;
-            }
-
-            const filePath = String(target.items[0].url).replace('file://', '');
-	    dbPath.text = filePath.split('/').pop();
-	    copyingDB = true;
-	    keepassrx.setFile(filePath, pickingDB);
-	    target.finalize();
-	    peerPicker.visible = false;
-        }
+	onLockingStatusReceived: (status) => {
+	    if (status === 'unset') {
+		resetApp();
+	    }
+	}
     }
 
     ColumnLayout {
@@ -137,21 +109,21 @@ Page {
         anchors.leftMargin: units.gu(7)
         anchors.rightMargin: units.gu(7)
         anchors.verticalCenter: parent.verticalCenter
-        spacing: units.gu(2)
+        spacing: units.gu(1)
 
 	RowLayout {
 	    Layout.fillWidth: true
 
 	    Rectangle {
-		height: units.gu(35)
+		height: units.gu(25)
 		Layout.fillWidth: true
 		Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
 	        color: "transparent"
 
 		Image {
 		    id: logo
-		    width: units.gu(35)
-		    height: units.gu(35)
+		    width: units.gu(25)
+		    height: units.gu(25)
 		    fillMode: Image.PreserveAspectFit
 		    source: '../../assets/keepass-rx.svg'
 		    x: parent.width / 2 - width / 2
@@ -162,91 +134,40 @@ Page {
 
         RowLayout {
             Layout.fillWidth: true
+	    width: parent.width
 
-	    // The DB path when first picking a database.
-            TextField {
-                enabled: !busy
-		id: dbPath
-                text: settings.lastDB.split('/').pop()
+	    Text {
 		Layout.fillWidth: true
-		onAccepted: {
-		    errorMsg = '';
-		    copyingDB = true;
-		    settings.lastDB = text;
-		    text = settings.lastDB.split('/').pop();
-		    manualPath = true;
-		    keepassrx.setFile(settings.lastDB, pickingDB);
-		}
-            }
-
-            Button {
-                id: pickDB
-                // TRANSLATORS: DB is the abbreviation for database
-                text: i18n.tr("Pick DB")
-                onClicked: {
-                    pickingDB = true
-                    errorMsg = ''
-                    busy = false
-                    peerPicker.visible = true;
-                }
-            }
+		Layout.preferredWidth: parent.width
+		horizontalAlignment: Qt.AlignHCenter
+		width: parent.width
+		text: databaseName
+	    }
         }
 
 	RowLayout {
-            Label {
+	    Text {
+		visible: !busy
+		color: LomiriColors.slate
 		Layout.fillWidth: true
-		id: manualPathLabel
-		color: "gray"
-		// TRANSLATORS: When the user has manually typed a file path.
-		text: i18n.tr('Manual path set.')
-		visible: manualPath === true
+		Layout.preferredWidth: parent.width
+		horizontalAlignment: Qt.AlignHCenter
 		wrapMode: Text.WordWrap
-            }
+		// TRANSLATORS: The user must type the database master password.
+		text: i18n.tr('Enter the database master password')
+	    }
 	}
-
-
-        RowLayout {
-            TextField {
-                enabled: false
-                text: settings.lastKey
-                Layout.fillWidth: true
-                onTextChanged: settings.lastKey = text
-            }
-
-            Button {
-                visible: !settings.lastKey
-		// TRANSLATORS: Pick a key file to open the password database.
-                text: i18n.tr("Pick Key")
-                onClicked: {
-                    pickingDB = false
-                    peerPicker.visible = true;
-                    busy = false
-                    errorMsg = ''
-                }
-            }
-            Button {
-                visible: settings.lastKey
-		// TRANSLATORS: Clear the selected key file.
-                text: i18n.tr("Clear Key")
-                onClicked: {
-                    settings.lastKey = ''
-                }
-            }
-        }
 
         RowLayout {
             Layout.fillWidth: true
-	    visible: !busy
 
-            TextField {
+	    TextField {
                 id: password
-                enabled: (settings.lastDB !== undefined &&
-			  settings.lastDB != null &&
-			  settings.lastDB.length > 0 &&
-			  dbPath.text.length > 0) && !busy
+		visible: !busy
+                enabled: !busy
                 text: ''
-		// TRANSLATORS: The keepass database master password
-                placeholderText: i18n.tr("Password")
+		// TRANSLATORS: The master password for opening the database.
+                placeholderText: i18n.tr("Master Password")
                 echoMode: showPasswordAction.checked ? TextInput.Normal : TextInput.Password
 		inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
                 Layout.fillWidth: true
@@ -258,6 +179,7 @@ Page {
             }
 
             ActionBar {
+		visible: !busy
                 numberOfSlots: 1
                 actions: [
                     Action {
@@ -269,21 +191,15 @@ Page {
             }
         }
 
-	RowLayout {
-	    Layout.fillWidth: true
+        Button {
+            Layout.fillWidth: true
 	    visible: !busy
-
-            Button {
-		Layout.fillWidth: true
-		enabled: (
-		    (dbPath.text != null && dbPath.text.length > 0) || settings.lastDB) &&
-		    (settings.lastKey || password.text)
-		color: LomiriColors.green
-		// TRANSLATORS: Open the password database.
-		text: !keepassrx.isMasterPasswordEncrypted ? i18n.tr("Open") : i18n.tr("Unlock")
-		onClicked: openDatabase()
-            }
-	}
+            enabled: !busy && password.text
+	    color: LomiriColors.green
+            // TRANSLATORS: Open the database after password entered.
+            text: i18n.tr("Open")
+            onClicked: openDatabase()
+        }
 
         ActivityIndicator {
             Layout.fillWidth: true
@@ -298,7 +214,7 @@ Page {
 	    visible: busy
 	    // TRANSLATORS: The database is in the process of being
 	    // opened.
-	    text: i18n.tr('Opening Database')
+	    text: i18n.tr("Opening")
 	    color: LomiriColors.slate
 	}
 
@@ -309,27 +225,6 @@ Page {
 	    color: "red"
 	    visible: errorMsg !== undefined && errorMsg.length > 0
             wrapMode: Text.WordWrap
-        }
-    }
-
-    Component {
-        id: cpu_version_component
-        Dialog {
-            id: cpu_version_popup
-	    // TRANSLATORS: Checking if the user's device has an ARMv7
-	    // CPU, and if the password database is a kdbx version 3
-	    // file.
-            title: i18n.tr("Database version compatibility")
-            modal: true
-            text: i18n.tr(
-                      "You are running on an ARMv7 device in which databases version 3 (kdbx3) are <b>extremely</b> slow.<br/>For your sanity, make sure your database is version 4 (kdbx4)")
-
-            Button {
-                text: "Ok"
-                onClicked: {
-                    PopupUtils.close(cpu_version_popup)
-                }
-            }
         }
     }
 }

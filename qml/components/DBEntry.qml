@@ -10,16 +10,16 @@ UITK.ListItem {
     id: entireItem
 
     Connections {
-	target: keepassrx
-	onTotpReceived: (totp) => {
-	    if (!totp.error) {
-		UITK.Clipboard.push(totp.digits);
-		toast.show("Token '" + totp.digits + "' copied. Valid for " + totp.validFor);
-		clearClipboardTimer.start();
-	    } else {
-		toast.show(totp.error);
-	    }
-	}
+        target: keepassrx
+        onTotpReceived: (totp) => {
+            if (!totp.error) {
+                UITK.Clipboard.push(totp.digits);
+                toast.show("Token '" + totp.digits + "' copied. Valid for " + totp.validFor);
+                clearClipboardTimer.start();
+            } else {
+                toast.show(totp.error);
+            }
+        }
     }
 
     //override the trailing action panels defaul colors. use #808080
@@ -38,7 +38,7 @@ UITK.ListItem {
                 onTriggered: {
                     UITK.Clipboard.push(username);
                     toast.show("Username copied to clipboard (30 secs)");
-		    clearClipboardTimer.start();
+                    clearClipboardTimer.start();
                 }
             },
             UITK.Action {
@@ -47,7 +47,7 @@ UITK.ListItem {
                 onTriggered: {
                     UITK.Clipboard.push(password)
                     toast.show("Password copied to clipboard (30 secs)")
-		    clearClipboardTimer.start();
+                    clearClipboardTimer.start();
                 }
             },
             UITK.Action {
@@ -67,10 +67,10 @@ UITK.ListItem {
                 iconSource: "../../assets/2fa.svg"
                 iconName: "totp-code"
                 onTriggered: {
-		    // Need to fetch current TOTP because it shifts
-		    // with time. Response is handled by the
-		    // onTotpReceived event.
-		    keepassrx.getTotp(uuid);
+                    // Need to fetch current TOTP because it shifts
+                    // with time. Response is handled by the
+                    // onTotpReceived event.
+                    keepassrx.getTotp(uuid);
                 }
             }
         ]
@@ -123,16 +123,18 @@ UITK.ListItem {
         width: entryImg.width + detailsColumn.width
         height: parent.height
         onClicked: {
-	    pageStack.addPageToNextColumn(
-		adaptiveLayout.primaryPage,
-		Qt.resolvedUrl("../pages/SingleEntry.qml"),
-		{
-		    entryTitle: title,
-		    entryUsername: username,
-		    entryPassword: password,
-		    entryUrl: url
-		}
-	    )
+            pageStack.addPageToNextColumn(
+                adaptiveLayout.primaryPage,
+                Qt.resolvedUrl("../pages/SingleEntry.qml"),
+                {
+                    entryTitle: title,
+                    entryUsername: username,
+                    entryPassword: password,
+                    entryUrl: url,
+                    entryNotes: notes,
+                    entryCustomFields: customFields
+                }
+            )
         }
     }
 
@@ -146,11 +148,11 @@ UITK.ListItem {
     Timer {
         id: clearClipboardTimer
         repeat: false
-	running: false
+        running: false
         interval: 30000
         onTriggered: {
-	    UITK.Clipboard.clear();
-	    toast.show('KeePassRX: Clipboard cleared.');
-	}
+            UITK.Clipboard.clear();
+            toast.show('KeePassRX: Clipboard cleared.');
+        }
     }
 }

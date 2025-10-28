@@ -16,42 +16,42 @@ Page {
     property double lastHeartbeat: 0
 
     Component.onCompleted: {
-	if (databaseName) {
-	    keepassrx.lastDB = databaseName;
-	}
+        if (databaseName) {
+            keepassrx.lastDB = databaseName;
+        }
     }
 
     header: PageHeader {
         id: header
         title: databaseName || keepassrx.lastDB
-	leadingActionBar.actions: [
-	    Action {
-		name: "Back"
-		text: i18n.tr("Back")
-		iconName: "previous"
-		onTriggered: {
-		    // When going back, remove the setting.
-		    keepassrx.lastDB = null;
-		    adaptiveLayout.primaryPageSource = Qt.resolvedUrl("./DBList.qml");
-		    pageStack.removePages(openDbPage);
-		}
-	    }
-	]
+        leadingActionBar.actions: [
+            Action {
+                name: "Back"
+                text: i18n.tr("Back")
+                iconName: "previous"
+                onTriggered: {
+                    // When going back, remove the setting.
+                    keepassrx.lastDB = null;
+                    adaptiveLayout.primaryPageSource = Qt.resolvedUrl("./DBList.qml");
+                    pageStack.removePages(openDbPage);
+                }
+            }
+        ]
 
         trailingActionBar.actions: [
-	    Action {
-		name: "Settings"
-		text: i18n.tr("Settings")
-		iconName: "settings"
-		onTriggered: { pageStack.addPageToNextColumn(openDbPage, settingsPage) }
-	    },
+            Action {
+                name: "Settings"
+                text: i18n.tr("Settings")
+                iconName: "settings"
+                onTriggered: { pageStack.addPageToNextColumn(openDbPage, settingsPage) }
+            },
 
-	    Action {
-		name: "About"
-		text: i18n.tr("About")
-		iconName: "info"
-		onTriggered: { pageStack.addPageToNextColumn(openDbPage, aboutPage) }
-	    }
+            Action {
+                name: "About"
+                text: i18n.tr("About")
+                iconName: "info"
+                onTriggered: { pageStack.addPageToNextColumn(openDbPage, aboutPage) }
+            }
         ]
     }
 
@@ -61,7 +61,7 @@ Page {
         property string lastDB
         property int autoCloseInterval: 5
         property bool showSlowDBWarning: true
-	property bool easyOpen: true
+        property bool easyOpen: true
     }
 
     function openDatabase() {
@@ -78,28 +78,28 @@ Page {
     }
 
     Connections {
-	target: keepassrx
-	onDatabaseOpened: {
-	    busy = false;
-	    keepassrx.lastDB = databaseName;
+        target: keepassrx
+        onDatabaseOpened: {
+            busy = false;
+            keepassrx.lastDB = databaseName;
             adaptiveLayout.primaryPageSource = Qt.resolvedUrl("./EntriesPage.qml");
-	}
-
-	onDatabaseOpenFailed: (error) => {
-	    busy = false;
-	    errorMsg = `Error: ${error}`;
-            keepassrx.invalidateMasterPassword();
-	}
-
-        onMasterPasswordStored: {
-	    keepassrx.openDatabase(databaseName, settings.lastKey);
         }
 
-	onLockingStatusReceived: (status) => {
-	    if (status === 'unset') {
-		resetApp();
-	    }
-	}
+        onDatabaseOpenFailed: (error) => {
+            busy = false;
+            errorMsg = `Error: ${error}`;
+            keepassrx.invalidateMasterPassword();
+        }
+
+        onMasterPasswordStored: {
+            keepassrx.openDatabase(databaseName, settings.lastKey);
+        }
+
+        onLockingStatusReceived: (status) => {
+            if (status === 'unset') {
+                resetApp();
+            }
+        }
     }
 
     ColumnLayout {
@@ -111,65 +111,66 @@ Page {
         anchors.verticalCenter: parent.verticalCenter
         spacing: units.gu(1)
 
-	RowLayout {
-	    Layout.fillWidth: true
-
-	    Rectangle {
-		height: units.gu(25)
-		Layout.fillWidth: true
-		Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
-	        color: "transparent"
-
-		Image {
-		    id: logo
-		    width: units.gu(25)
-		    height: units.gu(25)
-		    fillMode: Image.PreserveAspectFit
-		    source: '../../assets/keepass-rx.svg'
-		    x: parent.width / 2 - width / 2
-		    y: parent.height / 2 - height / 2
-		}
-	    }
-	}
-
         RowLayout {
             Layout.fillWidth: true
-	    width: parent.width
 
-	    Text {
-		Layout.fillWidth: true
-		Layout.preferredWidth: parent.width
-		horizontalAlignment: Qt.AlignHCenter
-		width: parent.width
-		text: databaseName
-	    }
+            Rectangle {
+                height: units.gu(25)
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
+                color: "transparent"
+
+                Image {
+                    id: logo
+                    width: units.gu(25)
+                    height: units.gu(25)
+                    fillMode: Image.PreserveAspectFit
+                    source: '../../assets/keepass-rx.svg'
+                    x: parent.width / 2 - width / 2
+                    y: parent.height / 2 - height / 2
+                }
+            }
         }
 
-	RowLayout {
-	    Text {
-		visible: !busy
-		color: LomiriColors.slate
-		Layout.fillWidth: true
-		Layout.preferredWidth: parent.width
-		horizontalAlignment: Qt.AlignHCenter
-		wrapMode: Text.WordWrap
-		// TRANSLATORS: The user must type the database master password.
-		text: i18n.tr('Enter the database master password')
-	    }
-	}
+        RowLayout {
+            Layout.fillWidth: true
+            width: parent.width
+
+            Text {
+                Layout.fillWidth: true
+                Layout.preferredWidth: parent.width
+                horizontalAlignment: Qt.AlignHCenter
+                color: LomiriColors.ash
+                width: parent.width
+                text: databaseName
+            }
+        }
+
+        RowLayout {
+            Text {
+                visible: !busy
+                color: LomiriColors.slate
+                Layout.fillWidth: true
+                Layout.preferredWidth: parent.width
+                horizontalAlignment: Qt.AlignHCenter
+                wrapMode: Text.WordWrap
+                // TRANSLATORS: The user must type the database master password.
+                text: i18n.tr('Enter the database master password')
+            }
+        }
 
         RowLayout {
             Layout.fillWidth: true
 
-	    TextField {
+            TextField {
                 id: password
-		visible: !busy
+                visible: !busy
                 enabled: !busy
                 text: ''
-		// TRANSLATORS: The master password for opening the database.
+                // TRANSLATORS: The master password for opening the database.
                 placeholderText: i18n.tr("Master Password")
                 echoMode: showPasswordAction.checked ? TextInput.Normal : TextInput.Password
-		inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
+                inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
                 Layout.fillWidth: true
                 Keys.onReturnPressed: openDatabase()
 
@@ -179,7 +180,7 @@ Page {
             }
 
             ActionBar {
-		visible: !busy
+                visible: !busy
                 numberOfSlots: 1
                 actions: [
                     Action {
@@ -193,9 +194,9 @@ Page {
 
         Button {
             Layout.fillWidth: true
-	    visible: !busy
+            visible: !busy
             enabled: !busy && password.text
-	    color: LomiriColors.green
+            color: Theme.name == "Lomiri.Components.Themes.Ambiance" ? LomiriColors.green : LomiriColors.lightGreen
             // TRANSLATORS: Open the database after password entered.
             text: i18n.tr("Open")
             onClicked: openDatabase()
@@ -207,23 +208,23 @@ Page {
             visible: busy
         }
 
-	Text {
-	    Layout.fillWidth: true
-	    Layout.preferredWidth: parent.width
-	    horizontalAlignment: Qt.AlignHCenter
-	    visible: busy
-	    // TRANSLATORS: The database is in the process of being
-	    // opened.
-	    text: i18n.tr("Opening")
-	    color: LomiriColors.slate
-	}
+        Text {
+            Layout.fillWidth: true
+            Layout.preferredWidth: parent.width
+            horizontalAlignment: Qt.AlignHCenter
+            visible: busy
+            // TRANSLATORS: The database is in the process of being
+            // opened.
+            text: i18n.tr("Opening")
+            color: LomiriColors.slate
+        }
 
         Label {
             Layout.fillWidth: true
-	    id: errorLabel
+            id: errorLabel
             text: errorMsg
-	    color: "red"
-	    visible: errorMsg !== undefined && errorMsg.length > 0
+            color: "red"
+            visible: errorMsg !== undefined && errorMsg.length > 0
             wrapMode: Text.WordWrap
         }
     }

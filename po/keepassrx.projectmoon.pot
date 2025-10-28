@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-26 20:58+0000\n"
+"POT-Creation-Date: 2025-10-27 19:01+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -131,4 +131,8 @@ msgstr ""
 
 #: qml/pages/UnlockPage.qml:257
 msgid "Database Not Opening?"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:132
+msgid "Notes"
 msgstr ""

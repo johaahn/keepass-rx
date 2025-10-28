@@ -3,11 +3,11 @@ use base64::{Engine, prelude::BASE64_STANDARD};
 use humanize_duration::Truncate;
 use humanize_duration::prelude::DurationExt;
 use infer;
-use keepass::db::{Entry, Group, Icon, NodeRef, TOTP as KeePassTOTP};
+use keepass::db::{CustomData, Entry, Group, Icon, NodeRef, TOTP as KeePassTOTP, Value};
 use qmetaobject::{QString, QVariant, QVariantMap};
 use querystring::querify;
 use secrecy::{ExposeSecret, SecretString};
-use std::{collections::HashMap, str::FromStr};
+use std::{collections::HashMap, ops::Deref, str::FromStr};
 use totp_rs::{Secret, TOTP};
 use uriparse::URI;
 use uuid::Uuid;
@@ -18,6 +18,11 @@ mod zeroable_db;
 
 pub use easy_open::EncryptedPassword;
 pub use zeroable_db::ZeroableDatabase;
+
+// Fields inserted by other KeePass programs that we do not want to
+// show as custom fields. They might be used for other things in the
+// app, though.
+const FIELDS_TO_HIDE: [&str; 2] = ["KeePassXC-Browser Settings", "_LAST_MODIFIED"];
 
 macro_rules! expose {
     ($secret:expr) => {{
@@ -52,7 +57,54 @@ impl RxGroup {
     }
 }
 
-#[derive(Zeroize, ZeroizeOnDrop, Default, Clone)]
+#[derive(Zeroize, Default, Clone)]
+struct RxCustomFields(Vec<(String, SecretString)>);
+
+impl From<CustomData> for RxCustomFields {
+    fn from(value: CustomData) -> Self {
+        let custom_fields: Vec<_> = value
+            .items
+            .iter()
+            .flat_map(|(key, item)| {
+                if !FIELDS_TO_HIDE.contains(&key.as_ref()) {
+                    item.value.clone().and_then(|value| match value {
+                        Value::Protected(val) => {
+                            Some((key.clone(), SecretString::from(val.to_string())))
+                        }
+                        Value::Unprotected(val) => {
+                            Some((key.clone(), SecretString::from(val)))
+                        }
+                        _ => None,
+                    })
+                } else {
+                    None
+                }
+            })
+            .collect();
+
+        Self(custom_fields)
+    }
+}
+
+impl Into<QVariantMap> for RxCustomFields {
+    fn into(self) -> QVariantMap {
+        let mut map: HashMap<String, QVariant> = HashMap::new();
+
+        for (key, value) in self.0 {
+            map.insert(key, QString::from(value.expose_secret()).into());
+        }
+
+        map.into()
+    }
+}
+
+impl Into<QVariant> for RxCustomFields {
+    fn into(self) -> QVariant {
+        Into::<QVariantMap>::into(self).into()
+    }
+}
+
+#[derive(Zeroize, Default, Clone)]
 pub struct RxEntry {
     #[zeroize(skip)]
     uuid: Uuid,
@@ -60,6 +112,11 @@ pub struct RxEntry {
     title: Option<SecretString>,
     username: Option<SecretString>,
     password: Option<SecretString>,
+    notes: Option<String>,
+
+    // A map would be better, but it's not zeroizable.
+    custom_fields: RxCustomFields,
+
     url: Option<SecretString>,
     raw_otp_value: Option<SecretString>,
     icon_data: Option<Vec<u8>>,
@@ -72,11 +129,27 @@ impl RxEntry {
     }
 
     pub fn new(entry: Entry, icon: Option<Icon>) -> Self {
+        let notes = entry
+            .fields
+            .iter()
+            .find(|(key, _)| key.as_str() == "Notes")
+            .and_then(|(_, value)| {
+                match value {
+                    Value::Protected(_) => Some("[Hidden]".to_string()),
+                    Value::Unprotected(val) => Some(val.clone()),
+                    _ => None, // discard binary notes? does that even exist?
+                }
+            });
+
+        let custom_fields = entry.custom_data.clone();
+
         Self {
             uuid: entry.uuid,
             title: entry.get_title().map(SecretString::from),
             username: entry.get_username().map(SecretString::from),
             password: entry.get_password().map(SecretString::from),
+            notes: notes,
+            custom_fields: custom_fields.into(),
             url: entry.get_url().map(SecretString::from),
             raw_otp_value: entry.get_raw_otp_value().map(SecretString::from),
             icon_data: icon.map(|i| i.data),
@@ -165,11 +238,14 @@ impl Into<QVariantMap> for RxEntry {
                 .unwrap_or_default()
         };
 
+        let totp = self.totp();
+
         let uuid: QString = self.uuid.to_string().into();
         let url: QString = mapper(&self.url);
         let username: QString = mapper(&self.username);
         let title: QString = mapper(&self.title);
         let password: QString = mapper(&self.password);
+        let notes: QString = self.notes.map(QString::from).unwrap_or_default();
 
         let mut map: HashMap<String, QVariant> = HashMap::new();
         map.insert("uuid".to_string(), uuid.into());
@@ -177,9 +253,9 @@ impl Into<QVariantMap> for RxEntry {
         map.insert("username".to_string(), username.into());
         map.insert("title".to_string(), title.into());
         map.insert("password".to_string(), password.into());
+        map.insert("notes".to_string(), notes.into());
         map.insert("iconPath".to_string(), icon_data_url.into());
-
-        let totp = self.totp();
+        map.insert("customFields".to_string(), self.custom_fields.into());
 
         if let Ok(_) = totp {
             map.insert("hasTotp".to_string(), true.into());

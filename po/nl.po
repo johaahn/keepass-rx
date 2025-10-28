@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-26 20:57+0000\n"
+"POT-Creation-Date: 2025-10-27 20:01+0100\n"
 "PO-Revision-Date: 2025-10-22 17:53+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: \n"
@@ -33,11 +33,11 @@ msgstr ""
 
 #: qml/pages/AboutPage.qml:67
 msgid ""
-"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
-"agnos.is/projectmoon/keepass-rx</a>"
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
+"git.agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
-"Broncode: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
-"agnos.is/projectmoon/keepass-rx</a>"
+"Broncode: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
+"git.agnos.is/projectmoon/keepass-rx</a>"
 
 #: qml/pages/DBList.qml:91
 msgid "Add Database"
@@ -141,6 +141,10 @@ msgstr ""
 
 #: qml/pages/UnlockPage.qml:257
 msgid "Database Not Opening?"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:132
+msgid "Notes"
 msgstr ""
 
 #, fuzzy

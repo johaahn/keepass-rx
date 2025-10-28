@@ -19,29 +19,29 @@ Page {
     property double lastHeartbeat: 0
 
     Component.onCompleted: {
-	if (keepassrx.databaseOpen) {
-	    console.log('UnlockPage: Closing an already open database. This is an anomaly.');
-	    keepassrx.closeDatabase();
-	}
+        if (keepassrx.databaseOpen) {
+            console.log('UnlockPage: Closing an already open database. This is an anomaly.');
+            keepassrx.closeDatabase();
+        }
     }
 
     header: PageHeader {
         id: header
         title: "KeePassRX"
         trailingActionBar.actions: [
-	    Action {
-		name: "Settings"
-		text: i18n.tr("Settings")
-		iconName: "settings"
-		onTriggered: { pageStack.addPageToNextColumn(unlockPage, settingsPage) }
-	    },
+            Action {
+                name: "Settings"
+                text: i18n.tr("Settings")
+                iconName: "settings"
+                onTriggered: { pageStack.addPageToNextColumn(unlockPage, settingsPage) }
+            },
 
-	    Action {
-		name: "About"
-		text: i18n.tr("About")
-		iconName: "info"
-		onTriggered: { pageStack.addPageToNextColumn(unlockPage, aboutPage) }
-	    }
+            Action {
+                name: "About"
+                text: i18n.tr("About")
+                iconName: "info"
+                onTriggered: { pageStack.addPageToNextColumn(unlockPage, aboutPage) }
+            }
         ]
     }
 
@@ -51,7 +51,7 @@ Page {
         property string lastDB
         property int autoCloseInterval: 5
         property bool showSlowDBWarning: true
-	property bool easyOpen: true
+        property bool easyOpen: true
     }
 
     function openDatabase() {
@@ -68,43 +68,43 @@ Page {
     }
 
     function resetApp() {
-	console.log('Lost the master password; resetting to Open page.');
-	pageStack.removePages(adaptiveLayout.primaryPageSource);
-	adaptiveLayout.primaryPageSource = Qt.resolvedUrl("./OpenDBPage.qml");
+        console.log('Lost the master password; resetting to Open page.');
+        pageStack.removePages(adaptiveLayout.primaryPageSource);
+        adaptiveLayout.primaryPageSource = Qt.resolvedUrl("./OpenDBPage.qml");
     }
 
     Connections {
-	target: keepassrx
-	onDatabaseOpened: {
-	    busy = false;
+        target: keepassrx
+        onDatabaseOpened: {
+            busy = false;
             adaptiveLayout.primaryPageSource = Qt.resolvedUrl("./EntriesPage.qml");
-	}
-
-	onDatabaseOpenFailed: (error) => {
-	    busy = false;
-	    errorMsg = `Error: ${error}`;
-            keepassrx.invalidateMasterPassword();
-	}
-
-	onDecryptionFailed: (error) => {
-	    busy = false;
-	    errorMsg = `Error: ${error}. Wrong passcode?`;
-	}
-
-        onMasterPasswordStored: {
-	    keepassrx.openDatabase(keepassrx.lastDB, settings.lastKey);
         }
 
-	onMasterPasswordDecrypted: {
-            console.log('Re-opening database from locked state.');
-	    keepassrx.openDatabase(keepassrx.lastDB,  settings.lastKey);
-	}
+        onDatabaseOpenFailed: (error) => {
+            busy = false;
+            errorMsg = `Error: ${error}`;
+            keepassrx.invalidateMasterPassword();
+        }
 
-	onLockingStatusReceived: (status) => {
-	    if (status === 'unset') {
-		resetApp();
-	    }
-	}
+        onDecryptionFailed: (error) => {
+            busy = false;
+            errorMsg = `Error: ${error}. Wrong passcode?`;
+        }
+
+        onMasterPasswordStored: {
+            keepassrx.openDatabase(keepassrx.lastDB, settings.lastKey);
+        }
+
+        onMasterPasswordDecrypted: {
+            console.log('Re-opening database from locked state.');
+            keepassrx.openDatabase(keepassrx.lastDB,  settings.lastKey);
+        }
+
+        onLockingStatusReceived: (status) => {
+            if (status === 'unset') {
+                resetApp();
+            }
+        }
     }
 
     ColumnLayout {
@@ -116,84 +116,86 @@ Page {
         anchors.verticalCenter: parent.verticalCenter
         spacing: units.gu(1)
 
-	RowLayout {
-	    Layout.fillWidth: true
-
-	    Rectangle {
-		height: units.gu(25)
-		Layout.fillWidth: true
-		Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
-	        color: "transparent"
-
-		Image {
-		    id: logo
-		    width: units.gu(25)
-		    height: units.gu(25)
-		    fillMode: Image.PreserveAspectFit
-		    source: '../../assets/keepass-rx.svg'
-		    x: parent.width / 2 - width / 2
-		    y: parent.height / 2 - height / 2
-		}
-	    }
-	}
-
         RowLayout {
             Layout.fillWidth: true
-	    width: parent.width
 
-	    Text {
-		Layout.fillWidth: true
-		Layout.preferredWidth: parent.width
-		horizontalAlignment: Qt.AlignHCenter
-		width: parent.width
-		text: keepassrx.lastDB
-	    }
+            Rectangle {
+                height: units.gu(25)
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
+                color: "transparent"
+
+                Image {
+                    id: logo
+                    width: units.gu(25)
+                    height: units.gu(25)
+                    fillMode: Image.PreserveAspectFit
+                    source: '../../assets/keepass-rx.svg'
+                    x: parent.width / 2 - width / 2
+                    y: parent.height / 2 - height / 2
+                }
+            }
         }
 
-	RowLayout {
-            Label {
-		Layout.fillWidth: true
-		id: manualPathLabel
-		color: "gray"
-		// TRANSLATORS: When the user has manually typed a file path.
-		text: i18n.tr('Manual path set.')
-		visible: manualPath === true && !keepassrx.isMasterPasswordEncrypted
-		wrapMode: Text.WordWrap
-            }
-	}
+        // Database name
+        RowLayout {
+            Layout.fillWidth: true
+            width: parent.width
 
-	RowLayout {
-	    Text {
-		visible: keepassrx.isMasterPasswordEncrypted
-		color: LomiriColors.slate
-		Layout.fillWidth: true
-		Layout.preferredWidth: parent.width
-		horizontalAlignment: Qt.AlignHCenter
-		wrapMode: Text.WordWrap
-		// TRANSLATORS: Explanation of what the user must put
-		// in the passcode textbox.
-		text: i18n.tr(
-		    'The passcode is the first five characters of the database ' +
-			'password (or the whole password if less than five characters).'
-		)
-	    }
-	}
+            Text {
+                Layout.fillWidth: true
+                Layout.preferredWidth: parent.width
+                horizontalAlignment: Qt.AlignHCenter
+                width: parent.width
+                color: LomiriColors.ash
+                text: keepassrx.lastDB
+            }
+        }
+
+        RowLayout {
+            Label {
+                Layout.fillWidth: true
+                id: manualPathLabel
+                color: "gray"
+                // TRANSLATORS: When the user has manually typed a file path.
+                text: i18n.tr('Manual path set.')
+                visible: manualPath === true && !keepassrx.isMasterPasswordEncrypted
+                wrapMode: Text.WordWrap
+            }
+        }
+
+        RowLayout {
+            Text {
+                visible: keepassrx.isMasterPasswordEncrypted
+                color: LomiriColors.slate
+                Layout.fillWidth: true
+                Layout.preferredWidth: parent.width
+                horizontalAlignment: Qt.AlignHCenter
+                wrapMode: Text.WordWrap
+                // TRANSLATORS: Explanation of what the user must put
+                // in the passcode textbox.
+                text: i18n.tr(
+                    'The passcode is the first five characters of the database ' +
+                        'password (or the whole password if less than five characters).'
+                )
+            }
+        }
 
         RowLayout {
             Layout.fillWidth: true
 
-	    TextField {
+            TextField {
                 id: shortPassword
-		visible: keepassrx.isMasterPasswordEncrypted
+                visible: keepassrx.isMasterPasswordEncrypted
                 enabled: (keepassrx.isMasterPasswordEncrypted &&
-			  keepassrx.lastDB !== undefined &&
-			  keepassrx.lastDB != null &&
-			  keepassrx.lastDB.length > 0 && !busy)
+                          keepassrx.lastDB !== undefined &&
+                          keepassrx.lastDB != null &&
+                          keepassrx.lastDB.length > 0 && !busy)
                 text: ''
-		// TRANSLATORS: The short password for unlocking the database.
+                // TRANSLATORS: The short password for unlocking the database.
                 placeholderText: i18n.tr("Passcode")
                 echoMode: showPasswordAction.checked ? TextInput.Normal : TextInput.Password
-		inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
+                inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
                 Layout.fillWidth: true
                 Keys.onReturnPressed: openDatabase()
 
@@ -203,7 +205,7 @@ Page {
             }
 
             ActionBar {
-		visible: keepassrx.isMasterPasswordEncrypted
+                visible: keepassrx.isMasterPasswordEncrypted
                 numberOfSlots: 1
                 actions: [
                     Action {
@@ -217,11 +219,11 @@ Page {
 
         Button {
             Layout.fillWidth: true
-	    visible: !busy && keepassrx.isMasterPasswordEncrypted
+            visible: !busy && keepassrx.isMasterPasswordEncrypted
             enabled: (keepassrx.isMasterPasswordEncrypted &&
-		      keepassrx.lastDB &&
-		      (settings.lastKey || shortPassword.text))
-	    color: LomiriColors.green
+                      keepassrx.lastDB &&
+                      (settings.lastKey || shortPassword.text))
+            color: Theme.name == "Lomiri.Components.Themes.Ambiance" ? LomiriColors.green : LomiriColors.lightGreen
             // TRANSLATORS: Unlock a previously-opened password database.
             text: i18n.tr("Unlock")
             onClicked: openDatabase()
@@ -233,37 +235,37 @@ Page {
             visible: busy || (!busy && !keepassrx.isMasterPasswordEncrypted)
         }
 
-	Text {
-	    Layout.fillWidth: true
-	    Layout.preferredWidth: parent.width
-	    horizontalAlignment: Qt.AlignHCenter
-	    visible: busy || (!busy && !keepassrx.isMasterPasswordEncrypted)
-	    // TRANSLATORS: The database is in the process of being
-	    // securely locked or unlocked.
-	    text: (busy && keepassrx.isMasterPasswordEncrypted)
-		|| busy // Re-opening after decrypt
-		? i18n.tr("Securely Unlocking")
-		: i18n.tr("Securely Locking")
-	    color: LomiriColors.slate
-	}
+        Text {
+            Layout.fillWidth: true
+            Layout.preferredWidth: parent.width
+            horizontalAlignment: Qt.AlignHCenter
+            visible: busy || (!busy && !keepassrx.isMasterPasswordEncrypted)
+            // TRANSLATORS: The database is in the process of being
+            // securely locked or unlocked.
+            text: (busy && keepassrx.isMasterPasswordEncrypted)
+                || busy // Re-opening after decrypt
+                ? i18n.tr("Securely Unlocking")
+                : i18n.tr("Securely Locking")
+            color: LomiriColors.slate
+        }
 
-	Button {
-	    id: brokenButton
-	    visible: false
-	    Layout.fillWidth: true
-	    color: LomiriColors.red
-	    // TRANSLATORS: Button that appears if something broke
-	    // when trying to reopen the DB.
-	    text: i18n.tr('Database Not Opening?')
-	    onClicked: resetApp()
-	}
+        Button {
+            id: brokenButton
+            visible: false
+            Layout.fillWidth: true
+            color: LomiriColors.red
+            // TRANSLATORS: Button that appears if something broke
+            // when trying to reopen the DB.
+            text: i18n.tr('Database Not Opening?')
+            onClicked: resetApp()
+        }
 
         Label {
             Layout.fillWidth: true
-	    id: errorLabel
+            id: errorLabel
             text: errorMsg
-	    color: "red"
-	    visible: errorMsg !== undefined && errorMsg.length > 0
+            color: "red"
+            visible: errorMsg !== undefined && errorMsg.length > 0
             wrapMode: Text.WordWrap
         }
     }
@@ -272,11 +274,11 @@ Page {
     Timer {
         id: fallbackTimer
         repeat: false
-	running: false
+        running: false
         interval: 30000
         onTriggered: {
-	    keepassrx.checkLockingStatus();
-	    brokenButton.visible = true;
-	}
+            keepassrx.checkLockingStatus();
+            brokenButton.visible = true;
+        }
     }
 }

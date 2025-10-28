@@ -27,21 +27,21 @@ UITK.Page {
                 property bool showRecycleBin: false
                 property bool changeGroupOnSearch: true
                 property bool showSlowDBWarning: true
-		property bool databaseLocking: true
+                property bool databaseLocking: true
             }
             id: col
             anchors.fill: parent
             spacing: units.gu(2)
 
-	    // TODO Currently requires a restart because we have
-	    // several Settings instances floating around. Make them
-	    // into a singleton!
+            // TODO Currently requires a restart because we have
+            // several Settings instances floating around. Make them
+            // into a singleton!
             SettingsItem {
                 title: i18n.ctr("enable easy locking and unlocking of the database",
                                 "Enable database locking (ALPHA)")
                 description: i18n.ctr(
-                                 "description for database locking",
-                                 "Securely lock and unlock database with a short passcode. Requires restart to take effect.")
+                    "description for database locking",
+                    "Securely lock and unlock database with a short passcode. Requires restart to take effect.")
                 control: UITK.Switch {
                     onCheckedChanged: settings.databaseLocking = checked
                     checked: settings.databaseLocking
@@ -81,8 +81,8 @@ UITK.Page {
                 title: i18n.ctr("show recycle-bin setting",
                                 'Show the "Recycle bin" group')
                 description: i18n.ctr(
-                                 "description for show recycle-bin setting",
-                                 'This group contains all the deleted entries')
+                    "description for show recycle-bin setting",
+                    'This group contains all the deleted entries')
                 control: UITK.Switch {
                     onCheckedChanged: settings.showRecycleBin = checked
                     checked: settings.showRecycleBin
@@ -92,8 +92,8 @@ UITK.Page {
                 title: i18n.ctr("change section on search setting",
                                 'Change section on search')
                 description: i18n.ctr(
-                                 "description for change section on search setting",
-                                 'Change section automatically if there are no results for the \
+                    "description for change section on search setting",
+                    'Change section automatically if there are no results for the \
 search value in the current section, and there are results in another section')
                 control: UITK.Switch {
                     onCheckedChanged: settings.changeGroupOnSearch = checked
@@ -103,11 +103,11 @@ search value in the current section, and there are results in another section')
             SettingsItem {
                 visible: isARMv7
                 title: i18n.ctr(
-                           "show slow database warning setting",
-                           'Show warning before opening very slow databases')
+                    "show slow database warning setting",
+                    'Show warning before opening very slow databases')
                 description: i18n.ctr(
-                                 "description for show slow database warning setting",
-                                 'Opening KDBX3 databases on ARMv7 devices can take up to 2 seconds <b>per entry</b> (3 minutes for 100 entries)')
+                    "description for show slow database warning setting",
+                    'Opening KDBX3 databases on ARMv7 devices can take up to 2 seconds <b>per entry</b> (3 minutes for 100 entries)')
                 control: UITK.Switch {
                     onCheckedChanged: settings.showSlowDBWarning = checked
                     checked: settings.showSlowDBWarning

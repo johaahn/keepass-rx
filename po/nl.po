@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-27 20:01+0100\n"
+"POT-Creation-Date: 2025-10-28 21:56+0000\n"
 "PO-Revision-Date: 2025-10-22 17:53+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: \n"
@@ -33,11 +33,11 @@ msgstr ""
 
 #: qml/pages/AboutPage.qml:67
 msgid ""
-"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
-"git.agnos.is/projectmoon/keepass-rx</a>"
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
+"agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
-"Broncode: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
-"git.agnos.is/projectmoon/keepass-rx</a>"
+"Broncode: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
+"agnos.is/projectmoon/keepass-rx</a>"
 
 #: qml/pages/DBList.qml:91
 msgid "Add Database"
@@ -94,57 +94,61 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:157
+#: qml/pages/OpenDBPage.qml:158
 msgid "Enter the database master password"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:170
+#: qml/pages/OpenDBPage.qml:171
 #, fuzzy
 msgid "Master Password"
 msgstr "Wachtwoord"
 
-#: qml/pages/OpenDBPage.qml:200
+#: qml/pages/OpenDBPage.qml:201
 msgid "Open"
 msgstr "Openen"
 
-#: qml/pages/OpenDBPage.qml:217
+#: qml/pages/OpenDBPage.qml:218
 #, fuzzy
 msgid "Opening"
 msgstr "Openen"
 
-#: qml/pages/UnlockPage.qml:159
+#: qml/pages/SingleEntry.qml:163
+msgid "Notes"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:171
+msgid "Tap to copy"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:161
 msgid "Manual path set."
 msgstr "Stel de locatie handmatig in."
 
-#: qml/pages/UnlockPage.qml:176
+#: qml/pages/UnlockPage.qml:178
 msgid ""
 "The passcode is the first five characters of the database password (or the "
 "whole password if less than five characters)."
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:194
+#: qml/pages/UnlockPage.qml:196
 #, fuzzy
 msgid "Passcode"
 msgstr "Wachtwoord"
 
-#: qml/pages/UnlockPage.qml:226
+#: qml/pages/UnlockPage.qml:228
 msgid "Unlock"
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:245
+#: qml/pages/UnlockPage.qml:247
 msgid "Securely Unlocking"
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:246
+#: qml/pages/UnlockPage.qml:248
 msgid "Securely Locking"
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:257
+#: qml/pages/UnlockPage.qml:259
 msgid "Database Not Opening?"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:132
-msgid "Notes"
 msgstr ""
 
 #, fuzzy

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-27 19:01+0000\n"
+"POT-Creation-Date: 2025-10-28 21:58+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -87,52 +87,56 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:157
+#: qml/pages/OpenDBPage.qml:158
 msgid "Enter the database master password"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:170
+#: qml/pages/OpenDBPage.qml:171
 msgid "Master Password"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:200
+#: qml/pages/OpenDBPage.qml:201
 msgid "Open"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:217
+#: qml/pages/OpenDBPage.qml:218
 msgid "Opening"
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:159
+#: qml/pages/SingleEntry.qml:163
+msgid "Notes"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:171
+msgid "Tap to copy"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:161
 msgid "Manual path set."
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:176
+#: qml/pages/UnlockPage.qml:178
 msgid ""
 "The passcode is the first five characters of the database password (or the "
 "whole password if less than five characters)."
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:194
+#: qml/pages/UnlockPage.qml:196
 msgid "Passcode"
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:226
+#: qml/pages/UnlockPage.qml:228
 msgid "Unlock"
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:245
+#: qml/pages/UnlockPage.qml:247
 msgid "Securely Unlocking"
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:246
+#: qml/pages/UnlockPage.qml:248
 msgid "Securely Locking"
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:257
+#: qml/pages/UnlockPage.qml:259
 msgid "Database Not Opening?"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:132
-msgid "Notes"
 msgstr ""

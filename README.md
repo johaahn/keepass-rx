@@ -46,19 +46,29 @@ still only supporting read-only database access.
  - [x] Clear clipboard after 30 seconds (partially implemented).
  - [x] "Easy lock" to re-open database without typing the whole password.
  - [ ] Improved password search UX (across groups).
- - [ ] New UI layout to support nested groups.
- - [ ] Display custom fields and values.
- - [ ] Improved database selection UX.
-   - [X] Support adding multiple databases.
-   - [ ] Make a clear distinction between "imported" databases (from
-         ContentHub) and "synced" databases (via external unconfined
-         program).
+ - [ ] Support attachments on entries.
+ - [ ] New UI layout to support groups
+   - [ ] Main page becomes the root group + entries list.
+   - [ ] Display entries under a group.
+ - [x] Display custom fields and values.
+ - [x] Improved database selection UX (multiple databases).
 
-## 3.x - Writable Databases
+## 3.x - Writable Databases and Beyond
 
 Implement updating and saving of databases, either using the
 experimental kdbx4 save feature of keepass-rs, or via the KeepassXC
 CLI.
+ - [ ] Edit and Save Databases
+   - [ ] Safely save databases.
+   - [ ] Edit basic fields.
+   - [ ] Create entries.
+   - [ ] Delete entries.
+   - [ ] Create groups.
+   - [ ] Delete groups.
+   - [ ] Move entries between groups.
+ - [ ] Make a clear distinction between "imported" databases (from
+       ContentHub) and "synced" databases (via external unconfined
+       program).
 
 ## Development
 

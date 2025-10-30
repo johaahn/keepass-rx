@@ -8,40 +8,39 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-28 21:56+0000\n"
-"PO-Revision-Date: 2025-10-22 17:53+0200\n"
+"POT-Creation-Date: 2025-10-28 21:58+0000\n"
+"PO-Revision-Date: 2025-10-30 10:18+0100\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: \n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.7\n"
+"X-Generator: Poedit 3.8\n"
 
 #: qml/pages/BlankPage.qml:47
 msgid "Blank page thing"
-msgstr ""
+msgstr "Blanco paginading"
 
 #: qml/pages/AboutPage.qml:56
-#, fuzzy
 msgid ""
 "KeePassRX is a work-in-progress password manager for KeePass password "
 "databases. It is licensed under the GNU GPL v3 license."
 msgstr ""
-"KeepassRX is een ontwikkeling zijnde wachtwoordbeheerder voor KeePass-"
+"KeepassRX is een in ontwikkeling zijnde wachtwoordbeheerder voor KeePass-"
 "databanken, uitgebracht onder de GNU GPL v3-licentie."
 
 #: qml/pages/AboutPage.qml:67
 msgid ""
-"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
-"agnos.is/projectmoon/keepass-rx</a>"
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
+"git.agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
-"Broncode: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
-"agnos.is/projectmoon/keepass-rx</a>"
+"Broncode: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
+"git.agnos.is/projectmoon/keepass-rx</a>"
 
 #: qml/pages/DBList.qml:91
 msgid "Add Database"
-msgstr ""
+msgstr "Databank toevoegen"
 
 #: qml/pages/DBList.qml:98 qml/pages/EntriesPage.qml:83
 #: qml/pages/OpenDBPage.qml:44 qml/pages/UnlockPage.qml:34
@@ -55,70 +54,67 @@ msgstr "Over"
 
 #: qml/pages/DBList.qml:125
 msgid "Loading last database:"
-msgstr ""
+msgstr "De vorige databank wordt geladen:"
 
 #: qml/pages/DBList.qml:136
 msgid "Select Database"
-msgstr ""
+msgstr "Kies een databank"
 
 #: qml/pages/DBList.qml:192
 msgid "Tap + to import a database."
-msgstr ""
+msgstr "Druk op + om een databank toe te voegen."
 
 #: qml/pages/DBList.qml:294
 msgid "It will only be removed from the app, not your device."
-msgstr ""
+msgstr "De databank wordt alleen verwijderd uit de app, niet van je apparaat."
 
 #: qml/pages/EntriesPage.qml:45
 msgid "Lock"
-msgstr ""
+msgstr "Vergrendelen"
 
 #: qml/pages/EntriesPage.qml:57
 msgid "Close"
-msgstr ""
+msgstr "Sluiten"
 
 #: qml/pages/EntriesPage.qml:70
 msgid "Search"
 msgstr "Zoeken"
 
 #: qml/pages/EntriesPage.qml:70
-#, fuzzy
 msgid "Cancel Search"
-msgstr "Zoeken"
+msgstr "Zoekopdracht afbreken"
 
 #: qml/pages/EntriesPage.qml:104
 msgid "Close Database"
-msgstr ""
+msgstr "Databank sluiten"
 
 #: qml/pages/OpenDBPage.qml:30
 msgid "Back"
-msgstr ""
+msgstr "Terug"
 
 #: qml/pages/OpenDBPage.qml:158
 msgid "Enter the database master password"
-msgstr ""
+msgstr "Voer het hoofdwachtwoord in"
 
 #: qml/pages/OpenDBPage.qml:171
-#, fuzzy
 msgid "Master Password"
-msgstr "Wachtwoord"
+msgstr "Hoofdwachtwoord"
 
 #: qml/pages/OpenDBPage.qml:201
 msgid "Open"
 msgstr "Openen"
 
 #: qml/pages/OpenDBPage.qml:218
-#, fuzzy
 msgid "Opening"
-msgstr "Openen"
+msgstr "Bezig met openen…"
 
 #: qml/pages/SingleEntry.qml:163
 msgid "Notes"
-msgstr ""
+msgstr "Aantekeningen"
 
 #: qml/pages/SingleEntry.qml:171
 msgid "Tap to copy"
-msgstr ""
+msgstr "Druk om te kopiëren"
 
 #: qml/pages/UnlockPage.qml:161
 msgid "Manual path set."
@@ -129,27 +125,29 @@ msgid ""
 "The passcode is the first five characters of the database password (or the "
 "whole password if less than five characters)."
 msgstr ""
+"De toegangscode bestaat uit de eerste vijf tekens van het "
+"databankwachtwoord (of het gehele wachtwoord, indien minder dan vijf "
+"tekens)."
 
 #: qml/pages/UnlockPage.qml:196
-#, fuzzy
 msgid "Passcode"
-msgstr "Wachtwoord"
+msgstr "Toegangscode"
 
 #: qml/pages/UnlockPage.qml:228
 msgid "Unlock"
-msgstr ""
+msgstr "Ontgrendelen"
 
 #: qml/pages/UnlockPage.qml:247
 msgid "Securely Unlocking"
-msgstr ""
+msgstr "Veilig ontgrendelen"
 
 #: qml/pages/UnlockPage.qml:248
 msgid "Securely Locking"
-msgstr ""
+msgstr "Veilig vergrendelen"
 
 #: qml/pages/UnlockPage.qml:259
 msgid "Database Not Opening?"
-msgstr ""
+msgstr "Kan de databank niet worden geopend?"
 
 #, fuzzy
 #~ msgid "Manual Import"

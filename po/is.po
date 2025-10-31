@@ -8,14 +8,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-31 12:48+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2025-10-31 17:02+0000\n"
+"Last-Translator: projectmoon <projectmoon@agnos.is>\n"
+"Language-Team: Icelandic <https://hosted.weblate.org/projects/ubports/"
+"keepassrx/is/>\n"
 "Language: is\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n % 10 != 1 || n % 100 == 11;\n"
+"X-Generator: Weblate 5.14.1-dev\n"
 
 #: qml/pages/BlankPage.qml:47
 msgid "Blank page thing"
@@ -40,7 +42,7 @@ msgstr ""
 #: qml/pages/DBList.qml:95 qml/pages/EntriesPage.qml:117
 #: qml/pages/OpenDBPage.qml:44 qml/pages/UnlockPage.qml:34
 msgid "Settings"
-msgstr ""
+msgstr "Stillingar"
 
 #: qml/pages/DBList.qml:102 qml/pages/EntriesPage.qml:126
 #: qml/pages/OpenDBPage.qml:51 qml/pages/UnlockPage.qml:41
@@ -78,7 +80,7 @@ msgstr ""
 
 #: qml/pages/EntriesPage.qml:104
 msgid "Search"
-msgstr ""
+msgstr "Leita"
 
 #: qml/pages/EntriesPage.qml:104
 msgid "Cancel Search"

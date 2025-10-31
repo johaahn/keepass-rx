@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-31 12:48+0100\n"
+"POT-Creation-Date: 2025-10-31 20:28+0100\n"
 "PO-Revision-Date: 2025-10-31 20:02+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -18,9 +18,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.14.1-dev\n"
-
-msgid "Blank page thing"
-msgstr "Blanco paginading"
 
 msgid ""
 "KeePassRX is a work-in-progress password manager for KeePass password "
@@ -124,6 +121,9 @@ msgstr "Veilig vergrendelen"
 
 msgid "Database Not Opening?"
 msgstr "Wordt de databank niet geopend?"
+
+#~ msgid "Blank page thing"
+#~ msgstr "Blanco paginading"
 
 #, fuzzy
 #~ msgid "Manual Import"

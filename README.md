@@ -46,10 +46,10 @@ still only supporting read-only database access.
  - [x] Clear clipboard after 30 seconds (partially implemented).
  - [x] "Easy lock" to re-open database without typing the whole password.
  - [ ] Improved password search UX (across groups).
- - [ ] Support attachments on entries.
- - [ ] New UI layout to support groups
-   - [ ] Main page becomes the root group + entries list.
-   - [ ] Display entries under a group.
+ - [ ] Support opening attachments on entries.
+ - [x] New UI layout to support groups
+   - [x] Main page becomes the root group + entries list.
+   - [x] Display entries under a group.
  - [x] Display custom fields and values.
  - [x] Improved database selection UX (multiple databases).
 
@@ -58,6 +58,12 @@ still only supporting read-only database access.
 Implement updating and saving of databases, either using the
 experimental kdbx4 save feature of keepass-rs, or via the KeepassXC
 CLI.
+ - [ ] Support KeePassDX templates (i.e. show credit card entries as a
+       credit card, etc).
+ - [ ] YubiKey challenge-response? (requires support in OS)
+ - [ ] Make a clear distinction between "imported" databases (from
+       ContentHub) and "synced" databases (via external unconfined
+       program).
  - [ ] Edit and Save Databases
    - [ ] Safely save databases.
    - [ ] Edit basic fields.
@@ -66,9 +72,6 @@ CLI.
    - [ ] Create groups.
    - [ ] Delete groups.
    - [ ] Move entries between groups.
- - [ ] Make a clear distinction between "imported" databases (from
-       ContentHub) and "synced" databases (via external unconfined
-       program).
 
 ## Development
 

@@ -9,14 +9,12 @@ pub enum RxItemType {
     #[default]
     Entry,
     Group,
-    GoBack,
 }
 
 fn entry_type_from_string(qval: &QString) -> RxItemType {
     match qval.to_string().as_str() {
         "Group" => RxItemType::Group,
         "Entry" => RxItemType::Entry,
-        "GoBack" => RxItemType::GoBack,
         _ => panic!("Invalid entry type: {}", qval),
     }
 }
@@ -25,7 +23,6 @@ fn entry_type_to_string(entry_type: &RxItemType) -> QString {
     match entry_type {
         RxItemType::Group => "Group",
         RxItemType::Entry => "Entry",
-        RxItemType::GoBack => "GoBack",
     }
     .into()
 }
@@ -54,26 +51,8 @@ pub struct RxListItem {
     hasTOTP: qt_property!(bool),
 }
 
-impl RxListItem {
-    /// Create a list item that represents going back up the group
-    /// structure. TODO to be replaced with breadcrumb nav thingy.
-    pub fn go_back() -> Self {
-        Self {
-            itemType: RxItemType::GoBack,
-            title: "..".to_string().into(),
-            ..Default::default()
-        }
-    }
-}
-
 impl From<&RxEntry> for RxListItem {
     fn from(value: &RxEntry) -> Self {
-        value.clone().into()
-    }
-}
-
-impl From<RxEntry> for RxListItem {
-    fn from(value: RxEntry) -> Self {
         RxListItem {
             base: Default::default(),
             itemType: RxItemType::Entry,
@@ -104,14 +83,14 @@ impl From<RxEntry> for RxListItem {
     }
 }
 
-impl From<&RxGroup> for RxListItem {
-    fn from(value: &RxGroup) -> Self {
-        value.clone().into()
+impl From<RxEntry> for RxListItem {
+    fn from(value: RxEntry) -> Self {
+        RxListItem::from(&value)
     }
 }
 
-impl From<RxGroup> for RxListItem {
-    fn from(value: RxGroup) -> Self {
+impl From<&RxGroup> for RxListItem {
+    fn from(value: &RxGroup) -> Self {
         RxListItem {
             base: Default::default(),
             itemType: RxItemType::Group,
@@ -121,7 +100,7 @@ impl From<RxGroup> for RxListItem {
                 .map(|parent| QString::from(parent.to_string()))
                 .unwrap_or_default(),
 
-            title: value.name.into(),
+            title: value.name.clone().into(),
             subtitle: QString::from("Group"),
 
             // TODO support group icons
@@ -132,6 +111,12 @@ impl From<RxGroup> for RxListItem {
             hasURL: false,
             hasTOTP: false,
         }
+    }
+}
+
+impl From<RxGroup> for RxListItem {
+    fn from(value: RxGroup) -> Self {
+        RxListItem::from(&value)
     }
 }
 

@@ -3,10 +3,11 @@ use base64::{Engine, prelude::BASE64_STANDARD};
 use humanize_duration::Truncate;
 use humanize_duration::prelude::DurationExt;
 use infer;
-use keepass::db::{CustomData, Entry, Group, Icon, NodeRef, TOTP as KeePassTOTP, Value};
+use keepass::db::{CustomData, Entry, Group, Icon, NodeRefMut, TOTP as KeePassTOTP, Value};
 use qmetaobject::{QString, QVariant, QVariantMap};
 use querystring::querify;
 use secrecy::{ExposeSecret, SecretString};
+use std::mem::take;
 use std::{collections::HashMap, str::FromStr};
 use totp_rs::{Secret, TOTP};
 use uriparse::URI;
@@ -71,10 +72,10 @@ pub struct RxGroup {
 }
 
 impl RxGroup {
-    pub fn new(group: &Group, subgroups: Vec<RxGroup>, entries: Vec<RxEntry>) -> Self {
+    pub fn new(group: &mut Group, subgroups: Vec<RxGroup>, entries: Vec<RxEntry>) -> Self {
         Self {
             uuid: group.uuid,
-            name: group.name.clone(),
+            name: take(&mut group.name),
             subgroups: subgroups,
             entries: entries,
             parent: None,
@@ -85,20 +86,19 @@ impl RxGroup {
 #[derive(Zeroize, Default, Clone)]
 pub struct RxCustomFields(Vec<(String, SecretString)>);
 
-impl From<CustomData> for RxCustomFields {
-    fn from(value: CustomData) -> Self {
-        let custom_fields: Vec<_> = value
-            .items
-            .iter()
+impl From<&mut CustomData> for RxCustomFields {
+    fn from(value: &mut CustomData) -> Self {
+        let items = take(&mut value.items);
+
+        let custom_fields: Vec<_> = items
+            .into_iter()
             .flat_map(|(key, item)| {
                 if !FIELDS_TO_HIDE.contains(&key.as_ref()) {
-                    item.value.clone().and_then(|value| match value {
+                    item.value.and_then(|value| match value {
                         Value::Protected(val) => {
-                            Some((key.clone(), SecretString::from(val.to_string())))
+                            Some((key, SecretString::from(val.to_string())))
                         }
-                        Value::Unprotected(val) => {
-                            Some((key.clone(), SecretString::from(val)))
-                        }
+                        Value::Unprotected(val) => Some((key, SecretString::from(val))),
                         _ => None,
                     })
                 } else {
@@ -111,11 +111,11 @@ impl From<CustomData> for RxCustomFields {
     }
 }
 
-impl Into<QVariantMap> for RxCustomFields {
-    fn into(self) -> QVariantMap {
+impl From<RxCustomFields> for QVariantMap {
+    fn from(value: RxCustomFields) -> QVariantMap {
         let mut map: HashMap<String, QVariant> = HashMap::new();
 
-        for (key, value) in self.0 {
+        for (key, value) in value.0 {
             map.insert(key, QString::from(value.expose_secret()).into());
         }
 
@@ -191,24 +191,24 @@ pub struct RxEntry {
 
 #[allow(dead_code)]
 impl RxEntry {
-    pub fn new_without_icon(entry: Entry, parent_uuid: Uuid) -> Self {
+    pub fn new_without_icon(entry: &mut Entry, parent_uuid: Uuid) -> Self {
         Self::new(entry, parent_uuid, None)
     }
 
-    pub fn new(entry: Entry, parent_uuid: Uuid, icon: Option<Icon>) -> Self {
+    pub fn new(entry: &mut Entry, parent_uuid: Uuid, icon: Option<Icon>) -> Self {
         let notes = entry
             .fields
-            .iter()
+            .iter_mut()
             .find(|(key, _)| key.as_str() == "Notes")
-            .and_then(|(_, value)| {
-                match value {
+            .and_then(|(_, mut value)| {
+                match &mut value {
                     Value::Protected(_) => Some("[Hidden]".to_string()),
-                    Value::Unprotected(val) => Some(val.clone()),
+                    Value::Unprotected(val) => Some(take(val)),
                     _ => None, // discard binary notes? does that even exist?
                 }
             });
 
-        let custom_fields = entry.custom_data.clone();
+        let mut custom_fields = take(&mut entry.custom_data);
 
         Self {
             uuid: entry.uuid,
@@ -217,7 +217,7 @@ impl RxEntry {
             username: entry.get_username().map(SecretString::from),
             password: entry.get_password().map(SecretString::from),
             notes: notes,
-            custom_fields: custom_fields.into(),
+            custom_fields: RxCustomFields::from(&mut custom_fields),
             url: entry.get_url().map(SecretString::from),
             raw_otp_value: entry.get_raw_otp_value().map(SecretString::from),
             icon_data: icon.map(|i| i.data),
@@ -286,7 +286,7 @@ impl RxEntry {
 
         let otp_digits = match self.has_steam_otp() {
             true => self.steam_otp_digits()?,
-            false => otp_code.code.clone(),
+            false => otp_code.code,
         };
 
         let otp_valid_for = format!("{}", otp_code.valid_for.human(Truncate::Second));
@@ -310,11 +310,8 @@ impl RxEntry {
     }
 }
 
-impl From<RxEntry> for QVariantMap {
-    fn from(value: RxEntry) -> QVariantMap {
-        // TODO support standard KeePass icons? (Icon IDs) create
-        // qstring in map step so it will be null after unwrap if no
-        // icon.
+impl From<&RxEntry> for QVariantMap {
+    fn from(value: &RxEntry) -> Self {
         let icon_data_url: QString =
             value.icon_data_url().map(QString::from).unwrap_or_default();
 
@@ -332,7 +329,7 @@ impl From<RxEntry> for QVariantMap {
         let username: QString = mapper(&value.username);
         let title: QString = mapper(&value.title);
         let password: QString = mapper(&value.password);
-        let notes: QString = value.notes.map(QString::from).unwrap_or_default();
+        let notes: QString = value.notes.clone().map(QString::from).unwrap_or_default();
 
         let mut map: HashMap<String, QVariant> = HashMap::new();
         map.insert("uuid".to_string(), uuid.into());
@@ -342,7 +339,10 @@ impl From<RxEntry> for QVariantMap {
         map.insert("password".to_string(), password.into());
         map.insert("notes".to_string(), notes.into());
         map.insert("iconPath".to_string(), icon_data_url.into());
-        map.insert("customFields".to_string(), value.custom_fields.into());
+        map.insert(
+            "customFields".to_string(),
+            value.custom_fields.clone().into(),
+        );
 
         if let Ok(_) = totp {
             map.insert("hasTotp".to_string(), true.into());
@@ -354,9 +354,15 @@ impl From<RxEntry> for QVariantMap {
     }
 }
 
-impl Into<QVariant> for RxEntry {
-    fn into(self) -> QVariant {
-        Into::<QVariantMap>::into(self).into()
+impl From<RxEntry> for QVariantMap {
+    fn from(value: RxEntry) -> QVariantMap {
+        QVariantMap::from(&value)
+    }
+}
+
+impl From<RxEntry> for QVariant {
+    fn from(value: RxEntry) -> Self {
+        Into::<QVariantMap>::into(value).into()
     }
 }
 
@@ -383,24 +389,16 @@ impl std::fmt::Debug for RxDatabase {
     }
 }
 
-fn load_groups_recursive(group: &Group, icons: &HashMap<Uuid, Icon>) -> Vec<RxGroup> {
-    let load_entry = |entry: &Entry| {
-        let icon = entry
-            .custom_icon_uuid
-            .and_then(|icon_uuid| icons.get(&icon_uuid));
-
-        RxEntry::new(entry.clone(), group.uuid, icon.cloned())
-    };
-
+fn load_groups_recursive(group: &mut Group, icons: &mut HashMap<Uuid, Icon>) -> Vec<RxGroup> {
     let this_group_id = group.uuid;
     let mut groups = vec![];
     let mut subgroups = vec![];
     let mut entries = vec![];
 
-    for node in group.children.iter() {
-        match node.as_ref() {
-            NodeRef::Group(subgroup) => {
-                let mut rx_groups: Vec<_> = load_groups_recursive(subgroup, icons)
+    for node in group.children.iter_mut() {
+        match node.as_mut() {
+            NodeRefMut::Group(mut subgroup) => {
+                let mut rx_groups: Vec<_> = load_groups_recursive(&mut subgroup, icons)
                     .into_iter()
                     .map(|mut subgroup| {
                         subgroup.parent = Some(this_group_id);
@@ -410,13 +408,16 @@ fn load_groups_recursive(group: &Group, icons: &HashMap<Uuid, Icon>) -> Vec<RxGr
 
                 subgroups.append(&mut rx_groups);
             }
-            NodeRef::Entry(entry) => {
-                entries.push(load_entry(entry));
+            NodeRefMut::Entry(entry) => {
+                let icon = entry
+                    .custom_icon_uuid
+                    .and_then(|icon_uuid| icons.remove(&icon_uuid));
+                entries.push(RxEntry::new(entry, group.uuid, icon));
             }
         }
     }
 
-    groups.push(RxGroup::new(&group, subgroups, entries));
+    groups.push(RxGroup::new(group, subgroups, entries));
     groups
 }
 
@@ -438,8 +439,8 @@ impl<'a> Iterator for RxGroupIter<'a> {
 }
 
 impl RxDatabase {
-    pub fn new(db: Zeroizing<ZeroableDatabase>) -> Self {
-        let icons: HashMap<Uuid, Icon> = db
+    pub fn new(db: &mut Zeroizing<ZeroableDatabase>) -> Self {
+        let mut icons: HashMap<Uuid, Icon> = db
             .meta
             .custom_icons
             .icons
@@ -449,7 +450,7 @@ impl RxDatabase {
 
         // There should only be one group in the vec, which is the
         // root.
-        let mut rx_groups = load_groups_recursive(&db.root, &icons);
+        let mut rx_groups = load_groups_recursive(&mut db.root, &mut icons);
         let root_group = rx_groups.swap_remove(0);
 
         Self { root: root_group }
@@ -475,10 +476,9 @@ impl RxDatabase {
             .flat_map(|group| group.entries.iter())
     }
 
-    pub fn get_group(&self, group_uuid: Uuid) -> Option<RxGroup> {
+    pub fn get_group(&self, group_uuid: Uuid) -> Option<&RxGroup> {
         self.all_groups_iter()
             .find(|group| group.uuid == group_uuid)
-            .cloned()
     }
 
     pub fn get_group_filter_subgroups(
@@ -501,13 +501,12 @@ impl RxDatabase {
         maybe_group
     }
 
-    pub fn get_entry(&self, entry_uuid: Uuid) -> Option<RxEntry> {
+    pub fn get_entry(&self, entry_uuid: Uuid) -> Option<&RxEntry> {
         self.all_entries_iter()
-            .cloned()
             .find(|entry| entry.uuid == entry_uuid)
     }
 
-    pub fn get_entries(&self, group_uuid: Uuid, search_term: Option<&str>) -> Vec<RxEntry> {
+    pub fn get_entries(&self, group_uuid: Uuid, search_term: Option<&str>) -> Vec<&RxEntry> {
         let search_term = search_term.map(|term| term.to_lowercase());
         let group = self.get_group(group_uuid);
         let entries_in_group = group.as_ref().map(|group| group.entries.as_slice());
@@ -534,7 +533,6 @@ impl RxDatabase {
                         Some(entry)
                     }
                 })
-                .cloned()
                 .collect::<Vec<_>>()
         });
 

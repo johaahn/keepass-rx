@@ -192,8 +192,8 @@ impl Handler<OpenDatabase> for KeepassRxActor {
 
                 let open_result = spawn_blocking(move || -> Result<RxDatabase> {
                     let db = Database::open(&mut db_file, db_key)?;
-                    let wrapped_db = Zeroizing::new(ZeroableDatabase(db));
-                    let rx_db = RxDatabase::new(wrapped_db);
+                    let mut wrapped_db = Zeroizing::new(ZeroableDatabase(db));
+                    let rx_db = RxDatabase::new(&mut wrapped_db);
                     Ok(rx_db)
                 })
                 .await??;
@@ -516,8 +516,7 @@ impl Handler<EncryptMasterPassword> for KeepassRxActor {
         // UI. It is run on a separate fire-and-forget async call,
         // which itself spawns a separate thread pool to actually
         // encrypt the password. If we were to wait for the
-        // actix::spawn to complete, the UI would still block. The
-        // type annotation here is just for the compiler.
+        // actix::spawn to complete, the UI would still block.
         let handle: JoinHandle<Result<_>> = actix::spawn(async move {
             let stored_pw = stored_pw.ok_or(anyhow!("No master password stored"));
 

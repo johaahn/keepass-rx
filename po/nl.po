@@ -3,30 +3,30 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-31 12:48+0100\n"
-"PO-Revision-Date: 2025-10-22 17:53+0200\n"
+"PO-Revision-Date: 2025-10-31 20:02+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
-"Language-Team: \n"
+"Language-Team: Dutch <https://hosted.weblate.org/projects/ubports/keepassrx/"
+"nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.7\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.1-dev\n"
 
 msgid "Blank page thing"
-msgstr ""
+msgstr "Blanco paginading"
 
-#, fuzzy
 msgid ""
 "KeePassRX is a work-in-progress password manager for KeePass password "
 "databases. It is licensed under the GNU GPL v3 license."
 msgstr ""
-"KeepassRX is een ontwikkeling zijnde wachtwoordbeheerder voor KeePass-"
+"KeePassRX is een in ontwikkeling zijnde wachtwoordbeheerder voor KeePass-"
 "databanken, uitgebracht onder de GNU GPL v3-licentie."
 
 msgid ""
@@ -37,7 +37,7 @@ msgstr ""
 "agnos.is/projectmoon/keepass-rx</a>"
 
 msgid "Add Database"
-msgstr ""
+msgstr "Databank toevoegen"
 
 msgid "Settings"
 msgstr "Instellingen"
@@ -46,61 +46,59 @@ msgid "About"
 msgstr "Over"
 
 msgid "Loading last database:"
-msgstr ""
+msgstr "De vorige databank wordt geopend:"
 
 msgid "Select Database"
-msgstr ""
+msgstr "Databank kiezen"
 
 msgid "Tap + to import a database."
-msgstr ""
+msgstr "Druk op ‘+’ om een databank toe te voegen."
 
 msgid "It will only be removed from the app, not your device."
 msgstr ""
+"Let op: de databank wordt alleen verwijderd uit de app, niet van je apparaat."
 
 msgid "Lock"
-msgstr ""
+msgstr "Vergrendelen"
 
 msgid "Close"
-msgstr ""
+msgstr "Sluiten"
 
 msgid "Back"
-msgstr ""
+msgstr "Terug"
 
 msgid "Search"
 msgstr "Zoeken"
 
-#, fuzzy
 msgid "Cancel Search"
-msgstr "Zoeken"
+msgstr "Zoekopdracht afbreken"
 
 msgid "Lock Database"
-msgstr ""
+msgstr "Databank vergrendelen"
 
 msgid "Close Database"
-msgstr ""
+msgstr "Databank sluiten"
 
 msgid "Enter the database master password"
-msgstr ""
+msgstr "Voer het hoofdwachtwoord in"
 
-#, fuzzy
 msgid "Master Password"
-msgstr "Wachtwoord"
+msgstr "Hoofdwachtwoord"
 
 msgid "Open"
 msgstr "Openen"
 
-#, fuzzy
 msgid "Opening"
-msgstr "Openen"
+msgstr "Bezig met openen…"
 
 msgid "Untitled Entry"
-msgstr ""
+msgstr "Naamloos item"
 
 msgid "Notes"
-msgstr ""
+msgstr "Aantekeningen"
 
 msgid "Tap to copy"
-msgstr ""
+msgstr "Druk om te kopiëren"
 
 msgid "Manual path set."
 msgstr "Stel de locatie handmatig in."
@@ -109,22 +107,23 @@ msgid ""
 "The passcode is the first five characters of the database password (or the "
 "whole password if less than five characters)."
 msgstr ""
+"De toegangscode bestaat uit de eerste vijf tekens van het databankwachtwoord "
+"(of het gehele wachtwoord, indien minder dan vijf tekens)."
 
-#, fuzzy
 msgid "Passcode"
-msgstr "Wachtwoord"
+msgstr "Toegangscode"
 
 msgid "Unlock"
-msgstr ""
+msgstr "Ontgrendelen"
 
 msgid "Securely Unlocking"
-msgstr ""
+msgstr "Veilig ontgrendelen"
 
 msgid "Securely Locking"
-msgstr ""
+msgstr "Veilig vergrendelen"
 
 msgid "Database Not Opening?"
-msgstr ""
+msgstr "Wordt de databank niet geopend?"
 
 #, fuzzy
 #~ msgid "Manual Import"

@@ -79,6 +79,12 @@ CLI.
 Built on the work of the [original Keepass app][original] by David
 Ventura.
 
+## Translating
+
+[KeePassRX can be translated on Hosted Weblate][translate]. The
+localization platform of this project is sponsored by Hosted Weblate
+via their free hosting plan for Libre and Open Source Projects.
+
 ## License
 
 Copyright (C) 2025 projectmoon, David Ventura
@@ -96,3 +102,4 @@ You should have received a copy of the GNU General Public License along with
 this program. If not, see <http://www.gnu.org/licenses/>.
 
 [original]: https://github.com/DavidVentura/Keepass
+[translate]: https://hosted.weblate.org/projects/ubports/keepassrx/

@@ -420,6 +420,23 @@ fn load_groups_recursive(group: &Group, icons: &HashMap<Uuid, Icon>) -> Vec<RxGr
     groups
 }
 
+struct RxGroupIter<'a> {
+    stack: Vec<&'a RxGroup>,
+}
+
+impl<'a> Iterator for RxGroupIter<'a> {
+    type Item = &'a RxGroup;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let node = self.stack.pop()?;
+        // Push children in reverse so they come out in original order.
+        for child in node.subgroups.iter().rev() {
+            self.stack.push(child);
+        }
+        Some(node)
+    }
+}
+
 impl RxDatabase {
     pub fn new(db: Zeroizing<ZeroableDatabase>) -> Self {
         let icons: HashMap<Uuid, Icon> = db
@@ -447,18 +464,13 @@ impl RxDatabase {
         &self.root
     }
 
-    fn all_groups_iter(&self) -> impl Iterator<Item = &RxGroup> {
-        let root_iter = std::iter::once(&self.root);
-
-        let all_subgroups =
-            self.root.subgroups.iter().flat_map(|subgroup| {
-                std::iter::once(subgroup).chain(subgroup.subgroups.iter())
-            });
-
-        root_iter.chain(all_subgroups)
+    pub fn all_groups_iter(&self) -> impl Iterator<Item = &RxGroup> {
+        RxGroupIter {
+            stack: vec![&self.root],
+        }
     }
 
-    fn all_entries_iter(&self) -> impl Iterator<Item = &RxEntry> {
+    pub fn all_entries_iter(&self) -> impl Iterator<Item = &RxEntry> {
         self.all_groups_iter()
             .flat_map(|group| group.entries.iter())
     }

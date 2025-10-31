@@ -1,47 +1,22 @@
 use actix::prelude::*;
 use anyhow::{Result, anyhow};
-use dirs::data_dir;
 use keepass::{Database, DatabaseKey};
-use qmeta_async::with_executor;
 use qmetaobject::*;
 use secstr::SecUtf8;
 use std::cell::RefCell;
 use std::collections::HashMap;
-use std::fs::{File, create_dir_all, remove_dir_all};
-use std::path::{Path, PathBuf};
+use std::fs::File;
 use std::sync::Arc;
 use tokio::task::{JoinHandle, spawn_blocking};
+use uuid::Uuid;
 use zeroize::{Zeroize, Zeroizing};
 
-use crate::rx::{EncryptedPassword, RxDatabase, ZeroableDatabase};
-
-const APP_ID: &'static str = "keepassrx.projectmoon";
-
-pub fn app_data_path() -> PathBuf {
-    let data_dir = data_dir().expect("no data dir?");
-    PathBuf::from(data_dir).join(APP_ID)
-}
-
-pub fn imported_databases_path() -> PathBuf {
-    PathBuf::from(app_data_path()).join(APP_ID).join("imported")
-}
-
-pub fn move_old_db() {
-    let db_path = app_data_path().join("db.kdbx");
-
-    if db_path.exists() {
-        let dest = imported_databases_path().join("db.kdbx");
-        match std::fs::copy(&db_path, dest) {
-            Ok(_) => {
-                println!("Copied old db.kdbx to imported directory");
-                if let Err(err) = std::fs::remove_file(db_path) {
-                    println!("Failed to remove old db.kdbx: {}", err);
-                }
-            }
-            Err(err) => println!("Failed to copy old db.kdbx: {}", err),
-        }
-    }
-}
+use super::KeepassRx;
+use super::models::RxListItem;
+use crate::{
+    gui::utils::imported_databases_path,
+    rx::{EncryptedPassword, RxDatabase, RxFieldName, ZeroableDatabase},
+};
 
 #[derive(Default)]
 pub struct KeepassRxActor {
@@ -84,60 +59,106 @@ impl Actor for KeepassRxActor {
 
 #[derive(Message)]
 #[rtype(result = "anyhow::Result<()>")]
-struct OpenDatabase {
-    db_name: String,
-    key_path: Option<String>,
+pub struct OpenDatabase {
+    pub db_name: String,
+    pub key_path: Option<String>,
 }
 
 #[derive(Message)]
 #[rtype(result = "anyhow::Result<()>")]
-struct DeleteDatabase {
-    db_name: String,
+pub struct DeleteDatabase {
+    pub db_name: String,
 }
 
 #[derive(Message)]
 #[rtype(result = "()")]
-struct CloseDatabase;
+pub struct CloseDatabase;
 
 #[derive(Message)]
 #[rtype(result = "()")]
-struct GetEntries {
-    search_term: Option<String>,
+pub struct GetEntries {
+    // None = root uuid
+    pub group_uuid: Option<Uuid>,
+    pub search_term: Option<String>,
 }
 
 #[derive(Message)]
 #[rtype(result = "()")]
-struct GetGroups;
-
-#[derive(Message)]
-#[rtype(result = "()")]
-struct GetTotp {
-    entry_uuid: String,
+pub struct GetSingleEntry {
+    pub entry_uuid: Uuid,
 }
 
 #[derive(Message)]
 #[rtype(result = "()")]
-struct StoreMasterPassword {
-    master_password: SecUtf8,
+pub struct GetFieldValue {
+    pub entry_uuid: Uuid,
+    pub field_name: RxFieldName,
+}
+
+impl GetEntries {
+    pub fn root(search_term: Option<String>) -> Self {
+        Self {
+            group_uuid: None,
+            search_term,
+        }
+    }
+
+    pub fn for_uuid(group_uuid: Uuid, search_term: Option<String>) -> Self {
+        Self {
+            group_uuid: Some(group_uuid),
+            search_term,
+        }
+    }
 }
 
 #[derive(Message)]
 #[rtype(result = "()")]
-struct EncryptMasterPassword;
+pub struct GetGroups {
+    // None = root uuid
+    pub group_uuid: Option<Uuid>,
+}
 
-#[derive(Message)]
-#[rtype(result = "()")]
-struct DecryptMasterPassword {
-    short_password: SecUtf8,
+impl GetGroups {
+    pub fn root() -> Self {
+        Self { group_uuid: None }
+    }
+
+    pub fn for_uuid(group_uuid: Uuid) -> Self {
+        Self {
+            group_uuid: Some(group_uuid),
+        }
+    }
 }
 
 #[derive(Message)]
 #[rtype(result = "()")]
-struct InvalidateMasterPassword;
+pub struct GetTotp {
+    pub entry_uuid: String,
+}
 
 #[derive(Message)]
 #[rtype(result = "()")]
-struct CheckLockingStatus;
+pub struct StoreMasterPassword {
+    pub master_password: SecUtf8,
+}
+
+#[derive(Message)]
+#[rtype(result = "()")]
+pub struct EncryptMasterPassword;
+
+#[derive(Message)]
+#[rtype(result = "()")]
+pub struct DecryptMasterPassword {
+    pub short_password: SecUtf8,
+}
+
+#[derive(Message)]
+#[rtype(result = "()")]
+pub struct InvalidateMasterPassword;
+
+#[derive(Message)]
+#[rtype(result = "()")]
+pub struct CheckLockingStatus;
 
 impl Handler<OpenDatabase> for KeepassRxActor {
     type Result = AtomicResponse<Self, anyhow::Result<()>>;
@@ -209,7 +230,7 @@ impl Handler<CloseDatabase> for KeepassRxActor {
         AtomicResponse::new(Box::pin(
             async move {
                 // Remove from option.
-                let mut db = db.ok_or(anyhow!("Database not open"))?;
+                let mut db = db.ok_or(anyhow!("CloseDatabase: Database not open"))?;
                 db.close();
                 Ok(())
             }
@@ -254,24 +275,39 @@ impl Handler<DeleteDatabase> for KeepassRxActor {
 impl Handler<GetGroups> for KeepassRxActor {
     type Result = ();
 
-    fn handle(&mut self, _: GetGroups, _: &mut Self::Context) -> Self::Result {
+    fn handle(&mut self, msg: GetGroups, _: &mut Self::Context) -> Self::Result {
         let binding = self.gui.clone();
         let binding = binding.pinned();
         let gui = binding.borrow();
 
         let db_binding = self.curr_db.borrow();
-        let db = match db_binding.as_ref().ok_or(anyhow!("Database not open")) {
+        let db = match db_binding
+            .as_ref()
+            .ok_or(anyhow!("GetGroups: Database not open"))
+        {
             Ok(db) => db,
             Err(err) => return gui.errorReceived(format!("{}", err)),
         };
 
-        let groups: QStringList = db
-            .groups()
-            .into_iter()
-            .map(|group| group.name.clone())
-            .collect();
+        let group_uuid = match msg.group_uuid {
+            Some(id) => id,
+            None => db.root_group().uuid,
+        };
 
-        gui.groupsReceived(groups);
+        let group = db.get_group(group_uuid);
+
+        let this_group_name = group
+            .as_ref()
+            .map(|grp| QString::from(grp.name.as_ref()))
+            .unwrap_or_default();
+
+        let parent_group_uuid = group
+            .as_ref()
+            .and_then(|grp| grp.parent.map(|parent| QString::from(parent.to_string())))
+            .unwrap_or_default();
+
+        let this_group_uuid = QString::from(group_uuid.to_string());
+        gui.groupsReceived(parent_group_uuid, this_group_uuid, this_group_name);
     }
 }
 
@@ -283,22 +319,92 @@ impl Handler<GetEntries> for KeepassRxActor {
         let gui = binding.borrow();
 
         let db_binding = self.curr_db.borrow();
-        let db = match db_binding.as_ref().ok_or(anyhow!("Database not open")) {
+        let db = match db_binding
+            .as_ref()
+            .ok_or(anyhow!("GetEntries: Database not open"))
+        {
             Ok(db) => db,
             Err(err) => return gui.errorReceived(format!("{}", err)),
         };
 
-        let entries = db.get_entries(msg.search_term.as_deref());
-        let map: HashMap<String, QVariantList> = entries
-            .into_iter()
-            .map(|(group_name, entries)| {
-                let qvariants = entries.into_iter().map(|ent| Into::<QVariant>::into(ent));
-                let qvariant_list = QVariantList::from_iter(qvariants);
-                (group_name, qvariant_list)
-            })
-            .collect();
+        let group_uuid = match msg.group_uuid {
+            Some(id) => id,
+            None => db.root_group().uuid,
+        };
 
-        gui.entriesReceived(QVariantMap::from(map));
+        let search_term = msg.search_term.as_deref();
+        let group = db.get_group_filter_subgroups(group_uuid, search_term);
+        let entries = db.get_entries(group_uuid, search_term);
+
+        // Groups first, then entries below.
+        let mut item_list: Vec<RxListItem> = group
+            .map(|grp| grp.subgroups.into_iter().map(RxListItem::from).collect())
+            .unwrap_or_default();
+
+        item_list.append(&mut entries.into_iter().map(RxListItem::from).collect());
+
+        let q_entries: QVariantList = item_list.into_iter().collect();
+        gui.entriesReceived(q_entries);
+    }
+}
+
+impl Handler<GetSingleEntry> for KeepassRxActor {
+    type Result = ();
+    fn handle(&mut self, msg: GetSingleEntry, _: &mut Self::Context) -> Self::Result {
+        let binding = self.gui.clone();
+        let binding = binding.pinned();
+        let gui = binding.borrow();
+
+        let db_binding = self.curr_db.borrow();
+        let db = match db_binding
+            .as_ref()
+            .ok_or(anyhow!("GetSingleEntry: Database not open"))
+        {
+            Ok(db) => db,
+            Err(err) => return gui.errorReceived(format!("{}", err)),
+        };
+
+        let entry = db.get_entry(msg.entry_uuid);
+
+        let q_entry = match entry.map(QVariantMap::from) {
+            Some(map) => map.to_qvariant(),
+            None => QVariant::default(), // null
+        };
+
+        gui.singleEntryReceived(q_entry);
+    }
+}
+
+impl Handler<GetFieldValue> for KeepassRxActor {
+    type Result = ();
+    fn handle(&mut self, msg: GetFieldValue, _: &mut Self::Context) -> Self::Result {
+        let binding = self.gui.clone();
+        let binding = binding.pinned();
+        let gui = binding.borrow();
+
+        let db_binding = self.curr_db.borrow();
+        let db = match db_binding
+            .as_ref()
+            .ok_or(anyhow!("GetSingleEntry: Database not open"))
+        {
+            Ok(db) => db,
+            Err(err) => return gui.errorReceived(format!("{}", err)),
+        };
+
+        let value: QString = db
+            .get_entry(msg.entry_uuid)
+            .and_then(|entry| {
+                entry
+                    .get_field_value(&msg.field_name)
+                    .map(|val| QString::from(val))
+            })
+            .unwrap_or_default();
+
+        gui.fieldValueReceived(
+            QString::from(msg.entry_uuid.to_string()),
+            QString::from(msg.field_name.to_string()),
+            value,
+        );
     }
 }
 
@@ -310,7 +416,10 @@ impl Handler<GetTotp> for KeepassRxActor {
         let gui = binding.borrow();
 
         let db_binding = self.curr_db.borrow();
-        let db = match db_binding.as_ref().ok_or(anyhow!("Database not open")) {
+        let db = match db_binding
+            .as_ref()
+            .ok_or(anyhow!("GetTotp: Database not open"))
+        {
             Ok(db) => db,
             Err(err) => return gui.errorReceived(format!("{}", err)),
         };
@@ -506,247 +615,5 @@ impl Handler<DecryptMasterPassword> for KeepassRxActor {
         });
 
         self.current_operation = Some(handle);
-    }
-}
-
-#[derive(QObject, Default)]
-#[allow(non_snake_case, dead_code)]
-pub struct KeepassRx {
-    base: qt_base_class!(trait QObject),
-    actor: Option<Addr<KeepassRxActor>>,
-    last_db: Option<String>,
-
-    lastDB: qt_property!(QString; READ getLastDB WRITE setLastDB NOTIFY lastDbChanged),
-    databaseOpen: qt_property!(bool),
-    isMasterPasswordEncrypted: qt_property!(bool; NOTIFY masterPasswordStateChanged),
-
-    // database management
-    listImportedDatabases: qt_method!(fn(&self)),
-    importDatabase: qt_method!(fn(&self, path: String)),
-    openDatabase: qt_method!(fn(&mut self, db_name: String, key_path: QString)),
-    closeDatabase: qt_method!(fn(&mut self)),
-    deleteDatabase: qt_method!(fn(&self, db_name: String)),
-
-    // group and entry management
-    getGroups: qt_method!(fn(&self)),
-    getEntries: qt_method!(fn(&self, search_term: QString)),
-    getTotp: qt_method!(fn(&self, entry_uuid: QString)),
-
-    // easy-open management
-    storeMasterPassword: qt_method!(fn(&self, master_password: QString)),
-    encryptMasterPassword: qt_method!(fn(&self)),
-    decryptMasterPassword: qt_method!(fn(&self, short_password: QString)),
-    invalidateMasterPassword: qt_method!(fn(&self)),
-    checkLockingStatus: qt_method!(fn(&self)),
-
-    // signals
-    lastDbChanged: qt_signal!(value: QString),
-    fileListingCompleted: qt_signal!(),
-    databaseImported: qt_signal!(db_name: QString),
-    databaseOpened: qt_signal!(),
-    databaseClosed: qt_signal!(),
-    databaseDeleted: qt_signal!(db_name: QString),
-    databaseOpenFailed: qt_signal!(message: String),
-    groupsReceived: qt_signal!(groups: QStringList),
-    entriesReceived: qt_signal!(entries: QVariantMap),
-    errorReceived: qt_signal!(error: String),
-    totpReceived: qt_signal!(totp: QVariantMap),
-
-    // easy-open signals
-    masterPasswordStored: qt_signal!(),
-    masterPasswordInvalidated: qt_signal!(),
-    masterPasswordStateChanged: qt_signal!(encrypted: bool),
-    masterPasswordDecrypted: qt_signal!(),
-    lockingStatusReceived: qt_signal!(status: String),
-    decryptionFailed: qt_signal!(error: QString),
-}
-
-#[allow(non_snake_case)]
-impl KeepassRx {
-    pub fn new(last_db: Option<String>) -> Self {
-        KeepassRx {
-            last_db: last_db,
-            ..Default::default()
-        }
-    }
-
-    pub fn getLastDB(&self) -> QString {
-        self.last_db.clone().map(QString::from).unwrap_or_default()
-    }
-
-    pub fn setLastDB(&mut self, last_db: QString) {
-        let new_last_db = if !last_db.is_null() {
-            Some(last_db.to_string())
-        } else {
-            None
-        };
-
-        let change = self.last_db != new_last_db;
-
-        if change {
-            let last_db_file = app_data_path().join("last-db");
-            let result = match new_last_db {
-                Some(ref db) => std::fs::write(last_db_file, db),
-                None => std::fs::write(last_db_file, "".to_string()),
-            };
-
-            if let Err(err) = result {
-                println!("Unable to write last-db file: {}", err);
-            }
-
-            self.last_db = new_last_db.clone();
-            self.lastDbChanged(new_last_db.map(QString::from).unwrap_or_default());
-        }
-    }
-
-    #[with_executor]
-    pub fn listImportedDatabases(&self) {
-        let list_dbs = || -> Result<()> {
-            let dbs = std::fs::read_dir(imported_databases_path())?;
-
-            for db in dbs {
-                self.databaseImported(QString::from(
-                    db?.file_name().to_string_lossy().to_string(),
-                ));
-            }
-
-            Ok(())
-        };
-
-        match list_dbs() {
-            Ok(_) => self.fileListingCompleted(),
-            Err(err) => self.errorReceived(format!("{}", err)),
-        }
-    }
-
-    /// Copy a chosen databse file into the local data structure. This
-    /// is completely sync because we need to finalize() the transfer
-    /// in QML.
-    #[with_executor]
-    pub fn importDatabase(&self, path: String) {
-        let copy_file = move || -> Result<String> {
-            let source = Path::new(&path);
-            let db_name = source
-                .file_name()
-                .ok_or(anyhow!("No filename found"))?
-                .to_string_lossy()
-                .into_owned();
-
-            let dest_dir = imported_databases_path();
-            let dest = dest_dir.join(&db_name);
-
-            if source == dest {
-                return Err(anyhow!("Trying to copy source to the same destination"));
-            }
-
-            println!("Making directory: {}", dest_dir.display());
-            create_dir_all(&dest_dir)?;
-
-            println!(
-                "Copying database from {} to {}",
-                source.display(),
-                dest.display()
-            );
-
-            // Nuke db.kdbx if it exists and is a directory for some
-            // reason. Can result from corruption or weirdness.
-            if dest.exists() && dest.is_dir() {
-                println!(
-                    "{} is a directory for some reason. Removing.",
-                    dest.display()
-                );
-                remove_dir_all(&dest)?;
-            }
-
-            let bytes_copied = std::fs::copy(&source, &dest)?;
-            println!("Copied {} bytes", bytes_copied);
-            Ok(db_name)
-        };
-
-        match copy_file() {
-            Ok(db_name) => self.databaseImported(QString::from(db_name)),
-            Err(err) => self.databaseOpenFailed(format!("{}", err)),
-        }
-    }
-
-    #[with_executor]
-    pub fn openDatabase(&mut self, db_name: String, key_path: QString) {
-        let key_path = match key_path {
-            kp if !kp.is_null() && !kp.is_empty() => Some(kp.to_string()),
-            _ => None,
-        };
-
-        let actor = self.actor.clone().expect("Actor not initialized");
-        actix::spawn(actor.send(OpenDatabase { db_name, key_path }));
-    }
-
-    #[with_executor]
-    pub fn closeDatabase(&mut self) {
-        let actor = self.actor.clone().expect("Actor not initialized");
-        actix::spawn(actor.send(CloseDatabase));
-    }
-
-    #[with_executor]
-    pub fn deleteDatabase(&self, db_name: String) {
-        let actor = self.actor.clone().expect("Actor not initialized");
-        actix::spawn(actor.send(DeleteDatabase { db_name }));
-    }
-
-    #[with_executor]
-    pub fn getGroups(&self) {
-        let actor = self.actor.clone().expect("Actor not initialized");
-        actix::spawn(actor.send(GetGroups));
-    }
-
-    #[with_executor]
-    pub fn getEntries(&self, search_term: QString) {
-        let search_term = match search_term {
-            term if !term.is_null() => Some(term.to_string()),
-            _ => None,
-        };
-
-        let actor = self.actor.clone().expect("Actor not initialized");
-        actix::spawn(actor.send(GetEntries { search_term }));
-    }
-
-    #[with_executor]
-    pub fn getTotp(&self, entry_uuid: QString) {
-        let entry_uuid = entry_uuid.to_string();
-        let actor = self.actor.clone().expect("Actor not initialized");
-        actix::spawn(actor.send(GetTotp { entry_uuid }));
-    }
-
-    #[with_executor]
-    pub fn storeMasterPassword(&self, master_password: QString) {
-        let actor = self.actor.clone().expect("Actor not initialized");
-        actix::spawn(actor.send(StoreMasterPassword {
-            master_password: SecUtf8::from(master_password.to_string()),
-        }));
-    }
-
-    #[with_executor]
-    pub fn encryptMasterPassword(&self) {
-        let actor = self.actor.clone().expect("Actor not initialized");
-        actix::spawn(actor.send(EncryptMasterPassword));
-    }
-
-    #[with_executor]
-    pub fn decryptMasterPassword(&self, short_password: QString) {
-        let actor = self.actor.clone().expect("Actor not initialized");
-        actix::spawn(actor.send(DecryptMasterPassword {
-            short_password: SecUtf8::from(short_password.to_string()),
-        }));
-    }
-
-    #[with_executor]
-    pub fn invalidateMasterPassword(&self) {
-        let actor = self.actor.clone().expect("Actor not initialized");
-        actix::spawn(actor.send(InvalidateMasterPassword));
-    }
-
-    #[with_executor]
-    pub fn checkLockingStatus(&self) {
-        let actor = self.actor.clone().expect("Actor not initialized");
-        actix::spawn(actor.send(CheckLockingStatus));
     }
 }

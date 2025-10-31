@@ -21,22 +21,27 @@ extern crate qmetaobject;
 
 use actix::Actor;
 use anyhow::Result;
-use app::KeepassRxApp;
 use cpp::cpp;
 use gettextrs::{bindtextdomain, textdomain};
-use gui::{KeepassRxActor, imported_databases_path, move_old_db};
 use qmeta_async::with_executor;
-use qmetaobject::{QObjectBox, QQuickStyle, QQuickView, qml_register_type};
+use qmetaobject::{QObjectBox, QQuickStyle, QQuickView, qml_register_enum, qml_register_type};
 use std::env;
 use std::path::PathBuf;
 use std::sync::Arc;
-
-use crate::gui::{KeepassRx, app_data_path};
 
 mod app;
 mod gui;
 mod qrc;
 mod rx;
+
+use crate::app::KeepassRxApp;
+
+use crate::gui::{
+    KeepassRx,
+    actor::KeepassRxActor,
+    models::{RxItemType, RxListItem},
+    utils::{app_data_path, imported_databases_path, move_old_db},
+};
 
 fn main() -> Result<()> {
     init_gettext();
@@ -55,6 +60,8 @@ fn main() -> Result<()> {
     QQuickStyle::set_style("Suru");
     qrc::load();
     qml_register_type::<KeepassRx>(cstr!("KeepassRx"), 1, 0, cstr!("KeepassRx"));
+    qml_register_type::<RxListItem>(cstr!("RxListItem"), 1, 0, cstr!("RxListItem"));
+    qml_register_enum::<RxItemType>(cstr!("RxItemType"), 1, 0, cstr!("RxItemType"));
 
     // Load last db
     // TODO this is a hack and should be more properly done with QT

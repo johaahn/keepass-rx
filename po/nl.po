@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-28 21:56+0000\n"
+"POT-Creation-Date: 2025-10-31 11:40+0100\n"
 "PO-Revision-Date: 2025-10-22 17:53+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: \n"
@@ -33,90 +33,99 @@ msgstr ""
 
 #: qml/pages/AboutPage.qml:67
 msgid ""
-"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
-"agnos.is/projectmoon/keepass-rx</a>"
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
+"git.agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
-"Broncode: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
-"agnos.is/projectmoon/keepass-rx</a>"
+"Broncode: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
+"git.agnos.is/projectmoon/keepass-rx</a>"
 
-#: qml/pages/DBList.qml:91
+#: qml/pages/DBList.qml:88
 msgid "Add Database"
 msgstr ""
 
-#: qml/pages/DBList.qml:98 qml/pages/EntriesPage.qml:83
+#: qml/pages/DBList.qml:95 qml/pages/EntriesPage.qml:117
 #: qml/pages/OpenDBPage.qml:44 qml/pages/UnlockPage.qml:34
 msgid "Settings"
 msgstr "Instellingen"
 
-#: qml/pages/DBList.qml:105 qml/pages/EntriesPage.qml:92
+#: qml/pages/DBList.qml:102 qml/pages/EntriesPage.qml:126
 #: qml/pages/OpenDBPage.qml:51 qml/pages/UnlockPage.qml:41
 msgid "About"
 msgstr "Over"
 
-#: qml/pages/DBList.qml:125
+#: qml/pages/DBList.qml:122
 msgid "Loading last database:"
 msgstr ""
 
-#: qml/pages/DBList.qml:136
+#: qml/pages/DBList.qml:133
 msgid "Select Database"
 msgstr ""
 
-#: qml/pages/DBList.qml:192
+#: qml/pages/DBList.qml:189
 msgid "Tap + to import a database."
 msgstr ""
 
-#: qml/pages/DBList.qml:294
+#: qml/pages/DBList.qml:287
 msgid "It will only be removed from the app, not your device."
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:45
+#: qml/pages/EntriesPage.qml:67
 msgid "Lock"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:57
+#: qml/pages/EntriesPage.qml:79
 msgid "Close"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:70
+#: qml/pages/EntriesPage.qml:91 qml/pages/OpenDBPage.qml:30
+#: qml/pages/SingleEntry.qml:25
+msgid "Back"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:104
 msgid "Search"
 msgstr "Zoeken"
 
-#: qml/pages/EntriesPage.qml:70
+#: qml/pages/EntriesPage.qml:104
 #, fuzzy
 msgid "Cancel Search"
 msgstr "Zoeken"
 
-#: qml/pages/EntriesPage.qml:104
+#: qml/pages/EntriesPage.qml:138
+msgid "Lock Database"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:148
 msgid "Close Database"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:30
-msgid "Back"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:158
+#: qml/pages/OpenDBPage.qml:162
 msgid "Enter the database master password"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:171
+#: qml/pages/OpenDBPage.qml:175
 #, fuzzy
 msgid "Master Password"
 msgstr "Wachtwoord"
 
-#: qml/pages/OpenDBPage.qml:201
+#: qml/pages/OpenDBPage.qml:205
 msgid "Open"
 msgstr "Openen"
 
-#: qml/pages/OpenDBPage.qml:218
+#: qml/pages/OpenDBPage.qml:222
 #, fuzzy
 msgid "Opening"
 msgstr "Openen"
 
-#: qml/pages/SingleEntry.qml:163
+#: qml/pages/SingleEntry.qml:18
+msgid "Untitled Entry"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:179
 msgid "Notes"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:171
+#: qml/pages/SingleEntry.qml:187
 msgid "Tap to copy"
 msgstr ""
 

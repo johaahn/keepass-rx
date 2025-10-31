@@ -15,31 +15,53 @@ UITK.Page {
         property bool databaseLocking: true
     }
 
+    property string parentGroupUuid
+    property string previousGroupUuid
+    property string groupUuid
+    property string groupName
     property bool searchMode: false
 
-    id: sectionFlickable
+    onGroupUuidChanged: {
+        if (groupUuid && (previousGroupUuid && groupUuid != previousGroupUuid)) {
+	    populate();
+        }
+    }
+
+    function popGroup() {
+	if (parentGroupUuid) {
+            groupUuid = parentGroupUuid;
+	} else {
+	    console.log('Cannot move up from root group!');
+	}
+    }
 
     function lockDatabase() {
-        pageStack.removePages(adaptiveLayout.primaryPageSource);
-        adaptiveLayout.primaryPageSource = Qt.resolvedUrl("./UnlockPage.qml");
         keepassrx.closeDatabase();
+        groupUuid = null;
+        groupName = null;
+        root.lockUI();
     }
 
     function closeDatabase() {
-        pageStack.removePages(adaptiveLayout.primaryPageSource);
-        adaptiveLayout.primaryPageSource = Qt.resolvedUrl("./DBList.qml");
         keepassrx.invalidateMasterPassword();
         keepassrx.closeDatabase();
+        groupUuid = null;
+        groupName = null;
+        root.closeUI();
+    }
+
+    function isAtRoot() {
+	return !parentGroupUuid || groupUuid == parentGroupUuid
     }
 
     header: UITK.PageHeader {
         id: header
-        title: "KeePassRX"
+        title: groupName && parentGroupUuid ? groupName : "KeePassRX"
 
         leadingActionBar.actions: [
             UITK.Action {
-                enabled: settings.databaseLocking
-                visible: settings.databaseLocking
+                enabled: settings.databaseLocking && isAtRoot()
+                visible: settings.databaseLocking && isAtRoot()
                 name: "Lock"
                 //TRANSLATORS: Securely lock (NOT close) an open database.
                 text: i18n.tr("Lock")
@@ -50,14 +72,26 @@ UITK.Page {
             },
 
             UITK.Action {
-                enabled: !settings.databaseLocking
-                visible: !settings.databaseLocking
+                enabled: !settings.databaseLocking && isAtRoot()
+                visible: !settings.databaseLocking && isAtRoot()
                 name: "Close"
                 //TRANSLATORS: Securely close (NOT lock) an open database.
                 text: i18n.tr("Close")
                 iconName: "close"
                 onTriggered: {
                     closeDatabase();
+                }
+            },
+
+	    UITK.Action {
+                enabled: !isAtRoot()
+                visible: !isAtRoot()
+                name: "Go Back"
+                //TRANSLATORS: Move back up in the group folder structure.
+                text: i18n.tr("Back")
+                iconName: "back"
+                onTriggered: {
+                    popGroup();
                 }
             }
         ]
@@ -97,9 +131,19 @@ UITK.Page {
             },
 
             UITK.Action {
-                name: "Close"
+                name: "Lock"
                 enabled: settings.databaseLocking
                 visible: settings.databaseLocking
+                // TRANSLATORS: Lock (NOT close) an open database.
+                text: i18n.tr('Lock Database')
+                iconName: "lock"
+                onTriggered: {
+                    lockDatabase();
+                }
+            },
+
+            UITK.Action {
+                name: "Close"
                 // TRANSLATORS: Close (NOT lock) an open database.
                 text: i18n.tr('Close Database')
                 iconName: "close"
@@ -129,34 +173,18 @@ UITK.Page {
                     Layout.fillWidth: true
                     visible: searchMode
                     id: searchField
-                    placeholderText: i18n.ctr("text for search placeholder", "Search")
+                    placeholderText: i18n.ctr("text for search placeholder", "Search entries in this group")
                     inputMethodHints: Qt.ImhNoPredictiveText
                     onTextChanged: {
-                        getEntries();
-                    }
-                }
-            }
-
-            RowLayout {
-                id: groupsBar
-                Layout.fillWidth: true
-                width: parent.width
-
-                UITK.Sections {
-                    id: sections
-                    width: parent.width
-                    Layout.fillWidth: true
-                    model: []
-                    onSelectedIndexChanged: {
-                        getEntries();
+                        getEntries(groupUuid);
                     }
                 }
             }
         }
     }
 
-
     ListView {
+	id: entriesList
         clip: true
         z: 1
         anchors.top: header.bottom
@@ -165,12 +193,11 @@ UITK.Page {
         anchors.bottom: parent.bottom
         spacing: units.gu(0.1)
 
-        id: lv
         model: ListModel {
-            id: listmodel
+            id: entriesListModel
         }
 
-        delegate: DBEntry {}
+      delegate: EntryItem {}
     }
 
     Popup {
@@ -216,43 +243,52 @@ UITK.Page {
     // 3. getEntries
     // 4. onEntriesReceived
     function populate() {
-        keepassrx.getGroups();
+	if (groupUuid) {
+            keepassrx.getGroups(groupUuid);
+	} else {
+	    keepassrx.getRootGroup();
+	}
     }
 
-    function getEntries() {
-        const group = sections.model[sections.selectedIndex]
-        keepassrx.getEntries(searchField.text);
+    function getEntries(groupUuidToGet) {
+        keepassrx.getEntries(groupUuidToGet, searchField.text);
     }
 
     Connections {
         target: keepassrx
 
-        onGroupsReceived: (groups) => {
-            sections.model = groups;
-            getEntries();
+        onDatabaseOpened: {
+            populate();
         }
 
-        onEntriesReceived: (items) => {
-            const group = sections.model[sections.selectedIndex];
-            listmodel.clear();
-            let entries = items[group] || [];
+	// This is a list of groups underneath this group, not ALL the
+	// groups. It's an array of RxListItem entities.
+        onGroupsReceived: (parentGroupId, thisGroupId, thisGroupName, subgroups) => {
+	    // Clear out searching when switching between groups.
+	    searchMode = false;
+	    searchField.text = '';
 
-            if (settings.changeGroupOnSearch && !entries.length) {
-                const keys = Object.keys(items);
-                if (keys.length) {
-                    sections.selectedIndex = sections.model.indexOf(keys[0])
-                    return;
-                }
-            }
+	    // the parent group id will be null if this is the root
+	    parentGroupUuid = parentGroupId;
+            previousGroupUuid = groupUuid;
 
-            for (var i = 0; i < entries.length; i++) {
-                listmodel.append(entries[i]);
+            // Hack to let root group load once, but still be able to load sub-groups.
+            if (!previousGroupUuid) previousGroupUuid = thisGroupId;
+
+	    groupUuid = thisGroupId;
+	    groupName = thisGroupName;
+            getEntries(thisGroupId);
+        }
+
+	// List of entries for this group. It's an array of RxListItem
+	// entities. It includes both immediate subgroups and
+	// immediate child entries in the group.
+        onEntriesReceived: (entries) => {
+	    entriesListModel.clear();
+
+            for (const entry of entries) {
+                entriesListModel.append(entry);
             }
         }
-    }
-
-  Component.onCompleted: {
-      keepassrx.encryptMasterPassword();
-      populate();
     }
 }

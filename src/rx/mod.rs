@@ -7,7 +7,7 @@ use keepass::db::{CustomData, Entry, Group, Icon, NodeRef, TOTP as KeePassTOTP, 
 use qmetaobject::{QString, QVariant, QVariantMap};
 use querystring::querify;
 use secrecy::{ExposeSecret, SecretString};
-use std::{collections::HashMap, ops::Deref, str::FromStr};
+use std::{collections::HashMap, str::FromStr};
 use totp_rs::{Secret, TOTP};
 use uriparse::URI;
 use uuid::Uuid;
@@ -33,32 +33,57 @@ macro_rules! expose {
     }};
 }
 
+macro_rules! expose_opt {
+    ($secret:expr) => {{
+        $secret
+            .as_ref()
+            .map(|secret| secret.expose_secret().to_string())
+    }};
+}
+
+pub(crate) use expose;
+
 #[derive(Zeroize, Default, Clone)]
 pub struct RxTotp {
     pub code: String,
     pub valid_for: String,
 }
 
-#[derive(Zeroize, ZeroizeOnDrop, Default, Clone)]
+#[derive(Zeroize, Default, Clone)]
 pub struct RxGroup {
     #[zeroize(skip)]
     pub uuid: Uuid,
+
+    /// The parent UUID will be None if this is the root group.
+    #[zeroize(skip)]
+    pub parent: Option<Uuid>,
+
     pub name: String,
+    // TODO use some kind of map instead of Vec (since maps do not
+    // impl Zeroize). should be possible once we stop loading secrets
+    // into memory.
+    pub subgroups: Vec<RxGroup>,
+
+    // TODO use some kind of map instead of Vec (since maps do not
+    // impl Zeroize). should be possible once we stop loading secrets
+    // into memory.
     pub entries: Vec<RxEntry>,
 }
 
 impl RxGroup {
-    pub fn new(group: &Group, entries: Vec<RxEntry>) -> Self {
+    pub fn new(group: &Group, subgroups: Vec<RxGroup>, entries: Vec<RxEntry>) -> Self {
         Self {
             uuid: group.uuid,
             name: group.name.clone(),
+            subgroups: subgroups,
             entries: entries,
+            parent: None,
         }
     }
 }
 
 #[derive(Zeroize, Default, Clone)]
-struct RxCustomFields(Vec<(String, SecretString)>);
+pub struct RxCustomFields(Vec<(String, SecretString)>);
 
 impl From<CustomData> for RxCustomFields {
     fn from(value: CustomData) -> Self {
@@ -104,31 +129,73 @@ impl Into<QVariant> for RxCustomFields {
     }
 }
 
+pub enum RxFieldName {
+    Title,
+    Username,
+    Password,
+    Url,
+    CustomField(String),
+}
+
+impl ToString for RxFieldName {
+    fn to_string(&self) -> String {
+        match self {
+            RxFieldName::Username => "Username".to_string(),
+            RxFieldName::Password => "Password".to_string(),
+            RxFieldName::Title => "Title".to_string(),
+            RxFieldName::Url => "URL".to_string(),
+            RxFieldName::CustomField(name) => name.to_owned(),
+        }
+    }
+}
+
+impl From<String> for RxFieldName {
+    fn from(value: String) -> Self {
+        match value.to_lowercase().as_ref() {
+            "username" => RxFieldName::Username,
+            "password" => RxFieldName::Password,
+            "title" => RxFieldName::Title,
+            "url" => RxFieldName::Url,
+            _ => RxFieldName::CustomField(value),
+        }
+    }
+}
+
+impl From<QString> for RxFieldName {
+    fn from(value: QString) -> Self {
+        RxFieldName::from(value.to_string())
+    }
+}
+
 #[derive(Zeroize, Default, Clone)]
 pub struct RxEntry {
     #[zeroize(skip)]
-    uuid: Uuid,
+    pub uuid: Uuid,
 
-    title: Option<SecretString>,
-    username: Option<SecretString>,
-    password: Option<SecretString>,
-    notes: Option<String>,
+    /// An entry always has a parent group.
+    #[zeroize(skip)]
+    pub parent_group: Uuid,
+
+    pub title: Option<SecretString>,
+    pub username: Option<SecretString>,
+    pub password: Option<SecretString>,
+    pub notes: Option<String>,
 
     // A map would be better, but it's not zeroizable.
-    custom_fields: RxCustomFields,
+    pub custom_fields: RxCustomFields,
 
-    url: Option<SecretString>,
-    raw_otp_value: Option<SecretString>,
-    icon_data: Option<Vec<u8>>,
+    pub url: Option<SecretString>,
+    pub raw_otp_value: Option<SecretString>,
+    pub icon_data: Option<Vec<u8>>,
 }
 
 #[allow(dead_code)]
 impl RxEntry {
-    pub fn new_without_icon(entry: Entry) -> Self {
-        Self::new(entry, None)
+    pub fn new_without_icon(entry: Entry, parent_uuid: Uuid) -> Self {
+        Self::new(entry, parent_uuid, None)
     }
 
-    pub fn new(entry: Entry, icon: Option<Icon>) -> Self {
+    pub fn new(entry: Entry, parent_uuid: Uuid, icon: Option<Icon>) -> Self {
         let notes = entry
             .fields
             .iter()
@@ -145,6 +212,7 @@ impl RxEntry {
 
         Self {
             uuid: entry.uuid,
+            parent_group: parent_uuid,
             title: entry.get_title().map(SecretString::from),
             username: entry.get_username().map(SecretString::from),
             password: entry.get_password().map(SecretString::from),
@@ -153,6 +221,24 @@ impl RxEntry {
             url: entry.get_url().map(SecretString::from),
             raw_otp_value: entry.get_raw_otp_value().map(SecretString::from),
             icon_data: icon.map(|i| i.data),
+        }
+    }
+
+    pub fn get_field_value(&self, field_name: &RxFieldName) -> Option<String> {
+        match field_name {
+            RxFieldName::Username => expose_opt!(self.username),
+            RxFieldName::Password => expose_opt!(self.password),
+            RxFieldName::Url => expose_opt!(self.url),
+            RxFieldName::Title => expose_opt!(self.title),
+            RxFieldName::CustomField(name) => {
+                self.custom_fields.0.iter().find_map(|(key, value)| {
+                    if key == name {
+                        Some(value.expose_secret().to_owned())
+                    } else {
+                        None
+                    }
+                })
+            }
         }
     }
 
@@ -210,26 +296,27 @@ impl RxEntry {
             valid_for: otp_valid_for,
         })
     }
+
+    pub fn icon_data_url(&self) -> Option<String> {
+        self.icon_data.as_deref().and_then(|data| {
+            infer::get(data).map(|k| {
+                format!(
+                    "data:{};base64,{}",
+                    k.mime_type(),
+                    BASE64_STANDARD.encode(data)
+                )
+            })
+        })
+    }
 }
 
-impl Into<QVariantMap> for RxEntry {
-    fn into(self) -> QVariantMap {
-        // TODO support standard KeePass icons? (Icon IDs)
-        let icon_data_url: QString = self
-            .icon_data
-            .as_deref()
-            .and_then(|data| {
-                // create qstring here so it will be null after unwrap
-                // if no icon.
-                infer::get(data).map(|k| {
-                    QString::from(format!(
-                        "data:{};base64,{}",
-                        k.mime_type(),
-                        BASE64_STANDARD.encode(data)
-                    ))
-                })
-            })
-            .unwrap_or_default();
+impl From<RxEntry> for QVariantMap {
+    fn from(value: RxEntry) -> QVariantMap {
+        // TODO support standard KeePass icons? (Icon IDs) create
+        // qstring in map step so it will be null after unwrap if no
+        // icon.
+        let icon_data_url: QString =
+            value.icon_data_url().map(QString::from).unwrap_or_default();
 
         let mapper = |value: &Option<SecretString>| {
             value
@@ -238,14 +325,14 @@ impl Into<QVariantMap> for RxEntry {
                 .unwrap_or_default()
         };
 
-        let totp = self.totp();
+        let totp = value.totp();
 
-        let uuid: QString = self.uuid.to_string().into();
-        let url: QString = mapper(&self.url);
-        let username: QString = mapper(&self.username);
-        let title: QString = mapper(&self.title);
-        let password: QString = mapper(&self.password);
-        let notes: QString = self.notes.map(QString::from).unwrap_or_default();
+        let uuid: QString = value.uuid.to_string().into();
+        let url: QString = mapper(&value.url);
+        let username: QString = mapper(&value.username);
+        let title: QString = mapper(&value.title);
+        let password: QString = mapper(&value.password);
+        let notes: QString = value.notes.map(QString::from).unwrap_or_default();
 
         let mut map: HashMap<String, QVariant> = HashMap::new();
         map.insert("uuid".to_string(), uuid.into());
@@ -255,7 +342,7 @@ impl Into<QVariantMap> for RxEntry {
         map.insert("password".to_string(), password.into());
         map.insert("notes".to_string(), notes.into());
         map.insert("iconPath".to_string(), icon_data_url.into());
-        map.insert("customFields".to_string(), self.custom_fields.into());
+        map.insert("customFields".to_string(), value.custom_fields.into());
 
         if let Ok(_) = totp {
             map.insert("hasTotp".to_string(), true.into());
@@ -275,20 +362,20 @@ impl Into<QVariant> for RxEntry {
 
 #[derive(Zeroize, ZeroizeOnDrop, Default, Clone)]
 pub struct RxDatabase {
-    groups: Vec<RxGroup>,
+    root: RxGroup,
 }
 
 // Manual impl because otherwise printing debug will dump the raw
 // contents of the ENTIRE database and crash the terminal.
 impl std::fmt::Debug for RxDatabase {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let groups_count = self.all_groups_iter().count();
         f.debug_struct("RxDatabase")
-            .field("groups", &self.groups.len())
+            .field("groups", &groups_count)
             .field(
                 "entries",
                 &self
-                    .groups
-                    .iter()
+                    .all_groups_iter()
                     .map(|group| group.entries.len())
                     .sum::<usize>(),
             )
@@ -302,17 +389,26 @@ fn load_groups_recursive(group: &Group, icons: &HashMap<Uuid, Icon>) -> Vec<RxGr
             .custom_icon_uuid
             .and_then(|icon_uuid| icons.get(&icon_uuid));
 
-        RxEntry::new(entry.clone(), icon.cloned())
+        RxEntry::new(entry.clone(), group.uuid, icon.cloned())
     };
 
+    let this_group_id = group.uuid;
     let mut groups = vec![];
+    let mut subgroups = vec![];
     let mut entries = vec![];
 
     for node in group.children.iter() {
         match node.as_ref() {
-            NodeRef::Group(group) => {
-                let mut rx_groups = load_groups_recursive(group, icons);
-                groups.append(&mut rx_groups);
+            NodeRef::Group(subgroup) => {
+                let mut rx_groups: Vec<_> = load_groups_recursive(subgroup, icons)
+                    .into_iter()
+                    .map(|mut subgroup| {
+                        subgroup.parent = Some(this_group_id);
+                        subgroup
+                    })
+                    .collect();
+
+                subgroups.append(&mut rx_groups);
             }
             NodeRef::Entry(entry) => {
                 entries.push(load_entry(entry));
@@ -320,11 +416,7 @@ fn load_groups_recursive(group: &Group, icons: &HashMap<Uuid, Icon>) -> Vec<RxGr
         }
     }
 
-    // Currently this will hide groups with no entries. Revisit
-    // after new layout/once editing is enabled.
-    if entries.len() > 0 {
-        groups.push(RxGroup::new(&group, entries));
-    }
+    groups.push(RxGroup::new(&group, subgroups, entries));
     groups
 }
 
@@ -338,9 +430,12 @@ impl RxDatabase {
             .map(|icon| (icon.uuid, icon.to_owned()))
             .collect();
 
-        let rx_groups = load_groups_recursive(&db.root, &icons);
+        // There should only be one group in the vec, which is the
+        // root.
+        let mut rx_groups = load_groups_recursive(&db.root, &icons);
+        let root_group = rx_groups.swap_remove(0);
 
-        Self { groups: rx_groups }
+        Self { root: root_group }
     }
 
     pub fn close(&mut self) {
@@ -348,17 +443,62 @@ impl RxDatabase {
         self.zeroize();
     }
 
-    pub fn groups(&self) -> &[RxGroup] {
-        self.groups.as_slice()
+    pub fn root_group(&self) -> &RxGroup {
+        &self.root
     }
 
-    pub fn get_entries(&self, search_term: Option<&str>) -> HashMap<String, Vec<RxEntry>> {
-        let search_term = search_term.map(|term| term.to_lowercase());
+    fn all_groups_iter(&self) -> impl Iterator<Item = &RxGroup> {
+        let root_iter = std::iter::once(&self.root);
 
-        let groups_and_entries = self
-            .groups
-            .iter()
-            .map(|group| (group.clone(), group.entries.as_slice()));
+        let all_subgroups =
+            self.root.subgroups.iter().flat_map(|subgroup| {
+                std::iter::once(subgroup).chain(subgroup.subgroups.iter())
+            });
+
+        root_iter.chain(all_subgroups)
+    }
+
+    fn all_entries_iter(&self) -> impl Iterator<Item = &RxEntry> {
+        self.all_groups_iter()
+            .flat_map(|group| group.entries.iter())
+    }
+
+    pub fn get_group(&self, group_uuid: Uuid) -> Option<RxGroup> {
+        self.all_groups_iter()
+            .find(|group| group.uuid == group_uuid)
+            .cloned()
+    }
+
+    pub fn get_group_filter_subgroups(
+        &self,
+        group_uuid: Uuid,
+        search_term: Option<&str>,
+    ) -> Option<RxGroup> {
+        let mut maybe_group = self
+            .all_groups_iter()
+            .find(|group| group.uuid == group_uuid)
+            .cloned();
+
+        if let Some(group) = &mut maybe_group {
+            group.subgroups.retain(|subgroup| match search_term {
+                Some(term) => subgroup.name.to_lowercase().contains(term),
+                None => true,
+            });
+        }
+
+        maybe_group
+    }
+
+    pub fn get_entry(&self, entry_uuid: Uuid) -> Option<RxEntry> {
+        self.all_entries_iter()
+            .cloned()
+            .find(|entry| entry.uuid == entry_uuid)
+    }
+
+    pub fn get_entries(&self, group_uuid: Uuid, search_term: Option<&str>) -> Vec<RxEntry> {
+        let search_term = search_term.map(|term| term.to_lowercase());
+        let group = self.get_group(group_uuid);
+        let entries_in_group = group.as_ref().map(|group| group.entries.as_slice());
 
         // Determine if an entry should show up in search results, if
         // a search term was specified. term is already lowecase here.
@@ -369,8 +509,8 @@ impl RxDatabase {
             username.contains(term) || url.contains(term) || title.contains(term)
         };
 
-        let filtered_by_search = groups_and_entries.map(|(group, entries)| {
-            let filtered_entries = entries
+        let filtered_by_search = entries_in_group.map(|entries| {
+            entries
                 .into_iter()
                 .filter_map(|entry| {
                     if let Some(term) = &search_term {
@@ -382,33 +522,17 @@ impl RxDatabase {
                         Some(entry)
                     }
                 })
-                .collect::<Vec<_>>();
-
-            (group, filtered_entries)
+                .cloned()
+                .collect::<Vec<_>>()
         });
 
-        // map of: group name -> list of entries
-        let group_to_entry_list = filtered_by_search.fold(
-            HashMap::<String, Vec<RxEntry>>::new(),
-            |mut acc, (group, entries)| {
-                let group_name = group.name.clone();
-                let values = acc.entry(group_name).or_insert_with(|| vec![]);
-
-                for entry in entries {
-                    values.push(entry.clone());
-                }
-                acc
-            },
-        );
-
-        group_to_entry_list
+        filtered_by_search.unwrap_or_default()
     }
 
     pub fn get_totp(&self, entry_uuid: &str) -> Result<RxTotp> {
         let entry_uuid = Uuid::from_str(entry_uuid)?;
         let entry = self
-            .groups
-            .iter()
+            .all_groups_iter()
             .flat_map(|group| group.entries.as_slice())
             .find(|&entry| entry.uuid == entry_uuid);
 
@@ -419,5 +543,36 @@ impl RxDatabase {
             Ok(None) => Err(anyhow!("Could not find OTP entry")),
             Err(err) => Err(err),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn finds_entries_in_group() {
+        let group_uuid =
+            Uuid::from_str("133b7912-7705-4967-bc6e-807761ba9479").expect("bad group uuid");
+        let entry_uuid =
+            Uuid::from_str("d7e5dcb1-1e36-4b2a-9468-74f699809c1d").expect("bad entry uuid");
+
+        let entry = RxEntry {
+            uuid: entry_uuid,
+            ..Default::default()
+        };
+
+        let group = RxGroup {
+            entries: vec![entry],
+            name: "asdf".to_string(),
+            subgroups: vec![],
+            uuid: group_uuid,
+            parent: None,
+        };
+
+        let db = RxDatabase { root: group };
+        let entries = db.get_entries(group_uuid, None);
+        assert!(entries.len() > 0);
+        assert_eq!(entries[0].uuid, entry_uuid);
     }
 }

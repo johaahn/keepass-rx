@@ -32,8 +32,8 @@ Page {
                 onTriggered: {
                     // When going back, remove the setting.
                     keepassrx.lastDB = null;
-                    adaptiveLayout.primaryPageSource = Qt.resolvedUrl("./DBList.qml");
-                    pageStack.removePages(openDbPage);
+                    root.reload();
+                    //pageStack.removePages(openDbPage);
                 }
             }
         ]
@@ -79,10 +79,14 @@ Page {
 
     Connections {
         target: keepassrx
+
         onDatabaseOpened: {
             busy = false;
             keepassrx.lastDB = databaseName;
-            adaptiveLayout.primaryPageSource = Qt.resolvedUrl("./EntriesPage.qml");
+	    keepassrx.encryptMasterPassword();
+
+            adaptiveLayout.primaryPage = entriesPage;
+	    entriesPage.visible = true;
         }
 
         onDatabaseOpenFailed: (error) => {

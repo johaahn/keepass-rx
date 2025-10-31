@@ -69,15 +69,15 @@ Page {
 
     function resetApp() {
         console.log('Lost the master password; resetting to Open page.');
-        pageStack.removePages(adaptiveLayout.primaryPageSource);
-        adaptiveLayout.primaryPageSource = Qt.resolvedUrl("./OpenDBPage.qml");
+        pageStack.removePages(adaptiveLayout.primaryPage);
+        adaptiveLayout.primaryPage = openDbPage;
     }
 
     Connections {
         target: keepassrx
         onDatabaseOpened: {
             busy = false;
-            adaptiveLayout.primaryPageSource = Qt.resolvedUrl("./EntriesPage.qml");
+            adaptiveLayout.primaryPage = entriesPage;
         }
 
         onDatabaseOpenFailed: (error) => {

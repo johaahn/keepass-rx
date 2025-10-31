@@ -46,16 +46,64 @@ MainView {
     }
 
     Component.onCompleted: {
-	if (keepassrx.isMasterPasswordEncrypted) {
-	    adaptiveLayout.primaryPageSource = Qt.resolvedUrl("./pages/UnlockPage.qml");
-	} else {
-	    adaptiveLayout.primaryPageSource = Qt.resolvedUrl("./pages/DBList.qml");
-	}
+        reload();
+    }
+
+    function lockUI() {
+        if (adaptiveLayout.primaryPage) {
+            adaptiveLayout.removePages(adaptiveLayout.primaryPage);
+        }
+
+        if (adaptiveLayout.primaryPageSource) {
+            adaptiveLayout.removePages(adaptiveLayout.primaryPageSource);
+        }
+
+        adaptiveLayout.primaryPageSource = Qt.resolvedUrl("pages/UnlockPage.qml");
+    }
+
+    function closeUI() {
+        if (adaptiveLayout.primaryPage) {
+            adaptiveLayout.removePages(adaptiveLayout.primaryPage);
+        }
+
+        if (adaptiveLayout.primaryPageSource) {
+            adaptiveLayout.removePages(adaptiveLayout.primaryPageSource);
+        }
+
+        adaptiveLayout.primaryPageSource = Qt.resolvedUrl("pages/DBList.qml");
+    }
+
+    // Only one of dblist or unlock page can be active at a time, due
+    // to conflicting signals.
+    function reload() {
+        if (adaptiveLayout.primaryPage) {
+            adaptiveLayout.removePages(adaptiveLayout.primaryPage);
+        }
+
+        if (adaptiveLayout.primaryPageSource) {
+            adaptiveLayout.removePages(adaptiveLayout.primaryPageSource);
+        }
+
+        if (keepassrx.isMasterPasswordEncrypted) {
+            adaptiveLayout.primaryPageSource = Qt.resolvedUrl("pages/UnlockPage.qml");
+        } else {
+            adaptiveLayout.primaryPageSource = Qt.resolvedUrl("pages/DBList.qml");
+        }
     }
 
     AdaptivePageLayout {
 	id: adaptiveLayout
 	anchors.fill: parent
+
+        OpenDBPage {
+            id: openDbPage
+            visible: false
+        }
+
+	EntriesPage {
+	    visible: false
+	    id: entriesPage
+	}
 
 	SettingsPage {
 	    visible: false

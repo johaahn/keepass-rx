@@ -1,0 +1,326 @@
+use actix::prelude::*;
+use anyhow::{Result, anyhow};
+use qmeta_async::with_executor;
+use qmetaobject::*;
+use secstr::SecUtf8;
+use std::fs::{create_dir_all, remove_dir_all};
+use std::path::Path;
+use std::str::FromStr;
+use uuid::Uuid;
+
+pub(crate) mod actor;
+pub(crate) mod models;
+pub(crate) mod utils;
+
+use actor::*;
+use utils::*;
+
+#[derive(QObject, Default)]
+#[allow(non_snake_case, dead_code)]
+pub struct KeepassRx {
+    base: qt_base_class!(trait QObject),
+    actor: Option<Addr<KeepassRxActor>>,
+    last_db: Option<String>,
+
+    lastDB: qt_property!(QString; READ getLastDB WRITE setLastDB NOTIFY lastDbChanged),
+    databaseOpen: qt_property!(bool),
+    isMasterPasswordEncrypted: qt_property!(bool; NOTIFY masterPasswordStateChanged),
+
+    // database management
+    listImportedDatabases: qt_method!(fn(&self)),
+    importDatabase: qt_method!(fn(&self, path: String)),
+    openDatabase: qt_method!(fn(&mut self, db_name: String, key_path: QString)),
+    closeDatabase: qt_method!(fn(&mut self)),
+    deleteDatabase: qt_method!(fn(&self, db_name: String)),
+
+    // group and entry management
+    getRootGroup: qt_method!(fn(&self)),
+    getGroups: qt_method!(fn(&self, group_uuid: QString)),
+    getRootEntries: qt_method!(fn(&self, search_term: QString)),
+    getEntries: qt_method!(fn(&self, group_uuid: QString, search_term: QString)),
+    getSingleEntry: qt_method!(fn(&self, entry_uuid: QString)),
+    getTotp: qt_method!(fn(&self, entry_uuid: QString)),
+    getFieldValue: qt_method!(fn(&self, entry_uuid: QString, field_name: QString)),
+
+    // easy-open management
+    storeMasterPassword: qt_method!(fn(&self, master_password: QString)),
+    encryptMasterPassword: qt_method!(fn(&self)),
+    decryptMasterPassword: qt_method!(fn(&self, short_password: QString)),
+    invalidateMasterPassword: qt_method!(fn(&self)),
+    checkLockingStatus: qt_method!(fn(&self)),
+
+    // db management signals
+    lastDbChanged: qt_signal!(value: QString),
+    fileListingCompleted: qt_signal!(),
+    databaseImported: qt_signal!(db_name: QString),
+    databaseOpened: qt_signal!(),
+    databaseClosed: qt_signal!(),
+    databaseDeleted: qt_signal!(db_name: QString),
+    databaseOpenFailed: qt_signal!(message: String),
+
+    // data signals
+    groupsReceived: qt_signal!(parent_group_uuid: QString, this_group_uuid: QString, this_group_name: QString),
+    entriesReceived: qt_signal!(entries: QVariantList),
+    errorReceived: qt_signal!(error: String),
+    totpReceived: qt_signal!(totp: QVariantMap),
+    singleEntryReceived: qt_signal!(entry: QVariant),
+    fieldValueReceived: qt_signal!(entry_uuid: QString, field_name: QString, field_value: QString),
+
+    // easy-open signals
+    masterPasswordStored: qt_signal!(),
+    masterPasswordInvalidated: qt_signal!(),
+    masterPasswordStateChanged: qt_signal!(encrypted: bool),
+    masterPasswordDecrypted: qt_signal!(),
+    lockingStatusReceived: qt_signal!(status: String),
+    decryptionFailed: qt_signal!(error: QString),
+}
+
+#[allow(non_snake_case)]
+impl KeepassRx {
+    pub fn new(last_db: Option<String>) -> Self {
+        KeepassRx {
+            last_db: last_db,
+            ..Default::default()
+        }
+    }
+
+    pub fn getLastDB(&self) -> QString {
+        self.last_db.clone().map(QString::from).unwrap_or_default()
+    }
+
+    pub fn setLastDB(&mut self, last_db: QString) {
+        let new_last_db = if !last_db.is_null() {
+            Some(last_db.to_string())
+        } else {
+            None
+        };
+
+        let change = self.last_db != new_last_db;
+
+        if change {
+            let last_db_file = app_data_path().join("last-db");
+            let result = match new_last_db {
+                Some(ref db) => std::fs::write(last_db_file, db),
+                None => std::fs::write(last_db_file, "".to_string()),
+            };
+
+            if let Err(err) = result {
+                println!("Unable to write last-db file: {}", err);
+            }
+
+            self.last_db = new_last_db.clone();
+            self.lastDbChanged(new_last_db.map(QString::from).unwrap_or_default());
+        }
+    }
+
+    #[with_executor]
+    pub fn listImportedDatabases(&self) {
+        let list_dbs = || -> Result<()> {
+            let dbs = std::fs::read_dir(imported_databases_path())?;
+
+            for db in dbs {
+                self.databaseImported(QString::from(
+                    db?.file_name().to_string_lossy().to_string(),
+                ));
+            }
+
+            Ok(())
+        };
+
+        match list_dbs() {
+            Ok(_) => self.fileListingCompleted(),
+            Err(err) => self.errorReceived(format!("{}", err)),
+        }
+    }
+
+    /// Copy a chosen databse file into the local data structure. This
+    /// is completely sync because we need to finalize() the transfer
+    /// in QML.
+    #[with_executor]
+    pub fn importDatabase(&self, path: String) {
+        let copy_file = move || -> Result<String> {
+            let source = Path::new(&path);
+            let db_name = source
+                .file_name()
+                .ok_or(anyhow!("No filename found"))?
+                .to_string_lossy()
+                .into_owned();
+
+            let dest_dir = imported_databases_path();
+            let dest = dest_dir.join(&db_name);
+
+            if source == dest {
+                return Err(anyhow!("Trying to copy source to the same destination"));
+            }
+
+            println!("Making directory: {}", dest_dir.display());
+            create_dir_all(&dest_dir)?;
+
+            println!(
+                "Copying database from {} to {}",
+                source.display(),
+                dest.display()
+            );
+
+            // Nuke db.kdbx if it exists and is a directory for some
+            // reason. Can result from corruption or weirdness.
+            if dest.exists() && dest.is_dir() {
+                println!(
+                    "{} is a directory for some reason. Removing.",
+                    dest.display()
+                );
+                remove_dir_all(&dest)?;
+            }
+
+            let bytes_copied = std::fs::copy(&source, &dest)?;
+            println!("Copied {} bytes", bytes_copied);
+            Ok(db_name)
+        };
+
+        match copy_file() {
+            Ok(db_name) => self.databaseImported(QString::from(db_name)),
+            Err(err) => self.databaseOpenFailed(format!("{}", err)),
+        }
+    }
+
+    #[with_executor]
+    pub fn openDatabase(&mut self, db_name: String, key_path: QString) {
+        let key_path = match key_path {
+            kp if !kp.is_null() && !kp.is_empty() => Some(kp.to_string()),
+            _ => None,
+        };
+
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(OpenDatabase { db_name, key_path }));
+    }
+
+    #[with_executor]
+    pub fn closeDatabase(&mut self) {
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(CloseDatabase));
+    }
+
+    #[with_executor]
+    pub fn deleteDatabase(&self, db_name: String) {
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(DeleteDatabase { db_name }));
+    }
+
+    #[with_executor]
+    pub fn getRootGroup(&self) {
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(GetGroups::root()));
+    }
+
+    #[with_executor]
+    pub fn getGroups(&self, group_uuid: QString) {
+        let actor = self.actor.clone().expect("Actor not initialized");
+        let maybe_uuid = Uuid::from_str(&group_uuid.to_string());
+
+        match maybe_uuid {
+            Ok(group_uuid) => {
+                actix::spawn(actor.send(GetGroups::for_uuid(group_uuid)));
+            }
+            Err(err) => self.errorReceived(format!("{}", err)),
+        }
+    }
+
+    #[with_executor]
+    pub fn getRootEntries(&self, search_term: QString) {
+        let actor = self.actor.clone().expect("Actor not initialized");
+        let search_term = match search_term {
+            term if !term.is_null() => Some(term.to_string()),
+            _ => None,
+        };
+
+        actix::spawn(actor.send(GetEntries::root(search_term)));
+    }
+
+    #[with_executor]
+    pub fn getEntries(&self, group_uuid: QString, search_term: QString) {
+        let maybe_uuid = Uuid::from_str(&group_uuid.to_string());
+        let search_term = match search_term {
+            term if !term.trimmed().is_empty() && !term.is_null() => Some(term.to_string()),
+            _ => None,
+        };
+
+        let actor = self.actor.clone().expect("Actor not initialized");
+
+        match maybe_uuid {
+            Ok(group_uuid) => {
+                actix::spawn(actor.send(GetEntries::for_uuid(group_uuid, search_term)));
+            }
+            Err(err) => self.errorReceived(format!("{}", err)),
+        }
+    }
+
+    #[with_executor]
+    pub fn getSingleEntry(&self, entry_uuid: QString) {
+        let actor = self.actor.clone().expect("Actor not initialized");
+        let maybe_uuid = Uuid::from_str(&entry_uuid.to_string());
+
+        match maybe_uuid {
+            Ok(entry_uuid) => {
+                actix::spawn(actor.send(GetSingleEntry { entry_uuid }));
+            }
+            Err(err) => self.errorReceived(format!("{}", err)),
+        }
+    }
+
+    #[with_executor]
+    pub fn getTotp(&self, entry_uuid: QString) {
+        let entry_uuid = entry_uuid.to_string();
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(GetTotp { entry_uuid }));
+    }
+
+    #[with_executor]
+    pub fn storeMasterPassword(&self, master_password: QString) {
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(StoreMasterPassword {
+            master_password: SecUtf8::from(master_password.to_string()),
+        }));
+    }
+
+    #[with_executor]
+    pub fn encryptMasterPassword(&self) {
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(EncryptMasterPassword));
+    }
+
+    #[with_executor]
+    pub fn decryptMasterPassword(&self, short_password: QString) {
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(DecryptMasterPassword {
+            short_password: SecUtf8::from(short_password.to_string()),
+        }));
+    }
+
+    #[with_executor]
+    pub fn invalidateMasterPassword(&self) {
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(InvalidateMasterPassword));
+    }
+
+    #[with_executor]
+    pub fn checkLockingStatus(&self) {
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(CheckLockingStatus));
+    }
+
+    #[with_executor]
+    pub fn getFieldValue(&self, entry_uuid: QString, field_name: QString) {
+        let maybe_uuid = Uuid::from_str(&entry_uuid.to_string());
+        let actor = self.actor.clone().expect("Actor not initialized");
+
+        match maybe_uuid {
+            Ok(entry_uuid) => {
+                actix::spawn(actor.send(GetFieldValue {
+                    entry_uuid,
+                    field_name: field_name.into(),
+                }));
+            }
+            Err(err) => self.errorReceived(format!("{}", err)),
+        }
+    }
+}

@@ -15,7 +15,23 @@ Page {
     property var entryCustomFields
 
     header: PageHeader {
-        title: entryTitle || 'Entry'
+        title: entryTitle || i18n.tr('Untitled Entry')
+
+        // For some reason the auto-managed back button isn't showing
+        // up, so we make our own.
+        leadingActionBar.actions: [
+            Action {
+                name: "Back"
+                text: i18n.tr("Back")
+                iconName: "previous"
+                onTriggered: {
+                    // If we remove primary page, only child pages
+                    // (i.e. THIS page) are removed. So, this sends us
+                    // back to entries list.
+                    pageStack.removePages(pageStack.primaryPage);
+                }
+            }
+        ]
     }
 
     ListModel {

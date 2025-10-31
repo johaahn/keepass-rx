@@ -9,8 +9,6 @@ import KeepassRx 1.0
 import "../components"
 
 Page {
-    id: dbListPage
-
     property bool copyingDB
     property bool pickingDB
     property bool busy
@@ -62,9 +60,8 @@ Page {
         repeat: false
         onTriggered: {
             if (keepassrx.lastDB) {
-                let openPage = Qt.resolvedUrl("./OpenDBPage.qml");
                 pageStack.addPageToCurrentColumn(
-                    dbListPage, openPage, {
+                    adaptiveLayout.primaryPage, openDbPage, {
                         databaseName: keepassrx.lastDB
                     }
                 );
@@ -122,7 +119,7 @@ Page {
         width: parent.width
 
         Text {
-            text: i18n.tr("Loading last database:", keepassrx.lastDB.length);
+            text: i18n.tr("Loading last database:", keepassrx.lastDB);
         }
 
     }
@@ -253,12 +250,8 @@ Page {
 
                     onClicked: {
                         keepassrx.lastDB = databaseName;
-
-                        pageStack.addPageToCurrentColumn(
-                            dbListPage, Qt.resolvedUrl("./OpenDBPage.qml"), {
-                                databaseName
-                            }
-                        );
+                        openDbPage.databaseName = databaseName;
+                        adaptiveLayout.primaryPage = openDbPage;
                     }
 
                     leadingActions: ListItemActions {

@@ -16,7 +16,8 @@ databases, with additional features beyond the original app.
 
 ## Roadmap
 
-The development of this app will follow this plan.
+The development of this app will follow this plan. These are
+milestones, not version numbers.
 
 ## 0.x - Minimal Viable Product
 

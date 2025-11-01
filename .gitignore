@@ -4,4 +4,4 @@ target/
 *.click
 *~
 todo.org
-po/*.po
+#po/*.po

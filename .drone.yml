@@ -31,7 +31,7 @@ steps:
     api_key:
       from_secret: release_push_key
     base_url: https://git.agnos.is/
-    files: **/*.click
+    files: "**/*.click"
 
 - name: open-store-publish
   when:

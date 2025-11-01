@@ -155,6 +155,7 @@ fn main() {
     let qt_library_path = qt_library_path.trim();
 
     println!("cargo:rerun-if-changed=src/main.rs");
+    println!("cargo:rerun-if-changed=po/*");
     println!("cargo:rustc-link-search{macos_lib_search}={qt_library_path}");
     println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}Widgets");
     println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}Gui");

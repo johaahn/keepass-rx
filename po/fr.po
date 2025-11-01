@@ -8,107 +8,116 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-01 08:42+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2025-11-01 13:57+0000\n"
+"Last-Translator: Vlad Nirky <nirky.vlad@protonmail.com>\n"
+"Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
+"fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.14.1-dev\n"
 
 msgid ""
 "KeePassRX is a work-in-progress password manager for KeePass password "
 "databases. It is licensed under the GNU GPL v3 license."
 msgstr ""
+"KeePassRX est un gestionnaire de mots de passe en cours de développement "
+"pour les bases de données KeePass. Il est distribué sous licence GNU GPL v3."
 
 msgid ""
 "Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
+"Source : <a href='https ://git.agnos.is/projectmoon/keepass-rx'>https ://"
+"git.agnos.is/projectmoon/keepass-rx</a>"
 
 msgid "Lock"
-msgstr ""
+msgstr "Verrouiller"
 
 msgid "Close"
-msgstr ""
+msgstr "Fermer"
 
 msgid "Back"
-msgstr ""
+msgstr "Retour"
 
 msgid "Search"
-msgstr ""
+msgstr "Chercher"
 
 msgid "Cancel Search"
-msgstr ""
+msgstr "Annuler la recherche"
 
 msgid "Settings"
-msgstr ""
+msgstr "Paramètres"
 
 msgid "About"
-msgstr ""
+msgstr "A propos de"
 
 msgid "Lock Database"
-msgstr ""
+msgstr "Verrouiller la base de données"
 
 msgid "Close Database"
-msgstr ""
+msgstr "Fermer la base de données"
 
 msgid "Untitled Entry"
-msgstr ""
+msgstr "Entrée sans titre"
 
 msgid "Notes"
-msgstr ""
+msgstr "Notes"
 
 msgid "Tap to copy"
-msgstr ""
+msgstr "Appuyez pour copier"
 
 msgid "Add Database"
-msgstr ""
+msgstr "Ajouter une base de données"
 
 msgid "Loading last database."
-msgstr ""
+msgstr "Chargement de la dernière base de données."
 
 msgid "Select Database"
-msgstr ""
+msgstr "Sélectionner la base de données"
 
 msgid "Tap + to import a database."
-msgstr ""
+msgstr "Appuyer + pour importer une base de données."
 
 msgid "It will only be removed from the app, not your device."
-msgstr ""
+msgstr "Elle sera simplement retirée de l’application, pas de votre appareil."
 
 msgid "Enter the database master password"
-msgstr ""
+msgstr "Entrez le mot de passe principal de la base de données"
 
 msgid "Master Password"
-msgstr ""
+msgstr "Mot de passe principal"
 
 msgid "Open"
-msgstr ""
+msgstr "Ouvrir"
 
 msgid "Opening"
-msgstr ""
+msgstr "Ouverture"
 
 msgid "Manual path set."
-msgstr ""
+msgstr "Chemin défini manuellement."
 
 msgid ""
 "The passcode is the first five characters of the database password (or the "
 "whole password if less than five characters)."
 msgstr ""
+"Le code d’accès correspond aux cinq premiers caractères du mot de passe de "
+"la base de données "
+"(ou au mot de passe complet s’il comporte moins de cinq caractères)."
 
 msgid "Passcode"
-msgstr ""
+msgstr "Code d'accès"
 
 msgid "Unlock"
-msgstr ""
+msgstr "Déverrouiller"
 
 msgid "Securely Unlocking"
-msgstr ""
+msgstr "Déverrouillage sécurisé"
 
 msgid "Securely Locking"
-msgstr ""
+msgstr "Verrouillage sécurisé"
 
 msgid "Database Not Opening?"
-msgstr ""
+msgstr "La base de données ne s'ouvre pas ?"

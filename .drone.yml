@@ -1,6 +1,6 @@
 ---
 kind: pipeline
-name: keepassrx-build
+name: default
 
 steps:
 - name: amd64

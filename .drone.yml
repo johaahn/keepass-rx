@@ -39,6 +39,9 @@ steps:
     - refs/tags/v*
   depends_on:
   - push-release
+  image: clickable/ci-20.04-armhf
+  commands:
+    - clickable publish --all
   environment:
    OPENSTORE_API_key:
       from_secret: openstore_api_key

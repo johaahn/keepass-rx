@@ -1,0 +1,44 @@
+---
+kind: pipeline
+name: keepassrx-build
+
+steps:
+- name: amd64
+  image: clickable/ci-20.04-amd64
+  commands:
+  - clickable build --clean
+
+- name: arm64
+  image: clickable/ci-20.04-arm64
+  commands:
+  - clickable build --clean
+
+- name: armhf
+  image: clickable/ci-20.04-armhf
+  commands:
+    - clickable build --clean
+
+- name: push-release
+  depends_on:
+  - amd64
+  - arm64
+  - armhf
+  image: plugins/gitea-release
+  when:
+    ref:
+    - refs/tags/v*
+  settings:
+    api_key:
+      from_secret: release_push_key
+    base_url: https://git.agnos.is/
+    files: build/**/*.click
+
+- name: open-store-publish
+  when:
+    ref:
+    - refs/tags/v*
+  depends_on:
+  - push-release
+  environment:
+   OPENSTORE_API_key:
+      from_secret: openstore_api_key

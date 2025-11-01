@@ -31,7 +31,7 @@ steps:
     api_key:
       from_secret: release_push_key
     base_url: https://git.agnos.is/
-    files: build/**/*.click
+    files: **/*.click
 
 - name: open-store-publish
   when:
@@ -41,7 +41,7 @@ steps:
   - push-release
   image: clickable/ci-20.04-armhf
   commands:
-    - clickable publish --all
+    - clickable publish --arch all
   environment:
    OPENSTORE_API_key:
       from_secret: openstore_api_key

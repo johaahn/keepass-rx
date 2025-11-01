@@ -15,6 +15,38 @@ pub(crate) mod utils;
 use actor::*;
 use utils::*;
 
+#[derive(Default, QEnum, Clone, Copy)]
+#[repr(C)]
+pub enum RxGuiState {
+    #[default]
+    NotOpen,
+    Open,
+    Locked,
+}
+
+fn gui_state_from_string(qval: &QString) -> RxGuiState {
+    match qval.to_string().as_str() {
+        "NotOpen" => RxGuiState::NotOpen,
+        "Open" => RxGuiState::Open,
+        "Locked" => RxGuiState::Locked,
+        _ => panic!("Invalid GUI state: {}", qval),
+    }
+}
+
+fn gui_state_to_string(gui_state: &RxGuiState) -> QString {
+    match gui_state {
+        RxGuiState::NotOpen => "NotOpen",
+        RxGuiState::Open => "Open",
+        RxGuiState::Locked => "Locked",
+    }
+    .into()
+}
+
+impl QMetaType for RxGuiState {
+    const CONVERSION_FROM_STRING: Option<fn(&QString) -> Self> = Some(gui_state_from_string);
+    const CONVERSION_TO_STRING: Option<fn(&Self) -> QString> = Some(gui_state_to_string);
+}
+
 #[derive(QObject, Default)]
 #[allow(non_snake_case, dead_code)]
 pub struct KeepassRx {
@@ -22,6 +54,7 @@ pub struct KeepassRx {
     actor: Option<Addr<KeepassRxActor>>,
     last_db: Option<String>,
 
+    guiState: qt_property!(RxGuiState),
     lastDB: qt_property!(QString; READ getLastDB WRITE setLastDB NOTIFY lastDbChanged),
     databaseOpen: qt_property!(bool),
     isMasterPasswordEncrypted: qt_property!(bool; NOTIFY masterPasswordStateChanged),

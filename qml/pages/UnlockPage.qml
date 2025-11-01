@@ -55,7 +55,7 @@ Page {
     }
 
     function openDatabase() {
-        console.log('[Unlock] QML - Storing password');
+        console.log('[Unlock] QML - Unlocking master password');
         busy = true;
         showPasswordAction.checked = false;
 

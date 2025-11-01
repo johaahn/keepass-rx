@@ -23,6 +23,7 @@ use actix::Actor;
 use anyhow::Result;
 use cpp::cpp;
 use gettextrs::{bindtextdomain, textdomain};
+use gui::RxGuiState;
 use qmeta_async::with_executor;
 use qmetaobject::{QObjectBox, QQuickStyle, QQuickView, qml_register_enum, qml_register_type};
 use std::env;
@@ -62,6 +63,7 @@ fn main() -> Result<()> {
     qml_register_type::<KeepassRx>(cstr!("KeepassRx"), 1, 0, cstr!("KeepassRx"));
     qml_register_type::<RxListItem>(cstr!("RxListItem"), 1, 0, cstr!("RxListItem"));
     qml_register_enum::<RxItemType>(cstr!("RxItemType"), 1, 0, cstr!("RxItemType"));
+    qml_register_enum::<RxGuiState>(cstr!("RxGuiState"), 1, 0, cstr!("RxGuiState"));
 
     // Load last db
     // TODO this is a hack and should be more properly done with QT

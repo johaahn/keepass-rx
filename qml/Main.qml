@@ -45,12 +45,14 @@ MainView {
         }
 
         onDatabaseOpened: {
+            keepassrx.guiState = 'Open';
 	    keepassrx.encryptMasterPassword();
             adaptiveLayout.primaryPage = entriesPage;
 	    entriesPage.visible = true;
         }
 
         onDatabaseOpenFailed: (error) => {
+            keepassrx.guiState = 'NotOpen';
             keepassrx.invalidateMasterPassword();
         }
 
@@ -71,18 +73,12 @@ MainView {
     }
 
     function lockUI() {
-        if (adaptiveLayout.primaryPage) {
-            adaptiveLayout.removePages(adaptiveLayout.primaryPage);
-        }
-
-        if (adaptiveLayout.primaryPageSource) {
-            adaptiveLayout.removePages(adaptiveLayout.primaryPageSource);
-        }
-
-        adaptiveLayout.primaryPageSource = Qt.resolvedUrl("pages/UnlockPage.qml");
+        keepassrx.guiState = 'Locked';
+        reload();
     }
 
     function closeUI() {
+        keepassrx.guiState = 'NotOpen';
         reload();
     }
 
@@ -97,9 +93,9 @@ MainView {
             adaptiveLayout.removePages(adaptiveLayout.primaryPageSource);
         }
 
-        if (keepassrx.isMasterPasswordEncrypted) {
+        if (keepassrx.guiState == 'Locked') {
             adaptiveLayout.primaryPageSource = Qt.resolvedUrl("pages/UnlockPage.qml");
-        } else if (keepassrx.lastDB) {
+        } else if (keepassrx.guiState == 'NotOpen') {
             adaptiveLayout.primaryPageSource = Qt.resolvedUrl("pages/OpenDBPage.qml");
         } else {
             adaptiveLayout.primaryPageSource = Qt.resolvedUrl("pages/DBList.qml");

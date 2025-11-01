@@ -905,7 +905,7 @@ dependencies = [
 
 [[package]]
 name = "keepassrx"
-version = "0.6.2"
+version = "0.6.3"
 dependencies = [
  "actix",
  "aes-gcm",

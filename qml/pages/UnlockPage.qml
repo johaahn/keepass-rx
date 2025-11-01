@@ -81,7 +81,7 @@ Page {
             busy = false;
         }
 
-        onDatabaseOpenFailed: {
+        onDatabaseOpenFailed: (error) => {
             busy = false;
             errorMsg = `Error: ${error}`;
         }

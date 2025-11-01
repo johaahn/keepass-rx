@@ -55,6 +55,7 @@ pub struct RxGroup {
     pub parent: Option<Uuid>,
 
     pub name: String,
+
     // TODO use some kind of map instead of Vec (since maps do not
     // impl Zeroize). should be possible once we stop loading secrets
     // into memory.
@@ -118,9 +119,9 @@ impl From<RxCustomFields> for QVariantMap {
     }
 }
 
-impl Into<QVariant> for RxCustomFields {
-    fn into(self) -> QVariant {
-        Into::<QVariantMap>::into(self).into()
+impl From<RxCustomFields> for QVariant {
+    fn from(value: RxCustomFields) -> QVariant {
+        QVariantMap::from(value).into()
     }
 }
 

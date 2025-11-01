@@ -95,7 +95,7 @@ MainView {
 
         if (keepassrx.guiState == 'Locked') {
             adaptiveLayout.primaryPageSource = Qt.resolvedUrl("pages/UnlockPage.qml");
-        } else if (keepassrx.guiState == 'NotOpen') {
+        } else if (keepassrx.guiState == 'NotOpen' && keepassrx.lastDB) {
             adaptiveLayout.primaryPageSource = Qt.resolvedUrl("pages/OpenDBPage.qml");
         } else {
             adaptiveLayout.primaryPageSource = Qt.resolvedUrl("pages/DBList.qml");

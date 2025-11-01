@@ -166,9 +166,9 @@ impl KeepassRx {
         }
     }
 
-    /// Copy a chosen databse file into the local data structure. This
+    /// Copy a chosen database file into the local data structure. This
     /// is completely sync because we need to finalize() the transfer
-    /// in QML.
+    /// in QML from the same scope as this method call.
     #[with_executor]
     pub fn importDatabase(&self, path: String) {
         let copy_file = move || -> Result<String> {

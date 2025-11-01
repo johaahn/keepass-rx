@@ -43,6 +43,27 @@ MainView {
         onErrorReceived: (error) => {
             console.error('Uncaught error (put me in a popup):', error);
         }
+
+        onDatabaseOpened: {
+	    keepassrx.encryptMasterPassword();
+            adaptiveLayout.primaryPage = entriesPage;
+	    entriesPage.visible = true;
+        }
+
+        onDatabaseOpenFailed: (error) => {
+            keepassrx.invalidateMasterPassword();
+        }
+
+        onMasterPasswordStored: {
+            if (visible) {
+                keepassrx.openDatabase(keepassrx.lastDB, settings.lastKey);
+            }
+        }
+
+        onMasterPasswordDecrypted: {
+            console.log('Re-opening database from locked state.');
+            keepassrx.openDatabase(keepassrx.lastDB,  settings.lastKey);
+        }
     }
 
     Component.onCompleted: {
@@ -62,15 +83,7 @@ MainView {
     }
 
     function closeUI() {
-        if (adaptiveLayout.primaryPage) {
-            adaptiveLayout.removePages(adaptiveLayout.primaryPage);
-        }
-
-        if (adaptiveLayout.primaryPageSource) {
-            adaptiveLayout.removePages(adaptiveLayout.primaryPageSource);
-        }
-
-        adaptiveLayout.primaryPageSource = Qt.resolvedUrl("pages/DBList.qml");
+        reload();
     }
 
     // Only one of dblist or unlock page can be active at a time, due
@@ -86,6 +99,8 @@ MainView {
 
         if (keepassrx.isMasterPasswordEncrypted) {
             adaptiveLayout.primaryPageSource = Qt.resolvedUrl("pages/UnlockPage.qml");
+        } else if (keepassrx.lastDB) {
+            adaptiveLayout.primaryPageSource = Qt.resolvedUrl("pages/OpenDBPage.qml");
         } else {
             adaptiveLayout.primaryPageSource = Qt.resolvedUrl("pages/DBList.qml");
         }

@@ -18,6 +18,10 @@ Page {
     Component.onCompleted: {
         if (databaseName) {
             keepassrx.lastDB = databaseName;
+        } else {
+            if (keepassrx.lastDB) {
+                databaseName = keepassrx.lastDB;
+            }
         }
     }
 
@@ -33,7 +37,6 @@ Page {
                     // When going back, remove the setting.
                     keepassrx.lastDB = null;
                     root.reload();
-                    //pageStack.removePages(openDbPage);
                 }
             }
         ]
@@ -65,11 +68,15 @@ Page {
     }
 
     function openDatabase() {
+        console.log('[OpenDB] QML - Storing password');
         busy = true;
         showPasswordAction.checked = false;
 
+        keepassrx.lastDB = databaseName;
+
         if (keepassrx.isMasterPasswordEncrypted) {
             // TODO should not be able to be in this state
+            console.error('Why are we in this state?');
         } else {
             keepassrx.storeMasterPassword(password.text);
         }
@@ -82,21 +89,11 @@ Page {
 
         onDatabaseOpened: {
             busy = false;
-            keepassrx.lastDB = databaseName;
-	    keepassrx.encryptMasterPassword();
-
-            adaptiveLayout.primaryPage = entriesPage;
-	    entriesPage.visible = true;
         }
 
-        onDatabaseOpenFailed: (error) => {
+        onDatabaseOpenFailed: {
             busy = false;
             errorMsg = `Error: ${error}`;
-            keepassrx.invalidateMasterPassword();
-        }
-
-        onMasterPasswordStored: {
-            keepassrx.openDatabase(databaseName, settings.lastKey);
         }
 
         onLockingStatusReceived: (status) => {
@@ -146,7 +143,7 @@ Page {
                 horizontalAlignment: Qt.AlignHCenter
                 color: LomiriColors.ash
                 width: parent.width
-                text: databaseName
+                text: databaseName || keepassrx.lastDB
             }
         }
 

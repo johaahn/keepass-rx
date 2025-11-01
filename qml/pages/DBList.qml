@@ -46,29 +46,6 @@ Page {
                 dbListModel.remove(indexToDelete);
             }
         }
-
-        onFileListingCompleted: {
-            lastDbTimer.running = true;
-        }
-    }
-
-    // Immediately go to the enter pw page if we have selected a
-    // DB in the past.
-    // TODO check if file actually exists!
-    Timer {
-        id: lastDbTimer
-        interval: 1
-        running: false
-        repeat: false
-        onTriggered: {
-            if (keepassrx.lastDB) {
-                pageStack.addPageToCurrentColumn(
-                    adaptiveLayout.primaryPage, openDbPage, {
-                        databaseName: keepassrx.lastDB
-                    }
-                );
-            }
-        }
     }
 
     Component.onCompleted: {
@@ -110,7 +87,7 @@ Page {
 
     ColumnLayout {
         id: loadLastDbView
-        visible: keepassrx.lastDB && keepassrx.lastDB.length > 0 // string
+        visible: keepassrx.lastDB && keepassrx.lastDB.trim().length > 0 // string
         spacing: units.gu(2)
         anchors.left: parent.left
         anchors.right: parent.right
@@ -121,9 +98,8 @@ Page {
         width: parent.width
 
         Text {
-            text: i18n.tr("Loading last database:", keepassrx.lastDB);
+            text: i18n.tr("Loading last database.");
         }
-
     }
 
 

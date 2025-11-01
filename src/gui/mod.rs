@@ -50,6 +50,7 @@ pub struct KeepassRx {
     checkLockingStatus: qt_method!(fn(&self)),
 
     // db management signals
+    appReady: qt_signal!(),
     lastDbChanged: qt_signal!(value: QString),
     fileListingCompleted: qt_signal!(),
     databaseImported: qt_signal!(db_name: QString),

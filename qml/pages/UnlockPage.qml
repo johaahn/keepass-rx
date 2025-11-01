@@ -55,6 +55,7 @@ Page {
     }
 
     function openDatabase() {
+        console.log('[Unlock] QML - Storing password');
         busy = true;
         showPasswordAction.checked = false;
 
@@ -75,35 +76,19 @@ Page {
 
     Connections {
         target: keepassrx
+
         onDatabaseOpened: {
             busy = false;
-            adaptiveLayout.primaryPage = entriesPage;
         }
 
-        onDatabaseOpenFailed: (error) => {
+        onDatabaseOpenFailed: {
             busy = false;
             errorMsg = `Error: ${error}`;
-            keepassrx.invalidateMasterPassword();
         }
 
         onDecryptionFailed: (error) => {
             busy = false;
             errorMsg = `Error: ${error}. Wrong passcode?`;
-        }
-
-        onMasterPasswordStored: {
-            keepassrx.openDatabase(keepassrx.lastDB, settings.lastKey);
-        }
-
-        onMasterPasswordDecrypted: {
-            console.log('Re-opening database from locked state.');
-            keepassrx.openDatabase(keepassrx.lastDB,  settings.lastKey);
-        }
-
-        onLockingStatusReceived: (status) => {
-            if (status === 'unset') {
-                resetApp();
-            }
         }
     }
 

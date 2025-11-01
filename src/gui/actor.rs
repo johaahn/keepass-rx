@@ -178,7 +178,7 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                 let pw_binding = pw_binding.as_ref();
                 let pw_binding = pw_binding
                     .as_deref()
-                    .ok_or(anyhow!("No master password stored"))?;
+                    .ok_or(anyhow!("[OpenDB] No master password stored"))?;
 
                 let mut db_file = File::open(db_path)?;
                 let key_file = msg.key_path.map(|p| File::open(p));
@@ -518,7 +518,7 @@ impl Handler<EncryptMasterPassword> for KeepassRxActor {
         // encrypt the password. If we were to wait for the
         // actix::spawn to complete, the UI would still block.
         let handle: JoinHandle<Result<_>> = actix::spawn(async move {
-            let stored_pw = stored_pw.ok_or(anyhow!("No master password stored"));
+            let stored_pw = stored_pw.ok_or(anyhow!("[Encrypt] No master password stored"));
 
             let (tx, rx) = tokio::sync::oneshot::channel();
             rayon::spawn(move || {
@@ -576,7 +576,7 @@ impl Handler<DecryptMasterPassword> for KeepassRxActor {
             // Extract from inner option.
             let master_pw = maybe_master_pw
                 .take()
-                .ok_or(anyhow!("No master password stored"));
+                .ok_or(anyhow!("[Decrypt] No master password stored"));
 
             let gui_binding = gui_binding.pinned();
             let mut gui = gui_binding.borrow_mut();

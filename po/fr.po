@@ -1,0 +1,147 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-31 20:28+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+
+#: qml/pages/AboutPage.qml:56
+msgid ""
+"KeePassRX is a work-in-progress password manager for KeePass password "
+"databases. It is licensed under the GNU GPL v3 license."
+msgstr ""
+
+#: qml/pages/AboutPage.qml:67
+msgid ""
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
+"git.agnos.is/projectmoon/keepass-rx</a>"
+msgstr ""
+
+#: qml/pages/DBList.qml:88
+msgid "Add Database"
+msgstr ""
+
+#: qml/pages/DBList.qml:95 qml/pages/EntriesPage.qml:117
+#: qml/pages/OpenDBPage.qml:44 qml/pages/UnlockPage.qml:34
+msgid "Settings"
+msgstr ""
+
+#: qml/pages/DBList.qml:102 qml/pages/EntriesPage.qml:126
+#: qml/pages/OpenDBPage.qml:51 qml/pages/UnlockPage.qml:41
+msgid "About"
+msgstr ""
+
+#: qml/pages/DBList.qml:122
+msgid "Loading last database:"
+msgstr ""
+
+#: qml/pages/DBList.qml:133
+msgid "Select Database"
+msgstr ""
+
+#: qml/pages/DBList.qml:189
+msgid "Tap + to import a database."
+msgstr ""
+
+#: qml/pages/DBList.qml:287
+msgid "It will only be removed from the app, not your device."
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:67
+msgid "Lock"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:79
+msgid "Close"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:91 qml/pages/OpenDBPage.qml:30
+#: qml/pages/SingleEntry.qml:25
+msgid "Back"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:104
+msgid "Search"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:104
+msgid "Cancel Search"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:138
+msgid "Lock Database"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:148
+msgid "Close Database"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:162
+msgid "Enter the database master password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:175
+msgid "Master Password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:205
+msgid "Open"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:222
+msgid "Opening"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:18
+msgid "Untitled Entry"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:179
+msgid "Notes"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:187
+msgid "Tap to copy"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:161
+msgid "Manual path set."
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:178
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:196
+msgid "Passcode"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:228
+msgid "Unlock"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:247
+msgid "Securely Unlocking"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:248
+msgid "Securely Locking"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:259
+msgid "Database Not Opening?"
+msgstr ""

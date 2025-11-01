@@ -435,7 +435,7 @@ impl<'a> Iterator for RxGroupIter<'a> {
 }
 
 impl RxDatabase {
-    pub fn new(db: &mut Zeroizing<ZeroableDatabase>) -> Self {
+    pub fn new(mut db: Zeroizing<ZeroableDatabase>) -> Self {
         let mut icons: HashMap<Uuid, Icon> = db
             .meta
             .custom_icons
@@ -448,6 +448,8 @@ impl RxDatabase {
         // root.
         let mut rx_groups = load_groups_recursive(&mut db.root, &mut icons);
         let root_group = rx_groups.swap_remove(0);
+
+        drop(db);
 
         Self { root: root_group }
     }

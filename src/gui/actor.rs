@@ -192,8 +192,8 @@ impl Handler<OpenDatabase> for KeepassRxActor {
 
                 let open_result = spawn_blocking(move || -> Result<RxDatabase> {
                     let db = Database::open(&mut db_file, db_key)?;
-                    let mut wrapped_db = Zeroizing::new(ZeroableDatabase(db));
-                    let rx_db = RxDatabase::new(&mut wrapped_db);
+                    let wrapped_db = Zeroizing::new(ZeroableDatabase(db));
+                    let rx_db = RxDatabase::new(wrapped_db);
                     Ok(rx_db)
                 })
                 .await??;

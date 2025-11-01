@@ -9,6 +9,8 @@ import KeepassRx 1.0
 import "../components"
 
 Page {
+    id: dbListPage
+
     property bool copyingDB
     property bool pickingDB
     property bool busy

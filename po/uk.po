@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-31 20:28+0100\n"
+"POT-Creation-Date: 2025-11-01 08:42+0000\n"
 "PO-Revision-Date: 2025-10-31 22:47+0000\n"
 "Last-Translator: Serhii Horichenko <serhii@horichenko.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/ubports/"
@@ -16,12 +16,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural="
-"(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? "
-"1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Weblate 5.14.1-dev\n"
 
-#: qml/pages/AboutPage.qml:56
 msgid ""
 "KeePassRX is a work-in-progress password manager for KeePass password "
 "databases. It is licensed under the GNU GPL v3 license."
@@ -29,7 +27,6 @@ msgstr ""
 "KeePassRX — це парольний менеджер для баз даних з паролями у форматі "
 "KeePass. Ліцензовано за умовами GNU GPL v3."
 
-#: qml/pages/AboutPage.qml:67
 msgid ""
 "Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
@@ -37,121 +34,93 @@ msgstr ""
 "Джерело: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
-#: qml/pages/DBList.qml:88
-msgid "Add Database"
-msgstr "Додати базу даних"
-
-#: qml/pages/DBList.qml:95 qml/pages/EntriesPage.qml:117
-#: qml/pages/OpenDBPage.qml:44 qml/pages/UnlockPage.qml:34
-msgid "Settings"
-msgstr "Налаштування"
-
-#: qml/pages/DBList.qml:102 qml/pages/EntriesPage.qml:126
-#: qml/pages/OpenDBPage.qml:51 qml/pages/UnlockPage.qml:41
-msgid "About"
-msgstr "Інфо"
-
-#: qml/pages/DBList.qml:122
-msgid "Loading last database:"
-msgstr "Завантаження останньої бази:"
-
-#: qml/pages/DBList.qml:133
-msgid "Select Database"
-msgstr "Оберіть базу даних"
-
-#: qml/pages/DBList.qml:189
-msgid "Tap + to import a database."
-msgstr "Імпортуйте базу даних через +."
-
-#: qml/pages/DBList.qml:287
-msgid "It will only be removed from the app, not your device."
-msgstr "Це буде вилучене лише з програми, але залишиться на пристрої."
-
-#: qml/pages/EntriesPage.qml:67
 msgid "Lock"
 msgstr "Блокувати"
 
-#: qml/pages/EntriesPage.qml:79
 msgid "Close"
 msgstr "Закрити"
 
-#: qml/pages/EntriesPage.qml:91 qml/pages/OpenDBPage.qml:30
-#: qml/pages/SingleEntry.qml:25
 msgid "Back"
 msgstr "Назад"
 
-#: qml/pages/EntriesPage.qml:104
 msgid "Search"
 msgstr "Пошук"
 
-#: qml/pages/EntriesPage.qml:104
 msgid "Cancel Search"
 msgstr "Скасувати пошук"
 
-#: qml/pages/EntriesPage.qml:138
+msgid "Settings"
+msgstr "Налаштування"
+
+msgid "About"
+msgstr "Інфо"
+
 msgid "Lock Database"
 msgstr "Блокувати базу даних"
 
-#: qml/pages/EntriesPage.qml:148
 msgid "Close Database"
 msgstr "Закрити базу даних"
 
-#: qml/pages/OpenDBPage.qml:162
-msgid "Enter the database master password"
-msgstr "Вкажіть майстер-пароль бази даних"
-
-#: qml/pages/OpenDBPage.qml:175
-msgid "Master Password"
-msgstr "Майстер-пароль"
-
-#: qml/pages/OpenDBPage.qml:205
-msgid "Open"
-msgstr "Відкрити"
-
-#: qml/pages/OpenDBPage.qml:222
-msgid "Opening"
-msgstr "Відкривається"
-
-#: qml/pages/SingleEntry.qml:18
 msgid "Untitled Entry"
 msgstr "Елемент без назви"
 
-#: qml/pages/SingleEntry.qml:179
 msgid "Notes"
 msgstr "Нотатки"
 
-#: qml/pages/SingleEntry.qml:187
 msgid "Tap to copy"
 msgstr "Торкніться для копіювання"
 
-#: qml/pages/UnlockPage.qml:161
+msgid "Add Database"
+msgstr "Додати базу даних"
+
+msgid "Loading last database."
+msgstr ""
+
+msgid "Select Database"
+msgstr "Оберіть базу даних"
+
+msgid "Tap + to import a database."
+msgstr "Імпортуйте базу даних через +."
+
+msgid "It will only be removed from the app, not your device."
+msgstr "Це буде вилучене лише з програми, але залишиться на пристрої."
+
+msgid "Enter the database master password"
+msgstr "Вкажіть майстер-пароль бази даних"
+
+msgid "Master Password"
+msgstr "Майстер-пароль"
+
+msgid "Open"
+msgstr "Відкрити"
+
+msgid "Opening"
+msgstr "Відкривається"
+
 msgid "Manual path set."
 msgstr "Шлях встановлений вручну."
 
-#: qml/pages/UnlockPage.qml:178
 msgid ""
 "The passcode is the first five characters of the database password (or the "
 "whole password if less than five characters)."
 msgstr ""
-"Код доступу — це перші п’ять символів пароля бази даних "
-"(або весь пароль, якщо він менш як п'ять символів)."
+"Код доступу — це перші п’ять символів пароля бази даних (або весь пароль, "
+"якщо він менш як п'ять символів)."
 
-#: qml/pages/UnlockPage.qml:196
 msgid "Passcode"
 msgstr "Код доступу"
 
-#: qml/pages/UnlockPage.qml:228
 msgid "Unlock"
 msgstr "Розблокувати"
 
-#: qml/pages/UnlockPage.qml:247
 msgid "Securely Unlocking"
 msgstr "Безпечне розблокування"
 
-#: qml/pages/UnlockPage.qml:248
 msgid "Securely Locking"
 msgstr "Безпечне блокування"
 
-#: qml/pages/UnlockPage.qml:259
 msgid "Database Not Opening?"
 msgstr "База даних не відкривається?"
+
+#~ msgid "Loading last database:"
+#~ msgstr "Завантаження останньої бази:"

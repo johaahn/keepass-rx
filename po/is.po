@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-31 20:28+0100\n"
+"POT-Creation-Date: 2025-11-01 08:42+0000\n"
 "PO-Revision-Date: 2025-10-31 17:02+0000\n"
 "Last-Translator: projectmoon <projectmoon@agnos.is>\n"
 "Language-Team: Icelandic <https://hosted.weblate.org/projects/ubports/"
@@ -25,29 +25,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
-"agnos.is/projectmoon/keepass-rx</a>"
-msgstr ""
-
-msgid "Add Database"
-msgstr ""
-
-msgid "Settings"
-msgstr "Stillingar"
-
-msgid "About"
-msgstr ""
-
-msgid "Loading last database:"
-msgstr ""
-
-msgid "Select Database"
-msgstr ""
-
-msgid "Tap + to import a database."
-msgstr ""
-
-msgid "It will only be removed from the app, not your device."
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
+"git.agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
 
 msgid "Lock"
@@ -65,10 +44,40 @@ msgstr "Leita"
 msgid "Cancel Search"
 msgstr ""
 
+msgid "Settings"
+msgstr "Stillingar"
+
+msgid "About"
+msgstr ""
+
 msgid "Lock Database"
 msgstr ""
 
 msgid "Close Database"
+msgstr ""
+
+msgid "Untitled Entry"
+msgstr ""
+
+msgid "Notes"
+msgstr ""
+
+msgid "Tap to copy"
+msgstr ""
+
+msgid "Add Database"
+msgstr ""
+
+msgid "Loading last database."
+msgstr ""
+
+msgid "Select Database"
+msgstr ""
+
+msgid "Tap + to import a database."
+msgstr ""
+
+msgid "It will only be removed from the app, not your device."
 msgstr ""
 
 msgid "Enter the database master password"
@@ -81,15 +90,6 @@ msgid "Open"
 msgstr ""
 
 msgid "Opening"
-msgstr ""
-
-msgid "Untitled Entry"
-msgstr ""
-
-msgid "Notes"
-msgstr ""
-
-msgid "Tap to copy"
 msgstr ""
 
 msgid "Manual path set."

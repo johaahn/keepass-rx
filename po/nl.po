@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-31 20:28+0100\n"
+"POT-Creation-Date: 2025-11-01 08:42+0000\n"
 "PO-Revision-Date: 2025-10-31 20:02+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -27,33 +27,11 @@ msgstr ""
 "databanken, uitgebracht onder de GNU GPL v3-licentie."
 
 msgid ""
-"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
-"agnos.is/projectmoon/keepass-rx</a>"
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
+"git.agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
-"Broncode: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
-"agnos.is/projectmoon/keepass-rx</a>"
-
-msgid "Add Database"
-msgstr "Databank toevoegen"
-
-msgid "Settings"
-msgstr "Instellingen"
-
-msgid "About"
-msgstr "Over"
-
-msgid "Loading last database:"
-msgstr "De vorige databank wordt geopend:"
-
-msgid "Select Database"
-msgstr "Databank kiezen"
-
-msgid "Tap + to import a database."
-msgstr "Druk op ‘+’ om een databank toe te voegen."
-
-msgid "It will only be removed from the app, not your device."
-msgstr ""
-"Let op: de databank wordt alleen verwijderd uit de app, niet van je apparaat."
+"Broncode: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
+"git.agnos.is/projectmoon/keepass-rx</a>"
 
 msgid "Lock"
 msgstr "Vergrendelen"
@@ -70,11 +48,42 @@ msgstr "Zoeken"
 msgid "Cancel Search"
 msgstr "Zoekopdracht afbreken"
 
+msgid "Settings"
+msgstr "Instellingen"
+
+msgid "About"
+msgstr "Over"
+
 msgid "Lock Database"
 msgstr "Databank vergrendelen"
 
 msgid "Close Database"
 msgstr "Databank sluiten"
+
+msgid "Untitled Entry"
+msgstr "Naamloos item"
+
+msgid "Notes"
+msgstr "Aantekeningen"
+
+msgid "Tap to copy"
+msgstr "Druk om te kopiëren"
+
+msgid "Add Database"
+msgstr "Databank toevoegen"
+
+msgid "Loading last database."
+msgstr ""
+
+msgid "Select Database"
+msgstr "Databank kiezen"
+
+msgid "Tap + to import a database."
+msgstr "Druk op ‘+’ om een databank toe te voegen."
+
+msgid "It will only be removed from the app, not your device."
+msgstr ""
+"Let op: de databank wordt alleen verwijderd uit de app, niet van je apparaat."
 
 msgid "Enter the database master password"
 msgstr "Voer het hoofdwachtwoord in"
@@ -87,15 +96,6 @@ msgstr "Openen"
 
 msgid "Opening"
 msgstr "Bezig met openen…"
-
-msgid "Untitled Entry"
-msgstr "Naamloos item"
-
-msgid "Notes"
-msgstr "Aantekeningen"
-
-msgid "Tap to copy"
-msgstr "Druk om te kopiëren"
 
 msgid "Manual path set."
 msgstr "Stel de locatie handmatig in."
@@ -121,6 +121,9 @@ msgstr "Veilig vergrendelen"
 
 msgid "Database Not Opening?"
 msgstr "Wordt de databank niet geopend?"
+
+#~ msgid "Loading last database:"
+#~ msgstr "De vorige databank wordt geopend:"
 
 #~ msgid "Blank page thing"
 #~ msgstr "Blanco paginading"

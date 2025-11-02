@@ -31,7 +31,10 @@ steps:
     api_key:
       from_secret: release_push_key
     base_url: https://git.agnos.is/
-    files: "**/*.click"
+    files:
+    - build/x86_64-linux-gnu/app/keepassrx.projectmoon_*.click
+    - build/aarch64-linux-gnu/app/keepassrx.projectmoon_*.click
+    - build/arm-linux-gnueabihf/app/keepassrx.projectmoon_*.click
 
 - name: open-store-publish
   depends_on:

@@ -37,7 +37,8 @@ steps:
   when:
     ref:
     - refs/tags/v*
-  depends_on: push-release
+  depends_on:
+  - push-release
   image: clickable/ci-20.04-armhf
   commands:
     - clickable publish --arch arm64 -- ${DRONE_COMMIT_MESSAGE}

@@ -583,4 +583,41 @@ mod tests {
         assert!(entries.len() > 0);
         assert_eq!(entries[0].uuid, entry_uuid);
     }
+
+    #[test]
+    fn search_entries_in_root_group() {
+        let group_uuid =
+            Uuid::from_str("133b7912-7705-4967-bc6e-807761ba9479").expect("bad group uuid");
+
+        let entry_uuid1 =
+            Uuid::from_str("d7e5dcb1-1e36-4b2a-9468-74f699809c1d").expect("bad entry uuid");
+
+        let entry_uuid2 =
+            Uuid::from_str("3c79f95c-842a-4e70-aed9-6cb7d128b01e").expect("bad entry uuid");
+
+        let entry1 = RxEntry {
+            uuid: entry_uuid1,
+            title: Some(SecretString::from("test title".to_string())),
+            ..Default::default()
+        };
+
+        let entry2 = RxEntry {
+            uuid: entry_uuid2,
+            title: Some(SecretString::from("should not show up".to_string())),
+            ..Default::default()
+        };
+
+        let group = RxGroup {
+            entries: vec![entry1, entry2],
+            name: "asdf".to_string(),
+            subgroups: vec![],
+            uuid: group_uuid,
+            parent: None,
+        };
+
+        let db = RxDatabase { root: group };
+        let entries = db.get_entries(group_uuid, Some("test"));
+        assert!(entries.len() == 1);
+        assert_eq!(entries[0].uuid, entry_uuid1);
+    }
 }

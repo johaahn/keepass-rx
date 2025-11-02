@@ -10,7 +10,8 @@ UITK.Page {
     property bool isARMv7: false
     header: UITK.PageHeader {
         id: header
-        title: i18n.ctr("page header", "About")
+        // TRANSLATORS: Header for the "About" page.
+        title: i18n.tr("About")
     }
 
     ColumnLayout {

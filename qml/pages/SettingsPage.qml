@@ -7,7 +7,8 @@ UITK.Page {
     property bool isARMv7: false
     header: UITK.PageHeader {
         id: header
-        title: i18n.ctr("page header", "Settings")
+        // TRANSLATORS: Page header for the settings.
+        title: i18n.tr("Settings")
     }
 
     Flickable {
@@ -37,11 +38,12 @@ UITK.Page {
             // several Settings instances floating around. Make them
             // into a singleton!
             SettingsItem {
-                title: i18n.ctr("enable easy locking and unlocking of the database",
-                                "Enable database locking (ALPHA)")
-                description: i18n.ctr(
-                    "description for database locking",
-                    "Securely lock and unlock database with a short passcode. Requires restart to take effect.")
+                // TRANSLATORS: Enable or disable easy (and secure!) locking and unlocking of the database.
+                title: i18n.tr("Enable database locking (ALPHA)")
+                // TRANSLATORS: Description of the database locking setting.
+                description: i18n.tr(
+                    "Securely lock and unlock database with a short passcode. Requires restart to take effect."
+                )
                 control: UITK.Switch {
                     onCheckedChanged: settings.databaseLocking = checked
                     checked: settings.databaseLocking
@@ -50,10 +52,9 @@ UITK.Page {
 
             SettingsItem {
                 // TRANSLATORS: DB is the abbreviation for database
-                title: i18n.ctr("auto-close time for database setting",
-                                "Auto-close db after inactivity")
-                description: i18n.ctr("description for auto-close setting",
-                                      "In minutes. 0 for disabled.")
+                title: i18n.tr("Auto-close db after inactivity")
+                // TRANSLATORS: Description of the auto-close setting.
+                description: i18n.tr("In minutes. 0 for disabled.")
                 control: UITK.TextField {
                     inputMethodHints: Qt.ImhDigitsOnly
                     text: settings.autoCloseInterval
@@ -78,23 +79,22 @@ UITK.Page {
                 }
             }
             SettingsItem {
-                title: i18n.ctr("show recycle-bin setting",
-                                'Show the "Recycle bin" group')
-                description: i18n.ctr(
-                    "description for show recycle-bin setting",
-                    'This group contains all the deleted entries')
+                // TRANSLATORS: Whether or not to show the recycling bin group of deleted password entries.
+                title: i18n.tr('Show the "Recycle bin" group')
+                // TRANSLATORS: Description of the "Show recycle bin group" setting.
+                description: i18n.tr('This group contains all the deleted entries')
                 control: UITK.Switch {
                     onCheckedChanged: settings.showRecycleBin = checked
                     checked: settings.showRecycleBin
                 }
             }
             SettingsItem {
-                title: i18n.ctr("change section on search setting",
-                                'Change section on search')
-                description: i18n.ctr(
-                    "description for change section on search setting",
-                    'Change section automatically if there are no results for the \
-search value in the current section, and there are results in another section')
+                // TRANSLAOTORS: Whether or not to change group section on search.
+                title: i18n.tr('Change section on search')
+                description: i18n.tr(
+                    'Change section automatically if there are no results for the ' +
+                        'search value in the current section, and there are results in another section'
+                )
                 control: UITK.Switch {
                     onCheckedChanged: settings.changeGroupOnSearch = checked
                     checked: settings.changeGroupOnSearch
@@ -102,12 +102,10 @@ search value in the current section, and there are results in another section')
             }
             SettingsItem {
                 visible: isARMv7
-                title: i18n.ctr(
-                    "show slow database warning setting",
-                    'Show warning before opening very slow databases')
-                description: i18n.ctr(
-                    "description for show slow database warning setting",
-                    'Opening KDBX3 databases on ARMv7 devices can take up to 2 seconds <b>per entry</b> (3 minutes for 100 entries)')
+                title: i18n.tr('Show warning before opening very slow databases')
+                description: i18n.tr(
+                    'Opening KDBX3 databases on ARMv7 devices can take up to 2 seconds <b>per entry</b> (3 minutes for 100 entries)'
+                )
                 control: UITK.Switch {
                     onCheckedChanged: settings.showSlowDBWarning = checked
                     checked: settings.showSlowDBWarning

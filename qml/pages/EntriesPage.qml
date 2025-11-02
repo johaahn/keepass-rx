@@ -173,7 +173,8 @@ UITK.Page {
                     Layout.fillWidth: true
                     visible: searchMode
                     id: searchField
-                    placeholderText: i18n.ctr("text for search placeholder", "Search entries in this group")
+                    // TRANSLATORS: Placeholder text of the search box for searching for database entries. Group is a group/folder of password manager entries.
+                    placeholderText: i18n.tr("Search entries in this group")
                     inputMethodHints: Qt.ImhNoPredictiveText
                     onTextChanged: {
                         getEntries(groupUuid);

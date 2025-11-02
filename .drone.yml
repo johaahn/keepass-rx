@@ -37,12 +37,12 @@ steps:
     - build/arm-linux-gnueabihf/app/keepassrx.projectmoon_*.click
 
 - name: open-store-publish
+  image: clickable/ci-20.04-amd64
   depends_on:
   - push-release
   when:
     ref:
     - refs/tags/v*
-  image: clickable/ci-20.04-amd64
   commands:
     - clickable publish --arch arm64 -- ${DRONE_COMMIT_MESSAGE}
     - clickable publish --arch amd64 -- ${DRONE_COMMIT_MESSAGE}

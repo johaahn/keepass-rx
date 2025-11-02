@@ -42,7 +42,7 @@ steps:
   when:
     ref:
     - refs/tags/v*
-  image: clickable/ci-20.04-armhf
+  image: clickable/ci-20.04-amd64
   commands:
     - clickable publish --arch arm64 -- ${DRONE_COMMIT_MESSAGE}
     - clickable publish --arch amd64 -- ${DRONE_COMMIT_MESSAGE}

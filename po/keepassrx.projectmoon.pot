@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-01 08:42+0000\n"
+"POT-Creation-Date: 2025-11-02 07:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,16 +17,74 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: qml/pages/AboutPage.qml:56
+#: qml/pages/AboutPage.qml:14 qml/pages/EntriesPage.qml:126
+#: qml/pages/DBList.qml:81 qml/pages/OpenDBPage.qml:55
+#: qml/pages/UnlockPage.qml:41
+msgid "About"
+msgstr ""
+
+#: qml/pages/AboutPage.qml:57
 msgid ""
 "KeePassRX is a work-in-progress password manager for KeePass password "
 "databases. It is licensed under the GNU GPL v3 license."
 msgstr ""
 
-#: qml/pages/AboutPage.qml:67
+#: qml/pages/AboutPage.qml:68
 msgid ""
-"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
-"agnos.is/projectmoon/keepass-rx</a>"
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
+"git.agnos.is/projectmoon/keepass-rx</a>"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:11 qml/pages/EntriesPage.qml:117
+#: qml/pages/DBList.qml:74 qml/pages/OpenDBPage.qml:48
+#: qml/pages/UnlockPage.qml:34
+msgid "Settings"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:42
+msgid "Enable database locking (ALPHA)"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:45
+msgid ""
+"Securely lock and unlock database with a short passcode. Requires restart to "
+"take effect."
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:55
+msgid "Auto-close db after inactivity"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:57
+msgid "In minutes. 0 for disabled."
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:83
+msgid "Show the \"Recycle bin\" group"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:85
+msgid "This group contains all the deleted entries"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:93
+msgid "Change section on search"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:95
+msgid ""
+"Change section automatically if there are no results for the search value in "
+"the current section, and there are results in another section"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:105
+msgid "Show warning before opening very slow databases"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:107
+msgid ""
+"Opening KDBX3 databases on ARMv7 devices can take up to 2 seconds <b>per "
+"entry</b> (3 minutes for 100 entries)"
 msgstr ""
 
 #: qml/pages/EntriesPage.qml:67
@@ -50,22 +108,16 @@ msgstr ""
 msgid "Cancel Search"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:117 qml/pages/DBList.qml:74
-#: qml/pages/OpenDBPage.qml:48 qml/pages/UnlockPage.qml:34
-msgid "Settings"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:126 qml/pages/DBList.qml:81
-#: qml/pages/OpenDBPage.qml:55 qml/pages/UnlockPage.qml:41
-msgid "About"
-msgstr ""
-
 #: qml/pages/EntriesPage.qml:138
 msgid "Lock Database"
 msgstr ""
 
 #: qml/pages/EntriesPage.qml:148
 msgid "Close Database"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:177
+msgid "Search entries in this group"
 msgstr ""
 
 #: qml/pages/SingleEntry.qml:18

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-01 08:42+0000\n"
+"POT-Creation-Date: 2025-11-02 07:24+0100\n"
 "PO-Revision-Date: 2025-10-31 20:02+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -18,6 +18,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.14.1-dev\n"
+
+msgid "About"
+msgstr "Over"
 
 msgid ""
 "KeePassRX is a work-in-progress password manager for KeePass password "
@@ -32,6 +35,45 @@ msgid ""
 msgstr ""
 "Broncode: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
+
+msgid "Settings"
+msgstr "Instellingen"
+
+msgid "Enable database locking (ALPHA)"
+msgstr ""
+
+msgid ""
+"Securely lock and unlock database with a short passcode. Requires restart to "
+"take effect."
+msgstr ""
+
+msgid "Auto-close db after inactivity"
+msgstr ""
+
+msgid "In minutes. 0 for disabled."
+msgstr ""
+
+msgid "Show the \"Recycle bin\" group"
+msgstr ""
+
+msgid "This group contains all the deleted entries"
+msgstr ""
+
+msgid "Change section on search"
+msgstr ""
+
+msgid ""
+"Change section automatically if there are no results for the search value in "
+"the current section, and there are results in another section"
+msgstr ""
+
+msgid "Show warning before opening very slow databases"
+msgstr ""
+
+msgid ""
+"Opening KDBX3 databases on ARMv7 devices can take up to 2 seconds <b>per "
+"entry</b> (3 minutes for 100 entries)"
+msgstr ""
 
 msgid "Lock"
 msgstr "Vergrendelen"
@@ -48,17 +90,14 @@ msgstr "Zoeken"
 msgid "Cancel Search"
 msgstr "Zoekopdracht afbreken"
 
-msgid "Settings"
-msgstr "Instellingen"
-
-msgid "About"
-msgstr "Over"
-
 msgid "Lock Database"
 msgstr "Databank vergrendelen"
 
 msgid "Close Database"
 msgstr "Databank sluiten"
+
+msgid "Search entries in this group"
+msgstr ""
 
 msgid "Untitled Entry"
 msgstr "Naamloos item"

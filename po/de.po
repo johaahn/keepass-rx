@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-01 08:42+0000\n"
+"POT-Creation-Date: 2025-11-02 07:24+0100\n"
 "PO-Revision-Date: 2025-10-31 21:20+0000\n"
 "Last-Translator: Daniel Frost <one@frostinfo.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -18,6 +18,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.14.1-dev\n"
+
+msgid "About"
+msgstr "Über"
 
 msgid ""
 "KeePassRX is a work-in-progress password manager for KeePass password "
@@ -34,6 +37,45 @@ msgstr ""
 "Quelle: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
+msgid "Settings"
+msgstr "Einstellungen"
+
+msgid "Enable database locking (ALPHA)"
+msgstr ""
+
+msgid ""
+"Securely lock and unlock database with a short passcode. Requires restart to "
+"take effect."
+msgstr ""
+
+msgid "Auto-close db after inactivity"
+msgstr ""
+
+msgid "In minutes. 0 for disabled."
+msgstr ""
+
+msgid "Show the \"Recycle bin\" group"
+msgstr ""
+
+msgid "This group contains all the deleted entries"
+msgstr ""
+
+msgid "Change section on search"
+msgstr ""
+
+msgid ""
+"Change section automatically if there are no results for the search value in "
+"the current section, and there are results in another section"
+msgstr ""
+
+msgid "Show warning before opening very slow databases"
+msgstr ""
+
+msgid ""
+"Opening KDBX3 databases on ARMv7 devices can take up to 2 seconds <b>per "
+"entry</b> (3 minutes for 100 entries)"
+msgstr ""
+
 msgid "Lock"
 msgstr "Sperren"
 
@@ -49,17 +91,14 @@ msgstr "Suchen"
 msgid "Cancel Search"
 msgstr "Suche abbrechen"
 
-msgid "Settings"
-msgstr "Einstellungen"
-
-msgid "About"
-msgstr "Über"
-
 msgid "Lock Database"
 msgstr "Datenbank sperren"
 
 msgid "Close Database"
 msgstr "Datenbank schließen"
+
+msgid "Search entries in this group"
+msgstr ""
 
 msgid "Untitled Entry"
 msgstr "Unbenannter Eintrag"

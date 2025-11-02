@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-02 07:24+0100\n"
-"PO-Revision-Date: 2025-10-31 17:02+0000\n"
+"PO-Revision-Date: 2025-11-02 11:51+0000\n"
 "Last-Translator: projectmoon <projectmoon@agnos.is>\n"
 "Language-Team: Icelandic <https://hosted.weblate.org/projects/ubports/"
 "keepassrx/is/>\n"
@@ -26,28 +26,34 @@ msgid ""
 "KeePassRX is a work-in-progress password manager for KeePass password "
 "databases. It is licensed under the GNU GPL v3 license."
 msgstr ""
+"KeePassRX er app lokaorðs-app í vinnslu fyrir KeePass gagnagrunna. Appið "
+"hefur leyfi samkvæmt GNU GPL v3."
 
 msgid ""
 "Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
+"Uppruni: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
+"git.agnos.is/projectmoon/keepass-rx</a>"
 
 msgid "Settings"
 msgstr "Stillingar"
 
 msgid "Enable database locking (ALPHA)"
-msgstr ""
+msgstr "Virkja læsing gagnagrunnanna (ALPHA)"
 
 msgid ""
 "Securely lock and unlock database with a short passcode. Requires restart to "
 "take effect."
 msgstr ""
+"Notaðu stutt lykilorð til að Loka og aflæsa gagnagrunnur með öryggi. Appið "
+"þarf að endurræsa."
 
 msgid "Auto-close db after inactivity"
-msgstr ""
+msgstr "Loka gagnagrunnurinn sjálfkrafa eftir smá tíma"
 
 msgid "In minutes. 0 for disabled."
-msgstr ""
+msgstr "í mínutur. Slökkva á stilling með 0."
 
 msgid "Show the \"Recycle bin\" group"
 msgstr ""
@@ -72,13 +78,13 @@ msgid ""
 msgstr ""
 
 msgid "Lock"
-msgstr ""
+msgstr "Læsa"
 
 msgid "Close"
-msgstr ""
+msgstr "Loka"
 
 msgid "Back"
-msgstr ""
+msgstr "Til baka"
 
 msgid "Search"
 msgstr "Leita"
@@ -87,25 +93,25 @@ msgid "Cancel Search"
 msgstr ""
 
 msgid "Lock Database"
-msgstr ""
+msgstr "Læsa Gangnagrunn"
 
 msgid "Close Database"
-msgstr ""
+msgstr "Loka Gagnagrunn"
 
 msgid "Search entries in this group"
-msgstr ""
+msgstr "Leitaðu að hlut í þessum flokki"
 
 msgid "Untitled Entry"
-msgstr ""
+msgstr "Ónefnd Færsla"
 
 msgid "Notes"
-msgstr ""
+msgstr "Athugasemdir"
 
 msgid "Tap to copy"
-msgstr ""
+msgstr "Ýtið á til að afrita"
 
 msgid "Add Database"
-msgstr ""
+msgstr "Bæta við Gangnagrunn"
 
 msgid "Loading last database."
 msgstr ""

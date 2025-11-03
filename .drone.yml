@@ -44,9 +44,9 @@ steps:
       ref:
         - "refs/tags/v*"
     commands:
-      - "clickable publish --arch arm64 -- ${DRONE_COMMIT_MESSAGE}"
-      - "clickable publish --arch amd64 -- ${DRONE_COMMIT_MESSAGE}"
-      - "clickable publish --arch armhf -- ${DRONE_COMMIT_MESSAGE}"
+      - 'clickable publish --arch arm64 -- \"${DRONE_COMMIT_MESSAGE}\"'
+      - 'clickable publish --arch amd64 -- \"${DRONE_COMMIT_MESSAGE}\"'
+      - 'clickable publish --arch armhf -- \"${DRONE_COMMIT_MESSAGE}\"'
     environment:
       OPENSTORE_API_KEY:
         from_secret: openstore_api_key

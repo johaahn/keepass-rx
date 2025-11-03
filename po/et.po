@@ -8,20 +8,22 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-02 07:24+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2025-11-03 11:51+0000\n"
+"Last-Translator: Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>\n"
+"Language-Team: Estonian <https://hosted.weblate.org/projects/ubports/"
+"keepassrx/et/>\n"
 "Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.1-dev\n"
 
 #: qml/pages/AboutPage.qml:14 qml/pages/EntriesPage.qml:126
 #: qml/pages/DBList.qml:81 qml/pages/OpenDBPage.qml:55
 #: qml/pages/UnlockPage.qml:41
 msgid "About"
-msgstr ""
+msgstr "Rakenduse teave"
 
 #: qml/pages/AboutPage.qml:57
 msgid ""
@@ -39,7 +41,7 @@ msgstr ""
 #: qml/pages/DBList.qml:74 qml/pages/OpenDBPage.qml:48
 #: qml/pages/UnlockPage.qml:34
 msgid "Settings"
-msgstr ""
+msgstr "Seadistused"
 
 #: qml/pages/SettingsPage.qml:42
 msgid "Enable database locking (ALPHA)"
@@ -89,7 +91,7 @@ msgstr ""
 
 #: qml/pages/EntriesPage.qml:67
 msgid "Lock"
-msgstr ""
+msgstr "Lukusta"
 
 #: qml/pages/EntriesPage.qml:79
 msgid "Close"

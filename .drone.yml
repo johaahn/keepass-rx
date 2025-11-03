@@ -30,7 +30,28 @@ steps:
     commands:
       - clickable build --clean
 
-  - name: push-release
+  - name: pre-release
+    depends_on:
+      - amd64
+      - arm64
+      - armhf
+    image: plugins/gitea-release
+    when:
+      branch:
+        - master
+      event:
+        - promote
+    settings:
+      api_key:
+        from_secret: release_push_key
+    base_url: https://git.agnos.is/
+    prerelease: true
+    files:
+      - build/x86_64-linux-gnu/app/keepassrx.projectmoon_*.click
+      - build/aarch64-linux-gnu/app/keepassrx.projectmoon_*.click
+      - build/arm-linux-gnueabihf/app/keepassrx.projectmoon_*.click
+
+  - name: production-release
     depends_on:
       - amd64
       - arm64
@@ -38,11 +59,12 @@ steps:
     image: plugins/gitea-release
     when:
       ref:
-        - refs/tags/v*
+        - "refs/tags/v*"
     settings:
       api_key:
         from_secret: release_push_key
     base_url: https://git.agnos.is/
+    prerelease: false
     files:
       - build/x86_64-linux-gnu/app/keepassrx.projectmoon_*.click
       - build/aarch64-linux-gnu/app/keepassrx.projectmoon_*.click

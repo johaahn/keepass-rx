@@ -39,8 +39,8 @@ steps:
     when:
       target:
         - prerelease
-      branch:
-        - master
+      ref:
+        - "refs/tags/v*"
       event:
         - promote
     settings:

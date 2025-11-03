@@ -1,4 +1,3 @@
-# why does weblate keep breaking drone?
 ---
 kind: pipeline
 name: default

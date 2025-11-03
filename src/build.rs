@@ -11,13 +11,16 @@ NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPO
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
 OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
+ */
+#![cfg_attr(debug_assertions, allow(dead_code, unused_imports))]
+
 use std::env;
 use std::fs;
 use std::path::PathBuf;
 use std::process::Command;
 
 /// Perform qmake query
+#[cfg(feature = "gui")]
 fn qmake_query(qmake: &str, args: &str, var: &str) -> String {
     let mut qmake_cmd_list: Vec<&str> = qmake.split(' ').collect();
     qmake_cmd_list.push("-query");
@@ -38,11 +41,13 @@ fn qmake_query(qmake: &str, args: &str, var: &str) -> String {
 }
 
 /// Generates the shell command to call for qmake
+#[cfg(feature = "gui")]
 fn qmake_call() -> String {
     env::var("QMAKE").unwrap_or(String::from("qmake"))
 }
 
 /// Generates the arguments for the call to qmake
+#[cfg(feature = "gui")]
 fn qmake_args() -> String {
     env::var("QMAKE_ARGS").unwrap_or_default()
 }
@@ -133,6 +138,7 @@ fn walk_dir(dir: PathBuf, ext: &str) -> Vec<PathBuf> {
     files
 }
 
+#[cfg(feature = "gui")]
 fn main() {
     update_language_files();
 
@@ -156,6 +162,7 @@ fn main() {
 
     println!("cargo:rerun-if-changed=src/main.rs");
     println!("cargo:rerun-if-changed=po/*");
+
     println!("cargo:rustc-link-search{macos_lib_search}={qt_library_path}");
     println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}Widgets");
     println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}Gui");
@@ -164,3 +171,6 @@ fn main() {
     println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}Qml");
     println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}QuickControls2");
 }
+
+#[cfg(not(feature = "gui"))]
+fn main() {}

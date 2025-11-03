@@ -1,7 +1,6 @@
 use qmetaobject::{QMetaType, QObject, QString, QVariant, QVariantList, QVariantMap};
 
 use crate::rx::{RxEntry, RxGroup};
-use secrecy::ExposeSecret;
 
 #[derive(QEnum, Clone, Default, Copy)]
 #[repr(C)]
@@ -69,14 +68,14 @@ impl From<&RxEntry> for RxListItem {
             title: value
                 .title
                 .as_ref()
-                .map(|title| title.expose_secret().to_string())
+                .and_then(|title| title.value().map(|t| t.to_string()))
                 .unwrap_or_else(|| "(Untitled)".to_string())
                 .into(),
 
             subtitle: value
                 .username
                 .as_ref()
-                .map(|username| username.expose_secret().to_string())
+                .and_then(|username| username.value().map(|u| u.to_string()))
                 .unwrap_or_else(|| "".to_string())
                 .into(),
         }

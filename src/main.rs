@@ -14,38 +14,51 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// Because gui is an "optional feature," we should allow dead code and
+// unused imports when building in debug mode without GUI enabled.
+#![cfg_attr(debug_assertions, allow(dead_code, unused_imports))]
+
 #[macro_use]
 extern crate cstr;
 #[macro_use]
 extern crate qmetaobject;
 
+extern crate libsodium_rs;
+
 use actix::Actor;
 use anyhow::Result;
 use cpp::cpp;
 use gettextrs::{bindtextdomain, textdomain};
-use gui::RxGuiState;
 use qmeta_async::with_executor;
 use qmetaobject::{QObjectBox, QQuickStyle, QQuickView, qml_register_enum, qml_register_type};
 use std::env;
 use std::path::PathBuf;
 use std::sync::Arc;
 
-mod app;
-mod gui;
-mod qrc;
 mod rx;
 
+#[cfg(feature = "gui")]
+mod app;
+#[cfg(feature = "gui")]
+mod gui;
+#[cfg(feature = "gui")]
+mod qrc;
+
+#[cfg(feature = "gui")]
 use crate::app::KeepassRxApp;
 
+#[cfg(feature = "gui")]
 use crate::gui::{
-    KeepassRx,
+    KeepassRx, RxGuiState,
     actor::KeepassRxActor,
     models::{RxItemType, RxListItem},
     utils::{app_data_path, imported_databases_path, move_old_db},
 };
 
-fn main() -> Result<()> {
+#[cfg(feature = "gui")]
+fn load_gui() -> Result<()> {
     init_gettext();
+
     unsafe {
         cpp! {{
             #include <QtCore/QCoreApplication>
@@ -112,6 +125,7 @@ fn main() -> Result<()> {
     Ok(())
 }
 
+#[cfg(feature = "gui")]
 fn init_gettext() {
     let domain = "keepassrx.projectmoon";
     textdomain(domain).expect("Failed to set gettext domain");
@@ -125,4 +139,18 @@ fn init_gettext() {
     let path = app_dir_path.join("share/locale");
 
     bindtextdomain(domain, path.to_str().unwrap()).expect("Failed to bind gettext domain");
+}
+
+fn main() -> Result<()> {
+    libsodium_rs::ensure_init()?;
+
+    match () {
+        #[cfg(feature = "gui")]
+        () => load_gui()?,
+
+        #[cfg(not(feature = "gui"))]
+        () => println!("GUI not enabled."),
+    }
+
+    Ok(())
 }

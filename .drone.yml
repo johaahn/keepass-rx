@@ -3,18 +3,30 @@ kind: pipeline
 name: default
 
 steps:
+
+  - name: test
+    image: clickable/ci-20.04-amd64
+    commands:
+      - cargo test --no-default-features
+
   - name: amd64
     image: clickable/ci-20.04-amd64
+    depends_on:
+      - test
     commands:
       - clickable build --clean
 
   - name: arm64
     image: clickable/ci-20.04-arm64
+    depends_on:
+      - test
     commands:
       - clickable build --clean
 
   - name: armhf
     image: clickable/ci-20.04-armhf
+    depends_on:
+      - test
     commands:
       - clickable build --clean
 

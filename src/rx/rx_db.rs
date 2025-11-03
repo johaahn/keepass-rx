@@ -4,13 +4,14 @@ use base64::{Engine, prelude::BASE64_STANDARD};
 use humanize_duration::Truncate;
 use humanize_duration::prelude::DurationExt;
 use infer;
-use keepass::db::{CustomData, Entry, Group, Icon, NodeRefMut, TOTP as KeePassTOTP, Value};
-use qmetaobject::{QString, QVariant, QVariantMap};
+use keepass::db::{CustomData, Entry, Group, Icon, Node, TOTP as KeePassTOTP, Value};
+use libsodium_rs::utils::{SecureVec, vec_utils};
 use querystring::querify;
-use secrecy::{ExposeSecret, SecretString};
-use std::mem::take;
+use secstr::SecStr;
+use std::mem;
 use std::{collections::HashMap, str::FromStr};
 use totp_rs::{Secret, TOTP};
+use unicase::UniCase;
 use uriparse::URI;
 use uuid::Uuid;
 use zeroize::{Zeroize, ZeroizeOnDrop, Zeroizing};
@@ -24,20 +25,29 @@ macro_rules! expose {
     ($secret:expr) => {{
         $secret
             .as_ref()
-            .map(SecretString::expose_secret)
+            .and_then(|secret| secret.value().map(|value| value.to_string()))
             .unwrap_or_default()
     }};
 }
 
 macro_rules! expose_opt {
+    ($secret:expr) => {{ $secret.as_ref().and_then(|secret| secret.value()) }};
+}
+
+macro_rules! expose_str {
     ($secret:expr) => {{
         $secret
             .as_ref()
-            .map(|secret| secret.expose_secret().to_string())
+            .and_then(|secret| secret.value())
+            .unwrap_or_default()
     }};
 }
 
-pub(crate) use expose;
+macro_rules! into_value {
+    ($key:expr, $val:expr) => {{ RxValue::try_from($val).ok().map(|secret| ($key, secret)) }};
+}
+
+pub(crate) use {expose, expose_opt, expose_str};
 
 #[derive(Zeroize, Default, Clone)]
 pub struct RxTotp {
@@ -71,7 +81,7 @@ impl RxGroup {
     pub fn new(group: &mut Group, subgroups: Vec<RxGroup>, entries: Vec<RxEntry>) -> Self {
         Self {
             uuid: group.uuid,
-            name: take(&mut group.name),
+            name: mem::take(&mut group.name),
             subgroups: subgroups,
             entries: entries,
             parent: None,
@@ -80,21 +90,18 @@ impl RxGroup {
 }
 
 #[derive(Zeroize, Default, Clone)]
-pub struct RxCustomFields(Vec<(String, SecretString)>);
+pub struct RxCustomFields(pub(crate) Vec<(String, RxValue)>);
 
-impl From<&mut CustomData> for RxCustomFields {
-    fn from(value: &mut CustomData) -> Self {
-        let items = take(&mut value.items);
-
-        let custom_fields: Vec<_> = items
+impl From<CustomData> for RxCustomFields {
+    fn from(value: CustomData) -> Self {
+        let custom_fields: Vec<_> = value
+            .items
             .into_iter()
             .flat_map(|(key, item)| {
                 if !FIELDS_TO_HIDE.contains(&key.as_ref()) {
                     item.value.and_then(|value| match value {
-                        Value::Protected(val) => {
-                            Some((key, SecretString::from(val.to_string())))
-                        }
-                        Value::Unprotected(val) => Some((key, SecretString::from(val))),
+                        Value::Protected(val) => into_value!(key, val),
+                        Value::Unprotected(val) => into_value!(key, val),
                         _ => None,
                     })
                 } else {
@@ -104,24 +111,6 @@ impl From<&mut CustomData> for RxCustomFields {
             .collect();
 
         Self(custom_fields)
-    }
-}
-
-impl From<RxCustomFields> for QVariantMap {
-    fn from(value: RxCustomFields) -> QVariantMap {
-        let mut map: HashMap<String, QVariant> = HashMap::new();
-
-        for (key, value) in value.0 {
-            map.insert(key, QString::from(value.expose_secret()).into());
-        }
-
-        map.into()
-    }
-}
-
-impl From<RxCustomFields> for QVariant {
-    fn from(value: RxCustomFields) -> QVariant {
-        QVariantMap::from(value).into()
     }
 }
 
@@ -157,9 +146,60 @@ impl From<String> for RxFieldName {
     }
 }
 
-impl From<QString> for RxFieldName {
-    fn from(value: QString) -> Self {
-        RxFieldName::from(value.to_string())
+/// Not Sync or Send, because of SecureVec using *mut u8.
+#[derive(Zeroize, ZeroizeOnDrop, Default, Clone, Debug)]
+pub enum RxValue {
+    Protected(SecureVec<u8>),
+    Unprotected(String),
+
+    #[default]
+    Unsupported,
+}
+
+impl RxValue {
+    pub fn value(&self) -> Option<&str> {
+        match self {
+            RxValue::Protected(secret) => std::str::from_utf8(&secret).ok(),
+            RxValue::Unprotected(value) => Some(value.as_ref()),
+            _ => None,
+        }
+    }
+}
+
+impl std::fmt::Display for RxValue {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            RxValue::Protected(_) => write!(f, "**SECRET**"),
+            RxValue::Unprotected(value) => write!(f, "{}", value),
+            _ => write!(f, "<unsupported value>"),
+        }
+    }
+}
+
+impl TryFrom<SecStr> for RxValue {
+    type Error = anyhow::Error;
+    fn try_from(mut value: SecStr) -> std::result::Result<Self, Self::Error> {
+        let value_unsecure = value.unsecure();
+        let mut secure_vec = vec_utils::secure_vec::<u8>(value_unsecure.len())?;
+        secure_vec.copy_from_slice(&value_unsecure);
+        value.zero_out();
+        Ok(RxValue::Protected(secure_vec))
+    }
+}
+
+impl FromStr for RxValue {
+    type Err = anyhow::Error;
+    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
+        Ok(RxValue::Unprotected(s.to_string()))
+    }
+}
+
+impl TryFrom<String> for RxValue {
+    type Error = anyhow::Error;
+    fn try_from(value: String) -> std::result::Result<Self, Self::Error> {
+        let mut secure_vec = vec_utils::secure_vec::<u8>(value.len())?;
+        secure_vec.copy_from_slice(value.as_ref());
+        Ok(RxValue::Protected(secure_vec))
     }
 }
 
@@ -172,70 +212,70 @@ pub struct RxEntry {
     #[zeroize(skip)]
     pub parent_group: Uuid,
 
-    pub title: Option<SecretString>,
-    pub username: Option<SecretString>,
-    pub password: Option<SecretString>,
-    pub notes: Option<String>,
+    pub title: Option<RxValue>,
+    pub username: Option<RxValue>,
+    pub password: Option<RxValue>,
+    pub notes: Option<RxValue>,
 
     // A map would be better, but it's not zeroizable.
     pub custom_fields: RxCustomFields,
 
-    pub url: Option<SecretString>,
-    pub raw_otp_value: Option<SecretString>,
+    pub url: Option<RxValue>,
+    pub raw_otp_value: Option<RxValue>,
     pub icon_data: Option<Vec<u8>>,
+}
+
+fn extract_value(entry: &mut Entry, field_name: &str) -> Option<RxValue> {
+    entry.fields.remove(field_name).and_then(|value| {
+        match value {
+            Value::Protected(val) => RxValue::try_from(val).ok(),
+            Value::Unprotected(val) => RxValue::try_from(val).ok(),
+            _ => None, // discard binary for now. attachments later?
+        }
+    })
 }
 
 #[allow(dead_code)]
 impl RxEntry {
-    pub fn new_without_icon(entry: &mut Entry, parent_uuid: Uuid) -> Self {
+    pub fn new_without_icon(entry: Entry, parent_uuid: Uuid) -> Self {
         Self::new(entry, parent_uuid, None)
     }
 
-    pub fn new(entry: &mut Entry, parent_uuid: Uuid, icon: Option<Icon>) -> Self {
-        let notes = entry
-            .fields
-            .iter_mut()
-            .find(|(key, _)| key.as_str() == "Notes")
-            .and_then(|(_, mut value)| {
-                match &mut value {
-                    Value::Protected(_) => Some("[Hidden]".to_string()),
-                    Value::Unprotected(val) => Some(take(val)),
-                    _ => None, // discard binary notes? does that even exist?
-                }
-            });
-
-        let mut custom_fields = take(&mut entry.custom_data);
+    pub fn new(mut entry: Entry, parent_uuid: Uuid, icon: Option<Icon>) -> Self {
+        let custom_fields = mem::take(&mut entry.custom_data);
 
         Self {
             uuid: entry.uuid,
             parent_group: parent_uuid,
-            title: entry.get_title().map(SecretString::from),
-            username: entry.get_username().map(SecretString::from),
-            password: entry.get_password().map(SecretString::from),
-            notes: notes,
-            custom_fields: RxCustomFields::from(&mut custom_fields),
-            url: entry.get_url().map(SecretString::from),
-            raw_otp_value: entry.get_raw_otp_value().map(SecretString::from),
+            title: extract_value(&mut entry, "Title"),
+            username: extract_value(&mut entry, "Username"),
+            password: extract_value(&mut entry, "Password"),
+            notes: extract_value(&mut entry, "Notes"),
+            custom_fields: RxCustomFields::from(custom_fields),
+            url: extract_value(&mut entry, "URL"),
+            raw_otp_value: extract_value(&mut entry, "otp"),
             icon_data: icon.map(|i| i.data),
         }
     }
 
     pub fn get_field_value(&self, field_name: &RxFieldName) -> Option<String> {
-        match field_name {
+        let found = match field_name {
             RxFieldName::Username => expose_opt!(self.username),
             RxFieldName::Password => expose_opt!(self.password),
             RxFieldName::Url => expose_opt!(self.url),
             RxFieldName::Title => expose_opt!(self.title),
             RxFieldName::CustomField(name) => {
-                self.custom_fields.0.iter().find_map(|(key, value)| {
-                    if key == name {
-                        Some(value.expose_secret().to_owned())
-                    } else {
-                        None
-                    }
-                })
+                self.custom_fields
+                    .0
+                    .iter()
+                    .find_map(|(key, value)| match key == name {
+                        true => value.value(),
+                        false => None,
+                    })
             }
-        }
+        };
+
+        found.map(|value| value.to_string())
     }
 
     pub fn has_steam_otp(&self) -> bool {
@@ -247,8 +287,7 @@ impl RxEntry {
             return Err(anyhow!("Not a Steam OTP entry"));
         }
 
-        let raw_otp = expose!(self.raw_otp_value);
-        let uri = URI::try_from(raw_otp)?;
+        let uri = URI::try_from(expose_str!(self.raw_otp_value))?;
 
         let query = uri
             .query()
@@ -271,12 +310,7 @@ impl RxEntry {
     }
 
     pub fn totp(&self) -> Result<RxTotp> {
-        let otp = self
-            .raw_otp_value
-            .as_ref()
-            .map(|otp| otp.expose_secret())
-            .map(|value| KeePassTOTP::from_str(value))
-            .ok_or(anyhow!("Unable to parse OTP"))??;
+        let otp = KeePassTOTP::from_str(expose_str!(self.raw_otp_value))?;
 
         let otp_code = otp.value_now()?;
 
@@ -303,62 +337,6 @@ impl RxEntry {
                 )
             })
         })
-    }
-}
-
-impl From<&RxEntry> for QVariantMap {
-    fn from(value: &RxEntry) -> Self {
-        let icon_data_url: QString =
-            value.icon_data_url().map(QString::from).unwrap_or_default();
-
-        let mapper = |value: &Option<SecretString>| {
-            value
-                .as_ref()
-                .map(|secret| QString::from(secret.expose_secret()))
-                .unwrap_or_default()
-        };
-
-        let totp = value.totp();
-
-        let uuid: QString = value.uuid.to_string().into();
-        let url: QString = mapper(&value.url);
-        let username: QString = mapper(&value.username);
-        let title: QString = mapper(&value.title);
-        let password: QString = mapper(&value.password);
-        let notes: QString = value.notes.clone().map(QString::from).unwrap_or_default();
-
-        let mut map: HashMap<String, QVariant> = HashMap::new();
-        map.insert("uuid".to_string(), uuid.into());
-        map.insert("url".to_string(), url.into());
-        map.insert("username".to_string(), username.into());
-        map.insert("title".to_string(), title.into());
-        map.insert("password".to_string(), password.into());
-        map.insert("notes".to_string(), notes.into());
-        map.insert("iconPath".to_string(), icon_data_url.into());
-        map.insert(
-            "customFields".to_string(),
-            value.custom_fields.clone().into(),
-        );
-
-        if let Ok(_) = totp {
-            map.insert("hasTotp".to_string(), true.into());
-        } else {
-            map.insert("hasTotp".to_string(), false.into());
-        }
-
-        map.into()
-    }
-}
-
-impl From<RxEntry> for QVariantMap {
-    fn from(value: RxEntry) -> QVariantMap {
-        QVariantMap::from(&value)
-    }
-}
-
-impl From<RxEntry> for QVariant {
-    fn from(value: RxEntry) -> Self {
-        Into::<QVariantMap>::into(value).into()
     }
 }
 
@@ -391,9 +369,11 @@ fn load_groups_recursive(group: &mut Group, icons: &mut HashMap<Uuid, Icon>) -> 
     let mut subgroups = vec![];
     let mut entries = vec![];
 
-    for node in group.children.iter_mut() {
-        match node.as_mut() {
-            NodeRefMut::Group(mut subgroup) => {
+    let children = mem::take(&mut group.children);
+
+    for node in children.into_iter() {
+        match node {
+            Node::Group(mut subgroup) => {
                 let mut rx_groups: Vec<_> = load_groups_recursive(&mut subgroup, icons)
                     .into_iter()
                     .map(|mut subgroup| {
@@ -404,7 +384,7 @@ fn load_groups_recursive(group: &mut Group, icons: &mut HashMap<Uuid, Icon>) -> 
 
                 subgroups.append(&mut rx_groups);
             }
-            NodeRefMut::Entry(entry) => {
+            Node::Entry(entry) => {
                 let icon = entry
                     .custom_icon_uuid
                     .and_then(|icon_uuid| icons.remove(&icon_uuid));
@@ -505,17 +485,33 @@ impl RxDatabase {
     }
 
     pub fn get_entries(&self, group_uuid: Uuid, search_term: Option<&str>) -> Vec<&RxEntry> {
-        let search_term = search_term.map(|term| term.to_lowercase());
+        let search_term = search_term.map(|term| UniCase::new(term).to_folded_case());
         let group = self.get_group(group_uuid);
         let entries_in_group = group.as_ref().map(|group| group.entries.as_slice());
 
         // Determine if an entry should show up in search results, if
         // a search term was specified. term is already lowecase here.
         let search_entry = |entry: &RxEntry, term: &str| {
-            let username = expose!(entry.username).to_lowercase();
-            let url = expose!(entry.url).to_lowercase();
-            let title = expose!(entry.title).to_lowercase();
-            username.contains(term) || url.contains(term) || title.contains(term)
+            let username = entry.username.as_ref().and_then(|u| {
+                u.value()
+                    .map(|secret| UniCase::new(secret).to_folded_case())
+            });
+
+            let url = entry.url.as_ref().and_then(|u| {
+                u.value()
+                    .map(|secret| UniCase::new(secret).to_folded_case())
+            });
+
+            let title = entry.title.as_ref().and_then(|u| {
+                u.value()
+                    .map(|secret| UniCase::new(secret).to_folded_case())
+            });
+
+            let contains_username = username.map(|u| u.contains(term)).unwrap_or(false);
+            let contains_url = url.map(|u| u.contains(term)).unwrap_or(false);
+            let contains_title = title.map(|t| t.contains(term)).unwrap_or(false);
+
+            contains_username || contains_url || contains_title
         };
 
         let filtered_by_search = entries_in_group.map(|entries| {
@@ -597,13 +593,13 @@ mod tests {
 
         let entry1 = RxEntry {
             uuid: entry_uuid1,
-            title: Some(SecretString::from("test title".to_string())),
+            title: Some(RxValue::from_str("test title").expect("bad value")),
             ..Default::default()
         };
 
         let entry2 = RxEntry {
             uuid: entry_uuid2,
-            title: Some(SecretString::from("should not show up".to_string())),
+            title: Some(RxValue::from_str("should not show up").expect("bad value")),
             ..Default::default()
         };
 
@@ -617,7 +613,12 @@ mod tests {
 
         let db = RxDatabase { root: group };
         let entries = db.get_entries(group_uuid, Some("test"));
-        assert!(entries.len() == 1);
+
+        assert!(
+            entries.len() == 1,
+            "expected 1 entry, but got {}",
+            entries.len()
+        );
         assert_eq!(entries[0].uuid, entry_uuid1);
     }
 }

@@ -23,7 +23,6 @@ actix = "0.13.5"
 qmeta-async = { git = "https://gitlab.com/rubdos/qmeta-async", version = "0.1.0" }
 base64 = "0.22.1"
 infer = "0.19.0"
-secrecy = "0.10.3"
 zeroize = { version = "1.8.2", features = ["alloc", "aarch64", "derive"] }
 take_mut = "0.2.2"
 aes-gcm = { version = "0.10.3", features = ["zeroize"] }
@@ -31,6 +30,13 @@ secstr = "0.5.1"
 scrypt = "0.11.0"
 rayon = "1.11.0"
 keyring = { version = "3", features = ["linux-native"] }
+libsodium-rs = { version = "0.2.1", features = ["fetch-latest", "optimized"] }
+unicase = "2.8.1"
 
 [build-dependencies]
 cpp_build = "0.5"
+
+[features]
+# Compile the GUI portion of the application (link QT etc).
+gui = []
+default = ["gui"]

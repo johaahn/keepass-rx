@@ -190,24 +190,24 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                     None => db_key,
                 };
 
-                let open_result = spawn_blocking(move || -> Result<RxDatabase> {
+                let open_result = spawn_blocking(move || -> Result<Database> {
                     let db = Database::open(&mut db_file, db_key)?;
-                    let wrapped_db = Zeroizing::new(ZeroableDatabase(db));
-                    let rx_db = RxDatabase::new(wrapped_db);
-                    Ok(rx_db)
+                    Ok(db)
                 })
                 .await??;
 
                 Ok(open_result)
             }
             .into_actor(self)
-            .map(|result: Result<RxDatabase>, this, _| {
+            .map(|result: Result<Database>, this, _| {
                 let binding = this.gui.clone();
                 let binding = binding.pinned();
                 let mut gui = binding.borrow_mut();
 
                 match result {
-                    Ok(rx_db) => {
+                    Ok(keepass_db) => {
+                        let wrapped_db = Zeroizing::new(ZeroableDatabase(keepass_db));
+                        let rx_db = RxDatabase::new(wrapped_db);
                         this.curr_db = RefCell::new(Some(rx_db));
                         gui.databaseOpen = true;
                         gui.databaseOpened();

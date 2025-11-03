@@ -147,7 +147,7 @@ impl From<String> for RxFieldName {
 }
 
 /// Not Sync or Send, because of SecureVec using *mut u8.
-#[derive(Zeroize, ZeroizeOnDrop, Default, Clone, Debug)]
+#[derive(Zeroize, ZeroizeOnDrop, Default, Clone)]
 pub enum RxValue {
     Protected(SecureVec<u8>),
     Unprotected(String),
@@ -167,6 +167,16 @@ impl RxValue {
 }
 
 impl std::fmt::Display for RxValue {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            RxValue::Protected(_) => write!(f, "**SECRET**"),
+            RxValue::Unprotected(value) => write!(f, "{}", value),
+            _ => write!(f, "<unsupported value>"),
+        }
+    }
+}
+
+impl std::fmt::Debug for RxValue {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             RxValue::Protected(_) => write!(f, "**SECRET**"),
@@ -248,7 +258,7 @@ impl RxEntry {
             uuid: entry.uuid,
             parent_group: parent_uuid,
             title: extract_value(&mut entry, "Title"),
-            username: extract_value(&mut entry, "Username"),
+            username: extract_value(&mut entry, "UserName"),
             password: extract_value(&mut entry, "Password"),
             notes: extract_value(&mut entry, "Notes"),
             custom_fields: RxCustomFields::from(custom_fields),
@@ -388,6 +398,7 @@ fn load_groups_recursive(group: &mut Group, icons: &mut HashMap<Uuid, Icon>) -> 
                 let icon = entry
                     .custom_icon_uuid
                     .and_then(|icon_uuid| icons.remove(&icon_uuid));
+
                 entries.push(RxEntry::new(entry, group.uuid, icon));
             }
         }

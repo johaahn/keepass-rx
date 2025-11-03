@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-02 07:24+0100\n"
-"PO-Revision-Date: 2025-11-03 11:51+0000\n"
+"PO-Revision-Date: 2025-11-03 14:31+0000\n"
 "Last-Translator: Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/ubports/"
 "keepassrx/et/>\n"
@@ -30,12 +30,16 @@ msgid ""
 "KeePassRX is a work-in-progress password manager for KeePass password "
 "databases. It is licensed under the GNU GPL v3 license."
 msgstr ""
+"KeePassRX on arendusjärgus salasõnahaldur, mis KeePass-vormingus salasõnade "
+"andmebaaside jaoks. Rakendus on litsentseeritud GNU GPL v3 alusel."
 
 #: qml/pages/AboutPage.qml:68
 msgid ""
 "Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
+"Lähtekood: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
+"git.agnos.is/projectmoon/keepass-rx</a>"
 
 #: qml/pages/SettingsPage.qml:11 qml/pages/EntriesPage.qml:117
 #: qml/pages/DBList.qml:74 qml/pages/OpenDBPage.qml:48
@@ -95,84 +99,84 @@ msgstr "Lukusta"
 
 #: qml/pages/EntriesPage.qml:79
 msgid "Close"
-msgstr ""
+msgstr "Sulge"
 
 #: qml/pages/EntriesPage.qml:91 qml/pages/SingleEntry.qml:25
 #: qml/pages/OpenDBPage.qml:34
 msgid "Back"
-msgstr ""
+msgstr "Tagasi"
 
 #: qml/pages/EntriesPage.qml:104
 msgid "Search"
-msgstr ""
+msgstr "Otsi"
 
 #: qml/pages/EntriesPage.qml:104
 msgid "Cancel Search"
-msgstr ""
+msgstr "Katkesta otsing"
 
 #: qml/pages/EntriesPage.qml:138
 msgid "Lock Database"
-msgstr ""
+msgstr "Lukusta andmebaas"
 
 #: qml/pages/EntriesPage.qml:148
 msgid "Close Database"
-msgstr ""
+msgstr "Sulge andmebaas"
 
 #: qml/pages/EntriesPage.qml:177
 msgid "Search entries in this group"
-msgstr ""
+msgstr "Otsi sellest grupist kirjeid"
 
 #: qml/pages/SingleEntry.qml:18
 msgid "Untitled Entry"
-msgstr ""
+msgstr "Pealkirjata kirje"
 
 #: qml/pages/SingleEntry.qml:179
 msgid "Notes"
-msgstr ""
+msgstr "Märkmed"
 
 #: qml/pages/SingleEntry.qml:187
 msgid "Tap to copy"
-msgstr ""
+msgstr "Kopeerimiseks klõpsa"
 
 #: qml/pages/DBList.qml:67
 msgid "Add Database"
-msgstr ""
+msgstr "Lisa andmebaas"
 
 #: qml/pages/DBList.qml:101
 msgid "Loading last database."
-msgstr ""
+msgstr "Laadin viimast andmebaasi."
 
 #: qml/pages/DBList.qml:111
 msgid "Select Database"
-msgstr ""
+msgstr "Vali andmebaas"
 
 #: qml/pages/DBList.qml:167
 msgid "Tap + to import a database."
-msgstr ""
+msgstr "Andmebaasi importimiseks klõpsa + ikooni."
 
 #: qml/pages/DBList.qml:265
 msgid "It will only be removed from the app, not your device."
-msgstr ""
+msgstr "Ta eemaldatakse rakendusest, mitte aga seadmest."
 
 #: qml/pages/OpenDBPage.qml:160
 msgid "Enter the database master password"
-msgstr ""
+msgstr "Sisesta andmebaasi üldsalasõna"
 
 #: qml/pages/OpenDBPage.qml:173
 msgid "Master Password"
-msgstr ""
+msgstr "Üldsalasõna"
 
 #: qml/pages/OpenDBPage.qml:203
 msgid "Open"
-msgstr ""
+msgstr "Ava"
 
 #: qml/pages/OpenDBPage.qml:220
 msgid "Opening"
-msgstr ""
+msgstr "Avamisel"
 
 #: qml/pages/UnlockPage.qml:146
 msgid "Manual path set."
-msgstr ""
+msgstr "Käsitsi määratud asukoht on seadistatud."
 
 #: qml/pages/UnlockPage.qml:163
 msgid ""

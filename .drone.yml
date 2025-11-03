@@ -37,6 +37,8 @@ steps:
       - armhf
     image: plugins/gitea-release
     when:
+      target:
+        - prerelease
       branch:
         - master
       event:
@@ -58,6 +60,10 @@ steps:
       - armhf
     image: plugins/gitea-release
     when:
+      target:
+        - release
+      event:
+        - promote
       ref:
         - "refs/tags/v*"
     settings:

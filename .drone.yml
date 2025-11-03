@@ -73,7 +73,7 @@ steps:
   - name: open-store-publish
     image: clickable/ci-20.04-amd64
     depends_on:
-      - prodution-release
+      - production-release
     when:
       ref:
         - "refs/tags/v*"

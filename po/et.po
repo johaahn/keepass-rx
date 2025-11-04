@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-02 07:24+0100\n"
-"PO-Revision-Date: 2025-11-03 14:31+0000\n"
+"PO-Revision-Date: 2025-11-04 10:51+0000\n"
 "Last-Translator: Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/ubports/"
 "keepassrx/et/>\n"
@@ -50,48 +50,55 @@ msgstr "Seadistused"
 #: qml/pages/SettingsPage.qml:42
 msgid "Enable database locking (ALPHA)"
 msgstr ""
+"Lülita andmebaasi lukustamine sisse (väga esialgne alfa-funktsionaalsus)"
 
 #: qml/pages/SettingsPage.qml:45
 msgid ""
 "Securely lock and unlock database with a short passcode. Requires restart to "
 "take effect."
 msgstr ""
+"Kasuta andmebaasi lukustamiseks ja avamiseks lühikest salakoodi. Jõustamine "
+"eeldab rakenduse uuesti käivitamist."
 
 #: qml/pages/SettingsPage.qml:55
 msgid "Auto-close db after inactivity"
-msgstr ""
+msgstr "Sulge andmebaas automaatselt, kui ta pole kasutusel"
 
 #: qml/pages/SettingsPage.qml:57
 msgid "In minutes. 0 for disabled."
-msgstr ""
+msgstr "Sisesta soovitud kestus minutites. 0 lülitab selle võimaluse välja."
 
 #: qml/pages/SettingsPage.qml:83
 msgid "Show the \"Recycle bin\" group"
-msgstr ""
+msgstr "Näita gruppi „Prügikast“"
 
 #: qml/pages/SettingsPage.qml:85
 msgid "This group contains all the deleted entries"
-msgstr ""
+msgstr "Siin on näha kõik kustutatud kirjed"
 
 #: qml/pages/SettingsPage.qml:93
 msgid "Change section on search"
-msgstr ""
+msgstr "Otsimisel muuda alajaotust"
 
 #: qml/pages/SettingsPage.qml:95
 msgid ""
 "Change section automatically if there are no results for the search value in "
 "the current section, and there are results in another section"
 msgstr ""
+"Kui antud alajaotusest otsimisel pole vastuseid, kuid mujal on, siis vaheta "
+"alajaotust automaatelt"
 
 #: qml/pages/SettingsPage.qml:105
 msgid "Show warning before opening very slow databases"
-msgstr ""
+msgstr "Väga aeglaste andmebaaside avamisel näita hoiatust"
 
 #: qml/pages/SettingsPage.qml:107
 msgid ""
 "Opening KDBX3 databases on ARMv7 devices can take up to 2 seconds <b>per "
 "entry</b> (3 minutes for 100 entries)"
 msgstr ""
+"KDBX3 andmebaaside avamisel ARMv7-seadmetes kulub aega kuni 2 sekundit "
+"<b>kirje kohta</b> (3 minutit 100 kirje kohta)"
 
 #: qml/pages/EntriesPage.qml:67
 msgid "Lock"
@@ -183,23 +190,25 @@ msgid ""
 "The passcode is the first five characters of the database password (or the "
 "whole password if less than five characters)."
 msgstr ""
+"Salakood on andmebaasi salasõna viis esimest tähemärki "
+"(või kogu salasõna, kui ta on alla viie tähemärgi pikk)."
 
 #: qml/pages/UnlockPage.qml:181
 msgid "Passcode"
-msgstr ""
+msgstr "Salakood"
 
 #: qml/pages/UnlockPage.qml:213
 msgid "Unlock"
-msgstr ""
+msgstr "Eemalda lukustus"
 
 #: qml/pages/UnlockPage.qml:232
 msgid "Securely Unlocking"
-msgstr ""
+msgstr "Turvaline lukustuse eemaldamine"
 
 #: qml/pages/UnlockPage.qml:233
 msgid "Securely Locking"
-msgstr ""
+msgstr "Turvaline lukustamine"
 
 #: qml/pages/UnlockPage.qml:244
 msgid "Database Not Opening?"
-msgstr ""
+msgstr "Kas andmebaas ei avane?"

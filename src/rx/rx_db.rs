@@ -209,7 +209,7 @@ pub enum RxValue {
 impl RxValue {
     pub fn is_hidden_by_default(&self) -> bool {
         match self {
-            RxValue::Protected(_) | RxValue::Sensitive(_) => true,
+            RxValue::Protected(_) => true,
             _ => false,
         }
     }

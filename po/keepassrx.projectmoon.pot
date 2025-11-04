@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-04 09:33+0100\n"
+"POT-Creation-Date: 2025-11-04 09:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,9 +17,9 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: qml/pages/AboutPage.qml:14 qml/pages/EntriesPage.qml:126
-#: qml/pages/DBList.qml:81 qml/pages/OpenDBPage.qml:55
-#: qml/pages/UnlockPage.qml:41
+#: qml/pages/AboutPage.qml:14 qml/pages/DBList.qml:81
+#: qml/pages/OpenDBPage.qml:55 qml/pages/UnlockPage.qml:41
+#: qml/pages/EntriesPage.qml:126
 msgid "About"
 msgstr ""
 
@@ -31,14 +31,55 @@ msgstr ""
 
 #: qml/pages/AboutPage.qml:68
 msgid ""
-"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
-"git.agnos.is/projectmoon/keepass-rx</a>"
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
+"agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
 
-#: qml/pages/SettingsPage.qml:11 qml/pages/EntriesPage.qml:117
+#: qml/pages/DBList.qml:67
+msgid "Add Database"
+msgstr ""
+
 #: qml/pages/DBList.qml:74 qml/pages/OpenDBPage.qml:48
-#: qml/pages/UnlockPage.qml:34
+#: qml/pages/SettingsPage.qml:11 qml/pages/UnlockPage.qml:34
+#: qml/pages/EntriesPage.qml:117
 msgid "Settings"
+msgstr ""
+
+#: qml/pages/DBList.qml:101
+msgid "Loading last database."
+msgstr ""
+
+#: qml/pages/DBList.qml:111
+msgid "Select Database"
+msgstr ""
+
+#: qml/pages/DBList.qml:167
+msgid "Tap + to import a database."
+msgstr ""
+
+#: qml/pages/DBList.qml:265
+msgid "It will only be removed from the app, not your device."
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:34 qml/pages/EntriesPage.qml:91
+#: qml/pages/SingleEntry.qml:25
+msgid "Back"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:160
+msgid "Enter the database master password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:173
+msgid "Master Password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:203
+msgid "Open"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:220
+msgid "Opening"
 msgstr ""
 
 #: qml/pages/SettingsPage.qml:42
@@ -87,17 +128,42 @@ msgid ""
 "entry</b> (3 minutes for 100 entries)"
 msgstr ""
 
+#: qml/pages/UnlockPage.qml:146
+msgid "Manual path set."
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:163
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:181
+msgid "Passcode"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:213
+msgid "Unlock"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:232
+msgid "Securely Unlocking"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:233
+msgid "Securely Locking"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:244
+msgid "Database Not Opening?"
+msgstr ""
+
 #: qml/pages/EntriesPage.qml:67
 msgid "Lock"
 msgstr ""
 
 #: qml/pages/EntriesPage.qml:79
 msgid "Close"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:91 qml/pages/SingleEntry.qml:25
-#: qml/pages/OpenDBPage.qml:34
-msgid "Back"
 msgstr ""
 
 #: qml/pages/EntriesPage.qml:104
@@ -130,70 +196,4 @@ msgstr ""
 
 #: qml/pages/SingleEntry.qml:194
 msgid "Tap to copy"
-msgstr ""
-
-#: qml/pages/DBList.qml:67
-msgid "Add Database"
-msgstr ""
-
-#: qml/pages/DBList.qml:101
-msgid "Loading last database."
-msgstr ""
-
-#: qml/pages/DBList.qml:111
-msgid "Select Database"
-msgstr ""
-
-#: qml/pages/DBList.qml:167
-msgid "Tap + to import a database."
-msgstr ""
-
-#: qml/pages/DBList.qml:265
-msgid "It will only be removed from the app, not your device."
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:160
-msgid "Enter the database master password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:173
-msgid "Master Password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:203
-msgid "Open"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:220
-msgid "Opening"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:146
-msgid "Manual path set."
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:163
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:181
-msgid "Passcode"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:213
-msgid "Unlock"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:232
-msgid "Securely Unlocking"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:233
-msgid "Securely Locking"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:244
-msgid "Database Not Opening?"
 msgstr ""

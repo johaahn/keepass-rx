@@ -68,7 +68,7 @@ Page {
             entryModel.append({
                 fieldName: key,
                 fieldValue: field.value,
-                fieldShown: field.isHiddenByDefault
+                fieldShown: !field.isHiddenByDefault
             });
         }
     }

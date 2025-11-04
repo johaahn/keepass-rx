@@ -17,6 +17,10 @@ use uriparse::URI;
 use uuid::Uuid;
 use zeroize::{Zeroize, ZeroizeOnDrop, Zeroizing};
 
+// Special field that indicates the entry is a templated entry (e.g.
+// credit card, wifi password, etc).
+const TEMPLATE_FIELD_NAME: &str = "_etm_template_uuid";
+
 // Fields inserted by other KeePass programs that we do not want to
 // show as custom fields. They might be used for other things in the
 // app, though.
@@ -27,7 +31,7 @@ const FIELDS_TO_HIDE: [&str; 3] = [
     "_LAST_MODIFIED",
     // UUID of a template (e.g. credit card entry), created by
     // KeePassDX.
-    "_etm_template_uuid",
+    TEMPLATE_FIELD_NAME,
 ];
 
 // Like FIELDS_TO_HIDE, but does a starts_with check to see if the
@@ -336,7 +340,7 @@ impl RxEntry {
 
         // Template: Extract the _etm_template_uuid field, which
         // points to a template DB entry.
-        let template_uuid = extract_value(&mut entry, "_etm_template_uuid").and_then(|val| {
+        let template_uuid = extract_value(&mut entry, TEMPLATE_FIELD_NAME).and_then(|val| {
             val.value()
                 .and_then(|uuid_str| Uuid::from_str(uuid_str).ok())
         });
@@ -701,7 +705,7 @@ mod tests {
         let mut entry = keepass::db::Entry::new();
 
         entry.fields.insert(
-            "_etm_template_uuid".to_string(),
+            TEMPLATE_FIELD_NAME.to_string(),
             keepass::db::Value::Unprotected(template_uuid.to_string()),
         );
 

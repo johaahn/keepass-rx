@@ -581,7 +581,7 @@ impl Handler<DecryptMasterPassword> for KeepassRxActor {
 
             let (tx, rx) = tokio::sync::oneshot::channel();
             rayon::spawn(move || {
-                if let Err(_) = tx.send(master_pw.map(|pw| pw.decrypt(&short_pw))) {
+                if let Err(_) = tx.send(master_pw.map(|pw| pw.decrypt(short_pw))) {
                     println!("Receiver dropped before receiving decrypted password.");
                 }
             });

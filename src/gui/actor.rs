@@ -333,13 +333,11 @@ impl Handler<GetEntries> for KeepassRxActor {
         };
 
         let search_term = msg.search_term.as_deref();
-        let group = db.get_group_filter_subgroups(group_uuid, search_term);
+        let subgroups_iter = db.filter_subgroups(group_uuid, search_term);
         let entries = db.get_entries(group_uuid, search_term);
 
         // Groups first, then entries below.
-        let mut item_list: Vec<RxListItem> = group
-            .map(|grp| grp.subgroups.into_iter().map(RxListItem::from).collect())
-            .unwrap_or_default();
+        let mut item_list: Vec<RxListItem> = subgroups_iter.map(RxListItem::from).collect();
 
         item_list.append(&mut entries.into_iter().map(RxListItem::from).collect());
 

@@ -620,24 +620,24 @@ impl RxDatabase {
             .find(|group| group.uuid == group_uuid)
     }
 
-    pub fn get_group_filter_subgroups(
+    pub fn filter_subgroups(
         &self,
         group_uuid: Uuid,
         search_term: Option<&str>,
-    ) -> Option<RxGroup> {
-        let mut maybe_group = self
+    ) -> impl Iterator<Item = &RxGroup> {
+        let maybe_group = self
             .all_groups_iter()
-            .find(|group| group.uuid == group_uuid)
-            .cloned();
+            .find(|group| group.uuid == group_uuid);
 
-        if let Some(group) = &mut maybe_group {
-            group.subgroups.retain(|subgroup| match search_term {
-                Some(term) => subgroup.name.to_lowercase().contains(term),
-                None => true,
-            });
-        }
-
-        maybe_group
+        maybe_group.into_iter().flat_map(move |group| {
+            group
+                .subgroups
+                .iter()
+                .filter(move |subgroup| match search_term {
+                    Some(term) => subgroup.name.to_lowercase().contains(term),
+                    None => true,
+                })
+        })
     }
 
     pub fn get_entry(&self, entry_uuid: Uuid) -> Option<&RxEntry> {

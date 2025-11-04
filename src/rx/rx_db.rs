@@ -693,6 +693,28 @@ mod tests {
     use super::*;
 
     #[test]
+    fn finds_templates() {
+        let template_uuid =
+            Uuid::from_str("8e4ff17c-a985-4e50-abde-e641783464ca").expect("bad uuid");
+
+        let mut group = keepass::db::Group::new("groupname");
+        let mut entry = keepass::db::Entry::new();
+
+        entry.fields.insert(
+            "_etm_template_uuid".to_string(),
+            keepass::db::Value::Unprotected(template_uuid.to_string()),
+        );
+
+        group.add_child(keepass::db::Node::Entry(entry));
+
+        let mut state = LoadState::default();
+        load_groups_recursive(&mut group, &mut HashMap::new(), &mut state);
+
+        assert_eq!(state.template_uuids.len(), 1);
+        assert!(state.template_uuids.contains(&template_uuid));
+    }
+
+    #[test]
     fn finds_entries_in_group() {
         let group_uuid =
             Uuid::from_str("133b7912-7705-4967-bc6e-807761ba9479").expect("bad group uuid");

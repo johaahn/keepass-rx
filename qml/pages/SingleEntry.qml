@@ -39,29 +39,36 @@ Page {
     }
 
     Component.onCompleted: {
-        entryModel.append({
-            fieldName: "Username",
-            fieldValue: entryUsername,
-            fieldShown: true
-        });
+        if (entryUsername) {
+            entryModel.append({
+                fieldName: "Username",
+                fieldValue: entryUsername,
+                fieldShown: true
+            });
+        }
 
-        entryModel.append({
-            fieldName: "Password",
-            fieldValue: entryPassword,
-            fieldShown: false
-        });
+        if (entryPassword) {
+            entryModel.append({
+                fieldName: "Password",
+                fieldValue: entryPassword,
+                fieldShown: false
+            });
+        }
 
-        entryModel.append({
-            fieldName: "URL",
-            fieldValue: entryUrl,
-            fieldShown: true
-        });
+        if (entryUrl) {
+            entryModel.append({
+                fieldName: "URL",
+                fieldValue: entryUrl,
+                fieldShown: true
+            });
+        }
 
-        for (const [key, value] of Object.entries(entryCustomFields)) {
+        // value is { value: string, isHiddenByDefault: bool }
+        for (const [key, field] of Object.entries(entryCustomFields)) {
             entryModel.append({
                 fieldName: key,
-                fieldValue: value,
-                fieldShown: true // TODO hide protected ones
+                fieldValue: field.value,
+                fieldShown: field.isHiddenByDefault
             });
         }
     }
@@ -214,7 +221,7 @@ Page {
 
             Text {
                 width: notesContentRow.width
-                text: entryNotes
+                text: entryNotes ? entryNotes : ''
                 wrapMode: Text.WordWrap
                 color: LomiriColors.ash
                 verticalAlignment: Text.AlignTop

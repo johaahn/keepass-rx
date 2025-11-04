@@ -396,7 +396,7 @@ impl Handler<GetFieldValue> for KeepassRxActor {
             .and_then(|entry| {
                 entry
                     .get_field_value(&msg.field_name)
-                    .map(|val| QString::from(val))
+                    .map(|val| val.value().map(QString::from).unwrap_or_default())
             })
             .unwrap_or_default();
 

@@ -41,12 +41,12 @@ ListItem {
 		entriesPage,
 		Qt.resolvedUrl("../pages/SingleEntry.qml"),
 		{
-		    entryTitle: entry.title,
-		    entryUsername: entry.username,
-		    entryPassword: entry.password,
-		    entryUrl: entry.url,
-		    entryNotes: entry.notes,
-		    entryCustomFields: entry.customFields
+		    entryTitle: entry.title ? entry.title : null,
+		    entryUsername: entry.username ? entry.username : null,
+		    entryPassword: entry.password ? entry.password : null,
+		    entryUrl: entry.url ? entry.url : null,
+		    entryNotes: entry.notes ? entry.notes : null,
+		    entryCustomFields: entry.customFields ? entry.customFields : null
 		}
 	    )
 	}

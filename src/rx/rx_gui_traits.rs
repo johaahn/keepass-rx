@@ -11,31 +11,41 @@ impl From<QString> for RxFieldName {
 
 impl From<&RxEntry> for QVariantMap {
     fn from(value: &RxEntry) -> Self {
+        enum ValueType<'a> {
+            Rx(&'a Option<RxValue>),
+            Uuid(uuid::Uuid),
+        }
+
         let icon_data_url: QString =
             value.icon_data_url().map(QString::from).unwrap_or_default();
 
-        let mapper = |value: &Option<RxValue>| {
-            expose_opt!(value)
-                .map(|secret| QString::from(secret))
-                .unwrap_or_default()
-        };
+        let maybe_insert =
+            |map: &mut HashMap<String, QVariant>, field_name: &str, value: ValueType| {
+                match value {
+                    ValueType::Rx(rx_val) => {
+                        if let Some(rx_val_str) = expose_opt!(rx_val) {
+                            map.insert(
+                                field_name.into(),
+                                QString::from(rx_val_str.to_string()).into(),
+                            );
+                        }
+                    }
+                    ValueType::Uuid(uuid) => {
+                        map.insert(field_name.into(), QString::from(uuid.to_string()).into());
+                    }
+                }
+            };
 
         let totp = value.totp();
-
-        let uuid: QString = value.uuid.to_string().into();
-        let url: QString = mapper(&value.url);
-        let username: QString = mapper(&value.username);
-        let title: QString = mapper(&value.title);
-        let password: QString = mapper(&value.password);
-        let notes: QString = mapper(&value.notes);
-
         let mut map: HashMap<String, QVariant> = HashMap::new();
-        map.insert("uuid".to_string(), uuid.into());
-        map.insert("url".to_string(), url.into());
-        map.insert("username".to_string(), username.into());
-        map.insert("title".to_string(), title.into());
-        map.insert("password".to_string(), password.into());
-        map.insert("notes".to_string(), notes.into());
+
+        maybe_insert(&mut map, "uuid", ValueType::Uuid(value.uuid));
+        maybe_insert(&mut map, "url", ValueType::Rx(&value.url));
+        maybe_insert(&mut map, "username", ValueType::Rx(&value.username));
+        maybe_insert(&mut map, "title", ValueType::Rx(&value.title));
+        maybe_insert(&mut map, "password", ValueType::Rx(&value.password));
+        maybe_insert(&mut map, "notes", ValueType::Rx(&value.notes));
+
         map.insert("iconPath".to_string(), icon_data_url.into());
         map.insert(
             "customFields".to_string(),
@@ -64,12 +74,29 @@ impl From<RxEntry> for QVariant {
     }
 }
 
+impl From<RxValue> for QVariantMap {
+    fn from(value: RxValue) -> Self {
+        let mut map = QVariantMap::default();
+        map.insert(
+            "value".into(),
+            value.value().map(QString::from).unwrap_or_default().into(),
+        );
+
+        map.insert(
+            "isHiddenByDefault".into(),
+            value.is_hidden_by_default().into(),
+        );
+
+        map
+    }
+}
+
 impl From<RxCustomFields> for QVariantMap {
     fn from(value: RxCustomFields) -> QVariantMap {
         let mut map: HashMap<String, QVariant> = HashMap::new();
 
         for (key, value) in value.0 {
-            let q_val = value.value().map(QString::from).unwrap_or_default();
+            let q_val = QVariantMap::from(value);
             map.insert(key, q_val.into());
         }
 

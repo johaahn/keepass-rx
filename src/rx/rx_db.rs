@@ -19,7 +19,17 @@ use zeroize::{Zeroize, ZeroizeOnDrop, Zeroizing};
 // Fields inserted by other KeePass programs that we do not want to
 // show as custom fields. They might be used for other things in the
 // app, though.
-const FIELDS_TO_HIDE: [&str; 2] = ["KeePassXC-Browser Settings", "_LAST_MODIFIED"];
+const FIELDS_TO_HIDE: [&str; 3] = [
+    // KeePassXC browser integration (list of URLs)
+    "KeePassXC-Browser Settings",
+    // Last modified date
+    "_LAST_MODIFIED",
+    // UUID of a template (e.g. credit card entry), created by
+    // KeePassDX.
+    "_etm_template_uuid",
+];
+
+// add AndroidApp, AndroidApp*, KP2A_URL, KP2A_URL*
 
 macro_rules! expose {
     ($secret:expr) => {{
@@ -92,6 +102,29 @@ impl RxGroup {
 #[derive(Zeroize, Default, Clone)]
 pub struct RxCustomFields(pub(crate) Vec<(String, RxValue)>);
 
+impl RxCustomFields {
+    pub fn append(&mut self, other: &mut RxCustomFields) {
+        self.0.append(&mut other.0);
+    }
+}
+
+impl From<Vec<(String, RxValue)>> for RxCustomFields {
+    fn from(value: Vec<(String, RxValue)>) -> Self {
+        let custom_fields: Vec<_> = value
+            .into_iter()
+            .flat_map(|(key, item)| {
+                if !FIELDS_TO_HIDE.contains(&key.as_ref()) {
+                    Some((key, item))
+                } else {
+                    None
+                }
+            })
+            .collect();
+
+        Self(custom_fields)
+    }
+}
+
 impl From<CustomData> for RxCustomFields {
     fn from(value: CustomData) -> Self {
         let custom_fields: Vec<_> = value
@@ -149,7 +182,15 @@ impl From<String> for RxFieldName {
 /// Not Sync or Send, because of SecureVec using *mut u8.
 #[derive(Zeroize, ZeroizeOnDrop, Default, Clone)]
 pub enum RxValue {
+    /// Fully hidden by default. Used for passwords etc.
     Protected(SecureVec<u8>),
+
+    /// Not hidden by default, but we don't want to leak the metadata
+    /// in memory if possible.
+    Sensitive(SecureVec<u8>),
+
+    /// Regular value not hidden or treated specially by memory
+    /// protection.
     Unprotected(String),
 
     #[default]
@@ -157,10 +198,18 @@ pub enum RxValue {
 }
 
 impl RxValue {
-    pub fn value(&self) -> Option<&str> {
+    pub fn is_hidden_by_default(&self) -> bool {
         match self {
-            RxValue::Protected(secret) => std::str::from_utf8(&secret).ok(),
-            RxValue::Unprotected(value) => Some(value.as_ref()),
+            RxValue::Protected(_) | RxValue::Sensitive(_) => true,
+            _ => false,
+        }
+    }
+
+    pub fn value(&self) -> Option<&str> {
+        use RxValue::*;
+        match self {
+            Protected(val) | Sensitive(val) => std::str::from_utf8(&val).ok(),
+            Unprotected(value) => Some(value.as_ref()),
             _ => None,
         }
     }
@@ -169,7 +218,7 @@ impl RxValue {
 impl std::fmt::Display for RxValue {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            RxValue::Protected(_) => write!(f, "**SECRET**"),
+            RxValue::Protected(_) | RxValue::Sensitive(_) => write!(f, "**SECRET**"),
             RxValue::Unprotected(value) => write!(f, "{}", value),
             _ => write!(f, "<unsupported value>"),
         }
@@ -179,7 +228,7 @@ impl std::fmt::Display for RxValue {
 impl std::fmt::Debug for RxValue {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            RxValue::Protected(_) => write!(f, "**SECRET**"),
+            RxValue::Protected(_) | RxValue::Sensitive(_) => write!(f, "**SECRET**"),
             RxValue::Unprotected(value) => write!(f, "{}", value),
             _ => write!(f, "<unsupported value>"),
         }
@@ -209,7 +258,7 @@ impl TryFrom<String> for RxValue {
     fn try_from(value: String) -> std::result::Result<Self, Self::Error> {
         let mut secure_vec = vec_utils::secure_vec::<u8>(value.len())?;
         secure_vec.copy_from_slice(value.as_ref());
-        Ok(RxValue::Protected(secure_vec))
+        Ok(RxValue::Sensitive(secure_vec))
     }
 }
 
@@ -235,6 +284,24 @@ pub struct RxEntry {
     pub icon_data: Option<Vec<u8>>,
 }
 
+fn extract_remaining_fields(entry: &mut Entry) -> Vec<(String, RxValue)> {
+    entry
+        .fields
+        .drain()
+        .flat_map(|(key, value)| {
+            match value {
+                Value::Protected(val) => {
+                    RxValue::try_from(val).ok().map(|rx_val| (key, rx_val))
+                }
+                Value::Unprotected(val) => {
+                    RxValue::try_from(val).ok().map(|rx_val| (key, rx_val))
+                }
+                _ => None, // discard binary for now. attachments later?
+            }
+        })
+        .collect()
+}
+
 fn extract_value(entry: &mut Entry, field_name: &str) -> Option<RxValue> {
     entry.fields.remove(field_name).and_then(|value| {
         match value {
@@ -252,40 +319,51 @@ impl RxEntry {
     }
 
     pub fn new(mut entry: Entry, parent_uuid: Uuid, icon: Option<Icon>) -> Self {
-        let custom_fields = mem::take(&mut entry.custom_data);
+        let custom_data = mem::take(&mut entry.custom_data);
+
+        let title = extract_value(&mut entry, "Title");
+        let username = extract_value(&mut entry, "UserName");
+        let password = extract_value(&mut entry, "Password");
+        let notes = extract_value(&mut entry, "Notes");
+        let url = extract_value(&mut entry, "URL");
+        let raw_otp_value = extract_value(&mut entry, "otp");
+
+        // Has to come after the above, otherwise those fields end up
+        // here.
+        let mut other_fields = RxCustomFields::from(extract_remaining_fields(&mut entry));
+        let mut custom_fields = RxCustomFields::from(custom_data);
+        custom_fields.append(&mut other_fields);
 
         Self {
             uuid: entry.uuid,
             parent_group: parent_uuid,
-            title: extract_value(&mut entry, "Title"),
-            username: extract_value(&mut entry, "UserName"),
-            password: extract_value(&mut entry, "Password"),
-            notes: extract_value(&mut entry, "Notes"),
-            custom_fields: RxCustomFields::from(custom_fields),
-            url: extract_value(&mut entry, "URL"),
-            raw_otp_value: extract_value(&mut entry, "otp"),
+            title: title,
+            username: username,
+            password: password,
+            notes: notes,
+            custom_fields: custom_fields,
+            url: url,
+            raw_otp_value: raw_otp_value,
             icon_data: icon.map(|i| i.data),
         }
     }
 
-    pub fn get_field_value(&self, field_name: &RxFieldName) -> Option<String> {
-        let found = match field_name {
-            RxFieldName::Username => expose_opt!(self.username),
-            RxFieldName::Password => expose_opt!(self.password),
-            RxFieldName::Url => expose_opt!(self.url),
-            RxFieldName::Title => expose_opt!(self.title),
+    pub fn get_field_value(&self, field_name: &RxFieldName) -> Option<&RxValue> {
+        match field_name {
+            RxFieldName::Username => self.username.as_ref(),
+            RxFieldName::Password => self.password.as_ref(),
+            RxFieldName::Url => self.url.as_ref(),
+            RxFieldName::Title => self.title.as_ref(),
             RxFieldName::CustomField(name) => {
                 self.custom_fields
                     .0
                     .iter()
                     .find_map(|(key, value)| match key == name {
-                        true => value.value(),
+                        true => Some(value),
                         false => None,
                     })
             }
-        };
-
-        found.map(|value| value.to_string())
+        }
     }
 
     pub fn has_steam_otp(&self) -> bool {

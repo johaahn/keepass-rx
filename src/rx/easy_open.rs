@@ -120,6 +120,7 @@ impl EncryptedPassword {
                 })
                 .map_err(|err| anyhow!(err))??;
 
+        let _ = self.secret.destroy(); // nuke the key in KRS
         Ok(master_password)
     }
 }

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-04 09:24+0000\n"
-"PO-Revision-Date: 2025-11-03 14:44+0000\n"
+"PO-Revision-Date: 2025-11-04 22:51+0000\n"
 "Last-Translator: projectmoon <projectmoon@agnos.is>\n"
 "Language-Team: Icelandic <https://hosted.weblate.org/projects/ubports/"
 "keepassrx/is/>\n"
@@ -46,10 +46,10 @@ msgid "Loading last database."
 msgstr ""
 
 msgid "Select Database"
-msgstr ""
+msgstr "Kjósa gagnagrunn"
 
 msgid "Tap + to import a database."
-msgstr ""
+msgstr "Ýtið á + til að flytja inn gagnagrunn."
 
 msgid "It will only be removed from the app, not your device."
 msgstr ""
@@ -58,16 +58,16 @@ msgid "Back"
 msgstr "Til baka"
 
 msgid "Enter the database master password"
-msgstr ""
+msgstr "Sláðu inn aðallykilorð gagnagrunnsins"
 
 msgid "Master Password"
-msgstr ""
+msgstr "Aðallykilorð"
 
 msgid "Open"
-msgstr ""
+msgstr "Opna"
 
 msgid "Opening"
-msgstr ""
+msgstr "Í vinnslu"
 
 msgid "Enable database locking (ALPHA)"
 msgstr "Virkja læsing gagnagrunnanna (ALPHA)"
@@ -114,21 +114,23 @@ msgid ""
 "The passcode is the first five characters of the database password (or the "
 "whole password if less than five characters)."
 msgstr ""
+"Stutt lykilorðið er fyrstu fimm stafirnar af lykilorðinu gagnagrunnar "
+"(eða heilt lykilorð ef það er stuttara en fimm stafir)."
 
 msgid "Passcode"
-msgstr ""
+msgstr "Stutt lykilorð"
 
 msgid "Unlock"
-msgstr ""
+msgstr "Aflæsa"
 
 msgid "Securely Unlocking"
-msgstr ""
+msgstr "Að aflæsa með öryggi"
 
 msgid "Securely Locking"
-msgstr ""
+msgstr "Læsa með öryggi"
 
 msgid "Database Not Opening?"
-msgstr ""
+msgstr "Er gagnagrunnur ekki að opna?"
 
 msgid "Lock"
 msgstr "Læsa"
@@ -140,7 +142,7 @@ msgid "Search"
 msgstr "Leita"
 
 msgid "Cancel Search"
-msgstr ""
+msgstr "Hætta leit"
 
 msgid "Lock Database"
 msgstr "Læsa Gangnagrunn"

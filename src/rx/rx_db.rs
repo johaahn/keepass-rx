@@ -29,7 +29,9 @@ const FIELDS_TO_HIDE: [&str; 3] = [
     "_etm_template_uuid",
 ];
 
-// add AndroidApp, AndroidApp*, KP2A_URL, KP2A_URL*
+// Like FIELDS_TO_HIDE, but does a starts_with check to see if the
+// value should be hidden.
+const WILDCARD_FIELDS_TO_HIDE: [&str; 2] = ["AndroidApp", "KP2A_URL"];
 
 macro_rules! expose {
     ($secret:expr) => {{
@@ -99,6 +101,13 @@ impl RxGroup {
     }
 }
 
+fn should_hide_field(field_name: &str) -> bool {
+    FIELDS_TO_HIDE.contains(&field_name)
+        || WILDCARD_FIELDS_TO_HIDE
+            .iter()
+            .any(|wildcard| field_name.starts_with(wildcard))
+}
+
 #[derive(Zeroize, Default, Clone)]
 pub struct RxCustomFields(pub(crate) Vec<(String, RxValue)>);
 
@@ -113,7 +122,7 @@ impl From<Vec<(String, RxValue)>> for RxCustomFields {
         let custom_fields: Vec<_> = value
             .into_iter()
             .flat_map(|(key, item)| {
-                if !FIELDS_TO_HIDE.contains(&key.as_ref()) {
+                if !should_hide_field(&key.as_ref()) {
                     Some((key, item))
                 } else {
                     None
@@ -131,7 +140,7 @@ impl From<CustomData> for RxCustomFields {
             .items
             .into_iter()
             .flat_map(|(key, item)| {
-                if !FIELDS_TO_HIDE.contains(&key.as_ref()) {
+                if !should_hide_field(&key.as_ref()) {
                     item.value.and_then(|value| match value {
                         Value::Protected(val) => into_value!(key, val),
                         Value::Unprotected(val) => into_value!(key, val),

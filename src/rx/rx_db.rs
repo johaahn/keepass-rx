@@ -446,7 +446,7 @@ impl RxEntry {
     }
 }
 
-#[derive(Zeroize, Default, Clone)]
+#[derive(Zeroize, Default, Clone, Hash, Eq, PartialEq)]
 pub struct RxTemplate {
     #[zeroize(skip)]
     uuid: Uuid,
@@ -460,7 +460,7 @@ pub struct RxTemplate {
 pub struct RxDatabase {
     root: RxGroup,
     #[zeroize(skip)]
-    templates: HashSet<Uuid>,
+    templates: HashMap<Uuid, RxTemplate>,
 }
 
 // Manual impl because otherwise printing debug will dump the raw
@@ -485,7 +485,7 @@ impl std::fmt::Debug for RxDatabase {
 /// loading, that are returned to the final RxDatabase object.
 #[derive(Default)]
 struct LoadState {
-    template_uuids: HashSet<Uuid>,
+    templates: HashMap<Uuid, RxTemplate>,
 }
 
 fn load_groups_recursive(
@@ -520,10 +520,13 @@ fn load_groups_recursive(
 
                 let rx_entry = RxEntry::new(entry, group.uuid, icon);
 
-                // Add template UUID to the set to gather up unique
-                // list of templates.
+                // Build up template entries as we go. Name of the
+                // template will be set later, in RxDatabase::new.
                 if let Some(template_uuid) = rx_entry.template_uuid {
-                    state.template_uuids.insert(template_uuid);
+                    let rx_template = state.templates.entry(template_uuid).or_default();
+
+                    rx_template.uuid = template_uuid;
+                    rx_template.entry_uuids.push(rx_entry.uuid);
                 }
 
                 entries.push(rx_entry);
@@ -570,10 +573,25 @@ impl RxDatabase {
 
         drop(db);
 
-        Self {
+        let mut db = Self {
             root: root_group,
-            templates: state.template_uuids,
+            templates: Default::default(),
+        };
+
+        // Map templates. Easier to do when we have access to DB logic.
+        for (_, rx_template) in state.templates.iter_mut() {
+            let template_name = db
+                .get_entry(rx_template.uuid)
+                .and_then(|t| t.title.as_ref().and_then(|v| v.value()))
+                .map(|template_name| template_name.to_string())
+                .unwrap_or_else(|| "Unknown Template".to_string());
+
+            rx_template.name = template_name;
         }
+
+        db.templates = state.templates;
+
+        db
     }
 
     pub fn close(&mut self) {
@@ -624,6 +642,11 @@ impl RxDatabase {
     pub fn get_entry(&self, entry_uuid: Uuid) -> Option<&RxEntry> {
         self.all_entries_iter()
             .find(|entry| entry.uuid == entry_uuid)
+    }
+
+    pub fn get_templates(&self) -> Vec<&RxEntry> {
+        //
+        vec![]
     }
 
     pub fn get_entries(&self, group_uuid: Uuid, search_term: Option<&str>) -> Vec<&RxEntry> {
@@ -714,8 +737,8 @@ mod tests {
         let mut state = LoadState::default();
         load_groups_recursive(&mut group, &mut HashMap::new(), &mut state);
 
-        assert_eq!(state.template_uuids.len(), 1);
-        assert!(state.template_uuids.contains(&template_uuid));
+        assert_eq!(state.templates.len(), 1);
+        assert!(state.templates.contains_key(&template_uuid));
     }
 
     #[test]
@@ -740,7 +763,7 @@ mod tests {
 
         let db = RxDatabase {
             root: group,
-            templates: HashSet::new(),
+            templates: HashMap::new(),
         };
 
         let entries = db.get_entries(group_uuid, None);
@@ -783,7 +806,7 @@ mod tests {
 
         let db = RxDatabase {
             root: group,
-            templates: HashSet::new(),
+            templates: HashMap::new(),
         };
 
         let entries = db.get_entries(group_uuid, Some("test"));

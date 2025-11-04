@@ -108,8 +108,8 @@ impl EncryptedPassword {
 
     pub fn decrypt(self, short_password: SecUtf8) -> Result<SecUtf8> {
         let encrypted_password = self.secret.retrieve()?;
-        let short_password = short_password.unsecure();
-        let key_raw_bytes = hash_password(short_password, &self.pw_salt)?;
+        let key_raw_bytes = hash_password(short_password.unsecure(), &self.pw_salt)?;
+        drop(short_password);
         let key = Key::from_bytes(&key_raw_bytes)?;
 
         let master_password =

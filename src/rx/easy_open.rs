@@ -1,12 +1,10 @@
-use aes_gcm::aead::Aead;
-use aes_gcm::aead::consts::U12;
-use aes_gcm::{AeadCore, Aes256Gcm, KeyInit, Nonce};
 use anyhow::{Result, anyhow};
 use keyring::Entry as KeyringEntry;
+use libsodium_rs::crypto_aead::xchacha20poly1305;
+use libsodium_rs::crypto_aead::xchacha20poly1305::{Key, Nonce};
+use libsodium_rs::crypto_kdf;
 use libsodium_rs::crypto_pwhash;
 use libsodium_rs::random;
-use scrypt::password_hash::{SaltString, rand_core::OsRng};
-use scrypt::{Params, scrypt};
 use secstr::SecUtf8;
 use std::sync::Arc;
 use zeroize::Zeroize;
@@ -24,20 +22,6 @@ fn to_short_password(value: &str) -> Result<&str> {
     };
 
     Ok(short_password)
-}
-
-fn derive_key(short_password: &[u8], salt: &SaltString) -> Result<[u8; 32]> {
-    let params = Params::recommended();
-    let mut derived_key = [0u8; 32];
-
-    scrypt(
-        short_password,
-        salt.as_str().as_bytes(),
-        &params,
-        &mut derived_key,
-    )?;
-
-    Ok(derived_key)
 }
 
 fn hash_password(value: &str, pw_salt: &[u8]) -> Result<Vec<u8>> {
@@ -95,10 +79,9 @@ impl Zeroize for KernelBackedSecret {
 pub struct EncryptedPassword {
     pw_salt: Vec<u8>,
 
-    #[zeroize(skip)]
-    cipher_salt: SaltString,
     secret: KernelBackedSecret,
-    nonce: Nonce<U12>,
+    #[zeroize(skip)]
+    nonce: Nonce,
 }
 
 impl EncryptedPassword {
@@ -109,20 +92,16 @@ impl EncryptedPassword {
         let mut pw_salt = [0u8; crypto_pwhash::SALTBYTES];
         random::fill_bytes(&mut pw_salt);
 
-        let pw_hash = hash_password(short_password, &pw_salt)?;
-        let cipher_salt = SaltString::generate(&mut OsRng);
-        let derived_key = derive_key(&pw_hash, &cipher_salt)?;
+        let key_raw_bytes = hash_password(short_password, &pw_salt)?;
+        let key = Key::from_bytes(&key_raw_bytes)?;
+        let nonce = Nonce::generate();
 
-        let cipher = Aes256Gcm::new(&derived_key.into());
-        let nonce = Aes256Gcm::generate_nonce(&mut OsRng); // 96-bits; unique per message
-        let ciphertext = cipher
-            .encrypt(&nonce, db_password.as_bytes())
-            .map_err(|err| anyhow!(err))?;
+        let ciphertext =
+            xchacha20poly1305::encrypt(db_password.as_bytes(), None, &nonce, &key)?;
 
         Ok(EncryptedPassword {
             pw_salt: pw_salt.to_vec(),
             secret: KernelBackedSecret::new(ciphertext)?,
-            cipher_salt,
             nonce,
         })
     }
@@ -130,17 +109,16 @@ impl EncryptedPassword {
     pub fn decrypt(&self, short_password: &SecUtf8) -> Result<SecUtf8> {
         let encrypted_password = self.secret.retrieve()?;
         let short_password = short_password.unsecure();
-        let pw_hash = hash_password(short_password, &self.pw_salt)?;
+        let key_raw_bytes = hash_password(short_password, &self.pw_salt)?;
+        let key = Key::from_bytes(&key_raw_bytes)?;
 
-        let key = derive_key(&pw_hash, &self.cipher_salt)?;
-        let cipher = Aes256Gcm::new(&key.into());
-
-        let master_password = cipher
-            .decrypt(&self.nonce, encrypted_password.as_ref())
-            .map(|master_pw| {
-                std::str::from_utf8(master_pw.as_slice()).map(|pw_utf8| SecUtf8::from(pw_utf8))
-            })
-            .map_err(|err| anyhow!(err))??;
+        let master_password =
+            xchacha20poly1305::decrypt(&encrypted_password, None, &self.nonce, &key)
+                .map(|master_pw| {
+                    std::str::from_utf8(master_pw.as_slice())
+                        .map(|pw_utf8| SecUtf8::from(pw_utf8))
+                })
+                .map_err(|err| anyhow!(err))??;
 
         Ok(master_password)
     }

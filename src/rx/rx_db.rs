@@ -255,13 +255,6 @@ impl TryFrom<SecStr> for RxValue {
     }
 }
 
-impl FromStr for RxValue {
-    type Err = anyhow::Error;
-    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
-        Ok(RxValue::Unprotected(s.to_string()))
-    }
-}
-
 impl TryFrom<String> for RxValue {
     type Error = anyhow::Error;
     fn try_from(value: String) -> std::result::Result<Self, Self::Error> {

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-02 07:24+0100\n"
+"POT-Creation-Date: 2025-11-04 09:24+0000\n"
 "PO-Revision-Date: 2025-11-04 04:41+0000\n"
 "Last-Translator: Daniel Frost <one@frostinfo.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -37,8 +37,38 @@ msgstr ""
 "Quelle: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
+msgid "Add Database"
+msgstr "Datenbank hinzufügen"
+
 msgid "Settings"
 msgstr "Einstellungen"
+
+msgid "Loading last database."
+msgstr "Letzte Datenbank wird geladen."
+
+msgid "Select Database"
+msgstr "Datenbank auswählen"
+
+msgid "Tap + to import a database."
+msgstr "Mit + eine Datenbank importieren."
+
+msgid "It will only be removed from the app, not your device."
+msgstr "Diese wird nur aus der App entfernt, aber nicht vom Gerät gelöscht."
+
+msgid "Back"
+msgstr "Zurück"
+
+msgid "Enter the database master password"
+msgstr "Datenbankpasswort eingeben"
+
+msgid "Master Password"
+msgstr "Datenbankpasswort"
+
+msgid "Open"
+msgstr "Öffnen"
+
+msgid "Opening"
+msgstr "Öffne"
 
 msgid "Enable database locking (ALPHA)"
 msgstr "Datenbanksperrung aktivieren (ALPHA)"
@@ -82,66 +112,6 @@ msgstr ""
 "Das Öffnen von KDBX3-Datenbanken auf ARMv7-Geräten kann bis zu 2 Sekunden "
 "<b>pro Eintrag</b> dauern (3 Minuten für 100 Einträge)"
 
-msgid "Lock"
-msgstr "Sperren"
-
-msgid "Close"
-msgstr "Schließen"
-
-msgid "Back"
-msgstr "Zurück"
-
-msgid "Search"
-msgstr "Suchen"
-
-msgid "Cancel Search"
-msgstr "Suche abbrechen"
-
-msgid "Lock Database"
-msgstr "Datenbank sperren"
-
-msgid "Close Database"
-msgstr "Datenbank schließen"
-
-msgid "Search entries in this group"
-msgstr "Einträge in dieser Gruppe suchen"
-
-msgid "Untitled Entry"
-msgstr "Unbenannter Eintrag"
-
-msgid "Notes"
-msgstr "Notizen"
-
-msgid "Tap to copy"
-msgstr "Antippen zum Kopieren"
-
-msgid "Add Database"
-msgstr "Datenbank hinzufügen"
-
-msgid "Loading last database."
-msgstr "Letzte Datenbank wird geladen."
-
-msgid "Select Database"
-msgstr "Datenbank auswählen"
-
-msgid "Tap + to import a database."
-msgstr "Mit + eine Datenbank importieren."
-
-msgid "It will only be removed from the app, not your device."
-msgstr "Diese wird nur aus der App entfernt, aber nicht vom Gerät gelöscht."
-
-msgid "Enter the database master password"
-msgstr "Datenbankpasswort eingeben"
-
-msgid "Master Password"
-msgstr "Datenbankpasswort"
-
-msgid "Open"
-msgstr "Öffnen"
-
-msgid "Opening"
-msgstr "Öffne"
-
 msgid "Manual path set."
 msgstr "Manueller Pfad gesetzt."
 
@@ -166,6 +136,36 @@ msgstr "Sicheres Sperren"
 
 msgid "Database Not Opening?"
 msgstr "Datenbank öffnet sich nicht?"
+
+msgid "Lock"
+msgstr "Sperren"
+
+msgid "Close"
+msgstr "Schließen"
+
+msgid "Search"
+msgstr "Suchen"
+
+msgid "Cancel Search"
+msgstr "Suche abbrechen"
+
+msgid "Lock Database"
+msgstr "Datenbank sperren"
+
+msgid "Close Database"
+msgstr "Datenbank schließen"
+
+msgid "Search entries in this group"
+msgstr "Einträge in dieser Gruppe suchen"
+
+msgid "Untitled Entry"
+msgstr "Unbenannter Eintrag"
+
+msgid "Notes"
+msgstr "Notizen"
+
+msgid "Tap to copy"
+msgstr "Antippen zum Kopieren"
 
 #~ msgid "Loading last database:"
 #~ msgstr "Lade die letzte Datenbank:"

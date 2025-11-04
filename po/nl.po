@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-02 07:24+0100\n"
+"POT-Creation-Date: 2025-11-04 09:24+0000\n"
 "PO-Revision-Date: 2025-11-02 11:51+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -36,8 +36,39 @@ msgstr ""
 "Broncode: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
+msgid "Add Database"
+msgstr "Databank toevoegen"
+
 msgid "Settings"
 msgstr "Instellingen"
+
+msgid "Loading last database."
+msgstr "Bezig met openen van vorige databank…"
+
+msgid "Select Database"
+msgstr "Databank kiezen"
+
+msgid "Tap + to import a database."
+msgstr "Druk op ‘+’ om een databank toe te voegen."
+
+msgid "It will only be removed from the app, not your device."
+msgstr ""
+"Let op: de databank wordt alleen verwijderd uit de app, niet van je apparaat."
+
+msgid "Back"
+msgstr "Terug"
+
+msgid "Enter the database master password"
+msgstr "Voer het hoofdwachtwoord in"
+
+msgid "Master Password"
+msgstr "Hoofdwachtwoord"
+
+msgid "Open"
+msgstr "Openen"
+
+msgid "Opening"
+msgstr "Bezig met openen…"
 
 msgid "Enable database locking (ALPHA)"
 msgstr "Databanken vergrendelen (experimenteel)"
@@ -81,67 +112,6 @@ msgstr ""
 "Het openen van KDBX3-databanken op ARMv7-apparaten kan tot wel twee seconden "
 "<b>per item</b> duren (drie minuten per honderd items)"
 
-msgid "Lock"
-msgstr "Vergrendelen"
-
-msgid "Close"
-msgstr "Sluiten"
-
-msgid "Back"
-msgstr "Terug"
-
-msgid "Search"
-msgstr "Zoeken"
-
-msgid "Cancel Search"
-msgstr "Zoekopdracht afbreken"
-
-msgid "Lock Database"
-msgstr "Databank vergrendelen"
-
-msgid "Close Database"
-msgstr "Databank sluiten"
-
-msgid "Search entries in this group"
-msgstr "Deze groep doorzoeken"
-
-msgid "Untitled Entry"
-msgstr "Naamloos item"
-
-msgid "Notes"
-msgstr "Aantekeningen"
-
-msgid "Tap to copy"
-msgstr "Druk om te kopiëren"
-
-msgid "Add Database"
-msgstr "Databank toevoegen"
-
-msgid "Loading last database."
-msgstr "Bezig met openen van vorige databank…"
-
-msgid "Select Database"
-msgstr "Databank kiezen"
-
-msgid "Tap + to import a database."
-msgstr "Druk op ‘+’ om een databank toe te voegen."
-
-msgid "It will only be removed from the app, not your device."
-msgstr ""
-"Let op: de databank wordt alleen verwijderd uit de app, niet van je apparaat."
-
-msgid "Enter the database master password"
-msgstr "Voer het hoofdwachtwoord in"
-
-msgid "Master Password"
-msgstr "Hoofdwachtwoord"
-
-msgid "Open"
-msgstr "Openen"
-
-msgid "Opening"
-msgstr "Bezig met openen…"
-
 msgid "Manual path set."
 msgstr "Stel de locatie handmatig in."
 
@@ -166,6 +136,36 @@ msgstr "Veilig vergrendelen"
 
 msgid "Database Not Opening?"
 msgstr "Wordt de databank niet geopend?"
+
+msgid "Lock"
+msgstr "Vergrendelen"
+
+msgid "Close"
+msgstr "Sluiten"
+
+msgid "Search"
+msgstr "Zoeken"
+
+msgid "Cancel Search"
+msgstr "Zoekopdracht afbreken"
+
+msgid "Lock Database"
+msgstr "Databank vergrendelen"
+
+msgid "Close Database"
+msgstr "Databank sluiten"
+
+msgid "Search entries in this group"
+msgstr "Deze groep doorzoeken"
+
+msgid "Untitled Entry"
+msgstr "Naamloos item"
+
+msgid "Notes"
+msgstr "Aantekeningen"
+
+msgid "Tap to copy"
+msgstr "Druk om te kopiëren"
 
 #~ msgid "Loading last database:"
 #~ msgstr "De vorige databank wordt geopend:"

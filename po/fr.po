@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-02 07:24+0100\n"
+"POT-Creation-Date: 2025-11-04 09:24+0000\n"
 "PO-Revision-Date: 2025-11-03 03:56+0000\n"
 "Last-Translator: Vlad Nirky <nirky.vlad@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -36,8 +36,38 @@ msgstr ""
 "Source : <a href='https ://git.agnos.is/projectmoon/keepass-rx'>https ://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
+msgid "Add Database"
+msgstr "Ajouter une base de données"
+
 msgid "Settings"
 msgstr "Paramètres"
+
+msgid "Loading last database."
+msgstr "Chargement de la dernière base de données."
+
+msgid "Select Database"
+msgstr "Sélectionner la base de données"
+
+msgid "Tap + to import a database."
+msgstr "Appuyer + pour importer une base de données."
+
+msgid "It will only be removed from the app, not your device."
+msgstr "Elle sera simplement retirée de l’application, pas de votre appareil."
+
+msgid "Back"
+msgstr "Retour"
+
+msgid "Enter the database master password"
+msgstr "Entrez le mot de passe principal de la base de données"
+
+msgid "Master Password"
+msgstr "Mot de passe principal"
+
+msgid "Open"
+msgstr "Ouvrir"
+
+msgid "Opening"
+msgstr "Ouverture"
 
 msgid "Enable database locking (ALPHA)"
 msgstr "Activer le verrouillage de la base de données (ALPHA)"
@@ -85,66 +115,6 @@ msgstr ""
 "L'ouverture des bases de données KDBX3 sur les appareils ARMv7 peut prendre "
 "jusqu'à 2 secondes <b>par entrée</b> (3 minutes pour 100 entrées)"
 
-msgid "Lock"
-msgstr "Verrouiller"
-
-msgid "Close"
-msgstr "Fermer"
-
-msgid "Back"
-msgstr "Retour"
-
-msgid "Search"
-msgstr "Chercher"
-
-msgid "Cancel Search"
-msgstr "Annuler la recherche"
-
-msgid "Lock Database"
-msgstr "Verrouiller la base de données"
-
-msgid "Close Database"
-msgstr "Fermer la base de données"
-
-msgid "Search entries in this group"
-msgstr "Rechercher les entrées dans ce groupe"
-
-msgid "Untitled Entry"
-msgstr "Entrée sans titre"
-
-msgid "Notes"
-msgstr "Notes"
-
-msgid "Tap to copy"
-msgstr "Appuyez pour copier"
-
-msgid "Add Database"
-msgstr "Ajouter une base de données"
-
-msgid "Loading last database."
-msgstr "Chargement de la dernière base de données."
-
-msgid "Select Database"
-msgstr "Sélectionner la base de données"
-
-msgid "Tap + to import a database."
-msgstr "Appuyer + pour importer une base de données."
-
-msgid "It will only be removed from the app, not your device."
-msgstr "Elle sera simplement retirée de l’application, pas de votre appareil."
-
-msgid "Enter the database master password"
-msgstr "Entrez le mot de passe principal de la base de données"
-
-msgid "Master Password"
-msgstr "Mot de passe principal"
-
-msgid "Open"
-msgstr "Ouvrir"
-
-msgid "Opening"
-msgstr "Ouverture"
-
 msgid "Manual path set."
 msgstr "Chemin défini manuellement."
 
@@ -170,3 +140,33 @@ msgstr "Verrouillage sécurisé"
 
 msgid "Database Not Opening?"
 msgstr "La base de données ne s'ouvre pas ?"
+
+msgid "Lock"
+msgstr "Verrouiller"
+
+msgid "Close"
+msgstr "Fermer"
+
+msgid "Search"
+msgstr "Chercher"
+
+msgid "Cancel Search"
+msgstr "Annuler la recherche"
+
+msgid "Lock Database"
+msgstr "Verrouiller la base de données"
+
+msgid "Close Database"
+msgstr "Fermer la base de données"
+
+msgid "Search entries in this group"
+msgstr "Rechercher les entrées dans ce groupe"
+
+msgid "Untitled Entry"
+msgstr "Entrée sans titre"
+
+msgid "Notes"
+msgstr "Notes"
+
+msgid "Tap to copy"
+msgstr "Appuyez pour copier"

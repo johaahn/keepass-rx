@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-02 07:24+0100\n"
+"POT-Creation-Date: 2025-11-04 09:24+0000\n"
 "PO-Revision-Date: 2025-11-03 14:44+0000\n"
 "Last-Translator: projectmoon <projectmoon@agnos.is>\n"
 "Language-Team: Icelandic <https://hosted.weblate.org/projects/ubports/"
@@ -36,8 +36,38 @@ msgstr ""
 "Uppruni: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
+msgid "Add Database"
+msgstr "Bæta við Gangnagrunn"
+
 msgid "Settings"
 msgstr "Stillingar"
+
+msgid "Loading last database."
+msgstr ""
+
+msgid "Select Database"
+msgstr ""
+
+msgid "Tap + to import a database."
+msgstr ""
+
+msgid "It will only be removed from the app, not your device."
+msgstr ""
+
+msgid "Back"
+msgstr "Til baka"
+
+msgid "Enter the database master password"
+msgstr ""
+
+msgid "Master Password"
+msgstr ""
+
+msgid "Open"
+msgstr ""
+
+msgid "Opening"
+msgstr ""
 
 msgid "Enable database locking (ALPHA)"
 msgstr "Virkja læsing gagnagrunnanna (ALPHA)"
@@ -77,14 +107,34 @@ msgid ""
 "entry</b> (3 minutes for 100 entries)"
 msgstr ""
 
+msgid "Manual path set."
+msgstr ""
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+
+msgid "Passcode"
+msgstr ""
+
+msgid "Unlock"
+msgstr ""
+
+msgid "Securely Unlocking"
+msgstr ""
+
+msgid "Securely Locking"
+msgstr ""
+
+msgid "Database Not Opening?"
+msgstr ""
+
 msgid "Lock"
 msgstr "Læsa"
 
 msgid "Close"
 msgstr "Loka"
-
-msgid "Back"
-msgstr "Til baka"
 
 msgid "Search"
 msgstr "Leita"
@@ -109,53 +159,3 @@ msgstr "Athugasemdir"
 
 msgid "Tap to copy"
 msgstr "Ýtið á til að afrita"
-
-msgid "Add Database"
-msgstr "Bæta við Gangnagrunn"
-
-msgid "Loading last database."
-msgstr ""
-
-msgid "Select Database"
-msgstr ""
-
-msgid "Tap + to import a database."
-msgstr ""
-
-msgid "It will only be removed from the app, not your device."
-msgstr ""
-
-msgid "Enter the database master password"
-msgstr ""
-
-msgid "Master Password"
-msgstr ""
-
-msgid "Open"
-msgstr ""
-
-msgid "Opening"
-msgstr ""
-
-msgid "Manual path set."
-msgstr ""
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-
-msgid "Passcode"
-msgstr ""
-
-msgid "Unlock"
-msgstr ""
-
-msgid "Securely Unlocking"
-msgstr ""
-
-msgid "Securely Locking"
-msgstr ""
-
-msgid "Database Not Opening?"
-msgstr ""

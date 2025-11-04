@@ -456,31 +456,6 @@ pub struct RxTemplate {
     entry_uuids: Vec<Uuid>,
 }
 
-#[derive(Zeroize, ZeroizeOnDrop, Default, Clone)]
-pub struct RxDatabase {
-    root: RxGroup,
-    #[zeroize(skip)]
-    templates: HashMap<Uuid, RxTemplate>,
-}
-
-// Manual impl because otherwise printing debug will dump the raw
-// contents of the ENTIRE database and crash the terminal.
-impl std::fmt::Debug for RxDatabase {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let groups_count = self.all_groups_iter().count();
-        f.debug_struct("RxDatabase")
-            .field("groups", &groups_count)
-            .field(
-                "entries",
-                &self
-                    .all_groups_iter()
-                    .map(|group| group.entries.len())
-                    .sum::<usize>(),
-            )
-            .finish()
-    }
-}
-
 /// Various global-ish things to carry around during recursive
 /// loading, that are returned to the final RxDatabase object.
 #[derive(Default)]
@@ -524,7 +499,6 @@ fn load_groups_recursive(
                 // template will be set later, in RxDatabase::new.
                 if let Some(template_uuid) = rx_entry.template_uuid {
                     let rx_template = state.templates.entry(template_uuid).or_default();
-
                     rx_template.uuid = template_uuid;
                     rx_template.entry_uuids.push(rx_entry.uuid);
                 }
@@ -538,6 +512,8 @@ fn load_groups_recursive(
     groups
 }
 
+/// Ordered recursive iterator through an RxGroup and all of its
+/// subgroups.
 struct RxGroupIter<'a> {
     stack: Vec<&'a RxGroup>,
 }
@@ -552,6 +528,31 @@ impl<'a> Iterator for RxGroupIter<'a> {
             self.stack.push(child);
         }
         Some(node)
+    }
+}
+
+#[derive(Zeroize, ZeroizeOnDrop, Default, Clone)]
+pub struct RxDatabase {
+    root: RxGroup,
+    #[zeroize(skip)]
+    templates: HashMap<Uuid, RxTemplate>,
+}
+
+// Manual impl because otherwise printing debug will dump the raw
+// contents of the ENTIRE database and crash the terminal.
+impl std::fmt::Debug for RxDatabase {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let groups_count = self.all_groups_iter().count();
+        f.debug_struct("RxDatabase")
+            .field("groups", &groups_count)
+            .field(
+                "entries",
+                &self
+                    .all_groups_iter()
+                    .map(|group| group.entries.len())
+                    .sum::<usize>(),
+            )
+            .finish()
     }
 }
 

@@ -8,6 +8,7 @@ use keepass::db::{CustomData, Entry, Group, Icon, Node, TOTP as KeePassTOTP, Val
 use libsodium_rs::utils::{SecureVec, vec_utils};
 use querystring::querify;
 use secstr::SecStr;
+use std::collections::HashSet;
 use std::mem;
 use std::{collections::HashMap, str::FromStr};
 use totp_rs::{Secret, TOTP};
@@ -273,6 +274,9 @@ pub struct RxEntry {
     #[zeroize(skip)]
     pub parent_group: Uuid,
 
+    #[zeroize(skip)]
+    pub template_uuid: Option<Uuid>,
+
     pub title: Option<RxValue>,
     pub username: Option<RxValue>,
     pub password: Option<RxValue>,
@@ -330,6 +334,13 @@ impl RxEntry {
         let url = extract_value(&mut entry, "URL");
         let raw_otp_value = extract_value(&mut entry, "otp");
 
+        // Template: Extract the _etm_template_uuid field, which
+        // points to a template DB entry.
+        let template_uuid = extract_value(&mut entry, "_etm_template_uuid").and_then(|val| {
+            val.value()
+                .and_then(|uuid_str| Uuid::from_str(uuid_str).ok())
+        });
+
         // Has to come after the above, otherwise those fields end up
         // here.
         let mut other_fields = RxCustomFields::from(extract_remaining_fields(&mut entry));
@@ -339,6 +350,7 @@ impl RxEntry {
         Self {
             uuid: entry.uuid,
             parent_group: parent_uuid,
+            template_uuid: template_uuid,
             title: title,
             username: username,
             password: password,
@@ -430,9 +442,21 @@ impl RxEntry {
     }
 }
 
+#[derive(Zeroize, Default, Clone)]
+pub struct RxTemplate {
+    #[zeroize(skip)]
+    uuid: Uuid,
+    name: String, // from the template's entry title.
+
+    #[zeroize(skip)]
+    entry_uuids: Vec<Uuid>,
+}
+
 #[derive(Zeroize, ZeroizeOnDrop, Default, Clone)]
 pub struct RxDatabase {
     root: RxGroup,
+    #[zeroize(skip)]
+    templates: HashSet<Uuid>,
 }
 
 // Manual impl because otherwise printing debug will dump the raw
@@ -453,7 +477,18 @@ impl std::fmt::Debug for RxDatabase {
     }
 }
 
-fn load_groups_recursive(group: &mut Group, icons: &mut HashMap<Uuid, Icon>) -> Vec<RxGroup> {
+/// Various global-ish things to carry around during recursive
+/// loading, that are returned to the final RxDatabase object.
+#[derive(Default)]
+struct LoadState {
+    template_uuids: HashSet<Uuid>,
+}
+
+fn load_groups_recursive(
+    group: &mut Group,
+    icons: &mut HashMap<Uuid, Icon>,
+    state: &mut LoadState,
+) -> Vec<RxGroup> {
     let this_group_id = group.uuid;
     let mut groups = vec![];
     let mut subgroups = vec![];
@@ -464,7 +499,7 @@ fn load_groups_recursive(group: &mut Group, icons: &mut HashMap<Uuid, Icon>) -> 
     for node in children.into_iter() {
         match node {
             Node::Group(mut subgroup) => {
-                let mut rx_groups: Vec<_> = load_groups_recursive(&mut subgroup, icons)
+                let mut rx_groups: Vec<_> = load_groups_recursive(&mut subgroup, icons, state)
                     .into_iter()
                     .map(|mut subgroup| {
                         subgroup.parent = Some(this_group_id);
@@ -479,7 +514,15 @@ fn load_groups_recursive(group: &mut Group, icons: &mut HashMap<Uuid, Icon>) -> 
                     .custom_icon_uuid
                     .and_then(|icon_uuid| icons.remove(&icon_uuid));
 
-                entries.push(RxEntry::new(entry, group.uuid, icon));
+                let rx_entry = RxEntry::new(entry, group.uuid, icon);
+
+                // Add template UUID to the set to gather up unique
+                // list of templates.
+                if let Some(template_uuid) = rx_entry.template_uuid {
+                    state.template_uuids.insert(template_uuid);
+                }
+
+                entries.push(rx_entry);
             }
         }
     }
@@ -517,12 +560,16 @@ impl RxDatabase {
 
         // There should only be one group in the vec, which is the
         // root.
-        let mut rx_groups = load_groups_recursive(&mut db.root, &mut icons);
+        let mut state = LoadState::default();
+        let mut rx_groups = load_groups_recursive(&mut db.root, &mut icons, &mut state);
         let root_group = rx_groups.swap_remove(0);
 
         drop(db);
 
-        Self { root: root_group }
+        Self {
+            root: root_group,
+            templates: state.template_uuids,
+        }
     }
 
     pub fn close(&mut self) {
@@ -665,7 +712,11 @@ mod tests {
             parent: None,
         };
 
-        let db = RxDatabase { root: group };
+        let db = RxDatabase {
+            root: group,
+            templates: HashSet::new(),
+        };
+
         let entries = db.get_entries(group_uuid, None);
         assert!(entries.len() > 0);
         assert_eq!(entries[0].uuid, entry_uuid);
@@ -684,13 +735,15 @@ mod tests {
 
         let entry1 = RxEntry {
             uuid: entry_uuid1,
-            title: Some(RxValue::from_str("test title").expect("bad value")),
+            title: Some(RxValue::try_from("test title".to_string()).expect("bad value")),
             ..Default::default()
         };
 
         let entry2 = RxEntry {
             uuid: entry_uuid2,
-            title: Some(RxValue::from_str("should not show up").expect("bad value")),
+            title: Some(
+                RxValue::try_from("should not show up".to_string()).expect("bad value"),
+            ),
             ..Default::default()
         };
 
@@ -702,7 +755,11 @@ mod tests {
             parent: None,
         };
 
-        let db = RxDatabase { root: group };
+        let db = RxDatabase {
+            root: group,
+            templates: HashSet::new(),
+        };
+
         let entries = db.get_entries(group_uuid, Some("test"));
 
         assert!(

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-04 09:24+0000\n"
+"POT-Creation-Date: 2025-11-05 15:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: qml/pages/AboutPage.qml:14 qml/pages/DBList.qml:81
 #: qml/pages/OpenDBPage.qml:55 qml/pages/UnlockPage.qml:41
-#: qml/pages/EntriesPage.qml:126
+#: qml/pages/EntriesPage.qml:133
 msgid "About"
 msgstr ""
 
@@ -31,8 +31,8 @@ msgstr ""
 
 #: qml/pages/AboutPage.qml:68
 msgid ""
-"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
-"agnos.is/projectmoon/keepass-rx</a>"
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
+"git.agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
 
 #: qml/pages/DBList.qml:67
@@ -41,7 +41,7 @@ msgstr ""
 
 #: qml/pages/DBList.qml:74 qml/pages/OpenDBPage.qml:48
 #: qml/pages/SettingsPage.qml:11 qml/pages/UnlockPage.qml:34
-#: qml/pages/EntriesPage.qml:117
+#: qml/pages/EntriesPage.qml:124
 msgid "Settings"
 msgstr ""
 
@@ -61,8 +61,8 @@ msgstr ""
 msgid "It will only be removed from the app, not your device."
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:34 qml/pages/EntriesPage.qml:91
-#: qml/pages/SingleEntry.qml:25
+#: qml/pages/OpenDBPage.qml:34 qml/pages/SingleEntry.qml:25
+#: qml/pages/EntriesPage.qml:84
 msgid "Back"
 msgstr ""
 
@@ -158,34 +158,6 @@ msgstr ""
 msgid "Database Not Opening?"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:67
-msgid "Lock"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:79
-msgid "Close"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:104
-msgid "Search"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:104
-msgid "Cancel Search"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:138
-msgid "Lock Database"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:148
-msgid "Close Database"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:177
-msgid "Search entries in this group"
-msgstr ""
-
 #: qml/pages/SingleEntry.qml:18
 msgid "Untitled Entry"
 msgstr ""
@@ -196,4 +168,40 @@ msgstr ""
 
 #: qml/pages/SingleEntry.qml:194
 msgid "Tap to copy"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:52
+msgid "Special Categories"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:60
+msgid "Lock"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:72
+msgid "Close"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:97
+msgid "View Mode"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:111
+msgid "Search"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:111
+msgid "Cancel Search"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:145
+msgid "Lock Database"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:155
+msgid "Close Database"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:184
+msgid "Search entries in this group"
 msgstr ""

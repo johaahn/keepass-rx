@@ -1,6 +1,7 @@
 use qmetaobject::{QMetaType, QObject, QString, QVariant, QVariantList, QVariantMap};
+use uuid::Uuid;
 
-use crate::rx::{RxEntry, RxGroup};
+use crate::rx::{RxEntry, RxGroup, RxTemplate};
 
 #[derive(QEnum, Clone, Default, Copy)]
 #[repr(C)]
@@ -8,12 +9,14 @@ pub enum RxItemType {
     #[default]
     Entry,
     Group,
+    Template,
 }
 
 fn entry_type_from_string(qval: &QString) -> RxItemType {
     match qval.to_string().as_str() {
         "Group" => RxItemType::Group,
         "Entry" => RxItemType::Entry,
+        "Template" => RxItemType::Template,
         _ => panic!("Invalid entry type: {}", qval),
     }
 }
@@ -22,6 +25,7 @@ fn entry_type_to_string(entry_type: &RxItemType) -> QString {
     match entry_type {
         RxItemType::Group => "Group",
         RxItemType::Entry => "Entry",
+        RxItemType::Template => "Template",
     }
     .into()
 }
@@ -48,6 +52,26 @@ pub struct RxListItem {
     hasPassword: qt_property!(bool),
     hasURL: qt_property!(bool),
     hasTOTP: qt_property!(bool),
+}
+
+impl From<&RxTemplate> for RxListItem {
+    fn from(value: &RxTemplate) -> Self {
+        RxListItem {
+            base: Default::default(),
+            itemType: RxItemType::Template,
+            uuid: QString::from(value.uuid.to_string()),
+            parentUuid: QString::default(),
+
+            hasUsername: false,
+            hasPassword: false,
+            hasURL: false,
+            hasTOTP: false,
+
+            iconPath: QString::default(),
+            title: QString::from(value.name.as_ref()),
+            subtitle: QString::from(""),
+        }
+    }
 }
 
 impl From<&RxEntry> for RxListItem {
@@ -156,5 +180,50 @@ impl From<RxList> for QVariantList {
     fn from(value: RxList) -> Self {
         let RxList(items) = value;
         items.into_iter().map(|item| QVariant::from(item)).collect()
+    }
+}
+
+#[derive(Default, Clone, Copy)]
+pub enum RxPageType {
+    #[default]
+    Group,
+    Template,
+}
+
+/// What group/template container we are in. Used in conjunction with
+/// RxViewMode to determine if we should be able to travel back up the
+/// tree and so on.
+#[derive(Default, Clone)]
+pub struct RxUiContainer {
+    pub uuid: Uuid,
+    pub page_type: RxPageType,
+    pub is_root: bool,
+}
+
+impl ToString for RxPageType {
+    fn to_string(&self) -> String {
+        match self {
+            RxPageType::Template => "Template".to_string(),
+            RxPageType::Group => "Group".to_string(),
+        }
+    }
+}
+
+impl From<&RxUiContainer> for QVariantMap {
+    fn from(value: &RxUiContainer) -> Self {
+        let mut qvar = QVariantMap::default();
+        qvar.insert(
+            "containerUuid".into(),
+            QString::from(value.uuid.to_string()).into(),
+        );
+
+        qvar.insert(
+            "containerType".into(),
+            QString::from(value.page_type.to_string()).into(),
+        );
+
+        qvar.insert("isRoot".into(), value.is_root.into());
+
+        qvar
     }
 }

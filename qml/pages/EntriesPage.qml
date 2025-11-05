@@ -1,12 +1,12 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.3
-import Lomiri.Components 1.3 as UITK
+import Lomiri.Components 1.3
 import Qt.labs.settings 1.0
 
 import "../components"
 
-UITK.Page {
+Page {
     Settings {
         id: settings
         property bool fetchOnOpen: false
@@ -15,51 +15,44 @@ UITK.Page {
         property bool databaseLocking: true
     }
 
-    property string parentGroupUuid
-    property string previousGroupUuid
-    property string groupUuid
-    property string groupName
+    // The default values of these properties control what we should fetch first.
+    property string containerUuid
+    property string containerName
+    property string containerType: 'Group'
+    property bool atRoot: true
     property bool searchMode: false
 
-    onGroupUuidChanged: {
-        if (groupUuid && (previousGroupUuid && groupUuid != previousGroupUuid)) {
-	    populate();
-        }
-    }
-
-    function popGroup() {
-	if (parentGroupUuid) {
-            groupUuid = parentGroupUuid;
-	} else {
-	    console.log('Cannot move up from root group!');
-	}
+    onContainerUuidChanged: {
+        //if (containerUuid && (previousContainerUuid && containerUuid != previousContainerUuid)) {
+	populate();
+        //}
     }
 
     function lockDatabase() {
         keepassrx.closeDatabase();
-        groupUuid = null;
-        groupName = null;
+        containerUuid = null;
+        containerName = null;
         root.lockUI();
     }
 
     function closeDatabase() {
         keepassrx.invalidateMasterPassword();
         keepassrx.closeDatabase();
-        groupUuid = null;
-        groupName = null;
+        containerUuid = null;
+        containerName = null;
         root.closeUI();
     }
 
     function isAtRoot() {
-	return !parentGroupUuid || groupUuid == parentGroupUuid
+        return atRoot;
     }
 
-    header: UITK.PageHeader {
+    header: PageHeader {
         id: header
-        title: groupName && parentGroupUuid ? groupName : "KeePassRX"
+        title: containerName && !isAtRoot() ? containerName : (containerType == 'Group' ?  "KeePassRX" : i18n.tr("Special Categories"))
 
         leadingActionBar.actions: [
-            UITK.Action {
+            Action {
                 enabled: settings.databaseLocking && isAtRoot()
                 visible: settings.databaseLocking && isAtRoot()
                 name: "Lock"
@@ -71,7 +64,7 @@ UITK.Page {
                 }
             },
 
-            UITK.Action {
+            Action {
                 enabled: !settings.databaseLocking && isAtRoot()
                 visible: !settings.databaseLocking && isAtRoot()
                 name: "Close"
@@ -83,22 +76,36 @@ UITK.Page {
                 }
             },
 
-	    UITK.Action {
+	    Action {
                 enabled: !isAtRoot()
                 visible: !isAtRoot()
                 name: "Go Back"
-                //TRANSLATORS: Move back up in the group folder structure.
+                //TRANSLATORS: Move back up in the container folder structure.
                 text: i18n.tr("Back")
                 iconName: "back"
                 onTriggered: {
-                    popGroup();
+                    keepassrx.popContainer();
                 }
             }
         ]
 
-        trailingActionBar.numberOfSlots: 2
+        trailingActionBar.numberOfSlots: 3
         trailingActionBar.actions: [
-            UITK.Action {
+            Action {
+                name: "View Mode"
+                // TRANSLATORS: Method of showing entries: by container or by template type.
+                text: i18n.tr("View Mode")
+                iconName: "filters"
+                onTriggered: {
+                    if (keepassrx.viewMode == 'Templates') {
+                        keepassrx.viewMode = 'All';
+                    } else {
+                        keepassrx.viewMode = 'Templates';
+                    }
+                }
+            },
+
+            Action {
                 name: "Search"
                 // TRANSLATORS: Initiate (or stop) the search action.
                 text: !searchMode ? i18n.tr("Search") : i18n.tr("Cancel Search")
@@ -112,7 +119,7 @@ UITK.Page {
                 }
             },
 
-            UITK.Action {
+            Action {
                 name: "Settings"
                 text: i18n.tr("Settings")
                 iconName: "settings"
@@ -121,7 +128,7 @@ UITK.Page {
                 }
             },
 
-            UITK.Action {
+            Action {
                 name: "About"
                 text: i18n.tr("About")
                 iconName: "info"
@@ -130,7 +137,7 @@ UITK.Page {
                 }
             },
 
-            UITK.Action {
+            Action {
                 name: "Lock"
                 enabled: settings.databaseLocking
                 visible: settings.databaseLocking
@@ -142,7 +149,7 @@ UITK.Page {
                 }
             },
 
-            UITK.Action {
+            Action {
                 name: "Close"
                 // TRANSLATORS: Close (NOT lock) an open database.
                 text: i18n.tr('Close Database')
@@ -168,16 +175,16 @@ UITK.Page {
                 Layout.fillWidth: true
                 width: parent.width
 
-                UITK.TextField {
+                TextField {
                     width: parent.width
                     Layout.fillWidth: true
                     visible: searchMode
                     id: searchField
-                    // TRANSLATORS: Placeholder text of the search box for searching for database entries. Group is a group/folder of password manager entries.
+                    // TRANSLATORS: Placeholder text of the search box for searching for database entries. Container is a container/folder of password manager entries.
                     placeholderText: i18n.tr("Search entries in this group")
                     inputMethodHints: Qt.ImhNoPredictiveText
                     onTextChanged: {
-                        getEntries(groupUuid);
+                        getEntries(containerUuid);
                     }
                 }
             }
@@ -239,51 +246,91 @@ UITK.Page {
     }
 
     // Welcome to async hell:
-    // 1. getGroups
-    // 2. onGroupsReceived
+    // 1. getContainers
+    // 2. onContainersReceived
     // 3. getEntries
     // 4. onEntriesReceived
     function populate() {
-	if (groupUuid) {
-            keepassrx.getGroups(groupUuid);
+	if (isAtRoot()) {
+            if (containerType == 'Group') {
+                keepassrx.getRootGroup();
+            } else {
+                keepassrx.getTemplates();
+            }
 	} else {
-	    keepassrx.getRootGroup();
+            if (containerType == 'Group') {
+                keepassrx.getGroup(containerUuid);
+            } else {
+                keepassrx.getTemplate(containerUuid);
+            }
 	}
     }
 
-    function getEntries(groupUuidToGet) {
-        keepassrx.getEntries(groupUuidToGet, searchField.text);
+    function getEntries(containerUuidToGet) {
+        keepassrx.getEntries(containerUuidToGet, searchField.text);
     }
 
     Connections {
         target: keepassrx
 
         onDatabaseOpened: {
-            populate();
+            // This will trigger the cascade of async operations that
+            // will fetch entries.
+            keepassrx.viewMode = 'All';
         }
 
-	// This is a list of groups underneath this group, not ALL the
-	// groups. It's an array of RxListItem entities.
-        onGroupsReceived: (parentGroupId, thisGroupId, thisGroupName, subgroups) => {
-	    // Clear out searching when switching between groups.
+        onViewModeChanged: (mode) => {
+            entriesListModel.clear();
+        }
+
+        // newContainer is { containerUuid, containerType }
+        onCurrentContainerChanged: (newContainer) => {
 	    searchMode = false;
 	    searchField.text = '';
+            entriesListModel.clear();
 
-	    // the parent group id will be null if this is the root
-	    parentGroupUuid = parentGroupId;
-            previousGroupUuid = groupUuid;
+            // Type must be set before UUID due to uuid change signal
+            // triggering entry list update.
+            atRoot = newContainer.isRoot;
+            containerType = newContainer.containerType;
+            containerUuid = newContainer.containerUuid;
+        }
 
-            // Hack to let root group load once, but still be able to load sub-groups.
-            if (!previousGroupUuid) previousGroupUuid = thisGroupId;
+        // Put as list of folders. When tapped, load template entries
+        // and onEntriesReceived takes care of the rest? BUT... we
+        // also have to take into account the container UUIDs.
+        onTemplatesReceived: (templates) => {
+	    searchMode = false;
+	    searchField.text = '';
+            entriesListModel.clear();
 
-	    groupUuid = thisGroupId;
-	    groupName = thisGroupName;
+            for (const template of templates) {
+                entriesListModel.append(template);
+            }
+        }
+
+        onGroupReceived: (parentContainerId, thisGroupId, thisGroupName) => {
+	    // Clear out searching when switching between containers.
+	    searchMode = false;
+	    searchField.text = '';
+            entriesListModel.clear();
+
+	    containerName = thisGroupName;
             getEntries(thisGroupId);
         }
 
-	// List of entries for this group. It's an array of RxListItem
-	// entities. It includes both immediate subgroups and
-	// immediate child entries in the group.
+        onTemplateReceived: (thisTemplateUuid, thisTemplateName) => {
+	    searchMode = false;
+	    searchField.text = '';
+            entriesListModel.clear();
+
+	    containerName = thisTemplateName;
+            getEntries(thisTemplateUuid);
+        }
+
+	// List of entries for this container. It's an array of RxListItem
+	// entities. It includes both immediate subcontainers and
+	// immediate child entries in the container.
         onEntriesReceived: (entries) => {
 	    entriesListModel.clear();
 

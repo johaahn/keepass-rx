@@ -126,7 +126,7 @@ ListItem {
 	    width: units.gu(5)
 	    height: parent.height
 	    y: parent.height / 2 - height / 2
-	    name: itemType == 'Group' ? 'folder' : 'up'
+	    name: itemType == 'Group' || itemType == 'Template' ? 'folder' : 'up'
 	}
 
 	Image {
@@ -165,12 +165,12 @@ ListItem {
 	width: entryImg.width + detailsColumn.width
 	height: parent.height
 	onClicked: {
-	    if (itemType == 'Group') {
-		entriesPage.groupUuid = uuid;
+	    if (itemType == 'Group' || itemType == 'Template') {
+                keepassrx.pushContainer(uuid);
 	    } else if (itemType == 'Entry') {
 		keepassrx.getSingleEntry(uuid);
 	    } else if (itemType == 'GoBack') {
-		entriesPage.popGroup();
+		keepassrx.popContainer();
 	    }
 	}
     }

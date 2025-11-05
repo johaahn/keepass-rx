@@ -1,5 +1,6 @@
 use actix::prelude::*;
 use anyhow::{Result, anyhow};
+use models::{RxPageType, RxUiContainer};
 use qmeta_async::with_executor;
 use qmetaobject::*;
 use secstr::SecUtf8;
@@ -47,17 +48,54 @@ impl QMetaType for RxGuiState {
     const CONVERSION_TO_STRING: Option<fn(&Self) -> QString> = Some(gui_state_to_string);
 }
 
+#[derive(Default, QEnum, Clone, Copy)]
+#[repr(C)]
+pub enum RxViewMode {
+    #[default]
+    All,
+    Templates,
+}
+
+fn view_mode_from_string(qval: &QString) -> RxViewMode {
+    match qval.to_string().as_str() {
+        "All" => RxViewMode::All,
+        "Templates" => RxViewMode::Templates,
+        _ => panic!("Invalid view mode: {}", qval),
+    }
+}
+
+fn view_mode_to_string(view_mode: &RxViewMode) -> QString {
+    match view_mode {
+        RxViewMode::All => "All",
+        RxViewMode::Templates => "Templates",
+    }
+    .into()
+}
+
+impl QMetaType for RxViewMode {
+    const CONVERSION_FROM_STRING: Option<fn(&QString) -> Self> = Some(view_mode_from_string);
+    const CONVERSION_TO_STRING: Option<fn(&Self) -> QString> = Some(view_mode_to_string);
+}
+
 #[derive(QObject, Default)]
 #[allow(non_snake_case, dead_code)]
 pub struct KeepassRx {
     base: qt_base_class!(trait QObject),
     actor: Option<Addr<KeepassRxActor>>,
     last_db: Option<String>,
+    container_stack: Vec<RxUiContainer>,
 
     guiState: qt_property!(RxGuiState),
+    viewMode: qt_property!(RxViewMode; READ getViewMode WRITE setViewMode NOTIFY viewModeChanged),
     lastDB: qt_property!(QString; READ getLastDB WRITE setLastDB NOTIFY lastDbChanged),
     databaseOpen: qt_property!(bool),
     isMasterPasswordEncrypted: qt_property!(bool; NOTIFY masterPasswordStateChanged),
+    rootGroupUuid: qt_property!(QString; NOTIFY rootGroupUuidChanged),
+
+    // page management
+    currentContainer: qt_property!(QVariant; NOTIFY currentContainerChanged),
+    pushContainer: qt_method!(fn(&self, container_uuid: QString)),
+    popContainer: qt_method!(fn(&self)),
 
     // database management
     listImportedDatabases: qt_method!(fn(&self)),
@@ -68,7 +106,9 @@ pub struct KeepassRx {
 
     // group and entry management
     getRootGroup: qt_method!(fn(&self)),
-    getGroups: qt_method!(fn(&self, group_uuid: QString)),
+    getTemplates: qt_method!(fn(&self)),
+    getTemplate: qt_method!(fn(&self, template_uuid: QString)),
+    getGroup: qt_method!(fn(&self, group_uuid: QString)),
     getRootEntries: qt_method!(fn(&self, search_term: QString)),
     getEntries: qt_method!(fn(&self, group_uuid: QString, search_term: QString)),
     getSingleEntry: qt_method!(fn(&self, entry_uuid: QString)),
@@ -82,9 +122,14 @@ pub struct KeepassRx {
     invalidateMasterPassword: qt_method!(fn(&self)),
     checkLockingStatus: qt_method!(fn(&self)),
 
+    // page signals
+    currentContainerChanged: qt_signal!(new_container: QVariant),
+
     // db management signals
     lastDbChanged: qt_signal!(value: QString),
+    viewModeChanged: qt_signal!(value: RxViewMode),
     fileListingCompleted: qt_signal!(),
+    rootGroupUuidChanged: qt_signal!(),
     databaseImported: qt_signal!(db_name: QString),
     databaseOpened: qt_signal!(),
     databaseClosed: qt_signal!(),
@@ -92,7 +137,9 @@ pub struct KeepassRx {
     databaseOpenFailed: qt_signal!(message: String),
 
     // data signals
-    groupsReceived: qt_signal!(parent_group_uuid: QString, this_group_uuid: QString, this_group_name: QString),
+    templatesReceived: qt_signal!(templates: QVariantList),
+    groupReceived: qt_signal!(parent_group_uuid: QString, this_group_uuid: QString, this_group_name: QString),
+    templateReceived: qt_signal!(this_template_uuid: QString, this_template_name: QString),
     entriesReceived: qt_signal!(entries: QVariantList),
     errorReceived: qt_signal!(error: String),
     totpReceived: qt_signal!(totp: QVariantMap),
@@ -115,6 +162,34 @@ impl KeepassRx {
             last_db: last_db,
             ..Default::default()
         }
+    }
+
+    pub fn getViewMode(&self) -> RxViewMode {
+        self.viewMode
+    }
+
+    pub fn setViewMode(&mut self, mode: RxViewMode) {
+        self.viewMode = mode;
+
+        self.container_stack.clear();
+
+        if let RxViewMode::All = mode {
+            self.container_stack.push(RxUiContainer {
+                uuid: Uuid::from_str(&self.rootGroupUuid.to_string()).unwrap(),
+                page_type: RxPageType::Group,
+                is_root: true,
+            });
+        } else {
+            self.container_stack.push(RxUiContainer {
+                uuid: Uuid::default(),
+                page_type: RxPageType::Template,
+                is_root: true,
+            });
+        }
+
+        let container = QVariantMap::from(&self.container_stack[0]);
+        self.viewModeChanged(mode);
+        self.currentContainerChanged(container.into());
     }
 
     pub fn getLastDB(&self) -> QString {
@@ -242,17 +317,30 @@ impl KeepassRx {
     #[with_executor]
     pub fn getRootGroup(&self) {
         let actor = self.actor.clone().expect("Actor not initialized");
-        actix::spawn(actor.send(GetGroups::root()));
+        actix::spawn(actor.send(GetGroup::root()));
     }
 
     #[with_executor]
-    pub fn getGroups(&self, group_uuid: QString) {
+    pub fn getGroup(&self, group_uuid: QString) {
         let actor = self.actor.clone().expect("Actor not initialized");
         let maybe_uuid = Uuid::from_str(&group_uuid.to_string());
 
         match maybe_uuid {
             Ok(group_uuid) => {
-                actix::spawn(actor.send(GetGroups::for_uuid(group_uuid)));
+                actix::spawn(actor.send(GetGroup::for_uuid(group_uuid)));
+            }
+            Err(err) => self.errorReceived(format!("{}", err)),
+        }
+    }
+
+    #[with_executor]
+    pub fn getTemplate(&self, template_uuid: QString) {
+        let actor = self.actor.clone().expect("Actor not initialized");
+        let maybe_uuid = Uuid::from_str(&template_uuid.to_string());
+
+        match maybe_uuid {
+            Ok(group_uuid) => {
+                actix::spawn(actor.send(GetTemplate::for_uuid(group_uuid)));
             }
             Err(err) => self.errorReceived(format!("{}", err)),
         }
@@ -283,7 +371,7 @@ impl KeepassRx {
             Ok(group_uuid) => {
                 actix::spawn(actor.send(GetEntries::for_uuid(group_uuid, search_term)));
             }
-            Err(err) => self.errorReceived(format!("{}", err)),
+            Err(err) => self.errorReceived(format!("GetEntries: error parsing UUID: {}", err)),
         }
     }
 
@@ -342,6 +430,12 @@ impl KeepassRx {
     }
 
     #[with_executor]
+    pub fn getTemplates(&self) {
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(GetTemplates));
+    }
+
+    #[with_executor]
     pub fn getFieldValue(&self, entry_uuid: QString, field_name: QString) {
         let maybe_uuid = Uuid::from_str(&entry_uuid.to_string());
         let actor = self.actor.clone().expect("Actor not initialized");
@@ -355,5 +449,23 @@ impl KeepassRx {
             }
             Err(err) => self.errorReceived(format!("{}", err)),
         }
+    }
+
+    #[with_executor]
+    pub fn pushContainer(&self, container_uuid: QString) {
+        let maybe_uuid = Uuid::from_str(&container_uuid.to_string());
+        let actor = self.actor.clone().expect("Actor not initialized");
+        match maybe_uuid {
+            Ok(container_id) => {
+                actix::spawn(actor.send(PushContainer(container_id)));
+            }
+            Err(err) => self.errorReceived(format!("{}", err)),
+        }
+    }
+
+    #[with_executor]
+    pub fn popContainer(&self) {
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(PopContainer));
     }
 }

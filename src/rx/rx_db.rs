@@ -66,6 +66,27 @@ macro_rules! into_value {
 
 pub(crate) use {expose, expose_opt, expose_str};
 
+pub enum RxContainer<'a> {
+    Group(&'a RxGroup),
+    Template(&'a RxTemplate),
+}
+
+impl RxContainer<'_> {
+    pub fn uuid(&self) -> Uuid {
+        match self {
+            RxContainer::Group(group) => group.uuid,
+            RxContainer::Template(template) => template.uuid,
+        }
+    }
+
+    pub fn name(&self) -> &str {
+        match self {
+            RxContainer::Group(group) => &group.name,
+            RxContainer::Template(template) => &template.name,
+        }
+    }
+}
+
 #[derive(Zeroize, Default, Clone)]
 pub struct RxTotp {
     pub code: String,
@@ -449,11 +470,11 @@ impl RxEntry {
 #[derive(Zeroize, Default, Clone, Hash, Eq, PartialEq)]
 pub struct RxTemplate {
     #[zeroize(skip)]
-    uuid: Uuid,
-    name: String, // from the template's entry title.
+    pub uuid: Uuid,
+    pub name: String, // from the template's entry title.
 
     #[zeroize(skip)]
-    entry_uuids: Vec<Uuid>,
+    pub entry_uuids: Vec<Uuid>,
 }
 
 /// Various global-ish things to carry around during recursive
@@ -461,6 +482,31 @@ pub struct RxTemplate {
 #[derive(Default)]
 struct LoadState {
     templates: HashMap<Uuid, RxTemplate>,
+}
+
+// Determine if an entry should show up in search results, if a search
+// term was specified. term is assumed to be already lowecase here.
+fn search_entry(entry: &RxEntry, term: &str) -> bool {
+    let username = entry.username.as_ref().and_then(|u| {
+        u.value()
+            .map(|secret| UniCase::new(secret).to_folded_case())
+    });
+
+    let url = entry.url.as_ref().and_then(|u| {
+        u.value()
+            .map(|secret| UniCase::new(secret).to_folded_case())
+    });
+
+    let title = entry.title.as_ref().and_then(|u| {
+        u.value()
+            .map(|secret| UniCase::new(secret).to_folded_case())
+    });
+
+    let contains_username = username.map(|u| u.contains(term)).unwrap_or(false);
+    let contains_url = url.map(|u| u.contains(term)).unwrap_or(false);
+    let contains_title = title.map(|t| t.contains(term)).unwrap_or(false);
+
+    contains_username || contains_url || contains_title
 }
 
 fn load_groups_recursive(
@@ -640,45 +686,62 @@ impl RxDatabase {
         })
     }
 
+    pub fn get_container(&self, container_uuid: Uuid) -> Option<RxContainer<'_>> {
+        self.get_group(container_uuid)
+            .map(|group| RxContainer::Group(group))
+            .or_else(|| {
+                self.get_template(container_uuid)
+                    .map(|template| RxContainer::Template(template))
+            })
+    }
+
     pub fn get_entry(&self, entry_uuid: Uuid) -> Option<&RxEntry> {
         self.all_entries_iter()
             .find(|entry| entry.uuid == entry_uuid)
     }
 
-    pub fn get_templates(&self) -> Vec<&RxEntry> {
-        //
-        vec![]
+    pub fn templates_iter(&self) -> impl Iterator<Item = &RxTemplate> {
+        self.templates.values()
+    }
+
+    pub fn get_template(&self, template_uuid: Uuid) -> Option<&RxTemplate> {
+        self.templates
+            .iter()
+            .find(|(uuid, _)| **uuid == template_uuid)
+            .map(|(_, template)| template)
+    }
+
+    pub fn find_templates(
+        &self,
+        search_term: Option<&str>,
+    ) -> impl Iterator<Item = &RxTemplate> {
+        let search_term = search_term.map(|term| UniCase::new(term).to_folded_case());
+        self.templates_iter()
+            .filter(move |template| match search_term {
+                Some(ref term) => UniCase::new(&template.name).to_folded_case().contains(term),
+                _ => true,
+            })
+    }
+
+    pub fn entries_iter_by_uuid(
+        &self,
+        uuids: &[Uuid],
+        search_term: Option<&str>,
+    ) -> impl Iterator<Item = &RxEntry> {
+        let search_term = search_term.map(|term| UniCase::new(term).to_folded_case());
+
+        self.all_entries_iter()
+            .filter(|&entry| uuids.contains(&entry.uuid))
+            .filter(move |entry| match search_term {
+                Some(ref term) => search_entry(&entry, term),
+                _ => true,
+            })
     }
 
     pub fn get_entries(&self, group_uuid: Uuid, search_term: Option<&str>) -> Vec<&RxEntry> {
         let search_term = search_term.map(|term| UniCase::new(term).to_folded_case());
         let group = self.get_group(group_uuid);
         let entries_in_group = group.as_ref().map(|group| group.entries.as_slice());
-
-        // Determine if an entry should show up in search results, if
-        // a search term was specified. term is already lowecase here.
-        let search_entry = |entry: &RxEntry, term: &str| {
-            let username = entry.username.as_ref().and_then(|u| {
-                u.value()
-                    .map(|secret| UniCase::new(secret).to_folded_case())
-            });
-
-            let url = entry.url.as_ref().and_then(|u| {
-                u.value()
-                    .map(|secret| UniCase::new(secret).to_folded_case())
-            });
-
-            let title = entry.title.as_ref().and_then(|u| {
-                u.value()
-                    .map(|secret| UniCase::new(secret).to_folded_case())
-            });
-
-            let contains_username = username.map(|u| u.contains(term)).unwrap_or(false);
-            let contains_url = url.map(|u| u.contains(term)).unwrap_or(false);
-            let contains_title = title.map(|t| t.contains(term)).unwrap_or(false);
-
-            contains_username || contains_url || contains_title
-        };
 
         let filtered_by_search = entries_in_group.map(|entries| {
             entries

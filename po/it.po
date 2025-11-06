@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-04 09:24+0000\n"
+"POT-Creation-Date: 2025-11-05 15:50+0100\n"
 "PO-Revision-Date: 2025-11-04 22:51+0000\n"
 "Last-Translator: projectmoon <projectmoon@agnos.is>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/ubports/"
@@ -124,10 +124,25 @@ msgstr ""
 msgid "Database Not Opening?"
 msgstr ""
 
+msgid "Untitled Entry"
+msgstr ""
+
+msgid "Notes"
+msgstr ""
+
+msgid "Tap to copy"
+msgstr ""
+
+msgid "Special Categories"
+msgstr ""
+
 msgid "Lock"
 msgstr ""
 
 msgid "Close"
+msgstr ""
+
+msgid "View Mode"
 msgstr ""
 
 msgid "Search"
@@ -143,13 +158,4 @@ msgid "Close Database"
 msgstr ""
 
 msgid "Search entries in this group"
-msgstr ""
-
-msgid "Untitled Entry"
-msgstr ""
-
-msgid "Notes"
-msgstr ""
-
-msgid "Tap to copy"
 msgstr ""

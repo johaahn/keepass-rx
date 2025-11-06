@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-04 09:24+0000\n"
+"POT-Creation-Date: 2025-11-05 15:50+0100\n"
 "PO-Revision-Date: 2025-11-03 03:56+0000\n"
 "Last-Translator: Vlad Nirky <nirky.vlad@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -141,11 +141,26 @@ msgstr "Verrouillage sécurisé"
 msgid "Database Not Opening?"
 msgstr "La base de données ne s'ouvre pas ?"
 
+msgid "Untitled Entry"
+msgstr "Entrée sans titre"
+
+msgid "Notes"
+msgstr "Notes"
+
+msgid "Tap to copy"
+msgstr "Appuyez pour copier"
+
+msgid "Special Categories"
+msgstr ""
+
 msgid "Lock"
 msgstr "Verrouiller"
 
 msgid "Close"
 msgstr "Fermer"
+
+msgid "View Mode"
+msgstr ""
 
 msgid "Search"
 msgstr "Chercher"
@@ -161,12 +176,3 @@ msgstr "Fermer la base de données"
 
 msgid "Search entries in this group"
 msgstr "Rechercher les entrées dans ce groupe"
-
-msgid "Untitled Entry"
-msgstr "Entrée sans titre"
-
-msgid "Notes"
-msgstr "Notes"
-
-msgid "Tap to copy"
-msgstr "Appuyez pour copier"

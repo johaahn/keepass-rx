@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-04 09:24+0000\n"
+"POT-Creation-Date: 2025-11-05 15:50+0100\n"
 "PO-Revision-Date: 2025-11-04 04:41+0000\n"
 "Last-Translator: Daniel Frost <one@frostinfo.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -137,11 +137,26 @@ msgstr "Sicheres Sperren"
 msgid "Database Not Opening?"
 msgstr "Datenbank öffnet sich nicht?"
 
+msgid "Untitled Entry"
+msgstr "Unbenannter Eintrag"
+
+msgid "Notes"
+msgstr "Notizen"
+
+msgid "Tap to copy"
+msgstr "Antippen zum Kopieren"
+
+msgid "Special Categories"
+msgstr ""
+
 msgid "Lock"
 msgstr "Sperren"
 
 msgid "Close"
 msgstr "Schließen"
+
+msgid "View Mode"
+msgstr ""
 
 msgid "Search"
 msgstr "Suchen"
@@ -157,15 +172,6 @@ msgstr "Datenbank schließen"
 
 msgid "Search entries in this group"
 msgstr "Einträge in dieser Gruppe suchen"
-
-msgid "Untitled Entry"
-msgstr "Unbenannter Eintrag"
-
-msgid "Notes"
-msgstr "Notizen"
-
-msgid "Tap to copy"
-msgstr "Antippen zum Kopieren"
 
 #~ msgid "Loading last database:"
 #~ msgstr "Lade die letzte Datenbank:"

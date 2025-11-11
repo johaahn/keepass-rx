@@ -559,13 +559,6 @@ fn load_groups_recursive(
         }
     }
 
-    let this_group = RxGroup::new(
-        group,
-        subgroups.iter().map(|sg| sg.uuid).collect(),
-        entries.iter().map(|e| e.uuid).collect(),
-        parent_group_uuid,
-    );
-
     for subgroup in subgroups {
         state.all_groups.insert(subgroup.uuid, subgroup);
     }
@@ -574,28 +567,13 @@ fn load_groups_recursive(
         state.all_entries.insert(entry.uuid, entry);
     }
 
-    //groups.push(this_group);
-    this_group
+    RxGroup::new(
+        group,
+        subgroups.iter().map(|sg| sg.uuid).collect(),
+        entries.iter().map(|e| e.uuid).collect(),
+        parent_group_uuid,
+    )
 }
-
-// /// Ordered recursive iterator through an RxGroup and all of its
-// /// subgroups.
-// struct RxGroupIter<'a> {
-//     stack: Vec<&'a RxGroup>,
-// }
-
-// impl<'a> Iterator for RxGroupIter<'a> {
-//     type Item = &'a RxGroup;
-
-//     fn next(&mut self) -> Option<Self::Item> {
-//         let node = self.stack.pop()?;
-//         // Push children in reverse so they come out in original order.
-//         for child in node.subgroups.iter().rev() {
-//             self.stack.push(child);
-//         }
-//         Some(node)
-//     }
-// }
 
 #[derive(Default, Clone)]
 pub struct RxDatabase {
@@ -691,22 +669,14 @@ impl RxDatabase {
     }
 
     pub fn all_groups_iter(&self) -> impl Iterator<Item = &RxGroup> {
-        // RxGroupIter {
-        //     stack: vec![&self.root],
-        // }
-
         self.all_groups.values()
     }
 
     pub fn all_entries_iter(&self) -> impl Iterator<Item = &RxEntry> {
-        // self.all_groups_iter()
-        //     .flat_map(|group| group.entries.iter())
         self.all_entries.values()
     }
 
     pub fn get_group(&self, group_uuid: Uuid) -> Option<&RxGroup> {
-        // self.all_groups_iter()
-        //     .find(|group| group.uuid == group_uuid)
         self.all_groups.get(&group_uuid)
     }
 
@@ -715,10 +685,6 @@ impl RxDatabase {
         group_uuid: Uuid,
         search_term: Option<&str>,
     ) -> impl Iterator<Item = &RxGroup> {
-        // let maybe_group = self
-        //     .all_groups_iter()
-        //     .find(|group| group.uuid == group_uuid);
-
         let maybe_group = self.all_groups.get(&group_uuid);
 
         maybe_group.into_iter().flat_map(move |group| {

@@ -1080,6 +1080,7 @@ dependencies = [
  "dirs",
  "gettext-rs",
  "humanize-duration",
+ "indexmap",
  "infer",
  "keepass",
  "keyring",

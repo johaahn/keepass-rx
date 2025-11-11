@@ -3,6 +3,7 @@ use anyhow::{Result, anyhow};
 use base64::{Engine, prelude::BASE64_STANDARD};
 use humanize_duration::Truncate;
 use humanize_duration::prelude::DurationExt;
+use indexmap::IndexMap;
 use infer;
 use keepass::db::{CustomData, Entry, Group, Icon, Node, TOTP as KeePassTOTP, Value};
 use libsodium_rs::utils::{SecureVec, vec_utils};
@@ -15,7 +16,7 @@ use totp_rs::{Secret, TOTP};
 use unicase::UniCase;
 use uriparse::URI;
 use uuid::Uuid;
-use zeroize::{Zeroize, ZeroizeOnDrop, Zeroizing};
+use zeroize::{DefaultIsZeroes, Zeroize, ZeroizeOnDrop, Zeroizing};
 
 // Special field that indicates the entry is a templated entry (e.g.
 // credit card, wifi password, etc).
@@ -107,22 +108,29 @@ pub struct RxGroup {
     // TODO use some kind of map instead of Vec (since maps do not
     // impl Zeroize). should be possible once we stop loading secrets
     // into memory.
-    pub subgroups: Vec<RxGroup>,
+    #[zeroize(skip)]
+    pub subgroups: Vec<Uuid>,
 
     // TODO use some kind of map instead of Vec (since maps do not
     // impl Zeroize). should be possible once we stop loading secrets
     // into memory.
-    pub entries: Vec<RxEntry>,
+    #[zeroize(skip)]
+    pub entries: Vec<Uuid>,
 }
 
 impl RxGroup {
-    pub fn new(group: &mut Group, subgroups: Vec<RxGroup>, entries: Vec<RxEntry>) -> Self {
+    pub fn new(
+        group: &mut Group,
+        subgroups: Vec<Uuid>,
+        entries: Vec<Uuid>,
+        parent: Option<Uuid>,
+    ) -> Self {
         Self {
             uuid: group.uuid,
             name: mem::take(&mut group.name),
             subgroups: subgroups,
             entries: entries,
-            parent: None,
+            parent: parent,
         }
     }
 }
@@ -482,6 +490,8 @@ pub struct RxTemplate {
 #[derive(Default)]
 struct LoadState {
     templates: HashMap<Uuid, RxTemplate>,
+    all_groups: IndexMap<Uuid, RxGroup>,
+    all_entries: IndexMap<Uuid, RxEntry>,
 }
 
 // Determine if an entry should show up in search results, if a search
@@ -513,9 +523,8 @@ fn load_groups_recursive(
     group: &mut Group,
     icons: &mut HashMap<Uuid, Icon>,
     state: &mut LoadState,
-) -> Vec<RxGroup> {
-    let this_group_id = group.uuid;
-    let mut groups = vec![];
+    parent_group_uuid: Option<Uuid>,
+) -> RxGroup {
     let mut subgroups = vec![];
     let mut entries = vec![];
 
@@ -524,15 +533,11 @@ fn load_groups_recursive(
     for node in children.into_iter() {
         match node {
             Node::Group(mut subgroup) => {
-                let mut rx_groups: Vec<_> = load_groups_recursive(&mut subgroup, icons, state)
-                    .into_iter()
-                    .map(|mut subgroup| {
-                        subgroup.parent = Some(this_group_id);
-                        subgroup
-                    })
-                    .collect();
+                let subgroup_id = subgroup.uuid;
+                let rx_subgroup =
+                    load_groups_recursive(&mut subgroup, icons, state, Some(subgroup_id));
 
-                subgroups.append(&mut rx_groups);
+                subgroups.push(rx_subgroup);
             }
             Node::Entry(entry) => {
                 let icon = entry
@@ -554,34 +559,66 @@ fn load_groups_recursive(
         }
     }
 
-    groups.push(RxGroup::new(group, subgroups, entries));
-    groups
-}
+    let this_group = RxGroup::new(
+        group,
+        subgroups.iter().map(|sg| sg.uuid).collect(),
+        entries.iter().map(|e| e.uuid).collect(),
+        parent_group_uuid,
+    );
 
-/// Ordered recursive iterator through an RxGroup and all of its
-/// subgroups.
-struct RxGroupIter<'a> {
-    stack: Vec<&'a RxGroup>,
-}
-
-impl<'a> Iterator for RxGroupIter<'a> {
-    type Item = &'a RxGroup;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        let node = self.stack.pop()?;
-        // Push children in reverse so they come out in original order.
-        for child in node.subgroups.iter().rev() {
-            self.stack.push(child);
-        }
-        Some(node)
+    for subgroup in subgroups {
+        state.all_groups.insert(subgroup.uuid, subgroup);
     }
+
+    for entry in entries {
+        state.all_entries.insert(entry.uuid, entry);
+    }
+
+    //groups.push(this_group);
+    this_group
 }
 
-#[derive(Zeroize, ZeroizeOnDrop, Default, Clone)]
+// /// Ordered recursive iterator through an RxGroup and all of its
+// /// subgroups.
+// struct RxGroupIter<'a> {
+//     stack: Vec<&'a RxGroup>,
+// }
+
+// impl<'a> Iterator for RxGroupIter<'a> {
+//     type Item = &'a RxGroup;
+
+//     fn next(&mut self) -> Option<Self::Item> {
+//         let node = self.stack.pop()?;
+//         // Push children in reverse so they come out in original order.
+//         for child in node.subgroups.iter().rev() {
+//             self.stack.push(child);
+//         }
+//         Some(node)
+//     }
+// }
+
+#[derive(Default, Clone)]
 pub struct RxDatabase {
-    root: RxGroup,
-    #[zeroize(skip)]
+    root: Uuid,
     templates: HashMap<Uuid, RxTemplate>,
+    all_groups: IndexMap<Uuid, RxGroup>,
+    all_entries: IndexMap<Uuid, RxEntry>,
+}
+
+impl Zeroize for RxDatabase {
+    fn zeroize(&mut self) {
+        for template in self.templates.values_mut() {
+            template.zeroize();
+        }
+
+        for group in self.all_groups.values_mut() {
+            group.zeroize();
+        }
+
+        for entry in self.all_entries.values_mut() {
+            entry.zeroize();
+        }
+    }
 }
 
 // Manual impl because otherwise printing debug will dump the raw
@@ -615,14 +652,17 @@ impl RxDatabase {
         // There should only be one group in the vec, which is the
         // root.
         let mut state = LoadState::default();
-        let mut rx_groups = load_groups_recursive(&mut db.root, &mut icons, &mut state);
-        let root_group = rx_groups.swap_remove(0);
+        let root_group = load_groups_recursive(&mut db.root, &mut icons, &mut state, None);
+        let root_uuid = root_group.uuid;
+        state.all_groups.insert(root_group.uuid, root_group);
 
         drop(db);
 
         let mut db = Self {
-            root: root_group,
+            root: root_uuid,
             templates: Default::default(),
+            all_groups: state.all_groups,
+            all_entries: state.all_entries,
         };
 
         // Map templates. Easier to do when we have access to DB logic.
@@ -647,23 +687,27 @@ impl RxDatabase {
     }
 
     pub fn root_group(&self) -> &RxGroup {
-        &self.root
+        self.all_groups.get(&self.root).expect("No root group")
     }
 
     pub fn all_groups_iter(&self) -> impl Iterator<Item = &RxGroup> {
-        RxGroupIter {
-            stack: vec![&self.root],
-        }
+        // RxGroupIter {
+        //     stack: vec![&self.root],
+        // }
+
+        self.all_groups.values()
     }
 
     pub fn all_entries_iter(&self) -> impl Iterator<Item = &RxEntry> {
-        self.all_groups_iter()
-            .flat_map(|group| group.entries.iter())
+        // self.all_groups_iter()
+        //     .flat_map(|group| group.entries.iter())
+        self.all_entries.values()
     }
 
     pub fn get_group(&self, group_uuid: Uuid) -> Option<&RxGroup> {
-        self.all_groups_iter()
-            .find(|group| group.uuid == group_uuid)
+        // self.all_groups_iter()
+        //     .find(|group| group.uuid == group_uuid)
+        self.all_groups.get(&group_uuid)
     }
 
     pub fn filter_subgroups(
@@ -671,18 +715,28 @@ impl RxDatabase {
         group_uuid: Uuid,
         search_term: Option<&str>,
     ) -> impl Iterator<Item = &RxGroup> {
-        let maybe_group = self
-            .all_groups_iter()
-            .find(|group| group.uuid == group_uuid);
+        // let maybe_group = self
+        //     .all_groups_iter()
+        //     .find(|group| group.uuid == group_uuid);
+
+        let maybe_group = self.all_groups.get(&group_uuid);
 
         maybe_group.into_iter().flat_map(move |group| {
-            group
-                .subgroups
-                .iter()
-                .filter(move |subgroup| match search_term {
-                    Some(term) => subgroup.name.to_lowercase().contains(term),
-                    None => true,
-                })
+            group.subgroups.iter().filter_map(move |subgroup_uuid| {
+                let subgroup = self.all_groups.get(subgroup_uuid);
+                if let Some(term) = search_term {
+                    let matches = subgroup
+                        .map(|sg| sg.name.to_lowercase().contains(term))
+                        .unwrap_or(false);
+
+                    match matches {
+                        true => subgroup,
+                        false => None,
+                    }
+                } else {
+                    subgroup
+                }
+            })
         })
     }
 
@@ -741,10 +795,16 @@ impl RxDatabase {
     pub fn get_entries(&self, group_uuid: Uuid, search_term: Option<&str>) -> Vec<&RxEntry> {
         let search_term = search_term.map(|term| UniCase::new(term).to_folded_case());
         let group = self.get_group(group_uuid);
-        let entries_in_group = group.as_ref().map(|group| group.entries.as_slice());
+        let entries_in_group = group
+            .map(|group| group.entries.as_slice())
+            .map(|entry_ids| {
+                entry_ids
+                    .into_iter()
+                    .flat_map(|id| self.all_entries.get(id))
+            });
 
-        let filtered_by_search = entries_in_group.map(|entries| {
-            entries
+        let filtered_by_search = entries_in_group.map(|entries_iter| {
+            entries_iter
                 .into_iter()
                 .filter_map(|entry| {
                     if let Some(term) = &search_term {
@@ -765,23 +825,68 @@ impl RxDatabase {
     pub fn get_totp(&self, entry_uuid: &str) -> Result<RxTotp> {
         let entry_uuid = Uuid::from_str(entry_uuid)?;
         let entry = self
-            .all_groups_iter()
-            .flat_map(|group| group.entries.as_slice())
-            .find(|&entry| entry.uuid == entry_uuid);
+            .all_entries
+            .get(&entry_uuid)
+            .ok_or(anyhow!("Could not find OTP entry"))?;
 
-        let otp = entry.map(|ent| ent.totp()).transpose();
-
-        match otp {
-            Ok(Some(otp)) => Ok(otp),
-            Ok(None) => Err(anyhow!("Could not find OTP entry")),
-            Err(err) => Err(err),
-        }
+        Ok(entry.totp()?)
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn loads_recursively() {
+        let mut db = keepass::db::Database::new(Default::default());
+        let mut group = keepass::db::Group::new("groupname");
+        let mut subgroup = keepass::db::Group::new("subgroupname");
+
+        let group_id = group.uuid;
+        let subgroup_id = subgroup.uuid;
+
+        let mut entry = keepass::db::Entry::new();
+        let entry_id = entry.uuid;
+
+        entry.fields.insert(
+            "Tite".to_string(),
+            keepass::db::Value::Unprotected("top-level entry".to_string()),
+        );
+
+        let mut sub_entry = keepass::db::Entry::new();
+        let sub_entry_id = sub_entry.uuid;
+
+        sub_entry.fields.insert(
+            "SubTite".to_string(),
+            keepass::db::Value::Unprotected("sub entry".to_string()),
+        );
+
+        subgroup.add_child(keepass::db::Node::Entry(sub_entry));
+        group.add_child(keepass::db::Node::Entry(entry));
+        group.add_child(keepass::db::Node::Group(subgroup));
+
+        db.root = group;
+
+        let rx_db = RxDatabase::new(Zeroizing::new(ZeroableDatabase(db)));
+        let rx_root = rx_db.root_group();
+
+        assert_eq!(rx_db.all_groups_iter().count(), 2);
+        assert_eq!(rx_db.all_entries_iter().count(), 2);
+
+        assert_eq!(rx_root.entries.len(), 1);
+        assert_eq!(rx_root.entries, vec![entry_id]);
+        assert_eq!(rx_root.subgroups.len(), 1);
+        assert_eq!(rx_root.uuid, group_id);
+        assert_eq!(rx_root.subgroups, vec![subgroup_id]);
+
+        let rx_subgroup = rx_db
+            .get_group(subgroup_id)
+            .expect("Could not find subgroup in DB");
+
+        assert_eq!(rx_subgroup.uuid, subgroup_id);
+        assert_eq!(rx_subgroup.entries, vec![sub_entry_id]);
+    }
 
     #[test]
     fn finds_templates() {
@@ -799,7 +904,7 @@ mod tests {
         group.add_child(keepass::db::Node::Entry(entry));
 
         let mut state = LoadState::default();
-        load_groups_recursive(&mut group, &mut HashMap::new(), &mut state);
+        load_groups_recursive(&mut group, &mut HashMap::new(), &mut state, None);
 
         assert_eq!(state.templates.len(), 1);
         assert!(state.templates.contains_key(&template_uuid));
@@ -818,7 +923,7 @@ mod tests {
         };
 
         let group = RxGroup {
-            entries: vec![entry],
+            entries: vec![entry_uuid],
             name: "asdf".to_string(),
             subgroups: vec![],
             uuid: group_uuid,
@@ -826,8 +931,10 @@ mod tests {
         };
 
         let db = RxDatabase {
-            root: group,
+            root: group.uuid,
             templates: HashMap::new(),
+            all_entries: IndexMap::from([(entry_uuid, entry)]),
+            all_groups: IndexMap::from([(group_uuid, group)]),
         };
 
         let entries = db.get_entries(group_uuid, None);
@@ -861,7 +968,7 @@ mod tests {
         };
 
         let group = RxGroup {
-            entries: vec![entry1, entry2],
+            entries: vec![entry_uuid1, entry_uuid2],
             name: "asdf".to_string(),
             subgroups: vec![],
             uuid: group_uuid,
@@ -869,8 +976,10 @@ mod tests {
         };
 
         let db = RxDatabase {
-            root: group,
+            root: group.uuid,
             templates: HashMap::new(),
+            all_entries: IndexMap::from([(entry_uuid1, entry1), (entry_uuid2, entry2)]),
+            all_groups: IndexMap::from([(group_uuid, group)]),
         };
 
         let entries = db.get_entries(group_uuid, Some("test"));

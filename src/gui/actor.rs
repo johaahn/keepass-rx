@@ -25,7 +25,7 @@ use crate::{
 #[derive(Default)]
 pub struct KeepassRxActor {
     gui: Arc<QObjectBox<KeepassRx>>,
-    curr_db: RefCell<Option<RxDatabase>>,
+    curr_db: RefCell<Option<Zeroizing<RxDatabase>>>,
     curr_master_pw: Arc<RefCell<Option<EncryptedPassword>>>,
     stored_master_password: Arc<RefCell<Option<SecUtf8>>>,
 
@@ -238,7 +238,7 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                         let rx_db = RxDatabase::new(wrapped_db);
 
                         gui.rootGroupUuid = QString::from(rx_db.root_group().uuid.to_string());
-                        this.curr_db = RefCell::new(Some(rx_db));
+                        this.curr_db = RefCell::new(Some(Zeroizing::new(rx_db)));
                         gui.databaseOpen = true;
                         gui.databaseOpened();
                     }

@@ -32,6 +32,7 @@ rayon = "1.11.0"
 keyring = { version = "3", features = ["linux-native"] }
 libsodium-rs = { version = "0.2.1", features = ["fetch-latest", "optimized"] }
 unicase = "2.8.1"
+indexmap = "2.12.0"
 
 [build-dependencies]
 cpp_build = "0.5"

@@ -37,7 +37,7 @@ const FIELDS_TO_HIDE: [&str; 3] = [
 
 // Like FIELDS_TO_HIDE, but does a starts_with check to see if the
 // value should be hidden.
-const WILDCARD_FIELDS_TO_HIDE: [&str; 2] = ["AndroidApp", "KP2A_URL"];
+const WILDCARD_FIELDS_TO_HIDE: [&str; 3] = ["AndroidApp", "KP2A_URL", "KPEX_PASSKEY_"];
 
 macro_rules! expose {
     ($secret:expr) => {{

@@ -5,12 +5,16 @@ use humanize_duration::Truncate;
 use humanize_duration::prelude::DurationExt;
 use indexmap::IndexMap;
 use infer;
+use keepass::config::DatabaseConfig;
 use keepass::db::{CustomData, Entry, Group, Icon, Node, TOTP as KeePassTOTP, Value};
 use libsodium_rs::utils::{SecureVec, vec_utils};
 use querystring::querify;
+use regex::Regex;
 use secstr::SecStr;
+use std::cell::OnceCell;
 use std::collections::HashSet;
 use std::mem;
+use std::sync::{LazyLock, OnceLock};
 use std::{collections::HashMap, str::FromStr};
 use totp_rs::{Secret, TOTP};
 use unicase::UniCase;
@@ -519,6 +523,8 @@ fn search_entry(entry: &RxEntry, term: &str) -> bool {
     contains_username || contains_url || contains_title
 }
 
+/// Create RxGroup instances recursively, while simultaneously
+/// buildingd up the database state.
 fn load_groups_recursive(
     group: &mut Group,
     icons: &mut HashMap<Uuid, Icon>,
@@ -577,8 +583,36 @@ fn load_groups_recursive(
     this_group
 }
 
+fn extract_string(input: Option<String>) -> Option<String> {
+    let s = input?;
+    static RE: LazyLock<Regex> =
+        LazyLock::new(|| Regex::new(r#"String\("([^"\\]*(?:\\.[^"\\]*)*)"\)"#).unwrap());
+
+    RE.captures(&s)
+        .and_then(|caps| caps.get(1).map(|m| m.as_str().to_string()))
+}
+
+#[derive(Default, Clone)]
+pub struct RxMetadata {
+    color: Option<String>,
+    name: Option<String>,
+    icon: Option<i32>,
+}
+
+fn create_metadata(config: &mut DatabaseConfig) -> Option<RxMetadata> {
+    let mut custom_db_data = config.public_custom_data.take().map(|pcd| pcd.data);
+    let color = custom_db_data
+        .as_mut()
+        .and_then(|d| d.remove("KPXC_PUBLIC_COLOR"))
+        .map(|val| format!("{:?}", val));
+
+    println!("{:?}", color);
+    None
+}
+
 #[derive(Default, Clone)]
 pub struct RxDatabase {
+    metadata: Option<RxMetadata>,
     root: Uuid,
     templates: HashMap<Uuid, RxTemplate>,
     all_groups: IndexMap<Uuid, RxGroup>,
@@ -629,12 +663,12 @@ impl RxDatabase {
             .map(|icon| (icon.uuid, icon.to_owned()))
             .collect();
 
-        // There should only be one group in the vec, which is the
-        // root.
         let mut state = LoadState::default();
         let root_group = load_groups_recursive(&mut db.root, &mut icons, &mut state, None);
         let root_uuid = root_group.uuid;
         state.all_groups.insert(root_group.uuid, root_group);
+
+        let rx_metadata = create_metadata(&mut db.config);
 
         drop(db);
 
@@ -643,6 +677,7 @@ impl RxDatabase {
             templates: Default::default(),
             all_groups: state.all_groups,
             all_entries: state.all_entries,
+            metadata: None, //color: "".to_string(),
         };
 
         // Map templates. Easier to do when we have access to DB logic.
@@ -806,6 +841,14 @@ mod tests {
     use super::*;
 
     #[test]
+    fn test_extract_string() {
+        let text = String::from(r#"String("value")"#);
+        let result = extract_string(Some(text));
+        assert!(result.is_some());
+        assert_eq!(result, Some(String::from("value")));
+    }
+
+    #[test]
     fn loads_recursively() {
         let mut db = keepass::db::Database::new(Default::default());
         let mut group = keepass::db::Group::new("groupname");
@@ -903,6 +946,7 @@ mod tests {
             templates: HashMap::new(),
             all_entries: IndexMap::from([(entry_uuid, entry)]),
             all_groups: IndexMap::from([(group_uuid, group)]),
+            metadata: None,
         };
 
         let entries = db.get_entries(group_uuid, None);
@@ -948,6 +992,7 @@ mod tests {
             templates: HashMap::new(),
             all_entries: IndexMap::from([(entry_uuid1, entry1), (entry_uuid2, entry2)]),
             all_groups: IndexMap::from([(group_uuid, group)]),
+            metadata: None,
         };
 
         let entries = db.get_entries(group_uuid, Some("test"));

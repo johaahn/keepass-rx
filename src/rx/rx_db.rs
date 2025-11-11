@@ -559,6 +559,13 @@ fn load_groups_recursive(
         }
     }
 
+    let this_group = RxGroup::new(
+        group,
+        subgroups.iter().map(|sg| sg.uuid).collect(),
+        entries.iter().map(|e| e.uuid).collect(),
+        parent_group_uuid,
+    );
+
     for subgroup in subgroups {
         state.all_groups.insert(subgroup.uuid, subgroup);
     }
@@ -567,12 +574,7 @@ fn load_groups_recursive(
         state.all_entries.insert(entry.uuid, entry);
     }
 
-    RxGroup::new(
-        group,
-        subgroups.iter().map(|sg| sg.uuid).collect(),
-        entries.iter().map(|e| e.uuid).collect(),
-        parent_group_uuid,
-    )
+    this_group
 }
 
 #[derive(Default, Clone)]

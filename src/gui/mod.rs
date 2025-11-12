@@ -100,6 +100,7 @@ pub struct KeepassRx {
     // database management
     listImportedDatabases: qt_method!(fn(&self)),
     importDatabase: qt_method!(fn(&self, path: String)),
+    getMetadata: qt_method!(fn(&self)),
     openDatabase: qt_method!(fn(&mut self, db_name: String, key_path: QString)),
     closeDatabase: qt_method!(fn(&mut self)),
     deleteDatabase: qt_method!(fn(&self, db_name: String)),
@@ -130,6 +131,7 @@ pub struct KeepassRx {
     viewModeChanged: qt_signal!(value: RxViewMode),
     fileListingCompleted: qt_signal!(),
     rootGroupUuidChanged: qt_signal!(),
+    metadataReceived: qt_signal!(metadata: QVariantMap),
     databaseImported: qt_signal!(db_name: QString),
     databaseOpened: qt_signal!(),
     databaseClosed: qt_signal!(),
@@ -289,6 +291,12 @@ impl KeepassRx {
             Ok(db_name) => self.databaseImported(QString::from(db_name)),
             Err(err) => self.databaseOpenFailed(format!("{}", err)),
         }
+    }
+
+    #[with_executor]
+    pub fn getMetadata(&self) {
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(GetMetadata));
     }
 
     #[with_executor]

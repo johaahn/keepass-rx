@@ -8,6 +8,7 @@ use infer;
 use keepass::config::DatabaseConfig;
 use keepass::db::{CustomData, Entry, Group, Icon, Node, TOTP as KeePassTOTP, Value};
 use libsodium_rs::utils::{SecureVec, vec_utils};
+use paste::paste;
 use querystring::querify;
 use regex::Regex;
 use secstr::SecStr;
@@ -583,36 +584,55 @@ fn load_groups_recursive(
     this_group
 }
 
-fn extract_string(input: Option<String>) -> Option<String> {
-    let s = input?;
+fn extract_string(input: String) -> Option<String> {
     static RE: LazyLock<Regex> =
         LazyLock::new(|| Regex::new(r#"String\("([^"\\]*(?:\\.[^"\\]*)*)"\)"#).unwrap());
 
-    RE.captures(&s)
+    RE.captures(&input)
         .and_then(|caps| caps.get(1).map(|m| m.as_str().to_string()))
+}
+
+fn extract_i32(input: String) -> Option<i32> {
+    static RE: LazyLock<Regex> =
+        LazyLock::new(|| Regex::new(r#"Int32\(([^"\\]*(?:\\.[^"\\]*)*)\)"#).unwrap());
+
+    RE.captures(&input)
+        .and_then(|caps| caps.get(1).map(|m| m.as_str()))
+        .and_then(|num| num.parse().ok())
+}
+
+macro_rules! get_kpxc_field {
+    ($kind:ty, $dbdata:expr, $field:expr) => {{
+        $dbdata
+            .as_mut()
+            .and_then(|d| d.remove($field))
+            .map(|val| format!("{:?}", val))
+            .and_then(paste! { [<extract_ $kind:lower>] })
+    }};
 }
 
 #[derive(Default, Clone)]
 pub struct RxMetadata {
-    color: Option<String>,
-    name: Option<String>,
-    icon: Option<i32>,
+    pub color: Option<String>,
+    pub name: Option<String>,
+    pub icon: Option<i32>,
 }
 
-fn create_metadata(config: &mut DatabaseConfig) -> Option<RxMetadata> {
-    let mut custom_db_data = config.public_custom_data.take().map(|pcd| pcd.data);
-    let color = custom_db_data
-        .as_mut()
-        .and_then(|d| d.remove("KPXC_PUBLIC_COLOR"))
-        .map(|val| format!("{:?}", val));
+impl RxMetadata {
+    pub fn new(mut config: DatabaseConfig) -> RxMetadata {
+        let mut custom_db_data = config.public_custom_data.take().map(|pcd| pcd.data);
 
-    println!("{:?}", color);
-    None
+        RxMetadata {
+            name: get_kpxc_field!(String, custom_db_data, "KPXC_PUBLIC_NAME"),
+            color: get_kpxc_field!(String, custom_db_data, "KPXC_PUBLIC_COLOR"),
+            icon: get_kpxc_field!(i32, custom_db_data, "KPXC_PUBLIC_ICON"),
+        }
+    }
 }
 
 #[derive(Default, Clone)]
 pub struct RxDatabase {
-    metadata: Option<RxMetadata>,
+    metadata: RxMetadata,
     root: Uuid,
     templates: HashMap<Uuid, RxTemplate>,
     all_groups: IndexMap<Uuid, RxGroup>,
@@ -668,7 +688,7 @@ impl RxDatabase {
         let root_uuid = root_group.uuid;
         state.all_groups.insert(root_group.uuid, root_group);
 
-        let rx_metadata = create_metadata(&mut db.config);
+        let rx_metadata = RxMetadata::new(mem::take(&mut db.config));
 
         drop(db);
 
@@ -677,7 +697,7 @@ impl RxDatabase {
             templates: Default::default(),
             all_groups: state.all_groups,
             all_entries: state.all_entries,
-            metadata: None, //color: "".to_string(),
+            metadata: rx_metadata,
         };
 
         // Map templates. Easier to do when we have access to DB logic.
@@ -699,6 +719,10 @@ impl RxDatabase {
     pub fn close(&mut self) {
         println!("Closing database.");
         self.zeroize();
+    }
+
+    pub fn metadata(&self) -> &RxMetadata {
+        &self.metadata
     }
 
     pub fn root_group(&self) -> &RxGroup {
@@ -843,7 +867,7 @@ mod tests {
     #[test]
     fn test_extract_string() {
         let text = String::from(r#"String("value")"#);
-        let result = extract_string(Some(text));
+        let result = extract_string(text);
         assert!(result.is_some());
         assert_eq!(result, Some(String::from("value")));
     }
@@ -946,7 +970,7 @@ mod tests {
             templates: HashMap::new(),
             all_entries: IndexMap::from([(entry_uuid, entry)]),
             all_groups: IndexMap::from([(group_uuid, group)]),
-            metadata: None,
+            ..Default::default()
         };
 
         let entries = db.get_entries(group_uuid, None);
@@ -992,7 +1016,7 @@ mod tests {
             templates: HashMap::new(),
             all_entries: IndexMap::from([(entry_uuid1, entry1), (entry_uuid2, entry2)]),
             all_groups: IndexMap::from([(group_uuid, group)]),
-            metadata: None,
+            ..Default::default()
         };
 
         let entries = db.get_entries(group_uuid, Some("test"));

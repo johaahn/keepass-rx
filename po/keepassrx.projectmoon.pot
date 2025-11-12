@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-05 15:50+0100\n"
+"POT-Creation-Date: 2025-11-12 11:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: qml/pages/AboutPage.qml:14 qml/pages/DBList.qml:81
 #: qml/pages/OpenDBPage.qml:55 qml/pages/UnlockPage.qml:41
-#: qml/pages/EntriesPage.qml:133
+#: qml/pages/EntriesPage.qml:153
 msgid "About"
 msgstr ""
 
@@ -31,8 +31,8 @@ msgstr ""
 
 #: qml/pages/AboutPage.qml:68
 msgid ""
-"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
-"git.agnos.is/projectmoon/keepass-rx</a>"
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
+"agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
 
 #: qml/pages/DBList.qml:67
@@ -41,7 +41,7 @@ msgstr ""
 
 #: qml/pages/DBList.qml:74 qml/pages/OpenDBPage.qml:48
 #: qml/pages/SettingsPage.qml:11 qml/pages/UnlockPage.qml:34
-#: qml/pages/EntriesPage.qml:124
+#: qml/pages/EntriesPage.qml:144
 msgid "Settings"
 msgstr ""
 
@@ -62,7 +62,7 @@ msgid "It will only be removed from the app, not your device."
 msgstr ""
 
 #: qml/pages/OpenDBPage.qml:34 qml/pages/SingleEntry.qml:25
-#: qml/pages/EntriesPage.qml:84
+#: qml/pages/EntriesPage.qml:104
 msgid "Back"
 msgstr ""
 
@@ -170,38 +170,38 @@ msgstr ""
 msgid "Tap to copy"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:52
+#: qml/pages/EntriesPage.qml:61
 msgid "Special Categories"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:60
+#: qml/pages/EntriesPage.qml:80
 msgid "Lock"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:72
+#: qml/pages/EntriesPage.qml:92
 msgid "Close"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:97
+#: qml/pages/EntriesPage.qml:117
 msgid "View Mode"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:111
+#: qml/pages/EntriesPage.qml:131
 msgid "Search"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:111
+#: qml/pages/EntriesPage.qml:131
 msgid "Cancel Search"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:145
+#: qml/pages/EntriesPage.qml:165
 msgid "Lock Database"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:155
+#: qml/pages/EntriesPage.qml:175
 msgid "Close Database"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:184
+#: qml/pages/EntriesPage.qml:204
 msgid "Search entries in this group"
 msgstr ""

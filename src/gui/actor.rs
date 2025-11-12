@@ -92,6 +92,10 @@ pub struct GetTemplates;
 
 #[derive(Message)]
 #[rtype(result = "()")]
+pub struct GetMetadata;
+
+#[derive(Message)]
+#[rtype(result = "()")]
 pub struct GetEntries {
     // None = root uuid
     pub container_uuid: Option<Uuid>,
@@ -414,6 +418,27 @@ impl Handler<GetTemplates> for KeepassRxActor {
 
         let templates: QVariantList = db.templates_iter().map(RxListItem::from).collect();
         gui.templatesReceived(templates);
+    }
+}
+
+impl Handler<GetMetadata> for KeepassRxActor {
+    type Result = ();
+
+    fn handle(&mut self, _: GetMetadata, _: &mut Self::Context) -> Self::Result {
+        let binding = self.gui.clone();
+        let binding = binding.pinned();
+        let gui = binding.borrow();
+
+        let db_binding = self.curr_db.borrow();
+        let db = match db_binding
+            .as_ref()
+            .ok_or(anyhow!("GetTemplates: Database not open"))
+        {
+            Ok(db) => db,
+            Err(err) => return gui.errorReceived(format!("{}", err)),
+        };
+
+        gui.metadataReceived(QVariantMap::from(db.metadata()));
     }
 }
 

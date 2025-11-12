@@ -22,6 +22,10 @@ Page {
     property bool atRoot: true
     property bool searchMode: false
 
+    // These are set by metadata fetching
+    property string publicDatabaseName
+    property string publicDatabaseColor
+
     onContainerUuidChanged: {
         //if (containerUuid && (previousContainerUuid && containerUuid != previousContainerUuid)) {
 	populate();
@@ -47,9 +51,25 @@ Page {
         return atRoot;
     }
 
+    function headerTitle() {
+        if (containerName && !isAtRoot()) {
+            return containerName;
+        } else {
+            if (containerType == 'Group') {
+                return publicDatabaseName ? publicDatabaseName : "KeePassRX";
+            } else {
+                return i18n.tr("Special Categories");
+            }
+        }
+    }
+
     header: PageHeader {
         id: header
-        title: containerName && !isAtRoot() ? containerName : (containerType == 'Group' ?  "KeePassRX" : i18n.tr("Special Categories"))
+        title: headerTitle()
+
+        StyleHints {
+            backgroundColor: publicDatabaseColor ? publicDatabaseColor : "transparent"
+        }
 
         leadingActionBar.actions: [
             Action {
@@ -277,6 +297,18 @@ Page {
             // This will trigger the cascade of async operations that
             // will fetch entries.
             keepassrx.viewMode = 'All';
+            keepassrx.getMetadata();
+        }
+
+        onMetadataReceived: (metadata) => {
+            console.log('Metadata received:', JSON.stringify(metadata));
+            if (metadata.publicName) {
+                publicDatabaseName = metadata.publicName;
+            }
+
+            if (metadata.publicColor) {
+                publicDatabaseColor = metadata.publicColor;
+            }
         }
 
         onViewModeChanged: (mode) => {

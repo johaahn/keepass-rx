@@ -3,6 +3,8 @@ use std::collections::HashMap;
 
 use crate::rx::{RxCustomFields, RxEntry, RxFieldName, RxValue, expose_opt};
 
+use super::RxMetadata;
+
 impl From<QString> for RxFieldName {
     fn from(value: QString) -> Self {
         RxFieldName::from(value.to_string())
@@ -107,5 +109,35 @@ impl From<RxCustomFields> for QVariantMap {
 impl From<RxCustomFields> for QVariant {
     fn from(value: RxCustomFields) -> QVariant {
         QVariantMap::from(value).into()
+    }
+}
+
+impl From<&RxMetadata> for QVariantMap {
+    fn from(value: &RxMetadata) -> Self {
+        let mut map = QVariantMap::default();
+
+        map.insert(
+            "publicName".into(),
+            value
+                .name
+                .as_ref()
+                .map(|val| QString::from(val.as_str()))
+                .unwrap_or_default()
+                .into(),
+        );
+
+        map.insert("publicIcon".into(), value.icon.unwrap_or_default().into());
+
+        map.insert(
+            "publicColor".into(),
+            value
+                .color
+                .as_ref()
+                .map(|val| QString::from(val.as_str()))
+                .unwrap_or_default()
+                .into(),
+        );
+
+        map
     }
 }

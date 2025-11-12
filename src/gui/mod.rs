@@ -1,5 +1,6 @@
 use actix::prelude::*;
 use anyhow::{Result, anyhow};
+use colors::wash_out_by_blending;
 use models::{RxPageType, RxUiContainer};
 use qmeta_async::with_executor;
 use qmetaobject::*;
@@ -10,6 +11,7 @@ use std::str::FromStr;
 use uuid::Uuid;
 
 pub(crate) mod actor;
+pub(crate) mod colors;
 pub(crate) mod models;
 pub(crate) mod utils;
 
@@ -122,6 +124,9 @@ pub struct KeepassRx {
     decryptMasterPassword: qt_method!(fn(&self, short_password: QString)),
     invalidateMasterPassword: qt_method!(fn(&self)),
     checkLockingStatus: qt_method!(fn(&self)),
+
+    // misc utility functions
+    washOutColor: qt_method!(fn(&self, hex_color: QString) -> QString),
 
     // page signals
     currentContainerChanged: qt_signal!(new_container: QVariant),
@@ -475,5 +480,12 @@ impl KeepassRx {
     pub fn popContainer(&self) {
         let actor = self.actor.clone().expect("Actor not initialized");
         actix::spawn(actor.send(PopContainer));
+    }
+
+    #[with_executor]
+    pub fn washOutColor(&self, hex_color: QString) -> QString {
+        wash_out_by_blending(&hex_color.to_string(), 0.5)
+            .expect("No color?!")
+            .into()
     }
 }

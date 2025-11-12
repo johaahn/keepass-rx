@@ -64,7 +64,9 @@ Page {
 
     function headerColor() {
         if (publicDatabaseColor && settings.showAccents) {
-            return publicDatabaseColor;
+            const washedOut = keepassrx.washOutColor(publicDatabaseColor);
+            console.log('washed out color:', washedOut);
+            return washedOut;
         } else {
             return "transparent";
         }

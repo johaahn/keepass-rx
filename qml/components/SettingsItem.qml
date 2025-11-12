@@ -1,5 +1,5 @@
 import QtQuick 2.0
-import Lomiri.Components 1.3 as UITK
+import Lomiri.Components 1.3
 
 Row {
     property string title
@@ -8,26 +8,26 @@ Row {
 
     anchors.left: parent.left
     anchors.right: parent.right
-    anchors.leftMargin: units.gu(2)
-    anchors.rightMargin: units.gu(2)
     spacing: units.gu(2)
 
     Column {
         spacing: units.gu(0.2)
         width: parent.width - loader.width - parent.spacing
         anchors.verticalCenter: parent.verticalCenter
-        UITK.Label {
+
+        Label {
             anchors.left: parent.left
             anchors.right: parent.right
             text: title
             wrapMode: Text.WordWrap
         }
-        UITK.Label {
+
+        Label {
             visible: description !== ''
             anchors.left: parent.left
             anchors.right: parent.right
             text: description
-            color: theme.palette.normal.raisedText
+            color: theme.palette.normal.backgroundSecondaryText
             wrapMode: Text.WordWrap
             font.pixelSize: units.gu(1.6)
         }

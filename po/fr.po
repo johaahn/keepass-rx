@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-12 14:11+0000\n"
+"POT-Creation-Date: 2025-11-12 20:31+0000\n"
 "PO-Revision-Date: 2025-11-12 14:35+0000\n"
 "Last-Translator: Vlad Nirky <nirky.vlad@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -19,28 +19,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Weblate 5.15-dev\n"
 
-msgid "About"
-msgstr "A propos de"
-
-msgid ""
-"KeePassRX is a work-in-progress password manager for KeePass password "
-"databases. It is licensed under the GNU GPL v3 license."
-msgstr ""
-"KeePassRX est un gestionnaire de mots de passe en cours de développement "
-"pour les bases de données KeePass. Il est distribué sous licence GNU GPL v3."
-
-msgid ""
-"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
-"git.agnos.is/projectmoon/keepass-rx</a>"
-msgstr ""
-"Source : <a href='https ://git.agnos.is/projectmoon/keepass-rx'>https ://"
-"git.agnos.is/projectmoon/keepass-rx</a>"
-
 msgid "Add Database"
 msgstr "Ajouter une base de données"
 
 msgid "Settings"
 msgstr "Paramètres"
+
+msgid "About"
+msgstr "A propos de"
 
 msgid "Loading last database."
 msgstr "Chargement de la dernière base de données."
@@ -53,21 +39,6 @@ msgstr "Appuyer + pour importer une base de données."
 
 msgid "It will only be removed from the app, not your device."
 msgstr "Elle sera simplement retirée de l’application, pas de votre appareil."
-
-msgid "Back"
-msgstr "Retour"
-
-msgid "Enter the database master password"
-msgstr "Entrez le mot de passe principal de la base de données"
-
-msgid "Master Password"
-msgstr "Mot de passe principal"
-
-msgid "Open"
-msgstr "Ouvrir"
-
-msgid "Opening"
-msgstr "Ouverture"
 
 msgid "Manual path set."
 msgstr "Chemin défini manuellement."
@@ -98,38 +69,26 @@ msgstr "La base de données ne s'ouvre pas ?"
 msgid "Untitled Entry"
 msgstr "Entrée sans titre"
 
+msgid "Back"
+msgstr "Retour"
+
 msgid "Notes"
 msgstr "Notes"
 
 msgid "Tap to copy"
 msgstr "Appuyez pour copier"
 
-msgid "Special Categories"
-msgstr "Catégories spéciales"
+msgid "Enter the database master password"
+msgstr "Entrez le mot de passe principal de la base de données"
 
-msgid "Lock"
-msgstr "Verrouiller"
+msgid "Master Password"
+msgstr "Mot de passe principal"
 
-msgid "Close"
-msgstr "Fermer"
+msgid "Open"
+msgstr "Ouvrir"
 
-msgid "View Mode"
-msgstr "Mode d'affichage"
-
-msgid "Search"
-msgstr "Chercher"
-
-msgid "Cancel Search"
-msgstr "Annuler la recherche"
-
-msgid "Lock Database"
-msgstr "Verrouiller la base de données"
-
-msgid "Close Database"
-msgstr "Fermer la base de données"
-
-msgid "Search entries in this group"
-msgstr "Rechercher les entrées dans ce groupe"
+msgid "Opening"
+msgstr "Ouverture"
 
 msgid ""
 "Change settings based on your preferences. Any change to the settings "
@@ -164,6 +123,52 @@ msgstr "Afficher le groupe « Corbeille »"
 
 msgid "This group contains all the deleted entries"
 msgstr "Ce groupe contient toutes les entrées supprimées"
+
+msgid ""
+"KeePassRX is a work-in-progress password manager for KeePass password "
+"databases. It is licensed under the GNU GPL v3 license."
+msgstr ""
+"KeePassRX est un gestionnaire de mots de passe en cours de développement "
+"pour les bases de données KeePass. Il est distribué sous licence GNU GPL v3."
+
+msgid ""
+"The built-in KeePass icon images are licensed under a variety of licenses as "
+"detailed in assets/COPYING."
+msgstr ""
+
+msgid ""
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
+"git.agnos.is/projectmoon/keepass-rx</a>"
+msgstr ""
+"Source : <a href='https ://git.agnos.is/projectmoon/keepass-rx'>https ://"
+"git.agnos.is/projectmoon/keepass-rx</a>"
+
+msgid "Special Categories"
+msgstr "Catégories spéciales"
+
+msgid "Lock"
+msgstr "Verrouiller"
+
+msgid "Close"
+msgstr "Fermer"
+
+msgid "View Mode"
+msgstr "Mode d'affichage"
+
+msgid "Search"
+msgstr "Chercher"
+
+msgid "Cancel Search"
+msgstr "Annuler la recherche"
+
+msgid "Lock Database"
+msgstr "Verrouiller la base de données"
+
+msgid "Close Database"
+msgstr "Fermer la base de données"
+
+msgid "Search entries in this group"
+msgstr "Rechercher les entrées dans ce groupe"
 
 #~ msgid "Enable database locking (ALPHA)"
 #~ msgstr "Activer le verrouillage de la base de données (ALPHA)"

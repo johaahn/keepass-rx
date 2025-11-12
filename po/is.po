@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-12 14:11+0000\n"
+"POT-Creation-Date: 2025-11-12 20:31+0000\n"
 "PO-Revision-Date: 2025-11-12 14:24+0000\n"
 "Last-Translator: projectmoon <projectmoon@agnos.is>\n"
 "Language-Team: Icelandic <https://hosted.weblate.org/projects/ubports/"
@@ -19,28 +19,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n % 10 != 1 || n % 100 == 11;\n"
 "X-Generator: Weblate 5.15-dev\n"
 
-msgid "About"
-msgstr "Um appið"
-
-msgid ""
-"KeePassRX is a work-in-progress password manager for KeePass password "
-"databases. It is licensed under the GNU GPL v3 license."
-msgstr ""
-"KeePassRX er app lykilorðs-app í vinnslu fyrir KeePass gagnagrunna. Appið "
-"hefur leyfi samkvæmt GNU GPL v3."
-
-msgid ""
-"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
-"git.agnos.is/projectmoon/keepass-rx</a>"
-msgstr ""
-"Uppruni: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
-"git.agnos.is/projectmoon/keepass-rx</a>"
-
 msgid "Add Database"
 msgstr "Bæta við Gangnagrunn"
 
 msgid "Settings"
 msgstr "Stillingar"
+
+msgid "About"
+msgstr "Um appið"
 
 msgid "Loading last database."
 msgstr "Síðasti gagnagrunnurinn í vinnslu."
@@ -53,21 +39,6 @@ msgstr "Ýtið á + til að flytja inn gagnagrunn."
 
 msgid "It will only be removed from the app, not your device."
 msgstr ""
-
-msgid "Back"
-msgstr "Til baka"
-
-msgid "Enter the database master password"
-msgstr "Sláðu inn aðallykilorð gagnagrunnsins"
-
-msgid "Master Password"
-msgstr "Aðallykilorð"
-
-msgid "Open"
-msgstr "Opna"
-
-msgid "Opening"
-msgstr "Í vinnslu"
 
 msgid "Manual path set."
 msgstr ""
@@ -97,38 +68,26 @@ msgstr "Er gagnagrunnur ekki að opna?"
 msgid "Untitled Entry"
 msgstr "Ónefnd Færsla"
 
+msgid "Back"
+msgstr "Til baka"
+
 msgid "Notes"
 msgstr "Athugasemdir"
 
 msgid "Tap to copy"
 msgstr "Ýtið á til að afrita"
 
-msgid "Special Categories"
-msgstr ""
+msgid "Enter the database master password"
+msgstr "Sláðu inn aðallykilorð gagnagrunnsins"
 
-msgid "Lock"
-msgstr "Læsa"
+msgid "Master Password"
+msgstr "Aðallykilorð"
 
-msgid "Close"
-msgstr "Loka"
+msgid "Open"
+msgstr "Opna"
 
-msgid "View Mode"
-msgstr ""
-
-msgid "Search"
-msgstr "Leita"
-
-msgid "Cancel Search"
-msgstr "Hætta leit"
-
-msgid "Lock Database"
-msgstr "Læsa Gangnagrunn"
-
-msgid "Close Database"
-msgstr "Loka Gagnagrunn"
-
-msgid "Search entries in this group"
-msgstr "Leitaðu að hlut í þessum flokki"
+msgid "Opening"
+msgstr "Í vinnslu"
 
 msgid ""
 "Change settings based on your preferences. Any change to the settings "
@@ -158,6 +117,52 @@ msgstr "Sýna \"ruslið\" flokkur"
 
 msgid "This group contains all the deleted entries"
 msgstr ""
+
+msgid ""
+"KeePassRX is a work-in-progress password manager for KeePass password "
+"databases. It is licensed under the GNU GPL v3 license."
+msgstr ""
+"KeePassRX er app lykilorðs-app í vinnslu fyrir KeePass gagnagrunna. Appið "
+"hefur leyfi samkvæmt GNU GPL v3."
+
+msgid ""
+"The built-in KeePass icon images are licensed under a variety of licenses as "
+"detailed in assets/COPYING."
+msgstr ""
+
+msgid ""
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
+"git.agnos.is/projectmoon/keepass-rx</a>"
+msgstr ""
+"Uppruni: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
+"git.agnos.is/projectmoon/keepass-rx</a>"
+
+msgid "Special Categories"
+msgstr ""
+
+msgid "Lock"
+msgstr "Læsa"
+
+msgid "Close"
+msgstr "Loka"
+
+msgid "View Mode"
+msgstr ""
+
+msgid "Search"
+msgstr "Leita"
+
+msgid "Cancel Search"
+msgstr "Hætta leit"
+
+msgid "Lock Database"
+msgstr "Læsa Gangnagrunn"
+
+msgid "Close Database"
+msgstr "Loka Gagnagrunn"
+
+msgid "Search entries in this group"
+msgstr "Leitaðu að hlut í þessum flokki"
 
 #~ msgid "Enable database locking (ALPHA)"
 #~ msgstr "Virkja læsing gagnagrunnanna (ALPHA)"

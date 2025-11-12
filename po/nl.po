@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-12 14:11+0000\n"
+"POT-Creation-Date: 2025-11-12 20:31+0000\n"
 "PO-Revision-Date: 2025-11-07 11:51+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -19,28 +19,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.15-dev\n"
 
-msgid "About"
-msgstr "Over"
-
-msgid ""
-"KeePassRX is a work-in-progress password manager for KeePass password "
-"databases. It is licensed under the GNU GPL v3 license."
-msgstr ""
-"KeePassRX is een in ontwikkeling zijnde wachtwoordbeheerder voor KeePass-"
-"databanken, uitgebracht onder de GNU GPL v3-licentie."
-
-msgid ""
-"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
-"git.agnos.is/projectmoon/keepass-rx</a>"
-msgstr ""
-"Broncode: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
-"git.agnos.is/projectmoon/keepass-rx</a>"
-
 msgid "Add Database"
 msgstr "Databank toevoegen"
 
 msgid "Settings"
 msgstr "Instellingen"
+
+msgid "About"
+msgstr "Over"
 
 msgid "Loading last database."
 msgstr "Bezig met openen van vorige databank…"
@@ -54,21 +40,6 @@ msgstr "Druk op ‘+’ om een databank toe te voegen."
 msgid "It will only be removed from the app, not your device."
 msgstr ""
 "Let op: de databank wordt alleen verwijderd uit de app, niet van je apparaat."
-
-msgid "Back"
-msgstr "Terug"
-
-msgid "Enter the database master password"
-msgstr "Voer het hoofdwachtwoord in"
-
-msgid "Master Password"
-msgstr "Hoofdwachtwoord"
-
-msgid "Open"
-msgstr "Openen"
-
-msgid "Opening"
-msgstr "Bezig met openen…"
 
 msgid "Manual path set."
 msgstr "Stel de locatie handmatig in."
@@ -98,38 +69,26 @@ msgstr "Wordt de databank niet geopend?"
 msgid "Untitled Entry"
 msgstr "Naamloos item"
 
+msgid "Back"
+msgstr "Terug"
+
 msgid "Notes"
 msgstr "Aantekeningen"
 
 msgid "Tap to copy"
 msgstr "Druk om te kopiëren"
 
-msgid "Special Categories"
-msgstr "Speciale categorieën"
+msgid "Enter the database master password"
+msgstr "Voer het hoofdwachtwoord in"
 
-msgid "Lock"
-msgstr "Vergrendelen"
+msgid "Master Password"
+msgstr "Hoofdwachtwoord"
 
-msgid "Close"
-msgstr "Sluiten"
+msgid "Open"
+msgstr "Openen"
 
-msgid "View Mode"
-msgstr "Weergavemodus"
-
-msgid "Search"
-msgstr "Zoeken"
-
-msgid "Cancel Search"
-msgstr "Zoekopdracht afbreken"
-
-msgid "Lock Database"
-msgstr "Databank vergrendelen"
-
-msgid "Close Database"
-msgstr "Databank sluiten"
-
-msgid "Search entries in this group"
-msgstr "Deze groep doorzoeken"
+msgid "Opening"
+msgstr "Bezig met openen…"
 
 msgid ""
 "Change settings based on your preferences. Any change to the settings "
@@ -159,6 +118,52 @@ msgstr "Prullenbakgroep tonen"
 
 msgid "This group contains all the deleted entries"
 msgstr "Deze groep bevat alle verwijderde items."
+
+msgid ""
+"KeePassRX is a work-in-progress password manager for KeePass password "
+"databases. It is licensed under the GNU GPL v3 license."
+msgstr ""
+"KeePassRX is een in ontwikkeling zijnde wachtwoordbeheerder voor KeePass-"
+"databanken, uitgebracht onder de GNU GPL v3-licentie."
+
+msgid ""
+"The built-in KeePass icon images are licensed under a variety of licenses as "
+"detailed in assets/COPYING."
+msgstr ""
+
+msgid ""
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
+"git.agnos.is/projectmoon/keepass-rx</a>"
+msgstr ""
+"Broncode: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
+"git.agnos.is/projectmoon/keepass-rx</a>"
+
+msgid "Special Categories"
+msgstr "Speciale categorieën"
+
+msgid "Lock"
+msgstr "Vergrendelen"
+
+msgid "Close"
+msgstr "Sluiten"
+
+msgid "View Mode"
+msgstr "Weergavemodus"
+
+msgid "Search"
+msgstr "Zoeken"
+
+msgid "Cancel Search"
+msgstr "Zoekopdracht afbreken"
+
+msgid "Lock Database"
+msgstr "Databank vergrendelen"
+
+msgid "Close Database"
+msgstr "Databank sluiten"
+
+msgid "Search entries in this group"
+msgstr "Deze groep doorzoeken"
 
 #~ msgid "Enable database locking (ALPHA)"
 #~ msgstr "Databanken vergrendelen (experimenteel)"

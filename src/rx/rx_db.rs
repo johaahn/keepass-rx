@@ -44,6 +44,15 @@ impl RxContainer<'_> {
     }
 }
 
+#[derive(Default, Clone, Zeroize)]
+pub enum RxIcon {
+    Builtin(usize),
+    #[zeroize(skip)]
+    Image(Uuid),
+    #[default]
+    None,
+}
+
 #[derive(Zeroize, Default, Clone)]
 pub struct RxGroup {
     #[zeroize(skip)]
@@ -54,6 +63,8 @@ pub struct RxGroup {
     pub parent: Option<Uuid>,
 
     pub name: String,
+
+    pub icon: RxIcon,
 
     // TODO use some kind of map instead of Vec (since maps do not
     // impl Zeroize). should be possible once we stop loading secrets
@@ -75,12 +86,19 @@ impl RxGroup {
         entries: Vec<Uuid>,
         parent: Option<Uuid>,
     ) -> Self {
+        let icon = match (group.custom_icon_uuid, group.icon_id) {
+            (Some(custom_id), _) => RxIcon::Image(custom_id),
+            (_, Some(buitin_id)) => RxIcon::Builtin(buitin_id),
+            _ => RxIcon::None,
+        };
+
         Self {
             uuid: group.uuid,
             name: mem::take(&mut group.name),
             subgroups: subgroups,
             entries: entries,
             parent: parent,
+            icon: icon,
         }
     }
 }
@@ -573,6 +591,7 @@ mod tests {
             subgroups: vec![],
             uuid: group_uuid,
             parent: None,
+            icon: RxIcon::None,
         };
 
         let db = RxDatabase {
@@ -619,6 +638,7 @@ mod tests {
             subgroups: vec![],
             uuid: group_uuid,
             parent: None,
+            icon: RxIcon::None,
         };
 
         let db = RxDatabase {

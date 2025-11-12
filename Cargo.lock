@@ -826,6 +826,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "glob"
+version = "0.3.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0cc23270f6e1808e30a928bdc84dea0b9b4136a8bc82338574f23baf47bbd280"
+
+[[package]]
 name = "hashbrown"
 version = "0.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1010,6 +1016,29 @@ dependencies = [
 ]
 
 [[package]]
+name = "include_directory"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fc51bf21d9c8c76d0d55b3926add7fde9b595719ee0d5710d46f8ee66131cca9"
+dependencies = [
+ "glob",
+ "include_directory_macros",
+ "mime",
+]
+
+[[package]]
+name = "include_directory_macros"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "35011b5de7391d94ea631aa584d09a88b2e877505a614e4952970214f2fd1b90"
+dependencies = [
+ "mime",
+ "new_mime_guess",
+ "proc-macro2",
+ "quote",
+]
+
+[[package]]
 name = "indexmap"
 version = "2.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1101,6 +1130,7 @@ dependencies = [
  "dirs",
  "gettext-rs",
  "humanize-duration",
+ "include_directory",
  "indexmap",
  "infer",
  "keepass",
@@ -1289,6 +1319,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f52b00d39961fc5b2736ea853c9cc86238e165017a493d1d5c8eac6bdc4cc273"
 
 [[package]]
+name = "mime"
+version = "0.3.17"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6877bb514081ee2a7ff5ef9de3281f14a4dd4bceac4c09388074a6b5df8a139a"
+
+[[package]]
 name = "minisign-verify"
 version = "0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1313,6 +1349,16 @@ dependencies = [
  "libc",
  "wasi",
  "windows-sys 0.61.2",
+]
+
+[[package]]
+name = "new_mime_guess"
+version = "4.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "02a2dfb3559d53e90b709376af1c379462f7fb3085a0177deb73e6ea0d99eff4"
+dependencies = [
+ "mime",
+ "unicase",
 ]
 
 [[package]]

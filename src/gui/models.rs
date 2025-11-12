@@ -1,7 +1,7 @@
 use qmetaobject::{QMetaType, QObject, QString, QVariant, QVariantList, QVariantMap};
 use uuid::Uuid;
 
-use crate::rx::{RxEntry, RxGroup, RxTemplate};
+use crate::rx::{RxEntry, RxGroup, RxIcon, RxTemplate};
 
 #[derive(QEnum, Clone, Default, Copy)]
 #[repr(C)]
@@ -46,6 +46,7 @@ pub struct RxListItem {
     title: qt_property!(QString),
     subtitle: qt_property!(QString),
     iconPath: qt_property!(QString),
+    iconBuiltin: qt_property!(bool),
 
     // Mostly for passwords entries. Does not really apply to groups.
     hasUsername: qt_property!(bool),
@@ -68,6 +69,7 @@ impl From<&RxTemplate> for RxListItem {
             hasTOTP: false,
 
             iconPath: QString::default(),
+            iconBuiltin: false,
             title: QString::from(value.name.as_ref()),
             subtitle: QString::from(""),
         }
@@ -88,6 +90,7 @@ impl From<&RxEntry> for RxListItem {
             hasTOTP: value.raw_otp_value.is_some(),
 
             iconPath: value.icon_data_url().map(QString::from).unwrap_or_default(),
+            iconBuiltin: false,
 
             title: value
                 .title
@@ -114,6 +117,14 @@ impl From<RxEntry> for RxListItem {
 
 impl From<&RxGroup> for RxListItem {
     fn from(value: &RxGroup) -> Self {
+        let builtin_icon = if let RxIcon::Builtin(id) = value.icon {
+            crate::gui::icons::to_builtin_icon(id)
+                .map(QString::from)
+                .unwrap_or_default()
+        } else {
+            QString::default()
+        };
+
         RxListItem {
             base: Default::default(),
             itemType: RxItemType::Group,
@@ -125,9 +136,8 @@ impl From<&RxGroup> for RxListItem {
 
             title: value.name.clone().into(),
             subtitle: QString::from("Group"),
-
-            // TODO support group icons
-            iconPath: QString::default(),
+            iconPath: builtin_icon,
+            iconBuiltin: matches!(value.icon, RxIcon::Builtin(_)),
 
             hasUsername: false,
             hasPassword: false,
@@ -169,6 +179,7 @@ impl From<RxListItem> for QVariantMap {
         map.insert("hasURL".into(), value.hasURL.to_qvariant());
         map.insert("hasTOTP".into(), value.hasTOTP.to_qvariant());
         map.insert("iconPath".into(), value.iconPath.to_qvariant());
+        map.insert("iconBuiltin".into(), value.iconBuiltin.to_qvariant());
 
         map
     }

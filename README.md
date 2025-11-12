@@ -12,7 +12,8 @@ software** with a defined development roadmap for new functionality
 and features.
 
 **Current Status:** Functional **readonly** opening of KeePass
-databases, with additional features beyond the original app.
+databases, with additional features and numerous UI improvements
+beyond the original app.
 
 ## Roadmap
 
@@ -34,9 +35,8 @@ An app that is rough around the edges but ready for daily use.
 Achieve functional **readonly** parity with the original Keepass app
 for Ubuntu Touch, plus a few extras.
  - [X] Display icons for password entries.
- - [ ] Support all app settings (that we want to support).
+ - [x] Support all app settings (that we want to support).
  - [ ] Key file support.
- - [ ] Close database after period of time.
 
 ## 2.x - Enhanced Features
 
@@ -53,13 +53,15 @@ still only supporting read-only database access.
    - [x] Display entries under a group.
  - [x] Display custom fields and values.
  - [x] Improved database selection UX (multiple databases).
+ - [x] Database accent color and name (from KeePassXC).
+ - [x] Render built-in KeePass icons.
 
 ## 3.x - Writable Databases and Beyond
 
 Implement updating and saving of databases, either using the
 experimental kdbx4 save feature of keepass-rs, or via the KeepassXC
 CLI.
- - [ ] Support KeePassDX templates (i.e. show credit card entries as a
+ - [x] Support KeePassDX templates (i.e. show credit card entries as a
        credit card, etc).
  - [ ] YubiKey challenge-response? (requires support in OS)
  - [ ] Make a clear distinction between "imported" databases (from

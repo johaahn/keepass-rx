@@ -54,7 +54,8 @@ Page {
             SettingsItem {
                 title: i18n.tr('Enable Accents')
                 description: i18n.tr(
-                    'Set header color and name according to public database settings.'
+                    'Set header color and name according to database settings. ' +
+                        'Compatible with KeePassXC.'
                 )
                 control: Switch {
                     onCheckedChanged: settings.showAccents = checked
@@ -62,35 +63,6 @@ Page {
                 }
             }
 
-            SettingsItem {
-                // TRANSLATORS: DB is the abbreviation for database
-                title: i18n.tr("Auto-close database after inactivity")
-                // TRANSLATORS: Description of the auto-close setting.
-                description: i18n.tr("In minutes. 0 for disabled.")
-                enabled: false
-                control: TextField {
-                    inputMethodHints: Qt.ImhDigitsOnly
-                    text: settings.autoCloseInterval
-                    onTextChanged: {
-                        if (isNaN(parseInt(text))) {
-                            text = 1
-                        }
-                        if (parseInt(text) < 0) {
-                            text = 1
-                        }
-                        if (parseInt(text) > 100) {
-                            text = 100
-                        }
-
-                        settings.autoCloseInterval = parseInt(text)
-                    }
-                    hasClearButton: false
-                    validator: IntValidator {
-                        bottom: 0
-                        top: 100
-                    }
-                }
-            }
             SettingsItem {
                 // TRANSLATORS: Whether or not to show the recycling bin group of deleted password entries.
                 title: i18n.tr('Show the "Recycle bin" group')

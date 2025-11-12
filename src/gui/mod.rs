@@ -126,7 +126,7 @@ pub struct KeepassRx {
     checkLockingStatus: qt_method!(fn(&self)),
 
     // misc utility functions
-    washOutColor: qt_method!(fn(&self, hex_color: QString) -> QString),
+    washOutColor: qt_method!(fn(&self, hex_color: QString) -> QVariantMap),
 
     // page signals
     currentContainerChanged: qt_signal!(new_container: QVariant),
@@ -483,7 +483,7 @@ impl KeepassRx {
     }
 
     #[with_executor]
-    pub fn washOutColor(&self, hex_color: QString) -> QString {
+    pub fn washOutColor(&self, hex_color: QString) -> QVariantMap {
         wash_out_by_blending(&hex_color.to_string(), 0.5)
             .expect("No color?!")
             .into()

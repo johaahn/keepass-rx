@@ -27,8 +27,14 @@ Page {
     property string publicDatabaseColor
     property string recycleBinUuid
 
+    property var colorWashout
+
     onContainerUuidChanged: {
 	populate();
+    }
+
+    onColorWashoutChanged: {
+
     }
 
     function lockDatabase() {
@@ -62,13 +68,22 @@ Page {
         }
     }
 
-    function headerColor() {
+    function headerBackgroundColor() {
         if (publicDatabaseColor && settings.showAccents) {
-            const washedOut = keepassrx.washOutColor(publicDatabaseColor);
-            console.log('washed out color:', washedOut);
-            return washedOut;
+            return colorWashout.backgroundColor;
         } else {
             return "transparent";
+        }
+    }
+
+    function headerTextColor() {
+        if (publicDatabaseColor && settings.showAccents && colorWashout) {
+            // textColorType is the color type for the header text itself.
+            return colorWashout.textColorType === 'Light'
+                ? LomiriColors.white
+                : LomiriColors.jet;
+        } else {
+            return theme.palette.normal.foregroundText;
         }
     }
 
@@ -77,7 +92,8 @@ Page {
         title: headerTitle()
 
         StyleHints {
-            backgroundColor: headerColor()
+            backgroundColor: headerBackgroundColor()
+            foregroundColor: headerTextColor()
         }
 
         leadingActionBar.actions: [
@@ -316,6 +332,7 @@ Page {
 
             if (metadata.publicColor) {
                 publicDatabaseColor = metadata.publicColor;
+                colorWashout = keepassrx.washOutColor(publicDatabaseColor);
             }
 
             if (metadata.recycleBinUuid) {

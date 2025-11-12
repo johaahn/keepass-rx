@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-12 14:04+0100\n"
+"POT-Creation-Date: 2025-11-12 13:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: qml/pages/AboutPage.qml:14 qml/pages/DBList.qml:81
 #: qml/pages/OpenDBPage.qml:55 qml/pages/UnlockPage.qml:41
-#: qml/pages/EntriesPage.qml:162
+#: qml/pages/EntriesPage.qml:178
 msgid "About"
 msgstr ""
 
@@ -31,8 +31,8 @@ msgstr ""
 
 #: qml/pages/AboutPage.qml:68
 msgid ""
-"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
-"git.agnos.is/projectmoon/keepass-rx</a>"
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
+"agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
 
 #: qml/pages/DBList.qml:67
@@ -40,8 +40,8 @@ msgid "Add Database"
 msgstr ""
 
 #: qml/pages/DBList.qml:74 qml/pages/OpenDBPage.qml:48
-#: qml/pages/UnlockPage.qml:34 qml/pages/EntriesPage.qml:153
-#: qml/pages/SettingsPage.qml:11
+#: qml/pages/UnlockPage.qml:34 qml/pages/SettingsPage.qml:11
+#: qml/pages/EntriesPage.qml:169
 msgid "Settings"
 msgstr ""
 
@@ -62,7 +62,7 @@ msgid "It will only be removed from the app, not your device."
 msgstr ""
 
 #: qml/pages/OpenDBPage.qml:34 qml/pages/SingleEntry.qml:25
-#: qml/pages/EntriesPage.qml:113
+#: qml/pages/EntriesPage.qml:129
 msgid "Back"
 msgstr ""
 
@@ -124,42 +124,6 @@ msgstr ""
 msgid "Tap to copy"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:60
-msgid "Special Categories"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:89
-msgid "Lock"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:101
-msgid "Close"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:126
-msgid "View Mode"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:140
-msgid "Search"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:140
-msgid "Cancel Search"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:174
-msgid "Lock Database"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:184
-msgid "Close Database"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:213
-msgid "Search entries in this group"
-msgstr ""
-
 #: qml/pages/SettingsPage.qml:43
 msgid "Enable database locking"
 msgstr ""
@@ -175,21 +139,59 @@ msgid "Enable Accents"
 msgstr ""
 
 #: qml/pages/SettingsPage.qml:57
-msgid "Set header color and name according to public database settings."
+msgid ""
+"Set header color and name according to database settings. Compatible with "
+"KeePassXC."
 msgstr ""
 
-#: qml/pages/SettingsPage.qml:67
+#: qml/pages/SettingsPage.qml:68
 msgid "Auto-close database after inactivity"
 msgstr ""
 
-#: qml/pages/SettingsPage.qml:69
+#: qml/pages/SettingsPage.qml:70
 msgid "In minutes. 0 for disabled."
 msgstr ""
 
-#: qml/pages/SettingsPage.qml:96
+#: qml/pages/SettingsPage.qml:97
 msgid "Show the \"Recycle bin\" group"
 msgstr ""
 
-#: qml/pages/SettingsPage.qml:98
+#: qml/pages/SettingsPage.qml:99
 msgid "This group contains all the deleted entries"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:66
+msgid "Special Categories"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:105
+msgid "Lock"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:117
+msgid "Close"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:142
+msgid "View Mode"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:156
+msgid "Search"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:156
+msgid "Cancel Search"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:190
+msgid "Lock Database"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:200
+msgid "Close Database"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:229
+msgid "Search entries in this group"
 msgstr ""

@@ -57,7 +57,7 @@ use crate::gui::{
 
 #[cfg(feature = "gui")]
 fn load_gui() -> Result<()> {
-    use gui::RxViewMode;
+    use gui::{RxViewMode, colors::ColorType};
 
     init_gettext();
 
@@ -80,6 +80,7 @@ fn load_gui() -> Result<()> {
     qml_register_enum::<RxItemType>(cstr!("RxItemType"), 1, 0, cstr!("RxItemType"));
     qml_register_enum::<RxGuiState>(cstr!("RxGuiState"), 1, 0, cstr!("RxGuiState"));
     qml_register_enum::<RxViewMode>(cstr!("RxViewMode"), 1, 0, cstr!("RxViewMode"));
+    qml_register_enum::<ColorType>(cstr!("ColorType"), 1, 0, cstr!("ColorType"));
 
     // Load last db
     // TODO this is a hack and should be more properly done with QT

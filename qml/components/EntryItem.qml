@@ -121,13 +121,28 @@ ListItem {
 
 	spacing: units.gu(1)
 
-	Icon {
-	    visible: itemType != 'Entry'
-	    width: units.gu(5)
-	    height: parent.height
-	    y: parent.height / 2 - height / 2
-	    name: itemType == 'Group' || itemType == 'Template' ? 'folder' : 'up'
-	}
+        Item {
+            width: units.gu(5)
+            height: parent.height
+            visible: itemType != 'Entry'
+
+	    Icon {
+	        width: units.gu(5)
+	        height: parent.height
+	        y: parent.height / 2 - height / 2
+	        name: itemType == 'Group' || itemType == 'Template' ? 'folder' : 'up'
+	    }
+
+	    Image {
+	        id: groupEntryImg
+	        fillMode: Image.PreserveAspectFit
+	        source: iconPath ? iconPath : '../../assets/placeholder.png'
+	        width: units.gu(2)
+	        height: units.gu(2)
+	        y: parent.height - height * 2
+                x: parent.width - width
+	    }
+        }
 
 	Image {
 	    id: entryImg

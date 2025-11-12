@@ -1,4 +1,5 @@
 mod easy_open;
+pub(crate) mod icons;
 mod rx_db;
 mod rx_entry;
 mod zeroable_db;

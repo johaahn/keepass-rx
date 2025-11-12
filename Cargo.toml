@@ -36,10 +36,10 @@ indexmap = "2.12.0"
 regex = "1.12.2"
 paste = "1.0.15"
 palette = "0.7.6"
-include_directory = { version = "0.1.1", features = ["glob"] }
 
 [build-dependencies]
 cpp_build = "0.5"
+walkdir = "2.5.0"
 
 [features]
 # Compile the GUI portion of the application (link QT etc).

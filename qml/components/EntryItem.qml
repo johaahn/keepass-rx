@@ -152,10 +152,10 @@ ListItem {
 	        id: groupEntryImg
 	        fillMode: Image.PreserveAspectFit
 	        source: resolveIconPath()
-	        width: units.gu(2)
-	        height: units.gu(2)
-	        y: parent.height - height * 2
-                x: parent.width - width
+	        width: units.gu(2.75)
+	        height: units.gu(2.75)
+	        y: parent.height - height * 1.5
+                x: parent.width - width / 1.25
 	    }
         }
 

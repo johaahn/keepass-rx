@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-12 15:44+0000\n"
+"POT-Creation-Date: 2025-11-12 19:09+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,8 +18,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: qml/pages/AboutPage.qml:14 qml/pages/DBList.qml:81
-#: qml/pages/OpenDBPage.qml:54 qml/pages/UnlockPage.qml:41
-#: qml/pages/EntriesPage.qml:178
+#: qml/pages/UnlockPage.qml:41 qml/pages/EntriesPage.qml:178
+#: qml/pages/OpenDBPage.qml:54
 msgid "About"
 msgstr ""
 
@@ -31,16 +31,16 @@ msgstr ""
 
 #: qml/pages/AboutPage.qml:68
 msgid ""
-"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
-"agnos.is/projectmoon/keepass-rx</a>"
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
+"git.agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
 
 #: qml/pages/DBList.qml:67
 msgid "Add Database"
 msgstr ""
 
-#: qml/pages/DBList.qml:74 qml/pages/OpenDBPage.qml:47
-#: qml/pages/UnlockPage.qml:34 qml/pages/EntriesPage.qml:169
+#: qml/pages/DBList.qml:74 qml/pages/UnlockPage.qml:34
+#: qml/pages/EntriesPage.qml:169 qml/pages/OpenDBPage.qml:47
 #: qml/pages/SettingsPage.qml:11
 msgid "Settings"
 msgstr ""
@@ -59,27 +59,6 @@ msgstr ""
 
 #: qml/pages/DBList.qml:265
 msgid "It will only be removed from the app, not your device."
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:34 qml/pages/SingleEntry.qml:25
-#: qml/pages/EntriesPage.qml:129
-msgid "Back"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:159
-msgid "Enter the database master password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:172
-msgid "Master Password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:202
-msgid "Open"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:219
-msgid "Opening"
 msgstr ""
 
 #: qml/pages/UnlockPage.qml:146
@@ -114,6 +93,11 @@ msgstr ""
 
 #: qml/pages/SingleEntry.qml:18
 msgid "Untitled Entry"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:25 qml/pages/EntriesPage.qml:129
+#: qml/pages/OpenDBPage.qml:34
+msgid "Back"
 msgstr ""
 
 #: qml/pages/SingleEntry.qml:186
@@ -158,6 +142,22 @@ msgstr ""
 
 #: qml/pages/EntriesPage.qml:229
 msgid "Search entries in this group"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:159
+msgid "Enter the database master password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:172
+msgid "Master Password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:202
+msgid "Open"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:219
+msgid "Opening"
 msgstr ""
 
 #: qml/pages/SettingsPage.qml:44

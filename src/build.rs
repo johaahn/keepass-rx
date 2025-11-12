@@ -16,8 +16,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 use std::env;
 use std::fs;
+use std::path::Path;
 use std::path::PathBuf;
 use std::process::Command;
+use walkdir::WalkDir;
 
 /// Perform qmake query
 #[cfg(feature = "gui")]
@@ -50,6 +52,26 @@ fn qmake_call() -> String {
 #[cfg(feature = "gui")]
 fn qmake_args() -> String {
     env::var("QMAKE_ARGS").unwrap_or_default()
+}
+
+fn output_kpxc_icons() {
+    let out_dir = env::var("OUT_DIR").unwrap();
+    let asset_dir = Path::new("assets/icons");
+    let mut entries = Vec::new();
+
+    for entry in WalkDir::new(asset_dir) {
+        let entry = entry.unwrap();
+        if entry.file_type().is_file() {
+            entries.push(entry.path().file_name().unwrap().to_os_string());
+        }
+    }
+
+    let out = format!(
+        "pub const FILES: &[&str; {}] = &{:?};",
+        entries.len(),
+        entries
+    );
+    fs::write(Path::new(&out_dir).join("kpxc_icons.rs"), out).unwrap();
 }
 
 /// Generate gettext translation files
@@ -140,6 +162,7 @@ fn walk_dir(dir: PathBuf, ext: &str) -> Vec<PathBuf> {
 
 #[cfg(feature = "gui")]
 fn main() {
+    output_kpxc_icons();
     update_language_files();
 
     let qmake_cmd = qmake_call();
@@ -161,6 +184,7 @@ fn main() {
     let qt_library_path = qt_library_path.trim();
 
     println!("cargo:rerun-if-changed=src/main.rs");
+    println!("cargo:rerun-if-changed=src/rx/icons.rs");
     println!("cargo:rerun-if-changed=po/*");
 
     println!("cargo:rustc-link-search{macos_lib_search}={qt_library_path}");
@@ -173,4 +197,6 @@ fn main() {
 }
 
 #[cfg(not(feature = "gui"))]
-fn main() {}
+fn main() {
+    output_kpxc_icons();
+}

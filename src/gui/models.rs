@@ -118,7 +118,7 @@ impl From<RxEntry> for RxListItem {
 impl From<&RxGroup> for RxListItem {
     fn from(value: &RxGroup) -> Self {
         let builtin_icon = if let RxIcon::Builtin(id) = value.icon {
-            crate::gui::icons::to_builtin_icon(id)
+            crate::rx::icons::to_builtin_icon(id)
                 .map(QString::from)
                 .unwrap_or_default()
         } else {

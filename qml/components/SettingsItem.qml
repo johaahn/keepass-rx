@@ -27,9 +27,9 @@ Row {
             anchors.left: parent.left
             anchors.right: parent.right
             text: description
-            color: '#999'
+            color: theme.palette.normal.raisedText
             wrapMode: Text.WordWrap
-            font.pixelSize: units.gu(1.4)
+            font.pixelSize: units.gu(1.6)
         }
     }
     Loader {

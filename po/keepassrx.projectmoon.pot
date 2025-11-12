@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-12 13:51+0000\n"
+"POT-Creation-Date: 2025-11-12 14:04+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: qml/pages/AboutPage.qml:14 qml/pages/DBList.qml:81
-#: qml/pages/OpenDBPage.qml:55 qml/pages/UnlockPage.qml:41
+#: qml/pages/OpenDBPage.qml:54 qml/pages/UnlockPage.qml:41
 #: qml/pages/EntriesPage.qml:178
 msgid "About"
 msgstr ""
@@ -39,7 +39,7 @@ msgstr ""
 msgid "Add Database"
 msgstr ""
 
-#: qml/pages/DBList.qml:74 qml/pages/OpenDBPage.qml:48
+#: qml/pages/DBList.qml:74 qml/pages/OpenDBPage.qml:47
 #: qml/pages/UnlockPage.qml:34 qml/pages/EntriesPage.qml:169
 #: qml/pages/SettingsPage.qml:11
 msgid "Settings"
@@ -66,19 +66,19 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:160
+#: qml/pages/OpenDBPage.qml:159
 msgid "Enter the database master password"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:173
+#: qml/pages/OpenDBPage.qml:172
 msgid "Master Password"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:203
+#: qml/pages/OpenDBPage.qml:202
 msgid "Open"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:220
+#: qml/pages/OpenDBPage.qml:219
 msgid "Opening"
 msgstr ""
 

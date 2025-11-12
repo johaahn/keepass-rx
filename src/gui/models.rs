@@ -1,7 +1,7 @@
 use qmetaobject::{QMetaType, QObject, QString, QVariant, QVariantList, QVariantMap};
 use uuid::Uuid;
 
-use crate::rx::{RxEntry, RxGroup, RxIcon, RxTemplate};
+use crate::rx::{RxEntry, RxGroup, RxTemplate};
 
 #[derive(QEnum, Clone, Default, Copy)]
 #[repr(C)]
@@ -89,8 +89,13 @@ impl From<&RxEntry> for RxListItem {
             hasURL: value.url.is_some(),
             hasTOTP: value.raw_otp_value.is_some(),
 
-            iconPath: value.icon_data_url().map(QString::from).unwrap_or_default(),
-            iconBuiltin: false,
+            iconPath: value
+                .icon
+                .icon_path()
+                .map(QString::from)
+                .unwrap_or_default(),
+
+            iconBuiltin: value.icon.is_builtin(),
 
             title: value
                 .title
@@ -117,14 +122,6 @@ impl From<RxEntry> for RxListItem {
 
 impl From<&RxGroup> for RxListItem {
     fn from(value: &RxGroup) -> Self {
-        let builtin_icon = if let RxIcon::Builtin(id) = value.icon {
-            crate::rx::icons::to_builtin_icon(id)
-                .map(QString::from)
-                .unwrap_or_default()
-        } else {
-            QString::default()
-        };
-
         RxListItem {
             base: Default::default(),
             itemType: RxItemType::Group,
@@ -136,8 +133,13 @@ impl From<&RxGroup> for RxListItem {
 
             title: value.name.clone().into(),
             subtitle: QString::from("Group"),
-            iconPath: builtin_icon,
-            iconBuiltin: matches!(value.icon, RxIcon::Builtin(_)),
+            iconPath: value
+                .icon
+                .icon_path()
+                .map(QString::from)
+                .unwrap_or_default(),
+
+            iconBuiltin: value.icon.is_builtin(),
 
             hasUsername: false,
             hasPassword: false,

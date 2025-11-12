@@ -74,7 +74,7 @@ impl RxGroup {
         parent: Option<Uuid>,
     ) -> Self {
         let icon = match (group.custom_icon_uuid, group.icon_id) {
-            (Some(custom_id), _) => RxIcon::Image(custom_id),
+            (Some(_custom_id), _) => RxIcon::None, // TODO support custom group icons
             (_, Some(buitin_id)) => RxIcon::Builtin(buitin_id),
             _ => RxIcon::None,
         };

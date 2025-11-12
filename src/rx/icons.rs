@@ -1,12 +1,9 @@
 use base64::{Engine, prelude::BASE64_STANDARD};
 use infer;
-use uuid::Uuid;
 
 mod kpxc {
     include!(concat!(env!("OUT_DIR"), "/kpxc_icons.rs"));
 }
-
-fn stuff() {}
 
 pub fn to_builtin_icon(icon_id: usize) -> Option<String> {
     if icon_id < kpxc::FILES.len() {

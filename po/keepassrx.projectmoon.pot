@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-12 19:20+0100\n"
+"POT-Creation-Date: 2025-11-12 20:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,32 +17,20 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: qml/pages/AboutPage.qml:14 qml/pages/DBList.qml:81
-#: qml/pages/UnlockPage.qml:41 qml/pages/EntriesPage.qml:178
-#: qml/pages/OpenDBPage.qml:54
-msgid "About"
-msgstr ""
-
-#: qml/pages/AboutPage.qml:57
-msgid ""
-"KeePassRX is a work-in-progress password manager for KeePass password "
-"databases. It is licensed under the GNU GPL v3 license."
-msgstr ""
-
-#: qml/pages/AboutPage.qml:68
-msgid ""
-"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
-"git.agnos.is/projectmoon/keepass-rx</a>"
-msgstr ""
-
 #: qml/pages/DBList.qml:67
 msgid "Add Database"
 msgstr ""
 
 #: qml/pages/DBList.qml:74 qml/pages/UnlockPage.qml:34
-#: qml/pages/EntriesPage.qml:169 qml/pages/OpenDBPage.qml:47
-#: qml/pages/SettingsPage.qml:11
+#: qml/pages/OpenDBPage.qml:47 qml/pages/SettingsPage.qml:11
+#: qml/pages/EntriesPage.qml:169
 msgid "Settings"
+msgstr ""
+
+#: qml/pages/DBList.qml:81 qml/pages/UnlockPage.qml:41
+#: qml/pages/OpenDBPage.qml:54 qml/pages/AboutPage.qml:11
+#: qml/pages/EntriesPage.qml:178
+msgid "About"
 msgstr ""
 
 #: qml/pages/DBList.qml:101
@@ -95,8 +83,8 @@ msgstr ""
 msgid "Untitled Entry"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:25 qml/pages/EntriesPage.qml:129
-#: qml/pages/OpenDBPage.qml:34
+#: qml/pages/SingleEntry.qml:25 qml/pages/OpenDBPage.qml:34
+#: qml/pages/EntriesPage.qml:129
 msgid "Back"
 msgstr ""
 
@@ -106,42 +94,6 @@ msgstr ""
 
 #: qml/pages/SingleEntry.qml:194
 msgid "Tap to copy"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:66
-msgid "Special Categories"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:105
-msgid "Lock"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:117
-msgid "Close"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:142
-msgid "View Mode"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:156
-msgid "Search"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:156
-msgid "Cancel Search"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:190
-msgid "Lock Database"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:200
-msgid "Close Database"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:229
-msgid "Search entries in this group"
 msgstr ""
 
 #: qml/pages/OpenDBPage.qml:159
@@ -192,4 +144,58 @@ msgstr ""
 
 #: qml/pages/SettingsPage.qml:81
 msgid "This group contains all the deleted entries"
+msgstr ""
+
+#: qml/pages/AboutPage.qml:54
+msgid ""
+"KeePassRX is a work-in-progress password manager for KeePass password "
+"databases. It is licensed under the GNU GPL v3 license."
+msgstr ""
+
+#: qml/pages/AboutPage.qml:65
+msgid ""
+"The built-in KeePass icon images are licensed under a variety of licenses as "
+"detailed in assets/COPYING."
+msgstr ""
+
+#: qml/pages/AboutPage.qml:76
+msgid ""
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
+"agnos.is/projectmoon/keepass-rx</a>"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:66
+msgid "Special Categories"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:105
+msgid "Lock"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:117
+msgid "Close"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:142
+msgid "View Mode"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:156
+msgid "Search"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:156
+msgid "Cancel Search"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:190
+msgid "Lock Database"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:200
+msgid "Close Database"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:229
+msgid "Search entries in this group"
 msgstr ""

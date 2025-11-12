@@ -2,7 +2,6 @@ use anyhow::{Result, anyhow};
 use keyring::Entry as KeyringEntry;
 use libsodium_rs::crypto_aead::xchacha20poly1305;
 use libsodium_rs::crypto_aead::xchacha20poly1305::{Key, Nonce};
-use libsodium_rs::crypto_kdf;
 use libsodium_rs::crypto_pwhash;
 use libsodium_rs::random;
 use secstr::SecUtf8;

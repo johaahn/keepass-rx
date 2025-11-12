@@ -45,3 +45,6 @@ walkdir = "2.5.0"
 # Compile the GUI portion of the application (link QT etc).
 gui = []
 default = ["gui"]
+
+[profile.release]
+strip="debuginfo"

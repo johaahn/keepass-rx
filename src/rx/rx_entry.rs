@@ -1,28 +1,19 @@
-use super::ZeroableDatabase;
 use super::icons::RxIcon;
 use anyhow::{Result, anyhow};
 use base64::{Engine, prelude::BASE64_STANDARD};
 use humanize_duration::Truncate;
 use humanize_duration::prelude::DurationExt;
-use indexmap::IndexMap;
 use infer;
-use keepass::config::DatabaseConfig;
-use keepass::db::{CustomData, Entry, Group, Icon, Meta, Node, TOTP as KeePassTOTP, Value};
+use keepass::db::{CustomData, Entry, Icon, TOTP as KeePassTOTP, Value};
 use libsodium_rs::utils::{SecureVec, vec_utils};
-use paste::paste;
 use querystring::querify;
-use regex::Regex;
 use secstr::SecStr;
-use std::cell::OnceCell;
-use std::collections::HashSet;
 use std::mem;
-use std::sync::{LazyLock, OnceLock};
-use std::{collections::HashMap, str::FromStr};
+use std::str::FromStr;
 use totp_rs::{Secret, TOTP};
-use unicase::UniCase;
 use uriparse::URI;
 use uuid::Uuid;
-use zeroize::{DefaultIsZeroes, Zeroize, ZeroizeOnDrop, Zeroizing};
+use zeroize::{Zeroize, ZeroizeOnDrop};
 
 macro_rules! expose {
     ($secret:expr) => {{

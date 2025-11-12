@@ -1,34 +1,24 @@
 use super::icons::RxIcon;
 use super::{RxEntry, RxTotp, ZeroableDatabase};
 use anyhow::{Result, anyhow};
-use base64::{Engine, prelude::BASE64_STANDARD};
-use humanize_duration::Truncate;
-use humanize_duration::prelude::DurationExt;
 use indexmap::IndexMap;
-use infer;
 use keepass::config::DatabaseConfig;
-use keepass::db::{CustomData, Entry, Group, Icon, Meta, Node, TOTP as KeePassTOTP, Value};
-use libsodium_rs::utils::{SecureVec, vec_utils};
+use keepass::db::{Group, Icon, Meta, Node};
 use paste::paste;
-use querystring::querify;
 use regex::Regex;
-use secstr::SecStr;
-use std::cell::OnceCell;
-use std::collections::HashSet;
 use std::mem;
-use std::sync::{LazyLock, OnceLock};
+use std::sync::LazyLock;
 use std::{collections::HashMap, str::FromStr};
-use totp_rs::{Secret, TOTP};
 use unicase::UniCase;
-use uriparse::URI;
 use uuid::Uuid;
-use zeroize::{DefaultIsZeroes, Zeroize, ZeroizeOnDrop, Zeroizing};
+use zeroize::{Zeroize, Zeroizing};
 
 pub enum RxContainer<'a> {
     Group(&'a RxGroup),
     Template(&'a RxTemplate),
 }
 
+#[allow(dead_code)]
 impl RxContainer<'_> {
     pub fn uuid(&self) -> Uuid {
         match self {

@@ -1,3 +1,5 @@
+use uuid::Uuid;
+
 mod kpxc {
     include!(concat!(env!("OUT_DIR"), "/kpxc_icons.rs"));
 }
@@ -12,4 +14,12 @@ pub fn to_builtin_icon(icon_id: usize) -> Option<String> {
     } else {
         None
     }
+}
+
+#[derive(Default, Clone)]
+pub enum RxIcon {
+    Builtin(usize),
+    Image(Uuid),
+    #[default]
+    None,
 }

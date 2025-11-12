@@ -96,11 +96,12 @@ pub struct RxEntry {
     pub password: Option<RxValue>,
     pub notes: Option<RxValue>,
 
-    // A map would be better, but it's not zeroizable.
     pub custom_fields: RxCustomFields,
 
     pub url: Option<RxValue>,
     pub raw_otp_value: Option<RxValue>,
+
+    // TODO replace with RxIcon
     pub icon_data: Option<Vec<u8>>,
 }
 

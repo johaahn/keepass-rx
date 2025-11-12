@@ -1,3 +1,4 @@
+use super::icons::RxIcon;
 use super::{RxEntry, RxTotp, ZeroableDatabase};
 use anyhow::{Result, anyhow};
 use base64::{Engine, prelude::BASE64_STANDARD};
@@ -44,15 +45,6 @@ impl RxContainer<'_> {
     }
 }
 
-#[derive(Default, Clone, Zeroize)]
-pub enum RxIcon {
-    Builtin(usize),
-    #[zeroize(skip)]
-    Image(Uuid),
-    #[default]
-    None,
-}
-
 #[derive(Zeroize, Default, Clone)]
 pub struct RxGroup {
     #[zeroize(skip)]
@@ -64,17 +56,12 @@ pub struct RxGroup {
 
     pub name: String,
 
+    #[zeroize(skip)]
     pub icon: RxIcon,
 
-    // TODO use some kind of map instead of Vec (since maps do not
-    // impl Zeroize). should be possible once we stop loading secrets
-    // into memory.
     #[zeroize(skip)]
     pub subgroups: Vec<Uuid>,
 
-    // TODO use some kind of map instead of Vec (since maps do not
-    // impl Zeroize). should be possible once we stop loading secrets
-    // into memory.
     #[zeroize(skip)]
     pub entries: Vec<Uuid>,
 }

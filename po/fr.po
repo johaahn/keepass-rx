@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-05 15:50+0100\n"
+"POT-Creation-Date: 2025-11-12 13:51+0000\n"
 "PO-Revision-Date: 2025-11-06 14:25+0000\n"
 "Last-Translator: Vlad Nirky <nirky.vlad@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -68,52 +68,6 @@ msgstr "Ouvrir"
 
 msgid "Opening"
 msgstr "Ouverture"
-
-msgid "Enable database locking (ALPHA)"
-msgstr "Activer le verrouillage de la base de données (ALPHA)"
-
-msgid ""
-"Securely lock and unlock database with a short passcode. Requires restart to "
-"take effect."
-msgstr ""
-"Verrouillez et déverrouillez la base de données en toute sécurité à l'aide "
-"d'un code d'accès court. Un redémarrage est nécessaire pour que la "
-"modification prenne effet."
-
-msgid "Auto-close db after inactivity"
-msgstr ""
-"Fermer automatiquement la base de données après une période d'inactivité"
-
-msgid "In minutes. 0 for disabled."
-msgstr "En minutes. 0 pour désactiver."
-
-msgid "Show the \"Recycle bin\" group"
-msgstr "Afficher le groupe « Corbeille »"
-
-msgid "This group contains all the deleted entries"
-msgstr "Ce groupe contient toutes les entrées supprimées"
-
-msgid "Change section on search"
-msgstr "Modifier la section recherchée"
-
-msgid ""
-"Change section automatically if there are no results for the search value in "
-"the current section, and there are results in another section"
-msgstr ""
-"Changer automatiquement de section s'il n'y a aucun résultat pour la valeur "
-"recherchée dans la section actuelle et qu'il y a des résultats dans une "
-"autre section"
-
-msgid "Show warning before opening very slow databases"
-msgstr ""
-"Afficher un avertissement avant d'ouvrir des bases de données très lentes"
-
-msgid ""
-"Opening KDBX3 databases on ARMv7 devices can take up to 2 seconds <b>per "
-"entry</b> (3 minutes for 100 entries)"
-msgstr ""
-"L'ouverture des bases de données KDBX3 sur les appareils ARMv7 peut prendre "
-"jusqu'à 2 secondes <b>par entrée</b> (3 minutes pour 100 entrées)"
 
 msgid "Manual path set."
 msgstr "Chemin défini manuellement."
@@ -176,3 +130,65 @@ msgstr "Fermer la base de données"
 
 msgid "Search entries in this group"
 msgstr "Rechercher les entrées dans ce groupe"
+
+msgid ""
+"Change settings based on your preferences. Any change to the settings "
+"requires a restart to take effect."
+msgstr ""
+
+msgid "Enable database locking"
+msgstr ""
+
+msgid ""
+"Securely lock and unlock database with a short passcode. Requires restart to "
+"take effect."
+msgstr ""
+"Verrouillez et déverrouillez la base de données en toute sécurité à l'aide "
+"d'un code d'accès court. Un redémarrage est nécessaire pour que la "
+"modification prenne effet."
+
+msgid "Enable Accents"
+msgstr ""
+
+msgid ""
+"Set header color and name according to database settings. Compatible with "
+"KeePassXC."
+msgstr ""
+
+msgid "Show the \"Recycle bin\" group"
+msgstr "Afficher le groupe « Corbeille »"
+
+msgid "This group contains all the deleted entries"
+msgstr "Ce groupe contient toutes les entrées supprimées"
+
+#~ msgid "Enable database locking (ALPHA)"
+#~ msgstr "Activer le verrouillage de la base de données (ALPHA)"
+
+#~ msgid "Auto-close db after inactivity"
+#~ msgstr ""
+#~ "Fermer automatiquement la base de données après une période d'inactivité"
+
+#~ msgid "In minutes. 0 for disabled."
+#~ msgstr "En minutes. 0 pour désactiver."
+
+#~ msgid "Change section on search"
+#~ msgstr "Modifier la section recherchée"
+
+#~ msgid ""
+#~ "Change section automatically if there are no results for the search value "
+#~ "in the current section, and there are results in another section"
+#~ msgstr ""
+#~ "Changer automatiquement de section s'il n'y a aucun résultat pour la "
+#~ "valeur recherchée dans la section actuelle et qu'il y a des résultats "
+#~ "dans une autre section"
+
+#~ msgid "Show warning before opening very slow databases"
+#~ msgstr ""
+#~ "Afficher un avertissement avant d'ouvrir des bases de données très lentes"
+
+#~ msgid ""
+#~ "Opening KDBX3 databases on ARMv7 devices can take up to 2 seconds <b>per "
+#~ "entry</b> (3 minutes for 100 entries)"
+#~ msgstr ""
+#~ "L'ouverture des bases de données KDBX3 sur les appareils ARMv7 peut "
+#~ "prendre jusqu'à 2 secondes <b>par entrée</b> (3 minutes pour 100 entrées)"

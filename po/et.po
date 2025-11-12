@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-05 15:50+0100\n"
+"POT-Creation-Date: 2025-11-12 13:51+0000\n"
 "PO-Revision-Date: 2025-11-07 14:51+0000\n"
 "Last-Translator: Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/ubports/"
@@ -69,49 +69,6 @@ msgstr "Ava"
 msgid "Opening"
 msgstr "Avamisel"
 
-msgid "Enable database locking (ALPHA)"
-msgstr ""
-"Lülita andmebaasi lukustamine sisse (väga esialgne alfa-funktsionaalsus)"
-
-msgid ""
-"Securely lock and unlock database with a short passcode. Requires restart to "
-"take effect."
-msgstr ""
-"Kasuta andmebaasi lukustamiseks ja avamiseks lühikest salakoodi. Jõustamine "
-"eeldab rakenduse uuesti käivitamist."
-
-msgid "Auto-close db after inactivity"
-msgstr "Sulge andmebaas automaatselt, kui ta pole kasutusel"
-
-msgid "In minutes. 0 for disabled."
-msgstr "Sisesta soovitud kestus minutites. 0 lülitab selle võimaluse välja."
-
-msgid "Show the \"Recycle bin\" group"
-msgstr "Näita gruppi „Prügikast“"
-
-msgid "This group contains all the deleted entries"
-msgstr "Siin on näha kõik kustutatud kirjed"
-
-msgid "Change section on search"
-msgstr "Otsimisel muuda alajaotust"
-
-msgid ""
-"Change section automatically if there are no results for the search value in "
-"the current section, and there are results in another section"
-msgstr ""
-"Kui antud alajaotusest otsimisel pole vastuseid, kuid mujal on, siis vaheta "
-"alajaotust automaatelt"
-
-msgid "Show warning before opening very slow databases"
-msgstr "Väga aeglaste andmebaaside avamisel näita hoiatust"
-
-msgid ""
-"Opening KDBX3 databases on ARMv7 devices can take up to 2 seconds <b>per "
-"entry</b> (3 minutes for 100 entries)"
-msgstr ""
-"KDBX3 andmebaaside avamisel ARMv7-seadmetes kulub aega kuni 2 sekundit "
-"<b>kirje kohta</b> (3 minutit 100 kirje kohta)"
-
 msgid "Manual path set."
 msgstr "Käsitsi määratud asukoht on seadistatud."
 
@@ -172,3 +129,62 @@ msgstr "Sulge andmebaas"
 
 msgid "Search entries in this group"
 msgstr "Otsi sellest grupist kirjeid"
+
+msgid ""
+"Change settings based on your preferences. Any change to the settings "
+"requires a restart to take effect."
+msgstr ""
+
+msgid "Enable database locking"
+msgstr ""
+
+msgid ""
+"Securely lock and unlock database with a short passcode. Requires restart to "
+"take effect."
+msgstr ""
+"Kasuta andmebaasi lukustamiseks ja avamiseks lühikest salakoodi. Jõustamine "
+"eeldab rakenduse uuesti käivitamist."
+
+msgid "Enable Accents"
+msgstr ""
+
+msgid ""
+"Set header color and name according to database settings. Compatible with "
+"KeePassXC."
+msgstr ""
+
+msgid "Show the \"Recycle bin\" group"
+msgstr "Näita gruppi „Prügikast“"
+
+msgid "This group contains all the deleted entries"
+msgstr "Siin on näha kõik kustutatud kirjed"
+
+#~ msgid "Enable database locking (ALPHA)"
+#~ msgstr ""
+#~ "Lülita andmebaasi lukustamine sisse (väga esialgne alfa-funktsionaalsus)"
+
+#~ msgid "Auto-close db after inactivity"
+#~ msgstr "Sulge andmebaas automaatselt, kui ta pole kasutusel"
+
+#~ msgid "In minutes. 0 for disabled."
+#~ msgstr "Sisesta soovitud kestus minutites. 0 lülitab selle võimaluse välja."
+
+#~ msgid "Change section on search"
+#~ msgstr "Otsimisel muuda alajaotust"
+
+#~ msgid ""
+#~ "Change section automatically if there are no results for the search value "
+#~ "in the current section, and there are results in another section"
+#~ msgstr ""
+#~ "Kui antud alajaotusest otsimisel pole vastuseid, kuid mujal on, siis "
+#~ "vaheta alajaotust automaatelt"
+
+#~ msgid "Show warning before opening very slow databases"
+#~ msgstr "Väga aeglaste andmebaaside avamisel näita hoiatust"
+
+#~ msgid ""
+#~ "Opening KDBX3 databases on ARMv7 devices can take up to 2 seconds <b>per "
+#~ "entry</b> (3 minutes for 100 entries)"
+#~ msgstr ""
+#~ "KDBX3 andmebaaside avamisel ARMv7-seadmetes kulub aega kuni 2 sekundit "
+#~ "<b>kirje kohta</b> (3 minutit 100 kirje kohta)"

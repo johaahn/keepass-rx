@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-05 15:50+0100\n"
+"POT-Creation-Date: 2025-11-12 13:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -61,42 +61,6 @@ msgid "Open"
 msgstr ""
 
 msgid "Opening"
-msgstr ""
-
-msgid "Enable database locking (ALPHA)"
-msgstr ""
-
-msgid ""
-"Securely lock and unlock database with a short passcode. Requires restart to "
-"take effect."
-msgstr ""
-
-msgid "Auto-close db after inactivity"
-msgstr ""
-
-msgid "In minutes. 0 for disabled."
-msgstr ""
-
-msgid "Show the \"Recycle bin\" group"
-msgstr ""
-
-msgid "This group contains all the deleted entries"
-msgstr ""
-
-msgid "Change section on search"
-msgstr ""
-
-msgid ""
-"Change section automatically if there are no results for the search value in "
-"the current section, and there are results in another section"
-msgstr ""
-
-msgid "Show warning before opening very slow databases"
-msgstr ""
-
-msgid ""
-"Opening KDBX3 databases on ARMv7 devices can take up to 2 seconds <b>per "
-"entry</b> (3 minutes for 100 entries)"
 msgstr ""
 
 msgid "Manual path set."
@@ -156,4 +120,31 @@ msgid "Close Database"
 msgstr ""
 
 msgid "Search entries in this group"
+msgstr ""
+
+msgid ""
+"Change settings based on your preferences. Any change to the settings "
+"requires a restart to take effect."
+msgstr ""
+
+msgid "Enable database locking"
+msgstr ""
+
+msgid ""
+"Securely lock and unlock database with a short passcode. Requires restart to "
+"take effect."
+msgstr ""
+
+msgid "Enable Accents"
+msgstr ""
+
+msgid ""
+"Set header color and name according to database settings. Compatible with "
+"KeePassXC."
+msgstr ""
+
+msgid "Show the \"Recycle bin\" group"
+msgstr ""
+
+msgid "This group contains all the deleted entries"
 msgstr ""

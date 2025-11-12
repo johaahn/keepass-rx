@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-05 15:50+0100\n"
+"POT-Creation-Date: 2025-11-12 13:51+0000\n"
 "PO-Revision-Date: 2025-11-03 20:51+0000\n"
 "Last-Translator: Serhii Horichenko <serhii@horichenko.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/ubports/"
@@ -70,48 +70,6 @@ msgstr "Відкрити"
 msgid "Opening"
 msgstr "Відкривається"
 
-msgid "Enable database locking (ALPHA)"
-msgstr "Активувати блокування бази даних (АЛЬФА)"
-
-msgid ""
-"Securely lock and unlock database with a short passcode. Requires restart to "
-"take effect."
-msgstr ""
-"Безпечно блокуйте та розблоковуйте базу даних коротким кодом. Для активації "
-"потрібне перезавантаження."
-
-msgid "Auto-close db after inactivity"
-msgstr "Автоматично закривати базу після неактивності"
-
-msgid "In minutes. 0 for disabled."
-msgstr "У хвилинах. 0 - вимкнене."
-
-msgid "Show the \"Recycle bin\" group"
-msgstr "Показати групу \"Кошик\""
-
-msgid "This group contains all the deleted entries"
-msgstr "Ця група містить усі видаленні записи"
-
-msgid "Change section on search"
-msgstr "Змінити розділ пошуку"
-
-msgid ""
-"Change section automatically if there are no results for the search value in "
-"the current section, and there are results in another section"
-msgstr ""
-"Якщо у поточному розділі результати для пошукового запиту відсутні, а в "
-"іншому розділі вони є, змінити розділ автоматично"
-
-msgid "Show warning before opening very slow databases"
-msgstr "Перед відкриттям дуже повільних баз даних показувати попередження"
-
-msgid ""
-"Opening KDBX3 databases on ARMv7 devices can take up to 2 seconds <b>per "
-"entry</b> (3 minutes for 100 entries)"
-msgstr ""
-"Відкриття баз даних KDBX3 на пристроях з ARMv7 може зайняти до 2 секунд "
-"<b>на запис</b> (3 хвилини на 100 записів)"
-
 msgid "Manual path set."
 msgstr "Шлях встановлений вручну."
 
@@ -172,6 +130,64 @@ msgstr "Закрити базу даних"
 
 msgid "Search entries in this group"
 msgstr "Шукати записи у цій групі"
+
+msgid ""
+"Change settings based on your preferences. Any change to the settings "
+"requires a restart to take effect."
+msgstr ""
+
+msgid "Enable database locking"
+msgstr ""
+
+msgid ""
+"Securely lock and unlock database with a short passcode. Requires restart to "
+"take effect."
+msgstr ""
+"Безпечно блокуйте та розблоковуйте базу даних коротким кодом. Для активації "
+"потрібне перезавантаження."
+
+msgid "Enable Accents"
+msgstr ""
+
+msgid ""
+"Set header color and name according to database settings. Compatible with "
+"KeePassXC."
+msgstr ""
+
+msgid "Show the \"Recycle bin\" group"
+msgstr "Показати групу \"Кошик\""
+
+msgid "This group contains all the deleted entries"
+msgstr "Ця група містить усі видаленні записи"
+
+#~ msgid "Enable database locking (ALPHA)"
+#~ msgstr "Активувати блокування бази даних (АЛЬФА)"
+
+#~ msgid "Auto-close db after inactivity"
+#~ msgstr "Автоматично закривати базу після неактивності"
+
+#~ msgid "In minutes. 0 for disabled."
+#~ msgstr "У хвилинах. 0 - вимкнене."
+
+#~ msgid "Change section on search"
+#~ msgstr "Змінити розділ пошуку"
+
+#~ msgid ""
+#~ "Change section automatically if there are no results for the search value "
+#~ "in the current section, and there are results in another section"
+#~ msgstr ""
+#~ "Якщо у поточному розділі результати для пошукового запиту відсутні, а в "
+#~ "іншому розділі вони є, змінити розділ автоматично"
+
+#~ msgid "Show warning before opening very slow databases"
+#~ msgstr "Перед відкриттям дуже повільних баз даних показувати попередження"
+
+#~ msgid ""
+#~ "Opening KDBX3 databases on ARMv7 devices can take up to 2 seconds <b>per "
+#~ "entry</b> (3 minutes for 100 entries)"
+#~ msgstr ""
+#~ "Відкриття баз даних KDBX3 на пристроях з ARMv7 може зайняти до 2 секунд "
+#~ "<b>на запис</b> (3 хвилини на 100 записів)"
 
 #~ msgid "Loading last database:"
 #~ msgstr "Завантаження останньої бази:"

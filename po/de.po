@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-05 15:50+0100\n"
+"POT-Creation-Date: 2025-11-12 13:51+0000\n"
 "PO-Revision-Date: 2025-11-07 14:51+0000\n"
 "Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -70,48 +70,6 @@ msgstr "Öffnen"
 msgid "Opening"
 msgstr "Öffne"
 
-msgid "Enable database locking (ALPHA)"
-msgstr "Datenbanksperrung aktivieren (ALPHA)"
-
-msgid ""
-"Securely lock and unlock database with a short passcode. Requires restart to "
-"take effect."
-msgstr ""
-"Sichere Sperrung und Entsperrung der Datenbank mit einem kurzen Passcode. "
-"Erfordert einen Neustart, um wirksam zu werden."
-
-msgid "Auto-close db after inactivity"
-msgstr "Datenbank nach Inaktivität automatisch schließen"
-
-msgid "In minutes. 0 for disabled."
-msgstr "In Minuten. 0 für deaktiviert."
-
-msgid "Show the \"Recycle bin\" group"
-msgstr "Gruppe „Papierkorb“ anzeigen"
-
-msgid "This group contains all the deleted entries"
-msgstr "Diese Gruppe enthält alle gelöschten Einträge"
-
-msgid "Change section on search"
-msgstr "Abschnitt der Suche ändern"
-
-msgid ""
-"Change section automatically if there are no results for the search value in "
-"the current section, and there are results in another section"
-msgstr ""
-"Wechsle den Reiter automatisch falls es keine Suchergebnisse im aktuellen "
-"Reiter gibt, aber in einem anderen Reiter"
-
-msgid "Show warning before opening very slow databases"
-msgstr "Warnung vor dem Öffnen sehr langsamer Datenbanken anzeigen"
-
-msgid ""
-"Opening KDBX3 databases on ARMv7 devices can take up to 2 seconds <b>per "
-"entry</b> (3 minutes for 100 entries)"
-msgstr ""
-"Das Öffnen von KDBX3-Datenbanken auf ARMv7-Geräten kann bis zu 2 Sekunden "
-"<b>pro Eintrag</b> dauern (3 Minuten für 100 Einträge)"
-
 msgid "Manual path set."
 msgstr "Manueller Pfad gesetzt."
 
@@ -172,6 +130,64 @@ msgstr "Datenbank schließen"
 
 msgid "Search entries in this group"
 msgstr "Einträge in dieser Gruppe suchen"
+
+msgid ""
+"Change settings based on your preferences. Any change to the settings "
+"requires a restart to take effect."
+msgstr ""
+
+msgid "Enable database locking"
+msgstr ""
+
+msgid ""
+"Securely lock and unlock database with a short passcode. Requires restart to "
+"take effect."
+msgstr ""
+"Sichere Sperrung und Entsperrung der Datenbank mit einem kurzen Passcode. "
+"Erfordert einen Neustart, um wirksam zu werden."
+
+msgid "Enable Accents"
+msgstr ""
+
+msgid ""
+"Set header color and name according to database settings. Compatible with "
+"KeePassXC."
+msgstr ""
+
+msgid "Show the \"Recycle bin\" group"
+msgstr "Gruppe „Papierkorb“ anzeigen"
+
+msgid "This group contains all the deleted entries"
+msgstr "Diese Gruppe enthält alle gelöschten Einträge"
+
+#~ msgid "Enable database locking (ALPHA)"
+#~ msgstr "Datenbanksperrung aktivieren (ALPHA)"
+
+#~ msgid "Auto-close db after inactivity"
+#~ msgstr "Datenbank nach Inaktivität automatisch schließen"
+
+#~ msgid "In minutes. 0 for disabled."
+#~ msgstr "In Minuten. 0 für deaktiviert."
+
+#~ msgid "Change section on search"
+#~ msgstr "Abschnitt der Suche ändern"
+
+#~ msgid ""
+#~ "Change section automatically if there are no results for the search value "
+#~ "in the current section, and there are results in another section"
+#~ msgstr ""
+#~ "Wechsle den Reiter automatisch falls es keine Suchergebnisse im aktuellen "
+#~ "Reiter gibt, aber in einem anderen Reiter"
+
+#~ msgid "Show warning before opening very slow databases"
+#~ msgstr "Warnung vor dem Öffnen sehr langsamer Datenbanken anzeigen"
+
+#~ msgid ""
+#~ "Opening KDBX3 databases on ARMv7 devices can take up to 2 seconds <b>per "
+#~ "entry</b> (3 minutes for 100 entries)"
+#~ msgstr ""
+#~ "Das Öffnen von KDBX3-Datenbanken auf ARMv7-Geräten kann bis zu 2 Sekunden "
+#~ "<b>pro Eintrag</b> dauern (3 Minuten für 100 Einträge)"
 
 #~ msgid "Loading last database:"
 #~ msgstr "Lade die letzte Datenbank:"

@@ -1,14 +1,11 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.12
-import Lomiri.Components 1.3 as UITK
+import Lomiri.Components 1.3
 import "../components"
 import Qt.labs.settings 1.0
 
-/* width: parent.width */
-/*             Layout.preferredWidth: width // this plus the explicit width and wrapmode will wrap the long text. */
-UITK.Page {
-    property bool isARMv7: false
-    header: UITK.PageHeader {
+Page {
+    header: PageHeader {
         id: header
         // TRANSLATORS: Header for the "About" page.
         title: i18n.tr("About")
@@ -49,7 +46,7 @@ UITK.Page {
             Layout.fillHeight: false
         }
 
-        UITK.Label {
+        Label {
             width: parent.width
             Layout.preferredWidth: width
             wrapMode: Text.Wrap
@@ -60,7 +57,18 @@ UITK.Page {
             )
         }
 
-        UITK.Label {
+        Label {
+            width: parent.width
+            Layout.preferredWidth: width
+            wrapMode: Text.Wrap
+            text: i18n.tr(
+                "" +
+                    "The built-in KeePass icon images are licensed under a variety of " +
+                    "licenses as detailed in assets/COPYING."
+            )
+        }
+
+        Label {
             width: parent.width
             Layout.preferredWidth: width
             wrapMode: Text.Wrap

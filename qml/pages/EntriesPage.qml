@@ -69,7 +69,7 @@ Page {
     }
 
     function headerBackgroundColor() {
-        if (publicDatabaseColor && settings.showAccents) {
+        if (publicDatabaseColor && settings.showAccents && colorWashout) {
             return colorWashout.backgroundColor;
         } else {
             return "transparent";

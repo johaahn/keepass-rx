@@ -46,6 +46,7 @@ pub struct RxListItem {
     title: qt_property!(QString),
     subtitle: qt_property!(QString),
     iconPath: qt_property!(QString),
+    iconBuiltin: qt_property!(bool),
 
     // Mostly for passwords entries. Does not really apply to groups.
     hasUsername: qt_property!(bool),
@@ -68,6 +69,7 @@ impl From<&RxTemplate> for RxListItem {
             hasTOTP: false,
 
             iconPath: QString::default(),
+            iconBuiltin: false,
             title: QString::from(value.name.as_ref()),
             subtitle: QString::from(""),
         }
@@ -87,7 +89,13 @@ impl From<&RxEntry> for RxListItem {
             hasURL: value.url.is_some(),
             hasTOTP: value.raw_otp_value.is_some(),
 
-            iconPath: value.icon_data_url().map(QString::from).unwrap_or_default(),
+            iconPath: value
+                .icon
+                .icon_path()
+                .map(QString::from)
+                .unwrap_or_default(),
+
+            iconBuiltin: value.icon.is_builtin(),
 
             title: value
                 .title
@@ -125,9 +133,13 @@ impl From<&RxGroup> for RxListItem {
 
             title: value.name.clone().into(),
             subtitle: QString::from("Group"),
+            iconPath: value
+                .icon
+                .icon_path()
+                .map(QString::from)
+                .unwrap_or_default(),
 
-            // TODO support group icons
-            iconPath: QString::default(),
+            iconBuiltin: value.icon.is_builtin(),
 
             hasUsername: false,
             hasPassword: false,
@@ -169,6 +181,7 @@ impl From<RxListItem> for QVariantMap {
         map.insert("hasURL".into(), value.hasURL.to_qvariant());
         map.insert("hasTOTP".into(), value.hasTOTP.to_qvariant());
         map.insert("iconPath".into(), value.iconPath.to_qvariant());
+        map.insert("iconBuiltin".into(), value.iconBuiltin.to_qvariant());
 
         map
     }

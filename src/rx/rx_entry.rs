@@ -1,4 +1,5 @@
 use super::ZeroableDatabase;
+use super::icons::RxIcon;
 use anyhow::{Result, anyhow};
 use base64::{Engine, prelude::BASE64_STANDARD};
 use humanize_duration::Truncate;
@@ -96,12 +97,13 @@ pub struct RxEntry {
     pub password: Option<RxValue>,
     pub notes: Option<RxValue>,
 
-    // A map would be better, but it's not zeroizable.
     pub custom_fields: RxCustomFields,
 
     pub url: Option<RxValue>,
     pub raw_otp_value: Option<RxValue>,
-    pub icon_data: Option<Vec<u8>>,
+
+    #[zeroize(skip)]
+    pub icon: RxIcon,
 }
 
 fn extract_remaining_fields(entry: &mut Entry) -> Vec<(String, RxValue)> {
@@ -155,11 +157,19 @@ impl RxEntry {
                 .and_then(|uuid_str| Uuid::from_str(uuid_str).ok())
         });
 
+        // Icon: Can eiher be the custom one (provided), or the
+        // built-in one, or nothing.
+
+        let rx_icon = icon
+            .map(|i| RxIcon::Image(i.data))
+            .or_else(|| entry.icon_id.map(|id| RxIcon::Builtin(id)))
+            .unwrap_or(RxIcon::None);
+
         // Has to come after the above, otherwise those fields end up
-        // here.
-        let mut other_fields = RxCustomFields::from(extract_remaining_fields(&mut entry));
+        // in the custom fields.
+        let mut remaining_fields = RxCustomFields::from(extract_remaining_fields(&mut entry));
         let mut custom_fields = RxCustomFields::from(custom_data);
-        custom_fields.append(&mut other_fields);
+        custom_fields.append(&mut remaining_fields);
 
         Self {
             uuid: entry.uuid,
@@ -172,7 +182,7 @@ impl RxEntry {
             custom_fields: custom_fields,
             url: url,
             raw_otp_value: raw_otp_value,
-            icon_data: icon.map(|i| i.data),
+            icon: rx_icon,
         }
     }
 
@@ -244,7 +254,7 @@ impl RxEntry {
     }
 
     pub fn icon_data_url(&self) -> Option<String> {
-        self.icon_data.as_deref().and_then(|data| {
+        if let RxIcon::Image(ref data) = self.icon {
             infer::get(data).map(|k| {
                 format!(
                     "data:{};base64,{}",
@@ -252,7 +262,9 @@ impl RxEntry {
                     BASE64_STANDARD.encode(data)
                 )
             })
-        })
+        } else {
+            None
+        }
     }
 }
 

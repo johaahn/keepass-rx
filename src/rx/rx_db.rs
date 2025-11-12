@@ -1,3 +1,4 @@
+use super::icons::RxIcon;
 use super::{RxEntry, RxTotp, ZeroableDatabase};
 use anyhow::{Result, anyhow};
 use base64::{Engine, prelude::BASE64_STANDARD};
@@ -55,15 +56,12 @@ pub struct RxGroup {
 
     pub name: String,
 
-    // TODO use some kind of map instead of Vec (since maps do not
-    // impl Zeroize). should be possible once we stop loading secrets
-    // into memory.
+    #[zeroize(skip)]
+    pub icon: RxIcon,
+
     #[zeroize(skip)]
     pub subgroups: Vec<Uuid>,
 
-    // TODO use some kind of map instead of Vec (since maps do not
-    // impl Zeroize). should be possible once we stop loading secrets
-    // into memory.
     #[zeroize(skip)]
     pub entries: Vec<Uuid>,
 }
@@ -75,12 +73,19 @@ impl RxGroup {
         entries: Vec<Uuid>,
         parent: Option<Uuid>,
     ) -> Self {
+        let icon = match (group.custom_icon_uuid, group.icon_id) {
+            (Some(_custom_id), _) => RxIcon::None, // TODO support custom group icons
+            (_, Some(buitin_id)) => RxIcon::Builtin(buitin_id),
+            _ => RxIcon::None,
+        };
+
         Self {
             uuid: group.uuid,
             name: mem::take(&mut group.name),
             subgroups: subgroups,
             entries: entries,
             parent: parent,
+            icon: icon,
         }
     }
 }
@@ -573,6 +578,7 @@ mod tests {
             subgroups: vec![],
             uuid: group_uuid,
             parent: None,
+            icon: RxIcon::None,
         };
 
         let db = RxDatabase {
@@ -619,6 +625,7 @@ mod tests {
             subgroups: vec![],
             uuid: group_uuid,
             parent: None,
+            icon: RxIcon::None,
         };
 
         let db = RxDatabase {

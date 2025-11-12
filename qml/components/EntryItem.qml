@@ -9,6 +9,18 @@ ListItem {
     height: units.gu(10)
     id: entireItem
 
+    function resolveIconPath() {
+        if (iconPath) {
+            if (iconBuiltin) {
+                return `../../assets/icons/${iconPath}`;
+            } else {
+                return iconPath;
+            }
+        } else {
+            return '../../assets/placeholder.png';
+        }
+    }
+
     Connections {
 	target: keepassrx
 
@@ -121,19 +133,37 @@ ListItem {
 
 	spacing: units.gu(1)
 
-	Icon {
-	    visible: itemType != 'Entry'
-	    width: units.gu(5)
-	    height: parent.height
-	    y: parent.height / 2 - height / 2
-	    name: itemType == 'Group' || itemType == 'Template' ? 'folder' : 'up'
-	}
+        // Group/Folder entry
+        Item {
+            width: units.gu(5)
+            height: parent.height
+            visible: itemType != 'Entry'
+
+            // The folder icon itself
+	    Icon {
+	        width: units.gu(5)
+	        height: parent.height
+	        y: parent.height / 2 - height / 2
+	        name: itemType == 'Group' || itemType == 'Template' ? 'folder' : 'up'
+	    }
+
+            // Icon of the group/folder, if it has one.
+	    Image {
+	        id: groupEntryImg
+	        fillMode: Image.PreserveAspectFit
+	        source: resolveIconPath()
+	        width: units.gu(2.75)
+	        height: units.gu(2.75)
+	        y: parent.height - height * 1.5
+                x: parent.width - width / 1.25
+	    }
+        }
 
 	Image {
 	    id: entryImg
 	    visible: itemType == 'Entry'
 	    fillMode: Image.PreserveAspectFit
-	    source: iconPath ? iconPath : '../../assets/placeholder.png'
+	    source: resolveIconPath()
 	    width: units.gu(5)
 	    height: parent.height
 	    y: parent.height / 2 - height / 2

@@ -39,6 +39,7 @@ palette = "0.7.6"
 
 [build-dependencies]
 cpp_build = "0.5"
+walkdir = "2.5.0"
 
 [features]
 # Compile the GUI portion of the application (link QT etc).

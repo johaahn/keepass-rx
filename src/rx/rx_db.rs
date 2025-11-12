@@ -6,7 +6,7 @@ use humanize_duration::prelude::DurationExt;
 use indexmap::IndexMap;
 use infer;
 use keepass::config::DatabaseConfig;
-use keepass::db::{CustomData, Entry, Group, Icon, Node, TOTP as KeePassTOTP, Value};
+use keepass::db::{CustomData, Entry, Group, Icon, Meta, Node, TOTP as KeePassTOTP, Value};
 use libsodium_rs::utils::{SecureVec, vec_utils};
 use paste::paste;
 use querystring::querify;
@@ -616,16 +616,19 @@ pub struct RxMetadata {
     pub color: Option<String>,
     pub name: Option<String>,
     pub icon: Option<i32>,
+
+    pub recycle_bin_uuid: Option<Uuid>,
 }
 
 impl RxMetadata {
-    pub fn new(mut config: DatabaseConfig) -> RxMetadata {
+    pub fn new(mut config: DatabaseConfig, meta: Meta) -> RxMetadata {
         let mut custom_db_data = config.public_custom_data.take().map(|pcd| pcd.data);
 
         RxMetadata {
             name: get_kpxc_field!(String, custom_db_data, "KPXC_PUBLIC_NAME"),
             color: get_kpxc_field!(String, custom_db_data, "KPXC_PUBLIC_COLOR"),
             icon: get_kpxc_field!(i32, custom_db_data, "KPXC_PUBLIC_ICON"),
+            recycle_bin_uuid: meta.recyclebin_uuid,
         }
     }
 }
@@ -688,7 +691,7 @@ impl RxDatabase {
         let root_uuid = root_group.uuid;
         state.all_groups.insert(root_group.uuid, root_group);
 
-        let rx_metadata = RxMetadata::new(mem::take(&mut db.config));
+        let rx_metadata = RxMetadata::new(mem::take(&mut db.config), mem::take(&mut db.meta));
 
         drop(db);
 

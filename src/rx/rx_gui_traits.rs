@@ -116,6 +116,17 @@ impl From<&RxMetadata> for QVariantMap {
     fn from(value: &RxMetadata) -> Self {
         let mut map = QVariantMap::default();
 
+        // Standard KeePass Settings
+        map.insert(
+            "recycleBinUuid".into(),
+            value
+                .recycle_bin_uuid
+                .map(|uuid| QString::from(uuid.to_string()))
+                .unwrap_or_default()
+                .into(),
+        );
+
+        // KeePassXC Settings
         map.insert(
             "publicName".into(),
             value

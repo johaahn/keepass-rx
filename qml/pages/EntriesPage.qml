@@ -25,6 +25,7 @@ Page {
     // These are set by metadata fetching
     property string publicDatabaseName
     property string publicDatabaseColor
+    property string recycleBinUuid
 
     onContainerUuidChanged: {
 	populate();
@@ -307,13 +308,16 @@ Page {
         }
 
         onMetadataReceived: (metadata) => {
-            console.log('Metadata received:', JSON.stringify(metadata));
             if (metadata.publicName) {
                 publicDatabaseName = metadata.publicName;
             }
 
             if (metadata.publicColor) {
                 publicDatabaseColor = metadata.publicColor;
+            }
+
+            if (metadata.recycleBinUuid) {
+                recycleBinUuid = metadata.recycleBinUuid;
             }
         }
 
@@ -366,14 +370,21 @@ Page {
             getEntries(thisTemplateUuid);
         }
 
-	// List of entries for this container. It's an array of RxListItem
-	// entities. It includes both immediate subcontainers and
-	// immediate child entries in the container.
+	// List of entries for this container. It's an array of
+	// RxListItem entities. It includes both immediate subgroups
+	// and immediate child entries in the container.
         onEntriesReceived: (entries) => {
 	    entriesListModel.clear();
 
             for (const entry of entries) {
-                entriesListModel.append(entry);
+                let append = true;
+                if (entry.itemType == 'Group' && entry.uuid == recycleBinUuid) {
+                    append = settings.showRecycleBin;
+                }
+
+                if (append) {
+                    entriesListModel.append(entry);
+                }
             }
         }
     }

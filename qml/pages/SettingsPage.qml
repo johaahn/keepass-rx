@@ -1,11 +1,11 @@
 import QtQuick 2.0
-import Lomiri.Components 1.3 as UITK
+import Lomiri.Components 1.3
 import "../components"
 import Qt.labs.settings 1.0
 
-UITK.Page {
+Page {
     property bool isARMv7: false
-    header: UITK.PageHeader {
+    header: PageHeader {
         id: header
         // TRANSLATORS: Page header for the settings.
         title: i18n.tr("Settings")
@@ -40,12 +40,12 @@ UITK.Page {
             // into a singleton!
             SettingsItem {
                 // TRANSLATORS: Enable or disable easy (and secure!) locking and unlocking of the database.
-                title: i18n.tr("Enable database locking (ALPHA)")
+                title: i18n.tr("Enable database locking")
                 // TRANSLATORS: Description of the database locking setting.
                 description: i18n.tr(
                     "Securely lock and unlock database with a short passcode. Requires restart to take effect."
                 )
-                control: UITK.Switch {
+                control: Switch {
                     onCheckedChanged: settings.databaseLocking = checked
                     checked: settings.databaseLocking
                 }
@@ -56,7 +56,7 @@ UITK.Page {
                 description: i18n.tr(
                     'Set header color and name according to public database settings.'
                 )
-                control: UITK.Switch {
+                control: Switch {
                     onCheckedChanged: settings.showAccents = checked
                     checked: settings.showAccents
                 }
@@ -64,10 +64,11 @@ UITK.Page {
 
             SettingsItem {
                 // TRANSLATORS: DB is the abbreviation for database
-                title: i18n.tr("Auto-close db after inactivity")
+                title: i18n.tr("Auto-close database after inactivity")
                 // TRANSLATORS: Description of the auto-close setting.
                 description: i18n.tr("In minutes. 0 for disabled.")
-                control: UITK.TextField {
+                enabled: false
+                control: TextField {
                     inputMethodHints: Qt.ImhDigitsOnly
                     text: settings.autoCloseInterval
                     onTextChanged: {
@@ -95,32 +96,9 @@ UITK.Page {
                 title: i18n.tr('Show the "Recycle bin" group')
                 // TRANSLATORS: Description of the "Show recycle bin group" setting.
                 description: i18n.tr('This group contains all the deleted entries')
-                control: UITK.Switch {
+                control: Switch {
                     onCheckedChanged: settings.showRecycleBin = checked
                     checked: settings.showRecycleBin
-                }
-            }
-            SettingsItem {
-                // TRANSLAOTORS: Whether or not to change group section on search.
-                title: i18n.tr('Change section on search')
-                description: i18n.tr(
-                    'Change section automatically if there are no results for the ' +
-                        'search value in the current section, and there are results in another section'
-                )
-                control: UITK.Switch {
-                    onCheckedChanged: settings.changeGroupOnSearch = checked
-                    checked: settings.changeGroupOnSearch
-                }
-            }
-            SettingsItem {
-                visible: isARMv7
-                title: i18n.tr('Show warning before opening very slow databases')
-                description: i18n.tr(
-                    'Opening KDBX3 databases on ARMv7 devices can take up to 2 seconds <b>per entry</b> (3 minutes for 100 entries)'
-                )
-                control: UITK.Switch {
-                    onCheckedChanged: settings.showSlowDBWarning = checked
-                    checked: settings.showSlowDBWarning
                 }
             }
         }

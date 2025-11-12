@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-12 11:34+0000\n"
+"POT-Creation-Date: 2025-11-12 11:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: qml/pages/AboutPage.qml:14 qml/pages/DBList.qml:81
 #: qml/pages/OpenDBPage.qml:55 qml/pages/UnlockPage.qml:41
-#: qml/pages/EntriesPage.qml:159
+#: qml/pages/EntriesPage.qml:160
 msgid "About"
 msgstr ""
 
@@ -41,7 +41,7 @@ msgstr ""
 
 #: qml/pages/DBList.qml:74 qml/pages/OpenDBPage.qml:48
 #: qml/pages/SettingsPage.qml:11 qml/pages/UnlockPage.qml:34
-#: qml/pages/EntriesPage.qml:150
+#: qml/pages/EntriesPage.qml:151
 msgid "Settings"
 msgstr ""
 
@@ -62,7 +62,7 @@ msgid "It will only be removed from the app, not your device."
 msgstr ""
 
 #: qml/pages/OpenDBPage.qml:34 qml/pages/SingleEntry.qml:25
-#: qml/pages/EntriesPage.qml:110
+#: qml/pages/EntriesPage.qml:111
 msgid "Back"
 msgstr ""
 
@@ -83,7 +83,7 @@ msgid "Opening"
 msgstr ""
 
 #: qml/pages/SettingsPage.qml:43
-msgid "Enable database locking (ALPHA)"
+msgid "Enable database locking"
 msgstr ""
 
 #: qml/pages/SettingsPage.qml:46
@@ -114,26 +114,6 @@ msgstr ""
 
 #: qml/pages/SettingsPage.qml:97
 msgid "This group contains all the deleted entries"
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:105
-msgid "Change section on search"
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:107
-msgid ""
-"Change section automatically if there are no results for the search value in "
-"the current section, and there are results in another section"
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:117
-msgid "Show warning before opening very slow databases"
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:119
-msgid ""
-"Opening KDBX3 databases on ARMv7 devices can take up to 2 seconds <b>per "
-"entry</b> (3 minutes for 100 entries)"
 msgstr ""
 
 #: qml/pages/UnlockPage.qml:146
@@ -178,38 +158,38 @@ msgstr ""
 msgid "Tap to copy"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:59
+#: qml/pages/EntriesPage.qml:60
 msgid "Special Categories"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:86
+#: qml/pages/EntriesPage.qml:87
 msgid "Lock"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:98
+#: qml/pages/EntriesPage.qml:99
 msgid "Close"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:123
+#: qml/pages/EntriesPage.qml:124
 msgid "View Mode"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:137
+#: qml/pages/EntriesPage.qml:138
 msgid "Search"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:137
+#: qml/pages/EntriesPage.qml:138
 msgid "Cancel Search"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:171
+#: qml/pages/EntriesPage.qml:172
 msgid "Lock Database"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:181
+#: qml/pages/EntriesPage.qml:182
 msgid "Close Database"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:210
+#: qml/pages/EntriesPage.qml:211
 msgid "Search entries in this group"
 msgstr ""

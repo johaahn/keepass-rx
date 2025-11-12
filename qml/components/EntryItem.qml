@@ -28,7 +28,7 @@ ListItem {
 	    // fieldValue will be null if it's not in the entry.
 	    if (fieldValue) {
 		// TODO Add some better URL handling, for fields that
-		// are not marked specifically as URL.
+		// are not marked specifically with title "URL".
 		if (fieldName.toLowerCase() == "url") {
 		    if (entry.url.indexOf('//') === -1) {
 			Qt.openUrlExternally('http://' + url);

@@ -18,6 +18,8 @@ pub(crate) mod utils;
 use actor::*;
 use utils::*;
 
+use crate::rx::RxMetadata;
+
 #[derive(Default, QEnum, Clone, Copy)]
 #[repr(C)]
 pub enum RxGuiState {
@@ -93,6 +95,7 @@ pub struct KeepassRx {
     databaseOpen: qt_property!(bool),
     isMasterPasswordEncrypted: qt_property!(bool; NOTIFY masterPasswordStateChanged),
     rootGroupUuid: qt_property!(QString; NOTIFY rootGroupUuidChanged),
+    metadata: qt_property!(QVariant; NOTIFY metadataChanged),
 
     // page management
     currentContainer: qt_property!(QVariant; NOTIFY currentContainerChanged),
@@ -144,6 +147,7 @@ pub struct KeepassRx {
     databaseOpenFailed: qt_signal!(message: String),
 
     // data signals
+    metadataChanged: qt_signal!(),
     templatesReceived: qt_signal!(templates: QVariantList),
     groupReceived: qt_signal!(parent_group_uuid: QString, this_group_uuid: QString, this_group_name: QString),
     templateReceived: qt_signal!(this_template_uuid: QString, this_template_name: QString),

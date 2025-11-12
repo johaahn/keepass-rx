@@ -152,3 +152,9 @@ impl From<&RxMetadata> for QVariantMap {
         map
     }
 }
+
+impl From<&RxMetadata> for QVariant {
+    fn from(value: &RxMetadata) -> Self {
+        QVariantMap::from(value).into()
+    }
+}

@@ -242,6 +242,7 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                         let rx_db = RxDatabase::new(wrapped_db);
 
                         gui.rootGroupUuid = QString::from(rx_db.root_group().uuid.to_string());
+                        gui.metadata = rx_db.metadata().into();
                         this.curr_db = RefCell::new(Some(Zeroizing::new(rx_db)));
                         gui.databaseOpen = true;
                         gui.databaseOpened();

@@ -1,7 +1,7 @@
 use qmetaobject::{QMetaType, QObject, QString, QVariant, QVariantList, QVariantMap};
 use uuid::Uuid;
 
-use crate::rx::{RxEntry, RxGroup, RxTemplate};
+use crate::rx::{RxEntry, RxGroup, RxMetadata, RxTemplate};
 
 #[derive(QEnum, Clone, Default, Copy)]
 #[repr(C)]

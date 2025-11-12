@@ -7,38 +7,26 @@ import Qt.labs.settings 1.0
 import "../components"
 
 Page {
+    Settings {
+        id: settings
+        property bool showAccents: true
+    }
+
     property string entryTitle
     property string entryUsername
     property string entryPassword
     property string entryUrl
     property string entryNotes
     property var entryCustomFields
-
-    header: PageHeader {
-        title: entryTitle || i18n.tr('Untitled Entry')
-
-        // For some reason the auto-managed back button isn't showing
-        // up, so we make our own.
-        leadingActionBar.actions: [
-            Action {
-                name: "Back"
-                text: i18n.tr("Back")
-                iconName: "previous"
-                onTriggered: {
-                    // If we remove primary page, only child pages
-                    // (i.e. THIS page) are removed. So, this sends us
-                    // back to entries list.
-                    pageStack.removePages(pageStack.primaryPage);
-                }
-            }
-        ]
-    }
-
-    ListModel {
-        id: entryModel
-    }
+    property var colorWashout
 
     Component.onCompleted: {
+        const metadata = keepassrx.metadata;
+
+        if (metadata.publicColor) {
+            colorWashout = keepassrx.washOutColor(metadata.publicColor);
+        }
+
         if (entryUsername) {
             entryModel.append({
                 fieldName: "Username",
@@ -71,6 +59,54 @@ Page {
                 fieldShown: !field.isHiddenByDefault
             });
         }
+    }
+
+    function headerBackgroundColor() {
+        if (settings.showAccents && colorWashout) {
+            return colorWashout.backgroundColor;
+        } else {
+            return "transparent";
+        }
+    }
+
+    function headerTextColor() {
+        if (settings.showAccents && colorWashout) {
+            // textColorType is the color type for the header text itself.
+            return colorWashout.textColorType === 'Light'
+                ? LomiriColors.white
+                : LomiriColors.jet;
+        } else {
+            return theme.palette.normal.foregroundText;
+        }
+    }
+
+    header: PageHeader {
+        title: entryTitle || i18n.tr('Untitled Entry')
+
+        StyleHints {
+            backgroundColor: headerBackgroundColor()
+            foregroundColor: headerTextColor()
+        }
+
+        // For some reason the auto-managed back button isn't showing
+        // up, so we make our own.
+        leadingActionBar.actions: [
+            Action {
+                name: "Back"
+                text: i18n.tr("Back")
+                iconName: "previous"
+                onTriggered: {
+                    // If we remove primary page, only child pages
+                    // (i.e. THIS page) are removed. So, this sends us
+                    // back to entries list.
+                    pageStack.removePages(pageStack.primaryPage);
+                }
+            }
+        ]
+    }
+
+    ListModel {
+        id: entryModel
     }
 
     Component {

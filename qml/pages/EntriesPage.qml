@@ -24,17 +24,12 @@ Page {
 
     // These are set by metadata fetching
     property string publicDatabaseName
-    property string publicDatabaseColor
     property string recycleBinUuid
 
     property var colorWashout
 
     onContainerUuidChanged: {
 	populate();
-    }
-
-    onColorWashoutChanged: {
-
     }
 
     function lockDatabase() {
@@ -69,7 +64,7 @@ Page {
     }
 
     function headerBackgroundColor() {
-        if (publicDatabaseColor && settings.showAccents && colorWashout) {
+        if (settings.showAccents && colorWashout) {
             return colorWashout.backgroundColor;
         } else {
             return "transparent";
@@ -77,7 +72,7 @@ Page {
     }
 
     function headerTextColor() {
-        if (publicDatabaseColor && settings.showAccents && colorWashout) {
+        if (settings.showAccents && colorWashout) {
             // textColorType is the color type for the header text itself.
             return colorWashout.textColorType === 'Light'
                 ? LomiriColors.white
@@ -323,16 +318,15 @@ Page {
             // will fetch entries.
             keepassrx.viewMode = 'All';
             keepassrx.getMetadata();
-        }
 
-        onMetadataReceived: (metadata) => {
+            const metadata = keepassrx.metadata;
+
             if (metadata.publicName) {
                 publicDatabaseName = metadata.publicName;
             }
 
             if (metadata.publicColor) {
-                publicDatabaseColor = metadata.publicColor;
-                colorWashout = keepassrx.washOutColor(publicDatabaseColor);
+                colorWashout = keepassrx.washOutColor(metadata.publicColor);
             }
 
             if (metadata.recycleBinUuid) {

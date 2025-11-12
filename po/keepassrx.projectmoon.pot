@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-12 20:06+0000\n"
+"POT-Creation-Date: 2025-11-12 20:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,13 +23,13 @@ msgstr ""
 
 #: qml/pages/DBList.qml:74 qml/pages/UnlockPage.qml:34
 #: qml/pages/OpenDBPage.qml:47 qml/pages/SettingsPage.qml:11
-#: qml/pages/EntriesPage.qml:169
+#: qml/pages/EntriesPage.qml:164
 msgid "Settings"
 msgstr ""
 
 #: qml/pages/DBList.qml:81 qml/pages/UnlockPage.qml:41
 #: qml/pages/OpenDBPage.qml:54 qml/pages/AboutPage.qml:11
-#: qml/pages/EntriesPage.qml:178
+#: qml/pages/EntriesPage.qml:173
 msgid "About"
 msgstr ""
 
@@ -79,20 +79,20 @@ msgstr ""
 msgid "Database Not Opening?"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:18
+#: qml/pages/SingleEntry.qml:84
 msgid "Untitled Entry"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:25 qml/pages/OpenDBPage.qml:34
-#: qml/pages/EntriesPage.qml:129
+#: qml/pages/SingleEntry.qml:96 qml/pages/OpenDBPage.qml:34
+#: qml/pages/EntriesPage.qml:124
 msgid "Back"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:186
+#: qml/pages/SingleEntry.qml:222
 msgid "Notes"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:194
+#: qml/pages/SingleEntry.qml:230
 msgid "Tap to copy"
 msgstr ""
 
@@ -164,38 +164,38 @@ msgid ""
 "agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:66
+#: qml/pages/EntriesPage.qml:61
 msgid "Special Categories"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:105
+#: qml/pages/EntriesPage.qml:100
 msgid "Lock"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:117
+#: qml/pages/EntriesPage.qml:112
 msgid "Close"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:142
+#: qml/pages/EntriesPage.qml:137
 msgid "View Mode"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:156
+#: qml/pages/EntriesPage.qml:151
 msgid "Search"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:156
+#: qml/pages/EntriesPage.qml:151
 msgid "Cancel Search"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:190
+#: qml/pages/EntriesPage.qml:185
 msgid "Lock Database"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:200
+#: qml/pages/EntriesPage.qml:195
 msgid "Close Database"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:229
+#: qml/pages/EntriesPage.qml:224
 msgid "Search entries in this group"
 msgstr ""

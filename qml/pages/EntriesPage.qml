@@ -9,9 +9,9 @@ import "../components"
 Page {
     Settings {
         id: settings
+        property bool showAccents: true
         property bool fetchOnOpen: false
         property bool showRecycleBin: false
-        property bool changeGroupOnSearch: true
         property bool databaseLocking: true
     }
 
@@ -27,9 +27,7 @@ Page {
     property string publicDatabaseColor
 
     onContainerUuidChanged: {
-        //if (containerUuid && (previousContainerUuid && containerUuid != previousContainerUuid)) {
 	populate();
-        //}
     }
 
     function lockDatabase() {
@@ -56,10 +54,18 @@ Page {
             return containerName;
         } else {
             if (containerType == 'Group') {
-                return publicDatabaseName ? publicDatabaseName : "KeePassRX";
+                return settings.showAccents && publicDatabaseName ? publicDatabaseName : "KeePassRX";
             } else {
                 return i18n.tr("Special Categories");
             }
+        }
+    }
+
+    function headerColor() {
+        if (publicDatabaseColor && settings.showAccents) {
+            return publicDatabaseColor;
+        } else {
+            return "transparent";
         }
     }
 
@@ -68,7 +74,7 @@ Page {
         title: headerTitle()
 
         StyleHints {
-            backgroundColor: publicDatabaseColor ? publicDatabaseColor : "transparent"
+            backgroundColor: headerColor()
         }
 
         leadingActionBar.actions: [

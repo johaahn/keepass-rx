@@ -29,6 +29,7 @@ UITK.Page {
                 property bool changeGroupOnSearch: true
                 property bool showSlowDBWarning: true
                 property bool databaseLocking: true
+                property bool showAccents: true
             }
             id: col
             anchors.fill: parent
@@ -47,6 +48,17 @@ UITK.Page {
                 control: UITK.Switch {
                     onCheckedChanged: settings.databaseLocking = checked
                     checked: settings.databaseLocking
+                }
+            }
+
+            SettingsItem {
+                title: i18n.tr('Enable Accents')
+                description: i18n.tr(
+                    'Set header color and name according to public database settings.'
+                )
+                control: UITK.Switch {
+                    onCheckedChanged: settings.showAccents = checked
+                    checked: settings.showAccents
                 }
             }
 

@@ -35,6 +35,17 @@ Page {
             anchors.fill: parent
             spacing: units.gu(2)
 
+            anchors.leftMargin: units.gu(1)
+            anchors.rightMargin: units.gu(1)
+
+            Label {
+                width: parent.width
+                wrapMode: Text.WordWrap
+                text: i18n.tr('Change settings based on your preferences. ' +
+                              'Any change to the settings requires a restart to ' +
+                              'take effect.')
+            }
+
             // TODO Currently requires a restart because we have
             // several Settings instances floating around. Make them
             // into a singleton!

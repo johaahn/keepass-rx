@@ -35,7 +35,6 @@ Page {
                 iconName: "previous"
                 onTriggered: {
                     // When going back, remove the setting.
-                    console.log('going back');
                     keepassrx.lastDB = null;
                     root.reload();
                 }

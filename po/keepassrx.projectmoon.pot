@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-12 11:50+0000\n"
+"POT-Creation-Date: 2025-11-12 12:04+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -40,8 +40,8 @@ msgid "Add Database"
 msgstr ""
 
 #: qml/pages/DBList.qml:74 qml/pages/OpenDBPage.qml:48
-#: qml/pages/SettingsPage.qml:11 qml/pages/UnlockPage.qml:34
-#: qml/pages/EntriesPage.qml:151
+#: qml/pages/UnlockPage.qml:34 qml/pages/EntriesPage.qml:151
+#: qml/pages/SettingsPage.qml:11
 msgid "Settings"
 msgstr ""
 
@@ -80,40 +80,6 @@ msgstr ""
 
 #: qml/pages/OpenDBPage.qml:220
 msgid "Opening"
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:43
-msgid "Enable database locking"
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:46
-msgid ""
-"Securely lock and unlock database with a short passcode. Requires restart to "
-"take effect."
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:55
-msgid "Enable Accents"
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:57
-msgid "Set header color and name according to public database settings."
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:67
-msgid "Auto-close db after inactivity"
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:69
-msgid "In minutes. 0 for disabled."
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:95
-msgid "Show the \"Recycle bin\" group"
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:97
-msgid "This group contains all the deleted entries"
 msgstr ""
 
 #: qml/pages/UnlockPage.qml:146
@@ -192,4 +158,38 @@ msgstr ""
 
 #: qml/pages/EntriesPage.qml:211
 msgid "Search entries in this group"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:43
+msgid "Enable database locking"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:46
+msgid ""
+"Securely lock and unlock database with a short passcode. Requires restart to "
+"take effect."
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:55
+msgid "Enable Accents"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:57
+msgid "Set header color and name according to public database settings."
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:67
+msgid "Auto-close database after inactivity"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:69
+msgid "In minutes. 0 for disabled."
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:96
+msgid "Show the \"Recycle bin\" group"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:98
+msgid "This group contains all the deleted entries"
 msgstr ""

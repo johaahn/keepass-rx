@@ -9,14 +9,8 @@ mod kpxc {
 fn stuff() {}
 
 pub fn to_builtin_icon(icon_id: usize) -> Option<String> {
-    use kpxc::FILES;
-
-    // ID 58 is weird because it has two different icons, and thus
-    // offsets everything else by 1.
-    let icon_id = if icon_id > 58 { icon_id + 1 } else { icon_id };
-
-    if icon_id < FILES.len() {
-        Some(FILES[icon_id].to_string())
+    if icon_id < kpxc::FILES.len() {
+        Some(kpxc::FILES[icon_id].to_string())
     } else {
         None
     }

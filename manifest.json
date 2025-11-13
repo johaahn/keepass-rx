@@ -9,7 +9,7 @@
             "desktop":  "keepassrx.desktop"
         }
     },
-    "version": "0.9.0",
+    "version": "0.9.1",
     "maintainer": "projectmoon <projectmoon@agnos.is>",
     "framework" : "@CLICK_FRAMEWORK@"
 }

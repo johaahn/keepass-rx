@@ -1,4 +1,4 @@
-use crate::crypto::{EncryptedValue, MasterKey};
+use crate::crypto::{DefaultWithKey, EncryptedValue, MasterKey};
 
 use super::icons::RxIcon;
 use anyhow::{Result, anyhow};
@@ -82,15 +82,15 @@ pub struct RxEntry {
     #[zeroize(skip)]
     pub template_uuid: Option<Uuid>,
 
-    title: Option<RxValue>,
-    username: Option<RxValue>,
-    password: Option<RxValue>,
-    notes: Option<RxValue>,
+    pub(super) title: Option<RxValue>,
+    pub(super) username: Option<RxValue>,
+    pub(super) password: Option<RxValue>,
+    pub(super) notes: Option<RxValue>,
 
     pub custom_fields: RxCustomFields,
 
-    pub url: Option<RxValue>,
-    pub raw_otp_value: Option<RxValue>,
+    pub(super) url: Option<RxValue>,
+    pub(super) raw_otp_value: Option<RxValue>,
 
     #[zeroize(skip)]
     pub icon: RxIcon,
@@ -129,6 +129,34 @@ fn extract_value(
             _ => None, // discard binary for now. attachments later?
         }
     })
+}
+
+impl DefaultWithKey for RxCustomFields {
+    fn default_with_key(key: &Rc<MasterKey>) -> Self {
+        Self {
+            master_key: key.clone(),
+            data: Default::default(),
+        }
+    }
+}
+
+impl DefaultWithKey for RxEntry {
+    fn default_with_key(key: &Rc<MasterKey>) -> Self {
+        Self {
+            master_key: key.clone(),
+            custom_fields: DefaultWithKey::default_with_key(key),
+            icon: Default::default(),
+            notes: Default::default(),
+            parent_group: Default::default(),
+            password: Default::default(),
+            raw_otp_value: Default::default(),
+            template_uuid: Default::default(),
+            title: Default::default(),
+            url: Default::default(),
+            username: Default::default(),
+            uuid: Default::default(),
+        }
+    }
 }
 
 #[allow(dead_code)]
@@ -188,22 +216,34 @@ impl RxEntry {
         }
     }
 
-    pub fn username(&self) -> Option<RxValueKeyRef> {
+    pub fn username(&self) -> Option<RxValueKeyRef<'_>> {
         self.username
             .as_ref()
             .map(|v| RxValueKeyRef(v, &self.master_key))
     }
 
-    pub fn password(&self) -> Option<RxValueKeyRef> {
+    pub fn password(&self) -> Option<RxValueKeyRef<'_>> {
         self.password
             .as_ref()
-            .map(|p| RxValueKeyref(p, &self.master_key))
+            .map(|p| RxValueKeyRef(p, &self.master_key))
     }
 
-    pub fn title(&self) -> Option<RxValueKeyRef> {
+    pub fn title(&self) -> Option<RxValueKeyRef<'_>> {
         self.title
             .as_ref()
-            .map(|t| RxValueKeyref(t, &self.master_key))
+            .map(|t| RxValueKeyRef(t, &self.master_key))
+    }
+
+    pub fn url(&self) -> Option<RxValueKeyRef<'_>> {
+        self.url
+            .as_ref()
+            .map(|u| RxValueKeyRef(u, &self.master_key))
+    }
+
+    pub fn raw_otp_value(&self) -> Option<RxValueKeyRef<'_>> {
+        self.raw_otp_value
+            .as_ref()
+            .map(|t| RxValueKeyRef(t, &self.master_key))
     }
 
     pub(super) fn master_key(&self) -> &MasterKey {
@@ -495,7 +535,7 @@ impl RxCustomFields {
         }
     }
 
-    pub fn iter(&self) -> impl Iterator<Item = (&String, RxValueKeyRef)> {
+    pub fn iter(&self) -> impl Iterator<Item = (&String, RxValueKeyRef<'_>)> {
         self.data
             .iter()
             .map(|(key, value)| (key, RxValueKeyRef(value, &self.master_key)))

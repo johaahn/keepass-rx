@@ -86,8 +86,8 @@ impl From<&RxEntry> for RxListItem {
 
             hasUsername: value.username().is_some(),
             hasPassword: value.password().is_some(),
-            hasURL: value.url.is_some(),
-            hasTOTP: value.raw_otp_value.is_some(),
+            hasURL: value.url().is_some(),
+            hasTOTP: value.raw_otp_value().is_some(),
 
             iconPath: value
                 .icon

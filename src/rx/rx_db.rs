@@ -104,19 +104,19 @@ struct LoadState {
 
 // Determine if an entry should show up in search results, if a search
 // term was specified. term is assumed to be already lowecase here.
-fn search_entry(master_key: &MasterKey, entry: &RxEntry, term: &str) -> bool {
-    let username = entry.username.as_ref().and_then(|u| {
-        u.value(master_key)
+fn search_entry(entry: &RxEntry, term: &str) -> bool {
+    let username = entry.username().and_then(|u| {
+        u.value()
             .map(|secret| UniCase::new(secret).to_folded_case())
     });
 
-    let url = entry.url.as_ref().and_then(|u| {
-        u.value(master_key)
+    let url = entry.url().and_then(|u| {
+        u.value()
             .map(|secret| UniCase::new(secret).to_folded_case())
     });
 
-    let title = entry.title.as_ref().and_then(|u| {
-        u.value(master_key)
+    let title = entry.title().and_then(|u| {
+        u.value()
             .map(|secret| UniCase::new(secret).to_folded_case())
     });
 
@@ -324,7 +324,7 @@ impl RxDatabase {
         for (_, rx_template) in state.templates.iter_mut() {
             let template_name = db
                 .get_entry(rx_template.uuid)
-                .and_then(|t| t.title.as_ref().and_then(|v| v.value(&db.master_key)))
+                .and_then(|t| t.title().and_then(|v| v.value()))
                 .map(|template_name| template_name.to_string())
                 .unwrap_or_else(|| "Unknown Template".to_string());
 
@@ -434,7 +434,7 @@ impl RxDatabase {
         self.all_entries_iter()
             .filter(|&entry| uuids.contains(&entry.uuid))
             .filter(move |entry| match search_term {
-                Some(ref term) => search_entry(&self.master_key, &entry, term),
+                Some(ref term) => search_entry(&entry, term),
                 _ => true,
             })
     }
@@ -455,7 +455,7 @@ impl RxDatabase {
                 .into_iter()
                 .filter_map(|entry| {
                     if let Some(term) = &search_term {
-                        match search_entry(&self.master_key, &entry, term) {
+                        match search_entry(&entry, term) {
                             true => Some(entry),
                             false => None,
                         }
@@ -482,9 +482,11 @@ impl RxDatabase {
 
 #[cfg(test)]
 mod tests {
-    use crate::rx::{RxValue, TEMPLATE_FIELD_NAME};
-
     use super::*;
+    use crate::{
+        crypto::DefaultWithKey,
+        rx::{RxCustomFields, RxValue, TEMPLATE_FIELD_NAME},
+    };
 
     #[test]
     fn test_extract_string() {
@@ -566,7 +568,7 @@ mod tests {
             &mut HashMap::new(),
             &mut state,
             None,
-            Rc::new(MasterKey::new()),
+            &Rc::new(MasterKey::new().expect("Could not make master key")),
         );
 
         assert_eq!(state.templates.len(), 1);
@@ -575,6 +577,7 @@ mod tests {
 
     #[test]
     fn finds_entries_in_group() {
+        let master_key = Rc::new(MasterKey::new().expect("could not create master key"));
         let group_uuid =
             Uuid::from_str("133b7912-7705-4967-bc6e-807761ba9479").expect("bad group uuid");
         let entry_uuid =
@@ -582,7 +585,7 @@ mod tests {
 
         let entry = RxEntry {
             uuid: entry_uuid,
-            ..Default::default()
+            ..DefaultWithKey::default_with_key(&master_key)
         };
 
         let group = RxGroup {
@@ -599,7 +602,7 @@ mod tests {
             templates: HashMap::new(),
             all_entries: IndexMap::from([(entry_uuid, entry)]),
             all_groups: IndexMap::from([(group_uuid, group)]),
-            master_key: MasterKey::new().expect("could not create master key"),
+            master_key: master_key,
             metadata: Default::default(),
         };
 
@@ -610,6 +613,8 @@ mod tests {
 
     #[test]
     fn search_entries_in_root_group() {
+        let master_key = Rc::new(MasterKey::new().expect("Could not create a master key"));
+
         let group_uuid =
             Uuid::from_str("133b7912-7705-4967-bc6e-807761ba9479").expect("bad group uuid");
 
@@ -622,7 +627,7 @@ mod tests {
         let entry1 = RxEntry {
             uuid: entry_uuid1,
             title: Some(RxValue::try_from("test title".to_string()).expect("bad value")),
-            ..Default::default()
+            ..DefaultWithKey::default_with_key(&master_key)
         };
 
         let entry2 = RxEntry {
@@ -630,7 +635,7 @@ mod tests {
             title: Some(
                 RxValue::try_from("should not show up".to_string()).expect("bad value"),
             ),
-            ..Default::default()
+            ..DefaultWithKey::default_with_key(&master_key)
         };
 
         let group = RxGroup {
@@ -647,7 +652,7 @@ mod tests {
             templates: HashMap::new(),
             all_entries: IndexMap::from([(entry_uuid1, entry1), (entry_uuid2, entry2)]),
             all_groups: IndexMap::from([(group_uuid, group)]),
-            master_key: MasterKey::new().expect("could not create master key"),
+            master_key: master_key,
             metadata: Default::default(),
         };
 

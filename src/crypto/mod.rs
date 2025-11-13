@@ -9,11 +9,16 @@ use libsodium_rs::random;
 use libsodium_rs::utils::{SecureVec, vec_utils};
 use secstr::SecUtf8;
 use std::cell::RefCell;
+use std::rc::Rc;
 use std::sync::Arc;
 use uuid::Uuid;
 use zeroize::Zeroize;
 
 const SHORT_PW_LENGTH: usize = 5;
+
+pub trait DefaultWithKey {
+    fn default_with_key(key: &Rc<MasterKey>) -> Self;
+}
 
 fn to_short_password(value: &str) -> Result<&str> {
     let short_password = {

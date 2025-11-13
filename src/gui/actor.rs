@@ -13,13 +13,14 @@ use zeroize::{Zeroize, Zeroizing};
 
 use super::KeepassRx;
 use super::models::RxListItem;
+use crate::crypto::EncryptedPassword;
 use crate::{
     gui::{
         RxViewMode,
         models::{RxPageType, RxUiContainer},
         utils::imported_databases_path,
     },
-    rx::{EncryptedPassword, RxContainer, RxDatabase, RxFieldName, ZeroableDatabase},
+    rx::{RxContainer, RxDatabase, RxFieldName, ZeroableDatabase},
 };
 
 #[derive(Default)]

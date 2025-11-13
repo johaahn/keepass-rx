@@ -35,6 +35,7 @@ use std::env;
 use std::path::PathBuf;
 use std::sync::Arc;
 
+mod crypto;
 mod rx;
 
 #[cfg(feature = "gui")]

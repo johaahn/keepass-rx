@@ -56,7 +56,8 @@ fn qmake_args() -> String {
 
 fn output_kpxc_icons() {
     let out_dir = env::var("OUT_DIR").unwrap();
-    let asset_dir = Path::new("assets/icons");
+    let manifest_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
+    let asset_dir = Path::new(&manifest_dir).join("assets/icons");
     let mut entries = Vec::new();
 
     for entry in WalkDir::new(asset_dir) {
@@ -65,6 +66,13 @@ fn output_kpxc_icons() {
             entries.push(entry.path().file_name().unwrap().to_os_string());
         }
     }
+
+    assert_eq!(
+        entries.len(),
+        69,
+        "Expected 69 db icons, but found {}",
+        entries.len()
+    );
 
     let out = format!(
         "pub const FILES: &[&str; {}] = &{:?};",

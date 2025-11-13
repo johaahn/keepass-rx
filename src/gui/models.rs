@@ -84,8 +84,8 @@ impl From<&RxEntry> for RxListItem {
             uuid: QString::from(value.uuid.to_string()),
             parentUuid: QString::from(value.parent_group.to_string()),
 
-            hasUsername: value.username.is_some(),
-            hasPassword: value.password.is_some(),
+            hasUsername: value.username().is_some(),
+            hasPassword: value.password().is_some(),
             hasURL: value.url.is_some(),
             hasTOTP: value.raw_otp_value.is_some(),
 
@@ -98,15 +98,13 @@ impl From<&RxEntry> for RxListItem {
             iconBuiltin: value.icon.is_builtin(),
 
             title: value
-                .title
-                .as_ref()
+                .title()
                 .and_then(|title| title.value().map(|t| t.to_string()))
                 .unwrap_or_else(|| "(Untitled)".to_string())
                 .into(),
 
             subtitle: value
-                .username
-                .as_ref()
+                .username()
                 .and_then(|username| username.value().map(|u| u.to_string()))
                 .unwrap_or_else(|| "".to_string())
                 .into(),

@@ -28,10 +28,6 @@ macro_rules! expose {
     }};
 }
 
-macro_rules! expose_opt {
-    ($masterkey:expr, $secret:expr) => {{ $secret.as_ref().and_then(|secret| secret.value($masterkey)) }};
-}
-
 macro_rules! expose_str {
     ($masterkey:expr, $secret:expr) => {{
         $secret
@@ -41,7 +37,7 @@ macro_rules! expose_str {
     }};
 }
 
-pub(crate) use {expose, expose_opt, expose_str};
+pub(crate) use {expose, expose_str};
 
 // Special field that indicates the entry is a templated entry (e.g.
 // credit card, wifi password, etc).
@@ -86,10 +82,10 @@ pub struct RxEntry {
     #[zeroize(skip)]
     pub template_uuid: Option<Uuid>,
 
-    pub title: Option<RxValue>,
-    pub username: Option<RxValue>,
-    pub password: Option<RxValue>,
-    pub notes: Option<RxValue>,
+    title: Option<RxValue>,
+    username: Option<RxValue>,
+    password: Option<RxValue>,
+    notes: Option<RxValue>,
 
     pub custom_fields: RxCustomFields,
 
@@ -171,8 +167,8 @@ impl RxEntry {
 
         // Has to come after the above, otherwise those fields end up
         // in the custom fields.
-        let mut remaining_fields =
-            RxCustomFields::from(extract_remaining_fields(&master_key, &mut entry));
+        let remaining_fields = extract_remaining_fields(&master_key, &mut entry);
+        let mut remaining_fields = RxCustomFields::from_vec(&master_key, remaining_fields);
         let mut custom_fields = RxCustomFields::from_custom_data(&master_key, custom_data);
         custom_fields.append(&mut remaining_fields);
 
@@ -190,6 +186,28 @@ impl RxEntry {
             raw_otp_value: raw_otp_value,
             icon: rx_icon,
         }
+    }
+
+    pub fn username(&self) -> Option<RxValueKeyRef> {
+        self.username
+            .as_ref()
+            .map(|v| RxValueKeyRef(v, &self.master_key))
+    }
+
+    pub fn password(&self) -> Option<RxValueKeyRef> {
+        self.password
+            .as_ref()
+            .map(|p| RxValueKeyref(p, &self.master_key))
+    }
+
+    pub fn title(&self) -> Option<RxValueKeyRef> {
+        self.title
+            .as_ref()
+            .map(|t| RxValueKeyref(t, &self.master_key))
+    }
+
+    pub(super) fn master_key(&self) -> &MasterKey {
+        &self.master_key
     }
 
     pub fn get_field_value(&self, field_name: &RxFieldName) -> Option<RxValueKeyRef<'_>> {
@@ -212,7 +230,7 @@ impl RxEntry {
                 .map(|val| RxValueKeyRef(val, &self.master_key)),
             RxFieldName::CustomField(name) => {
                 self.custom_fields
-                    .0
+                    .data
                     .iter()
                     .find_map(|(key, value)| match key == name {
                         true => Some(RxValueKeyRef(value, &self.master_key)),
@@ -297,6 +315,10 @@ impl<'a> RxValueKeyRef<'a> {
 
     pub fn value(&self) -> Option<String> {
         self.0.value(self.1)
+    }
+
+    pub fn is_hidden_by_default(&self) -> bool {
+        self.0.is_hidden_by_default()
     }
 }
 
@@ -447,11 +469,39 @@ impl From<String> for RxFieldName {
     }
 }
 
-#[derive(Zeroize, Default, Clone)]
-pub struct RxCustomFields(pub(crate) Vec<(String, RxValue)>);
+#[derive(Zeroize, Clone)]
+pub struct RxCustomFields {
+    #[zeroize(skip)]
+    master_key: Rc<MasterKey>,
+    data: Vec<(String, RxValue)>,
+}
 
 impl RxCustomFields {
-    fn from_custom_data(master_key: &MasterKey, value: CustomData) -> Self {
+    fn from_vec(master_key: &Rc<MasterKey>, value: Vec<(String, RxValue)>) -> Self {
+        let custom_fields: Vec<_> = value
+            .into_iter()
+            .flat_map(|(key, item)| {
+                if !should_hide_field(&key.as_ref()) {
+                    Some((key, item))
+                } else {
+                    None
+                }
+            })
+            .collect();
+
+        Self {
+            master_key: master_key.clone(),
+            data: custom_fields,
+        }
+    }
+
+    pub fn iter(&self) -> impl Iterator<Item = (&String, RxValueKeyRef)> {
+        self.data
+            .iter()
+            .map(|(key, value)| (key, RxValueKeyRef(value, &self.master_key)))
+    }
+
+    fn from_custom_data(master_key: &Rc<MasterKey>, value: CustomData) -> Self {
         let custom_fields: Vec<_> = value
             .items
             .into_iter()
@@ -472,27 +522,13 @@ impl RxCustomFields {
             })
             .collect();
 
-        Self(custom_fields)
+        Self {
+            master_key: master_key.clone(),
+            data: custom_fields,
+        }
     }
 
     pub fn append(&mut self, other: &mut RxCustomFields) {
-        self.0.append(&mut other.0);
-    }
-}
-
-impl From<Vec<(String, RxValue)>> for RxCustomFields {
-    fn from(value: Vec<(String, RxValue)>) -> Self {
-        let custom_fields: Vec<_> = value
-            .into_iter()
-            .flat_map(|(key, item)| {
-                if !should_hide_field(&key.as_ref()) {
-                    Some((key, item))
-                } else {
-                    None
-                }
-            })
-            .collect();
-
-        Self(custom_fields)
+        self.data.append(&mut other.data);
     }
 }

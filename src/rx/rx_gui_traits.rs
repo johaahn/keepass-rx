@@ -1,9 +1,9 @@
 use qmetaobject::{QString, QVariant, QVariantMap};
 use std::collections::HashMap;
 
-use crate::rx::{RxCustomFields, RxEntry, RxFieldName, RxValue, expose_opt};
+use crate::rx::{RxCustomFields, RxEntry, RxFieldName, RxValue};
 
-use super::RxMetadata;
+use super::{RxMetadata, RxValueKeyRef};
 
 impl From<QString> for RxFieldName {
     fn from(value: QString) -> Self {
@@ -22,10 +22,12 @@ impl From<&RxEntry> for QVariantMap {
             value.icon_data_url().map(QString::from).unwrap_or_default();
 
         let maybe_insert =
-            |map: &mut HashMap<String, QVariant>, field_name: &str, value: ValueType| {
-                match value {
+            |map: &mut HashMap<String, QVariant>, field_name: &str, value_type: ValueType| {
+                match value_type {
                     ValueType::Rx(rx_val) => {
-                        if let Some(rx_val_str) = expose_opt!(rx_val) {
+                        let maybe_rx_val_str =
+                            rx_val.as_ref().and_then(|v| v.value(value.master_key()));
+                        if let Some(rx_val_str) = maybe_rx_val_str {
                             map.insert(
                                 field_name.into(),
                                 QString::from(rx_val_str.to_string()).into(),
@@ -76,8 +78,8 @@ impl From<RxEntry> for QVariant {
     }
 }
 
-impl From<RxValue> for QVariantMap {
-    fn from(value: RxValue) -> Self {
+impl From<RxValueKeyRef<'_>> for QVariantMap {
+    fn from(value: RxValueKeyRef<'_>) -> Self {
         let mut map = QVariantMap::default();
         map.insert(
             "value".into(),
@@ -97,9 +99,9 @@ impl From<RxCustomFields> for QVariantMap {
     fn from(value: RxCustomFields) -> QVariantMap {
         let mut map: HashMap<String, QVariant> = HashMap::new();
 
-        for (key, value) in value.0 {
+        for (key, value) in value.iter() {
             let q_val = QVariantMap::from(value);
-            map.insert(key, q_val.into());
+            map.insert(key.to_string(), q_val.into());
         }
 
         map.into()

@@ -30,28 +30,28 @@ steps:
     commands:
       - clickable build --clean
 
-  # - name: pre-release
-  #   depends_on:
-  #     - amd64
-  #     - arm64
-  #     - armhf
-  #   image: plugins/gitea-release
-  #   when:
-  #     target:
-  #       - prerelease
-  #     ref:
-  #       - "refs/tags/v*"
-  #     event:
-  #       - promote
-  #   settings:
-  #     api_key:
-  #       from_secret: release_push_key
-  #     base_url: https://git.agnos.is/
-  #     prerelease: true
-  #     files:
-  #       - build/x86_64-linux-gnu/app/keepassrx.projectmoon_*.click
-  #       - build/aarch64-linux-gnu/app/keepassrx.projectmoon_*.click
-  #       - build/arm-linux-gnueabihf/app/keepassrx.projectmoon_*.click
+  - name: pre-release
+    depends_on:
+      - amd64
+      - arm64
+      - armhf
+    image: plugins/gitea-release
+    when:
+      target:
+        - prerelease
+      ref:
+        - "refs/tags/v*-rc*"
+      event:
+        - promote
+    settings:
+      api_key:
+        from_secret: release_push_key
+      base_url: https://git.agnos.is/
+      prerelease: true
+      files:
+        - build/x86_64-linux-gnu/app/keepassrx.projectmoon_*.click
+        - build/aarch64-linux-gnu/app/keepassrx.projectmoon_*.click
+        - build/arm-linux-gnueabihf/app/keepassrx.projectmoon_*.click
 
   - name: production-release
     depends_on:
@@ -61,7 +61,7 @@ steps:
     image: plugins/gitea-release
     when:
       ref:
-        - "refs/tags/v*"
+        - "refs/tags/v\d\.\d\.\d"
     settings:
       api_key:
         from_secret: release_push_key
@@ -78,7 +78,7 @@ steps:
       - production-release
     when:
       ref:
-        - "refs/tags/v*"
+        - "refs/tags/v\d\.\d\.\d"
     commands:
       - |
         clickable publish --arch arm64 -- "${DRONE_COMMIT_MESSAGE}"

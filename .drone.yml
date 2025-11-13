@@ -61,7 +61,7 @@ steps:
     image: plugins/gitea-release
     when:
       ref:
-        - "refs/tags/v\d\.\d\.\d"
+        - "refs/tags/v\\d\\.\\d\\.\\d"
     settings:
       api_key:
         from_secret: release_push_key
@@ -78,7 +78,7 @@ steps:
       - production-release
     when:
       ref:
-        - "refs/tags/v\d\.\d\.\d"
+        - "refs/tags/v\\d\\.\\d\\.\\d"
     commands:
       - |
         clickable publish --arch arm64 -- "${DRONE_COMMIT_MESSAGE}"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-12 20:31+0000\n"
+"POT-Creation-Date: 2025-11-13 22:07+0100\n"
 "PO-Revision-Date: 2025-11-12 14:35+0000\n"
 "Last-Translator: Vlad Nirky <nirky.vlad@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -19,30 +19,43 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Weblate 5.15-dev\n"
 
+#: qml/pages/DBList.qml:67
 msgid "Add Database"
 msgstr "Ajouter une base de données"
 
+#: qml/pages/DBList.qml:74 qml/pages/UnlockPage.qml:34
+#: qml/pages/OpenDBPage.qml:47 qml/pages/SettingsPage.qml:11
+#: qml/pages/EntriesPage.qml:164
 msgid "Settings"
 msgstr "Paramètres"
 
+#: qml/pages/DBList.qml:81 qml/pages/UnlockPage.qml:41
+#: qml/pages/OpenDBPage.qml:54 qml/pages/AboutPage.qml:11
+#: qml/pages/EntriesPage.qml:173
 msgid "About"
 msgstr "A propos de"
 
+#: qml/pages/DBList.qml:101
 msgid "Loading last database."
 msgstr "Chargement de la dernière base de données."
 
+#: qml/pages/DBList.qml:111
 msgid "Select Database"
 msgstr "Sélectionner la base de données"
 
+#: qml/pages/DBList.qml:167
 msgid "Tap + to import a database."
 msgstr "Appuyer + pour importer une base de données."
 
+#: qml/pages/DBList.qml:265
 msgid "It will only be removed from the app, not your device."
 msgstr "Elle sera simplement retirée de l’application, pas de votre appareil."
 
+#: qml/pages/UnlockPage.qml:146
 msgid "Manual path set."
 msgstr "Chemin défini manuellement."
 
+#: qml/pages/UnlockPage.qml:163
 msgid ""
 "The passcode is the first five characters of the database password (or the "
 "whole password if less than five characters)."
@@ -51,45 +64,60 @@ msgstr ""
 "la base de données (ou au mot de passe complet s’il comporte moins de cinq "
 "caractères)."
 
+#: qml/pages/UnlockPage.qml:181
 msgid "Passcode"
 msgstr "Code d'accès"
 
+#: qml/pages/UnlockPage.qml:213
 msgid "Unlock"
 msgstr "Déverrouiller"
 
+#: qml/pages/UnlockPage.qml:232
 msgid "Securely Unlocking"
 msgstr "Déverrouillage sécurisé"
 
+#: qml/pages/UnlockPage.qml:233
 msgid "Securely Locking"
 msgstr "Verrouillage sécurisé"
 
+#: qml/pages/UnlockPage.qml:244
 msgid "Database Not Opening?"
 msgstr "La base de données ne s'ouvre pas ?"
 
+#: qml/pages/SingleEntry.qml:84
 msgid "Untitled Entry"
 msgstr "Entrée sans titre"
 
+#: qml/pages/SingleEntry.qml:96 qml/pages/OpenDBPage.qml:34
+#: qml/pages/EntriesPage.qml:124
 msgid "Back"
 msgstr "Retour"
 
+#: qml/pages/SingleEntry.qml:222
 msgid "Notes"
 msgstr "Notes"
 
+#: qml/pages/SingleEntry.qml:230
 msgid "Tap to copy"
 msgstr "Appuyez pour copier"
 
+#: qml/pages/OpenDBPage.qml:159
 msgid "Enter the database master password"
 msgstr "Entrez le mot de passe principal de la base de données"
 
+#: qml/pages/OpenDBPage.qml:172
 msgid "Master Password"
 msgstr "Mot de passe principal"
 
+#: qml/pages/OpenDBPage.qml:202
 msgid "Open"
 msgstr "Ouvrir"
 
+#: qml/pages/OpenDBPage.qml:219
 msgid "Opening"
 msgstr "Ouverture"
 
+#: qml/pages/SettingsPage.qml:44
 msgid ""
 "Change settings based on your preferences. Any change to the settings "
 "requires a restart to take effect."
@@ -97,9 +125,11 @@ msgstr ""
 "Modifiez les paramètres en fonction de vos préférences. Toute modification "
 "des paramètres nécessite un redémarrage pour prendre effet."
 
+#: qml/pages/SettingsPage.qml:54
 msgid "Enable database locking"
 msgstr "Activer le verrouillage de la base de données"
 
+#: qml/pages/SettingsPage.qml:57
 msgid ""
 "Securely lock and unlock database with a short passcode. Requires restart to "
 "take effect."
@@ -108,9 +138,11 @@ msgstr ""
 "d'un code d'accès court. Un redémarrage est nécessaire pour que la "
 "modification prenne effet."
 
+#: qml/pages/SettingsPage.qml:66
 msgid "Enable Accents"
 msgstr "Activer les accents"
 
+#: qml/pages/SettingsPage.qml:68
 msgid ""
 "Set header color and name according to database settings. Compatible with "
 "KeePassXC."
@@ -118,12 +150,15 @@ msgstr ""
 "Définissez la couleur et le nom de l'en-tête en fonction des paramètres de "
 "la base de données. Compatible avec KeePassXC."
 
+#: qml/pages/SettingsPage.qml:79
 msgid "Show the \"Recycle bin\" group"
 msgstr "Afficher le groupe « Corbeille »"
 
+#: qml/pages/SettingsPage.qml:81
 msgid "This group contains all the deleted entries"
 msgstr "Ce groupe contient toutes les entrées supprimées"
 
+#: qml/pages/AboutPage.qml:54
 msgid ""
 "KeePassRX is a work-in-progress password manager for KeePass password "
 "databases. It is licensed under the GNU GPL v3 license."
@@ -131,11 +166,13 @@ msgstr ""
 "KeePassRX est un gestionnaire de mots de passe en cours de développement "
 "pour les bases de données KeePass. Il est distribué sous licence GNU GPL v3."
 
+#: qml/pages/AboutPage.qml:65
 msgid ""
 "The built-in KeePass icon images are licensed under a variety of licenses as "
 "detailed in assets/COPYING."
 msgstr ""
 
+#: qml/pages/AboutPage.qml:76
 msgid ""
 "Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
@@ -143,30 +180,39 @@ msgstr ""
 "Source : <a href='https ://git.agnos.is/projectmoon/keepass-rx'>https ://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
+#: qml/pages/EntriesPage.qml:61
 msgid "Special Categories"
 msgstr "Catégories spéciales"
 
+#: qml/pages/EntriesPage.qml:100
 msgid "Lock"
 msgstr "Verrouiller"
 
+#: qml/pages/EntriesPage.qml:112
 msgid "Close"
 msgstr "Fermer"
 
+#: qml/pages/EntriesPage.qml:137
 msgid "View Mode"
 msgstr "Mode d'affichage"
 
+#: qml/pages/EntriesPage.qml:151
 msgid "Search"
 msgstr "Chercher"
 
+#: qml/pages/EntriesPage.qml:151
 msgid "Cancel Search"
 msgstr "Annuler la recherche"
 
+#: qml/pages/EntriesPage.qml:185
 msgid "Lock Database"
 msgstr "Verrouiller la base de données"
 
+#: qml/pages/EntriesPage.qml:195
 msgid "Close Database"
 msgstr "Fermer la base de données"
 
+#: qml/pages/EntriesPage.qml:224
 msgid "Search entries in this group"
 msgstr "Rechercher les entrées dans ce groupe"
 

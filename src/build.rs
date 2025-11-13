@@ -60,7 +60,9 @@ fn output_kpxc_icons() {
     let asset_dir = Path::new(&manifest_dir).join("assets/icons");
     let mut entries = Vec::new();
 
-    for entry in WalkDir::new(asset_dir) {
+    let walkdir = WalkDir::new(asset_dir).sort_by(|a, b| a.file_name().cmp(b.file_name()));
+
+    for entry in walkdir {
         let entry = entry.unwrap();
         if entry.file_type().is_file() {
             entries.push(entry.path().file_name().unwrap().to_os_string());

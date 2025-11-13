@@ -37,8 +37,6 @@ steps:
       - armhf
     image: plugins/gitea-release
     when:
-      target:
-        - prerelease
       branch:
         - "rc/v*"
     settings:

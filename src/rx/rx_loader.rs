@@ -159,6 +159,7 @@ pub struct LoadState {
 #[cfg(test)]
 mod tests {
     use keepass::Database;
+    use keyring::set_default_credential_builder;
 
     use crate::rx::TEMPLATE_FIELD_NAME;
 
@@ -166,7 +167,7 @@ mod tests {
 
     #[test]
     fn finds_templates() {
-        println!("Wow: {:?}", MasterKey::new());
+        set_default_credential_builder(keyring::mock::default_credential_builder());
         let template_uuid =
             Uuid::from_str("8e4ff17c-a985-4e50-abde-e641783464ca").expect("bad uuid");
 

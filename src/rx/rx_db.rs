@@ -393,6 +393,8 @@ impl RxDatabase {
 
 #[cfg(test)]
 mod tests {
+    use keyring::set_default_credential_builder;
+
     use super::*;
     use crate::{
         crypto::DefaultWithKey,
@@ -409,7 +411,7 @@ mod tests {
 
     #[test]
     fn loads_recursively() {
-        println!("Wow: {:?}", MasterKey::new());
+        set_default_credential_builder(keyring::mock::default_credential_builder());
         let mut db = keepass::db::Database::new(Default::default());
         let mut group = keepass::db::Group::new("groupname");
         let mut subgroup = keepass::db::Group::new("subgroupname");
@@ -461,7 +463,7 @@ mod tests {
 
     #[test]
     fn finds_entries_in_group() {
-        println!("Wow: {:?}", MasterKey::new());
+        set_default_credential_builder(keyring::mock::default_credential_builder());
         let master_key = Rc::new(MasterKey::new().expect("could not create master key"));
         let group_uuid =
             Uuid::from_str("133b7912-7705-4967-bc6e-807761ba9479").expect("bad group uuid");
@@ -498,7 +500,7 @@ mod tests {
 
     #[test]
     fn search_entries_in_root_group() {
-        println!("Wow: {:?}", MasterKey::new());
+        set_default_credential_builder(keyring::mock::default_credential_builder());
         let master_key = Rc::new(MasterKey::new().expect("Could not create a master key"));
 
         let group_uuid =

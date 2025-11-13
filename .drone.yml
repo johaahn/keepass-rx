@@ -39,10 +39,8 @@ steps:
     when:
       target:
         - prerelease
-      ref:
-        - "refs/tags/v*-rc*"
-      event:
-        - promote
+      branch:
+        - "rc/v*"
     settings:
       api_key:
         from_secret: release_push_key
@@ -61,7 +59,7 @@ steps:
     image: plugins/gitea-release
     when:
       ref:
-        - "refs/tags/v\\d\\.\\d\\.\\d"
+        - "refs/tags/v*"
     settings:
       api_key:
         from_secret: release_push_key
@@ -78,7 +76,7 @@ steps:
       - production-release
     when:
       ref:
-        - "refs/tags/v\\d\\.\\d\\.\\d"
+        - "refs/tags/v*"
     commands:
       - |
         clickable publish --arch arm64 -- "${DRONE_COMMIT_MESSAGE}"

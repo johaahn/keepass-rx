@@ -37,8 +37,8 @@ steps:
       - armhf
     image: plugins/gitea-release
     when:
-      branch:
-        - "rc/v*"
+      ref:
+        - "refs/tags/rc-*"
     settings:
       api_key:
         from_secret: release_push_key

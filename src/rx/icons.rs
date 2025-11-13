@@ -7,9 +7,6 @@ mod kpxc {
 
 pub fn to_builtin_icon(icon_id: usize) -> Option<String> {
     if icon_id < kpxc::FILES.len() {
-        let file = kpxc::FILES[icon_id].to_string();
-        println!("Choosing icon {} for ID {}", file, icon_id);
-
         Some(kpxc::FILES[icon_id].to_string())
     } else {
         None

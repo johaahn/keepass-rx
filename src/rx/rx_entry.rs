@@ -187,7 +187,6 @@ impl RxEntry {
 
         // Icon: Can eiher be the custom one (provided), or the
         // built-in one, or nothing.
-
         let rx_icon = icon
             .map(|i| RxIcon::Image(i.data))
             .or_else(|| entry.icon_id.map(|id| RxIcon::Builtin(id)))

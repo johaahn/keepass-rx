@@ -1,4 +1,7 @@
+use crate::crypto::MasterKey;
+
 use super::icons::RxIcon;
+use super::rx_loader::RxLoader;
 use super::{RxEntry, RxTotp, ZeroableDatabase};
 use anyhow::{Result, anyhow};
 use indexmap::IndexMap;
@@ -7,6 +10,7 @@ use keepass::db::{Group, Icon, Meta, Node};
 use paste::paste;
 use regex::Regex;
 use std::mem;
+use std::rc::Rc;
 use std::sync::LazyLock;
 use std::{collections::HashMap, str::FromStr};
 use unicase::UniCase;
@@ -90,29 +94,20 @@ pub struct RxTemplate {
     pub entry_uuids: Vec<Uuid>,
 }
 
-/// Various global-ish things to carry around during recursive
-/// loading, that are returned to the final RxDatabase object.
-#[derive(Default)]
-struct LoadState {
-    templates: HashMap<Uuid, RxTemplate>,
-    all_groups: IndexMap<Uuid, RxGroup>,
-    all_entries: IndexMap<Uuid, RxEntry>,
-}
-
 // Determine if an entry should show up in search results, if a search
 // term was specified. term is assumed to be already lowecase here.
 fn search_entry(entry: &RxEntry, term: &str) -> bool {
-    let username = entry.username.as_ref().and_then(|u| {
+    let username = entry.username().and_then(|u| {
         u.value()
             .map(|secret| UniCase::new(secret).to_folded_case())
     });
 
-    let url = entry.url.as_ref().and_then(|u| {
+    let url = entry.url().and_then(|u| {
         u.value()
             .map(|secret| UniCase::new(secret).to_folded_case())
     });
 
-    let title = entry.title.as_ref().and_then(|u| {
+    let title = entry.title().and_then(|u| {
         u.value()
             .map(|secret| UniCase::new(secret).to_folded_case())
     });
@@ -122,66 +117,6 @@ fn search_entry(entry: &RxEntry, term: &str) -> bool {
     let contains_title = title.map(|t| t.contains(term)).unwrap_or(false);
 
     contains_username || contains_url || contains_title
-}
-
-/// Create RxGroup instances recursively, while simultaneously
-/// buildingd up the database state.
-fn load_groups_recursive(
-    group: &mut Group,
-    icons: &mut HashMap<Uuid, Icon>,
-    state: &mut LoadState,
-    parent_group_uuid: Option<Uuid>,
-) -> RxGroup {
-    let mut subgroups = vec![];
-    let mut entries = vec![];
-
-    let children = mem::take(&mut group.children);
-
-    for node in children.into_iter() {
-        match node {
-            Node::Group(mut subgroup) => {
-                let subgroup_id = subgroup.uuid;
-                let rx_subgroup =
-                    load_groups_recursive(&mut subgroup, icons, state, Some(subgroup_id));
-
-                subgroups.push(rx_subgroup);
-            }
-            Node::Entry(entry) => {
-                let icon = entry
-                    .custom_icon_uuid
-                    .and_then(|icon_uuid| icons.remove(&icon_uuid));
-
-                let rx_entry = RxEntry::new(entry, group.uuid, icon);
-
-                // Build up template entries as we go. Name of the
-                // template will be set later, in RxDatabase::new.
-                if let Some(template_uuid) = rx_entry.template_uuid {
-                    let rx_template = state.templates.entry(template_uuid).or_default();
-                    rx_template.uuid = template_uuid;
-                    rx_template.entry_uuids.push(rx_entry.uuid);
-                }
-
-                entries.push(rx_entry);
-            }
-        }
-    }
-
-    let this_group = RxGroup::new(
-        group,
-        subgroups.iter().map(|sg| sg.uuid).collect(),
-        entries.iter().map(|e| e.uuid).collect(),
-        parent_group_uuid,
-    );
-
-    for subgroup in subgroups {
-        state.all_groups.insert(subgroup.uuid, subgroup);
-    }
-
-    for entry in entries {
-        state.all_entries.insert(entry.uuid, entry);
-    }
-
-    this_group
 }
 
 fn extract_string(input: String) -> Option<String> {
@@ -234,8 +169,11 @@ impl RxMetadata {
     }
 }
 
-#[derive(Default, Clone)]
+#[derive(Clone)]
 pub struct RxDatabase {
+    // Not to be confused with encryption key for master DB password.
+    // This is for encrypting values in memory.
+    master_key: Rc<MasterKey>,
     metadata: RxMetadata,
     root: Uuid,
     templates: HashMap<Uuid, RxTemplate>,
@@ -245,6 +183,8 @@ pub struct RxDatabase {
 
 impl Zeroize for RxDatabase {
     fn zeroize(&mut self) {
+        let _ = self.master_key.poison();
+
         for template in self.templates.values_mut() {
             template.zeroize();
         }
@@ -278,44 +218,31 @@ impl std::fmt::Debug for RxDatabase {
 }
 
 impl RxDatabase {
-    pub fn new(mut db: Zeroizing<ZeroableDatabase>) -> Self {
-        let mut icons: HashMap<Uuid, Icon> = db
-            .meta
-            .custom_icons
-            .icons
-            .iter()
-            .map(|icon| (icon.uuid, icon.to_owned()))
-            .collect();
-
-        let mut state = LoadState::default();
-        let root_group = load_groups_recursive(&mut db.root, &mut icons, &mut state, None);
-        let root_uuid = root_group.uuid;
-        state.all_groups.insert(root_group.uuid, root_group);
-
-        let rx_metadata = RxMetadata::new(mem::take(&mut db.config), mem::take(&mut db.meta));
-
-        drop(db);
+    pub fn new(db: Zeroizing<ZeroableDatabase>) -> Self {
+        let loader = RxLoader::new(db);
+        let mut loaded = loader.load().expect("Coud not load the database");
 
         let mut db = Self {
-            root: root_uuid,
+            master_key: loaded.master_key,
+            root: loaded.root_uuid,
             templates: Default::default(),
-            all_groups: state.all_groups,
-            all_entries: state.all_entries,
-            metadata: rx_metadata,
+            all_groups: loaded.state.all_groups,
+            all_entries: loaded.state.all_entries,
+            metadata: loaded.metadata,
         };
 
         // Map templates. Easier to do when we have access to DB logic.
-        for (_, rx_template) in state.templates.iter_mut() {
+        for (_, rx_template) in loaded.state.templates.iter_mut() {
             let template_name = db
                 .get_entry(rx_template.uuid)
-                .and_then(|t| t.title.as_ref().and_then(|v| v.value()))
+                .and_then(|t| t.title().and_then(|v| v.value()))
                 .map(|template_name| template_name.to_string())
                 .unwrap_or_else(|| "Unknown Template".to_string());
 
             rx_template.name = template_name;
         }
 
-        db.templates = state.templates;
+        db.templates = loaded.state.templates;
 
         db
     }
@@ -466,9 +393,11 @@ impl RxDatabase {
 
 #[cfg(test)]
 mod tests {
-    use crate::rx::{RxValue, TEMPLATE_FIELD_NAME};
-
     use super::*;
+    use crate::{
+        crypto::DefaultWithKey,
+        rx::{RxCustomFields, RxValue, TEMPLATE_FIELD_NAME},
+    };
 
     #[test]
     fn test_extract_string() {
@@ -480,6 +409,7 @@ mod tests {
 
     #[test]
     fn loads_recursively() {
+        println!("Wow: {:?}", MasterKey::new());
         let mut db = keepass::db::Database::new(Default::default());
         let mut group = keepass::db::Group::new("groupname");
         let mut subgroup = keepass::db::Group::new("subgroupname");
@@ -530,29 +460,9 @@ mod tests {
     }
 
     #[test]
-    fn finds_templates() {
-        let template_uuid =
-            Uuid::from_str("8e4ff17c-a985-4e50-abde-e641783464ca").expect("bad uuid");
-
-        let mut group = keepass::db::Group::new("groupname");
-        let mut entry = keepass::db::Entry::new();
-
-        entry.fields.insert(
-            TEMPLATE_FIELD_NAME.to_string(),
-            keepass::db::Value::Unprotected(template_uuid.to_string()),
-        );
-
-        group.add_child(keepass::db::Node::Entry(entry));
-
-        let mut state = LoadState::default();
-        load_groups_recursive(&mut group, &mut HashMap::new(), &mut state, None);
-
-        assert_eq!(state.templates.len(), 1);
-        assert!(state.templates.contains_key(&template_uuid));
-    }
-
-    #[test]
     fn finds_entries_in_group() {
+        println!("Wow: {:?}", MasterKey::new());
+        let master_key = Rc::new(MasterKey::new().expect("could not create master key"));
         let group_uuid =
             Uuid::from_str("133b7912-7705-4967-bc6e-807761ba9479").expect("bad group uuid");
         let entry_uuid =
@@ -560,7 +470,7 @@ mod tests {
 
         let entry = RxEntry {
             uuid: entry_uuid,
-            ..Default::default()
+            ..DefaultWithKey::default_with_key(&master_key)
         };
 
         let group = RxGroup {
@@ -577,7 +487,8 @@ mod tests {
             templates: HashMap::new(),
             all_entries: IndexMap::from([(entry_uuid, entry)]),
             all_groups: IndexMap::from([(group_uuid, group)]),
-            ..Default::default()
+            master_key: master_key,
+            metadata: Default::default(),
         };
 
         let entries = db.get_entries(group_uuid, None);
@@ -587,6 +498,9 @@ mod tests {
 
     #[test]
     fn search_entries_in_root_group() {
+        println!("Wow: {:?}", MasterKey::new());
+        let master_key = Rc::new(MasterKey::new().expect("Could not create a master key"));
+
         let group_uuid =
             Uuid::from_str("133b7912-7705-4967-bc6e-807761ba9479").expect("bad group uuid");
 
@@ -599,7 +513,7 @@ mod tests {
         let entry1 = RxEntry {
             uuid: entry_uuid1,
             title: Some(RxValue::try_from("test title".to_string()).expect("bad value")),
-            ..Default::default()
+            ..DefaultWithKey::default_with_key(&master_key)
         };
 
         let entry2 = RxEntry {
@@ -607,7 +521,7 @@ mod tests {
             title: Some(
                 RxValue::try_from("should not show up".to_string()).expect("bad value"),
             ),
-            ..Default::default()
+            ..DefaultWithKey::default_with_key(&master_key)
         };
 
         let group = RxGroup {
@@ -624,7 +538,8 @@ mod tests {
             templates: HashMap::new(),
             all_entries: IndexMap::from([(entry_uuid1, entry1), (entry_uuid2, entry2)]),
             all_groups: IndexMap::from([(group_uuid, group)]),
-            ..Default::default()
+            master_key: master_key,
+            metadata: Default::default(),
         };
 
         let entries = db.get_entries(group_uuid, Some("test"));

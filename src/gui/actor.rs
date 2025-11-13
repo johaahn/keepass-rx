@@ -13,13 +13,14 @@ use zeroize::{Zeroize, Zeroizing};
 
 use super::KeepassRx;
 use super::models::RxListItem;
+use crate::crypto::EncryptedPassword;
 use crate::{
     gui::{
         RxViewMode,
         models::{RxPageType, RxUiContainer},
         utils::imported_databases_path,
     },
-    rx::{EncryptedPassword, RxContainer, RxDatabase, RxFieldName, ZeroableDatabase},
+    rx::{RxContainer, RxDatabase, RxFieldName, ZeroableDatabase},
 };
 
 #[derive(Default)]
@@ -262,6 +263,7 @@ impl Handler<CloseDatabase> for KeepassRxActor {
     fn handle(&mut self, _: CloseDatabase, _: &mut Self::Context) -> Self::Result {
         // Remove from cell
         let db = self.curr_db.take();
+
         AtomicResponse::new(Box::pin(
             async move {
                 // Remove from option.
@@ -596,9 +598,11 @@ impl Handler<GetFieldValue> for KeepassRxActor {
         let value: QString = db
             .get_entry(msg.entry_uuid)
             .and_then(|entry| {
-                entry
-                    .get_field_value(&msg.field_name)
-                    .map(|val| val.value().map(QString::from).unwrap_or_default())
+                entry.get_field_value(&msg.field_name).map(|val| {
+                    val.value()
+                        .map(|s| QString::from(s.as_str()))
+                        .unwrap_or_default()
+                })
             })
             .unwrap_or_default();
 

@@ -1,3 +1,5 @@
+use crate::crypto::{DefaultWithKey, EncryptedValue, MasterKey};
+
 use super::icons::RxIcon;
 use anyhow::{Result, anyhow};
 use base64::{Engine, prelude::BASE64_STANDARD};
@@ -8,40 +10,34 @@ use keepass::db::{CustomData, Entry, Icon, TOTP as KeePassTOTP, Value};
 use libsodium_rs::utils::{SecureVec, vec_utils};
 use querystring::querify;
 use secstr::SecStr;
-use std::mem;
+use std::rc::Rc;
 use std::str::FromStr;
+use std::sync::atomic::Ordering;
+use std::{mem, sync::atomic::AtomicU64};
 use totp_rs::{Secret, TOTP};
 use uriparse::URI;
 use uuid::Uuid;
-use zeroize::{Zeroize, ZeroizeOnDrop};
+use zeroize::{Zeroize, ZeroizeOnDrop, Zeroizing};
 
 macro_rules! expose {
-    ($secret:expr) => {{
+    ($masterkey:expr, $secret:expr) => {{
         $secret
             .as_ref()
-            .and_then(|secret| secret.value().map(|value| value.to_string()))
+            .and_then(|secret| secret.value($masterkey).map(|value| value.to_string()))
             .unwrap_or_default()
     }};
-}
-
-macro_rules! expose_opt {
-    ($secret:expr) => {{ $secret.as_ref().and_then(|secret| secret.value()) }};
 }
 
 macro_rules! expose_str {
-    ($secret:expr) => {{
+    ($masterkey:expr, $secret:expr) => {{
         $secret
             .as_ref()
-            .and_then(|secret| secret.value())
+            .and_then(|secret| secret.value($masterkey))
             .unwrap_or_default()
     }};
 }
 
-macro_rules! into_value {
-    ($key:expr, $val:expr) => {{ RxValue::try_from($val).ok().map(|secret| ($key, secret)) }};
-}
-
-pub(crate) use {expose, expose_opt, expose_str};
+pub(crate) use {expose, expose_str};
 
 // Special field that indicates the entry is a templated entry (e.g.
 // credit card, wifi password, etc).
@@ -71,10 +67,13 @@ fn should_hide_field(field_name: &str) -> bool {
             .any(|wildcard| field_name.starts_with(wildcard))
 }
 
-#[derive(Zeroize, Default, Clone)]
+#[derive(Clone, Zeroize)]
 pub struct RxEntry {
     #[zeroize(skip)]
     pub uuid: Uuid,
+
+    #[zeroize(skip)]
+    pub(super) master_key: Rc<MasterKey>,
 
     /// An entry always has a parent group.
     #[zeroize(skip)]
@@ -83,29 +82,32 @@ pub struct RxEntry {
     #[zeroize(skip)]
     pub template_uuid: Option<Uuid>,
 
-    pub title: Option<RxValue>,
-    pub username: Option<RxValue>,
-    pub password: Option<RxValue>,
-    pub notes: Option<RxValue>,
+    pub(super) title: Option<RxValue>,
+    pub(super) username: Option<RxValue>,
+    pub(super) password: Option<RxValue>,
+    pub(super) notes: Option<RxValue>,
 
     pub custom_fields: RxCustomFields,
 
-    pub url: Option<RxValue>,
-    pub raw_otp_value: Option<RxValue>,
+    pub(super) url: Option<RxValue>,
+    pub(super) raw_otp_value: Option<RxValue>,
 
     #[zeroize(skip)]
     pub icon: RxIcon,
 }
 
-fn extract_remaining_fields(entry: &mut Entry) -> Vec<(String, RxValue)> {
+fn extract_remaining_fields(
+    master_key: &MasterKey,
+    entry: &mut Entry,
+) -> Vec<(String, RxValue)> {
     entry
         .fields
         .drain()
         .flat_map(|(key, value)| {
             match value {
-                Value::Protected(val) => {
-                    RxValue::try_from(val).ok().map(|rx_val| (key, rx_val))
-                }
+                Value::Protected(val) => RxValue::encrypted(master_key, val)
+                    .ok()
+                    .map(|rx_val| (key, rx_val)),
                 Value::Unprotected(val) => {
                     RxValue::try_from(val).ok().map(|rx_val| (key, rx_val))
                 }
@@ -115,38 +117,73 @@ fn extract_remaining_fields(entry: &mut Entry) -> Vec<(String, RxValue)> {
         .collect()
 }
 
-fn extract_value(entry: &mut Entry, field_name: &str) -> Option<RxValue> {
+fn extract_value(
+    master_key: &MasterKey,
+    entry: &mut Entry,
+    field_name: &str,
+) -> Option<RxValue> {
     entry.fields.remove(field_name).and_then(|value| {
         match value {
-            Value::Protected(val) => RxValue::try_from(val).ok(),
+            Value::Protected(val) => RxValue::encrypted(master_key, val).ok(),
             Value::Unprotected(val) => RxValue::try_from(val).ok(),
             _ => None, // discard binary for now. attachments later?
         }
     })
 }
 
+impl DefaultWithKey for RxCustomFields {
+    fn default_with_key(key: &Rc<MasterKey>) -> Self {
+        Self {
+            master_key: key.clone(),
+            data: Default::default(),
+        }
+    }
+}
+
+impl DefaultWithKey for RxEntry {
+    fn default_with_key(key: &Rc<MasterKey>) -> Self {
+        Self {
+            master_key: key.clone(),
+            custom_fields: DefaultWithKey::default_with_key(key),
+            icon: Default::default(),
+            notes: Default::default(),
+            parent_group: Default::default(),
+            password: Default::default(),
+            raw_otp_value: Default::default(),
+            template_uuid: Default::default(),
+            title: Default::default(),
+            url: Default::default(),
+            username: Default::default(),
+            uuid: Default::default(),
+        }
+    }
+}
+
 #[allow(dead_code)]
 impl RxEntry {
-    pub fn new_without_icon(entry: Entry, parent_uuid: Uuid) -> Self {
-        Self::new(entry, parent_uuid, None)
-    }
-
-    pub fn new(mut entry: Entry, parent_uuid: Uuid, icon: Option<Icon>) -> Self {
+    pub fn new(
+        master_key: &Rc<MasterKey>,
+        mut entry: Entry,
+        parent_uuid: Uuid,
+        icon: Option<Icon>,
+    ) -> Self {
+        let master_key = master_key.clone();
         let custom_data = mem::take(&mut entry.custom_data);
 
-        let title = extract_value(&mut entry, "Title");
-        let username = extract_value(&mut entry, "UserName");
-        let password = extract_value(&mut entry, "Password");
-        let notes = extract_value(&mut entry, "Notes");
-        let url = extract_value(&mut entry, "URL");
-        let raw_otp_value = extract_value(&mut entry, "otp");
+        let title = extract_value(&master_key, &mut entry, "Title");
+        let username = extract_value(&master_key, &mut entry, "UserName");
+        let password = extract_value(&master_key, &mut entry, "Password");
+        let notes = extract_value(&master_key, &mut entry, "Notes");
+        let url = extract_value(&master_key, &mut entry, "URL");
+        let raw_otp_value = extract_value(&master_key, &mut entry, "otp");
 
         // Template: Extract the _etm_template_uuid field, which
         // points to a template DB entry.
-        let template_uuid = extract_value(&mut entry, TEMPLATE_FIELD_NAME).and_then(|val| {
-            val.value()
-                .and_then(|uuid_str| Uuid::from_str(uuid_str).ok())
-        });
+        let template_uuid = extract_value(&master_key, &mut entry, TEMPLATE_FIELD_NAME)
+            .and_then(|val| {
+                val.value(&master_key)
+                    .and_then(|uuid_str| Uuid::from_str(&uuid_str).ok())
+            });
 
         // Icon: Can eiher be the custom one (provided), or the
         // built-in one, or nothing.
@@ -158,12 +195,14 @@ impl RxEntry {
 
         // Has to come after the above, otherwise those fields end up
         // in the custom fields.
-        let mut remaining_fields = RxCustomFields::from(extract_remaining_fields(&mut entry));
-        let mut custom_fields = RxCustomFields::from(custom_data);
+        let remaining_fields = extract_remaining_fields(&master_key, &mut entry);
+        let mut remaining_fields = RxCustomFields::from_vec(&master_key, remaining_fields);
+        let mut custom_fields = RxCustomFields::from_custom_data(&master_key, custom_data);
         custom_fields.append(&mut remaining_fields);
 
         Self {
             uuid: entry.uuid,
+            master_key: master_key,
             parent_group: parent_uuid,
             template_uuid: template_uuid,
             title: title,
@@ -177,18 +216,64 @@ impl RxEntry {
         }
     }
 
-    pub fn get_field_value(&self, field_name: &RxFieldName) -> Option<&RxValue> {
+    pub fn username(&self) -> Option<RxValueKeyRef<'_>> {
+        self.username
+            .as_ref()
+            .map(|v| RxValueKeyRef(v, &self.master_key))
+    }
+
+    pub fn password(&self) -> Option<RxValueKeyRef<'_>> {
+        self.password
+            .as_ref()
+            .map(|p| RxValueKeyRef(p, &self.master_key))
+    }
+
+    pub fn title(&self) -> Option<RxValueKeyRef<'_>> {
+        self.title
+            .as_ref()
+            .map(|t| RxValueKeyRef(t, &self.master_key))
+    }
+
+    pub fn url(&self) -> Option<RxValueKeyRef<'_>> {
+        self.url
+            .as_ref()
+            .map(|u| RxValueKeyRef(u, &self.master_key))
+    }
+
+    pub fn raw_otp_value(&self) -> Option<RxValueKeyRef<'_>> {
+        self.raw_otp_value
+            .as_ref()
+            .map(|t| RxValueKeyRef(t, &self.master_key))
+    }
+
+    pub(super) fn master_key(&self) -> &MasterKey {
+        &self.master_key
+    }
+
+    pub fn get_field_value(&self, field_name: &RxFieldName) -> Option<RxValueKeyRef<'_>> {
         match field_name {
-            RxFieldName::Username => self.username.as_ref(),
-            RxFieldName::Password => self.password.as_ref(),
-            RxFieldName::Url => self.url.as_ref(),
-            RxFieldName::Title => self.title.as_ref(),
+            RxFieldName::Username => self
+                .username
+                .as_ref()
+                .map(|val| RxValueKeyRef(val, &self.master_key)),
+            RxFieldName::Password => self
+                .password
+                .as_ref()
+                .map(|val| RxValueKeyRef(val, &self.master_key)),
+            RxFieldName::Url => self
+                .url
+                .as_ref()
+                .map(|val| RxValueKeyRef(val, &self.master_key)),
+            RxFieldName::Title => self
+                .title
+                .as_ref()
+                .map(|val| RxValueKeyRef(val, &self.master_key)),
             RxFieldName::CustomField(name) => {
                 self.custom_fields
-                    .0
+                    .data
                     .iter()
                     .find_map(|(key, value)| match key == name {
-                        true => Some(value),
+                        true => Some(RxValueKeyRef(value, &self.master_key)),
                         false => None,
                     })
             }
@@ -196,7 +281,7 @@ impl RxEntry {
     }
 
     pub fn has_steam_otp(&self) -> bool {
-        expose!(self.raw_otp_value).starts_with("otpauth://totp/Steam:")
+        expose!(&self.master_key, self.raw_otp_value).starts_with("otpauth://totp/Steam:")
     }
 
     pub fn steam_otp_digits(&self) -> Result<String> {
@@ -204,7 +289,8 @@ impl RxEntry {
             return Err(anyhow!("Not a Steam OTP entry"));
         }
 
-        let uri = URI::try_from(expose_str!(self.raw_otp_value))?;
+        let raw_otp = expose_str!(&self.master_key, self.raw_otp_value);
+        let uri = URI::try_from(raw_otp.as_str())?;
 
         let query = uri
             .query()
@@ -227,7 +313,8 @@ impl RxEntry {
     }
 
     pub fn totp(&self) -> Result<RxTotp> {
-        let otp = KeePassTOTP::from_str(expose_str!(self.raw_otp_value))?;
+        let otp =
+            KeePassTOTP::from_str(expose_str!(&self.master_key, self.raw_otp_value).as_str())?;
 
         let otp_code = otp.value_now()?;
 
@@ -259,11 +346,27 @@ impl RxEntry {
     }
 }
 
+pub struct RxValueKeyRef<'a>(&'a RxValue, &'a MasterKey);
+
+impl<'a> RxValueKeyRef<'a> {
+    pub fn new(value: &'a RxValue, key: &'a MasterKey) -> Self {
+        Self(value, key)
+    }
+
+    pub fn value(&self) -> Option<Zeroizing<String>> {
+        self.0.value(self.1).map(Zeroizing::new)
+    }
+
+    pub fn is_hidden_by_default(&self) -> bool {
+        self.0.is_hidden_by_default()
+    }
+}
+
 /// Not Sync or Send, because of SecureVec using *mut u8.
-#[derive(Zeroize, ZeroizeOnDrop, Default, Clone)]
+#[derive(Default, Clone)]
 pub enum RxValue {
     /// Fully hidden by default. Used for passwords etc.
-    Protected(SecureVec<u8>),
+    Protected(EncryptedValue),
 
     /// Not hidden by default, but we don't want to leak the metadata
     /// in memory if possible.
@@ -277,7 +380,35 @@ pub enum RxValue {
     Unsupported,
 }
 
+impl Zeroize for RxValue {
+    fn zeroize(&mut self) {
+        match self {
+            RxValue::Protected(encrypted_value) => encrypted_value.zeroize(),
+            RxValue::Sensitive(val) => val.zeroize(),
+            RxValue::Unprotected(val) => val.zeroize(),
+            _ => (),
+        }
+    }
+}
+
+static ID_COUNTER: AtomicU64 = AtomicU64::new(1);
+
 impl RxValue {
+    pub fn encrypted(master_key: &MasterKey, mut value: SecStr) -> Result<Self> {
+        let value_unsecure = value.unsecure();
+        let mut secure_vec = vec_utils::secure_vec::<u8>(value_unsecure.len())?;
+        secure_vec.copy_from_slice(&value_unsecure);
+        value.zero_out();
+
+        let encrypted_value = EncryptedValue::new(
+            master_key,
+            ID_COUNTER.fetch_add(1, Ordering::SeqCst),
+            secure_vec,
+        )?;
+
+        Ok(Self::Protected(encrypted_value))
+    }
+
     pub fn is_hidden_by_default(&self) -> bool {
         match self {
             RxValue::Protected(_) => true,
@@ -285,11 +416,16 @@ impl RxValue {
         }
     }
 
-    pub fn value(&self) -> Option<&str> {
+    pub fn value(&self, master_key: &MasterKey) -> Option<String> {
         use RxValue::*;
         match self {
-            Protected(val) | Sensitive(val) => std::str::from_utf8(&val).ok(),
-            Unprotected(value) => Some(value.as_ref()),
+            Protected(val) => val
+                .expose(master_key)
+                .map(|val| std::str::from_utf8(&val).ok().map(|v| v.to_string()))
+                .ok()
+                .flatten(),
+            Sensitive(val) => std::str::from_utf8(&val).ok().map(|v| v.to_string()),
+            Unprotected(value) => Some(value.clone()),
             _ => None,
         }
     }
@@ -315,16 +451,16 @@ impl std::fmt::Debug for RxValue {
     }
 }
 
-impl TryFrom<SecStr> for RxValue {
-    type Error = anyhow::Error;
-    fn try_from(mut value: SecStr) -> std::result::Result<Self, Self::Error> {
-        let value_unsecure = value.unsecure();
-        let mut secure_vec = vec_utils::secure_vec::<u8>(value_unsecure.len())?;
-        secure_vec.copy_from_slice(&value_unsecure);
-        value.zero_out();
-        Ok(RxValue::Protected(secure_vec))
-    }
-}
+// impl TryFrom<SecStr> for RxValue {
+//     type Error = anyhow::Error;
+//     fn try_from(mut value: SecStr) -> std::result::Result<Self, Self::Error> {
+//         let value_unsecure = value.unsecure();
+//         let mut secure_vec = vec_utils::secure_vec::<u8>(value_unsecure.len())?;
+//         secure_vec.copy_from_slice(&value_unsecure);
+//         value.zero_out();
+//         Ok(RxValue::Protected(secure_vec))
+//     }
+// }
 
 impl TryFrom<String> for RxValue {
     type Error = anyhow::Error;
@@ -373,17 +509,15 @@ impl From<String> for RxFieldName {
     }
 }
 
-#[derive(Zeroize, Default, Clone)]
-pub struct RxCustomFields(pub(crate) Vec<(String, RxValue)>);
-
-impl RxCustomFields {
-    pub fn append(&mut self, other: &mut RxCustomFields) {
-        self.0.append(&mut other.0);
-    }
+#[derive(Zeroize, Clone)]
+pub struct RxCustomFields {
+    #[zeroize(skip)]
+    master_key: Rc<MasterKey>,
+    data: Vec<(String, RxValue)>,
 }
 
-impl From<Vec<(String, RxValue)>> for RxCustomFields {
-    fn from(value: Vec<(String, RxValue)>) -> Self {
+impl RxCustomFields {
+    fn from_vec(master_key: &Rc<MasterKey>, value: Vec<(String, RxValue)>) -> Self {
         let custom_fields: Vec<_> = value
             .into_iter()
             .flat_map(|(key, item)| {
@@ -395,20 +529,31 @@ impl From<Vec<(String, RxValue)>> for RxCustomFields {
             })
             .collect();
 
-        Self(custom_fields)
+        Self {
+            master_key: master_key.clone(),
+            data: custom_fields,
+        }
     }
-}
 
-impl From<CustomData> for RxCustomFields {
-    fn from(value: CustomData) -> Self {
+    pub fn iter(&self) -> impl Iterator<Item = (&String, RxValueKeyRef<'_>)> {
+        self.data
+            .iter()
+            .map(|(key, value)| (key, RxValueKeyRef(value, &self.master_key)))
+    }
+
+    fn from_custom_data(master_key: &Rc<MasterKey>, value: CustomData) -> Self {
         let custom_fields: Vec<_> = value
             .items
             .into_iter()
             .flat_map(|(key, item)| {
                 if !should_hide_field(&key.as_ref()) {
                     item.value.and_then(|value| match value {
-                        Value::Protected(val) => into_value!(key, val),
-                        Value::Unprotected(val) => into_value!(key, val),
+                        Value::Protected(val) => RxValue::encrypted(master_key, val)
+                            .ok()
+                            .map(|secret| (key, secret)),
+                        Value::Unprotected(val) => {
+                            RxValue::try_from(val).ok().map(|secret| (key, secret))
+                        }
                         _ => None,
                     })
                 } else {
@@ -417,6 +562,13 @@ impl From<CustomData> for RxCustomFields {
             })
             .collect();
 
-        Self(custom_fields)
+        Self {
+            master_key: master_key.clone(),
+            data: custom_fields,
+        }
+    }
+
+    pub fn append(&mut self, other: &mut RxCustomFields) {
+        self.data.append(&mut other.data);
     }
 }

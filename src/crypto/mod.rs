@@ -1,11 +1,16 @@
 use anyhow::{Result, anyhow};
+use crypto_kdf::Key as KdfKey;
 use keyring::Entry as KeyringEntry;
 use libsodium_rs::crypto_aead::xchacha20poly1305;
-use libsodium_rs::crypto_aead::xchacha20poly1305::{Key, Nonce};
+use libsodium_rs::crypto_aead::xchacha20poly1305::{Key as ChaChaKey, Nonce};
+use libsodium_rs::crypto_kdf;
 use libsodium_rs::crypto_pwhash;
 use libsodium_rs::random;
+use libsodium_rs::utils::{SecureVec, vec_utils};
 use secstr::SecUtf8;
+use std::cell::RefCell;
 use std::sync::Arc;
+use uuid::Uuid;
 use zeroize::Zeroize;
 
 const SHORT_PW_LENGTH: usize = 5;
@@ -92,7 +97,7 @@ impl EncryptedPassword {
         random::fill_bytes(&mut pw_salt);
 
         let key_raw_bytes = hash_password(short_password, &pw_salt)?;
-        let key = Key::from_bytes(&key_raw_bytes)?;
+        let key = ChaChaKey::from_bytes(&key_raw_bytes)?;
         let nonce = Nonce::generate();
 
         let ciphertext =
@@ -109,7 +114,7 @@ impl EncryptedPassword {
         let encrypted_password = self.secret.retrieve()?;
         let key_raw_bytes = hash_password(short_password.unsecure(), &self.pw_salt)?;
         drop(short_password);
-        let key = Key::from_bytes(&key_raw_bytes)?;
+        let key = ChaChaKey::from_bytes(&key_raw_bytes)?;
 
         let master_password =
             xchacha20poly1305::decrypt(&encrypted_password, None, &self.nonce, &key)
@@ -121,6 +126,98 @@ impl EncryptedPassword {
 
         let _ = self.secret.destroy(); // nuke the key in KRS
         Ok(master_password)
+    }
+}
+
+// Must be exactly 8 bytes
+const CONTEXT: &[u8; 8] = b"KEEPSSRX";
+
+#[derive(Clone)]
+pub struct MasterKey {
+    key: KdfKey,
+}
+
+impl MasterKey {
+    pub fn new() -> Result<Self> {
+        let master_key = crypto_kdf::Key::generate()?;
+        Ok(Self { key: master_key })
+    }
+
+    pub fn derive_subkey(&self, id: u64) -> Result<Vec<u8>> {
+        let subkey = crypto_kdf::derive_from_key(32, id, CONTEXT, &self.key)?;
+        Ok(subkey)
+    }
+}
+
+#[derive(Clone)]
+pub struct EncryptedValue {
+    id: u64,
+    value: RefCell<Vec<u8>>,
+    nonce: RefCell<Nonce>,
+}
+
+impl Zeroize for EncryptedValue {
+    fn zeroize(&mut self) {
+        let mut this_nonce = self.nonce.swap(&RefCell::new(Nonce::generate()));
+        let mut this_value = self.value.take();
+
+        this_nonce.zeroize();
+        this_value.zeroize();
+    }
+}
+
+impl EncryptedValue {
+    pub fn new(key: &MasterKey, id: u64, value: SecureVec<u8>) -> Result<Self> {
+        let subkey = key.derive_subkey(id)?;
+        let encryption_key = ChaChaKey::from_bytes(&subkey)?;
+        let nonce = Nonce::generate();
+
+        let ciphertext = xchacha20poly1305::encrypt(&value, None, &nonce, &encryption_key)?;
+        drop(value);
+
+        Ok(Self {
+            value: RefCell::new(ciphertext),
+            nonce: RefCell::new(nonce),
+            id: id,
+        })
+    }
+
+    fn decrypt(&self, key: &MasterKey) -> Result<SecureVec<u8>> {
+        let subkey = key.derive_subkey(self.id)?;
+        let encryption_key = ChaChaKey::from_bytes(&subkey)?;
+
+        let mut plaintext = xchacha20poly1305::decrypt(
+            &self.value.borrow(),
+            None,
+            &self.nonce.borrow(),
+            &encryption_key,
+        )?;
+
+        let mut secure_plaintext = vec_utils::secure_vec::<u8>(plaintext.len())?;
+        secure_plaintext.copy_from_slice(plaintext.as_slice());
+        plaintext.zeroize();
+
+        Ok(secure_plaintext)
+    }
+
+    fn reencrypt(&self, key: &MasterKey) -> Result<()> {
+        let decrypted = self.decrypt(key)?;
+
+        let mut value_mut = self.value.borrow_mut();
+        value_mut.zeroize();
+        drop(value_mut);
+
+        let new_value = Self::new(key, self.id, decrypted)?;
+        self.nonce.swap(&new_value.nonce);
+        self.value.swap(&new_value.value);
+
+        Ok(())
+    }
+
+    pub fn expose(&self, key: &MasterKey) -> Result<SecureVec<u8>> {
+        let plaintext_value = self.decrypt(key)?;
+        self.reencrypt(key)?;
+        Ok(plaintext_value)
     }
 }
 

@@ -10,7 +10,6 @@ jobs:
     container:
       image: clickable/ci-20.04-amd64
     steps:
-      - uses: actions/checkout@v4
       - run: cargo test --no-default-features
   build-amd64:
     needs: [test]

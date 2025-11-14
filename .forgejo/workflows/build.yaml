@@ -14,6 +14,9 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Setup Cache
+        uses: https://github.com/Swatinem/rust-cache@v2
+
       - name: Test
         run: cargo test --no-default-features
 

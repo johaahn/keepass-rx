@@ -6,6 +6,9 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Install pipx
+        run: apt install -y pipx
+
       - name: Install Clickable
         run: pipx install clickable-ut
 

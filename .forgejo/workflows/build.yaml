@@ -18,7 +18,7 @@ jobs:
         run: clickable build --clean
 
       - name: Test
-        run: clickable test --arch=amd64
+        run: cargo test --no-default-features
 
       - name: Upload Artifact
         uses: https://data.forgejo.org/forgejo/upload-artifact@v4
@@ -44,7 +44,7 @@ jobs:
         run: clickable build --clean
 
       - name: Test
-        run: clickable test --arch=arm64
+        run: cargo test --no-default-features
 
       - name: Upload Artifact
         uses: https://data.forgejo.org/forgejo/upload-artifact@v4
@@ -70,7 +70,7 @@ jobs:
         run: clickable build --clean
 
       - name: Test
-        run: clickable test --arch=armhf
+        run: cargo test --no-default-features
 
       - name: Upload Artifact
         uses: https://data.forgejo.org/forgejo/upload-artifact@v4

@@ -4,8 +4,6 @@ jobs:
     runs-on: docker
     container:
       image: ghcr.io/catthehacker/ubuntu:act-24.04
-      env:
-        PATH: /root/.local/bin
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4

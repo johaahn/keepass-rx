@@ -18,7 +18,6 @@ jobs:
     container:
       image: clickable/ci-20.04-amd64
     steps:
-      - uses: actions/checkout@v4
       - run: clickable build --clean
   artifact-amd64:
     runs-on: docker

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-13 22:07+0100\n"
+"POT-Creation-Date: 2025-11-14 08:49+0100\n"
 "PO-Revision-Date: 2025-11-12 14:35+0000\n"
 "Last-Translator: Vlad Nirky <nirky.vlad@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -23,14 +23,14 @@ msgstr ""
 msgid "Add Database"
 msgstr "Ajouter une base de données"
 
-#: qml/pages/DBList.qml:74 qml/pages/UnlockPage.qml:34
-#: qml/pages/OpenDBPage.qml:47 qml/pages/SettingsPage.qml:11
+#: qml/pages/DBList.qml:74 qml/pages/OpenDBPage.qml:47
+#: qml/pages/UnlockPage.qml:34 qml/pages/SettingsPage.qml:11
 #: qml/pages/EntriesPage.qml:164
 msgid "Settings"
 msgstr "Paramètres"
 
-#: qml/pages/DBList.qml:81 qml/pages/UnlockPage.qml:41
-#: qml/pages/OpenDBPage.qml:54 qml/pages/AboutPage.qml:11
+#: qml/pages/DBList.qml:81 qml/pages/OpenDBPage.qml:54
+#: qml/pages/UnlockPage.qml:41 qml/pages/AboutPage.qml:11
 #: qml/pages/EntriesPage.qml:173
 msgid "About"
 msgstr "A propos de"
@@ -50,6 +50,27 @@ msgstr "Appuyer + pour importer une base de données."
 #: qml/pages/DBList.qml:265
 msgid "It will only be removed from the app, not your device."
 msgstr "Elle sera simplement retirée de l’application, pas de votre appareil."
+
+#: qml/pages/OpenDBPage.qml:34 qml/pages/EntriesPage.qml:124
+#: qml/pages/SingleEntry.qml:96
+msgid "Back"
+msgstr "Retour"
+
+#: qml/pages/OpenDBPage.qml:159
+msgid "Enter the database master password"
+msgstr "Entrez le mot de passe principal de la base de données"
+
+#: qml/pages/OpenDBPage.qml:172
+msgid "Master Password"
+msgstr "Mot de passe principal"
+
+#: qml/pages/OpenDBPage.qml:202
+msgid "Open"
+msgstr "Ouvrir"
+
+#: qml/pages/OpenDBPage.qml:219
+msgid "Opening"
+msgstr "Ouverture"
 
 #: qml/pages/UnlockPage.qml:146
 msgid "Manual path set."
@@ -83,39 +104,6 @@ msgstr "Verrouillage sécurisé"
 #: qml/pages/UnlockPage.qml:244
 msgid "Database Not Opening?"
 msgstr "La base de données ne s'ouvre pas ?"
-
-#: qml/pages/SingleEntry.qml:84
-msgid "Untitled Entry"
-msgstr "Entrée sans titre"
-
-#: qml/pages/SingleEntry.qml:96 qml/pages/OpenDBPage.qml:34
-#: qml/pages/EntriesPage.qml:124
-msgid "Back"
-msgstr "Retour"
-
-#: qml/pages/SingleEntry.qml:222
-msgid "Notes"
-msgstr "Notes"
-
-#: qml/pages/SingleEntry.qml:230
-msgid "Tap to copy"
-msgstr "Appuyez pour copier"
-
-#: qml/pages/OpenDBPage.qml:159
-msgid "Enter the database master password"
-msgstr "Entrez le mot de passe principal de la base de données"
-
-#: qml/pages/OpenDBPage.qml:172
-msgid "Master Password"
-msgstr "Mot de passe principal"
-
-#: qml/pages/OpenDBPage.qml:202
-msgid "Open"
-msgstr "Ouvrir"
-
-#: qml/pages/OpenDBPage.qml:219
-msgid "Opening"
-msgstr "Ouverture"
 
 #: qml/pages/SettingsPage.qml:44
 msgid ""
@@ -215,6 +203,18 @@ msgstr "Fermer la base de données"
 #: qml/pages/EntriesPage.qml:224
 msgid "Search entries in this group"
 msgstr "Rechercher les entrées dans ce groupe"
+
+#: qml/pages/SingleEntry.qml:84
+msgid "Untitled Entry"
+msgstr "Entrée sans titre"
+
+#: qml/pages/SingleEntry.qml:222
+msgid "Notes"
+msgstr "Notes"
+
+#: qml/pages/SingleEntry.qml:230
+msgid "Tap to copy"
+msgstr "Appuyez pour copier"
 
 #~ msgid "Enable database locking (ALPHA)"
 #~ msgstr "Activer le verrouillage de la base de données (ALPHA)"

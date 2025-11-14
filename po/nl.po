@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-13 22:07+0100\n"
+"POT-Creation-Date: 2025-11-14 08:49+0100\n"
 "PO-Revision-Date: 2025-11-13 11:51+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -23,14 +23,14 @@ msgstr ""
 msgid "Add Database"
 msgstr "Databank toevoegen"
 
-#: qml/pages/DBList.qml:74 qml/pages/UnlockPage.qml:34
-#: qml/pages/OpenDBPage.qml:47 qml/pages/SettingsPage.qml:11
+#: qml/pages/DBList.qml:74 qml/pages/OpenDBPage.qml:47
+#: qml/pages/UnlockPage.qml:34 qml/pages/SettingsPage.qml:11
 #: qml/pages/EntriesPage.qml:164
 msgid "Settings"
 msgstr "Instellingen"
 
-#: qml/pages/DBList.qml:81 qml/pages/UnlockPage.qml:41
-#: qml/pages/OpenDBPage.qml:54 qml/pages/AboutPage.qml:11
+#: qml/pages/DBList.qml:81 qml/pages/OpenDBPage.qml:54
+#: qml/pages/UnlockPage.qml:41 qml/pages/AboutPage.qml:11
 #: qml/pages/EntriesPage.qml:173
 msgid "About"
 msgstr "Over"
@@ -51,6 +51,27 @@ msgstr "Druk op ‘+’ om een databank toe te voegen."
 msgid "It will only be removed from the app, not your device."
 msgstr ""
 "Let op: de databank wordt alleen verwijderd uit de app, niet van je apparaat."
+
+#: qml/pages/OpenDBPage.qml:34 qml/pages/EntriesPage.qml:124
+#: qml/pages/SingleEntry.qml:96
+msgid "Back"
+msgstr "Terug"
+
+#: qml/pages/OpenDBPage.qml:159
+msgid "Enter the database master password"
+msgstr "Voer het hoofdwachtwoord in"
+
+#: qml/pages/OpenDBPage.qml:172
+msgid "Master Password"
+msgstr "Hoofdwachtwoord"
+
+#: qml/pages/OpenDBPage.qml:202
+msgid "Open"
+msgstr "Openen"
+
+#: qml/pages/OpenDBPage.qml:219
+msgid "Opening"
+msgstr "Bezig met openen…"
 
 #: qml/pages/UnlockPage.qml:146
 msgid "Manual path set."
@@ -83,39 +104,6 @@ msgstr "Veilig vergrendelen"
 #: qml/pages/UnlockPage.qml:244
 msgid "Database Not Opening?"
 msgstr "Wordt de databank niet geopend?"
-
-#: qml/pages/SingleEntry.qml:84
-msgid "Untitled Entry"
-msgstr "Naamloos item"
-
-#: qml/pages/SingleEntry.qml:96 qml/pages/OpenDBPage.qml:34
-#: qml/pages/EntriesPage.qml:124
-msgid "Back"
-msgstr "Terug"
-
-#: qml/pages/SingleEntry.qml:222
-msgid "Notes"
-msgstr "Aantekeningen"
-
-#: qml/pages/SingleEntry.qml:230
-msgid "Tap to copy"
-msgstr "Druk om te kopiëren"
-
-#: qml/pages/OpenDBPage.qml:159
-msgid "Enter the database master password"
-msgstr "Voer het hoofdwachtwoord in"
-
-#: qml/pages/OpenDBPage.qml:172
-msgid "Master Password"
-msgstr "Hoofdwachtwoord"
-
-#: qml/pages/OpenDBPage.qml:202
-msgid "Open"
-msgstr "Openen"
-
-#: qml/pages/OpenDBPage.qml:219
-msgid "Opening"
-msgstr "Bezig met openen…"
 
 #: qml/pages/SettingsPage.qml:44
 msgid ""
@@ -216,6 +204,18 @@ msgstr "Databank sluiten"
 #: qml/pages/EntriesPage.qml:224
 msgid "Search entries in this group"
 msgstr "Deze groep doorzoeken"
+
+#: qml/pages/SingleEntry.qml:84
+msgid "Untitled Entry"
+msgstr "Naamloos item"
+
+#: qml/pages/SingleEntry.qml:222
+msgid "Notes"
+msgstr "Aantekeningen"
+
+#: qml/pages/SingleEntry.qml:230
+msgid "Tap to copy"
+msgstr "Druk om te kopiëren"
 
 #~ msgid "Enable database locking (ALPHA)"
 #~ msgstr "Databanken vergrendelen (experimenteel)"

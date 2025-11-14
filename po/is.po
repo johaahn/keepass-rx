@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-13 22:07+0100\n"
+"POT-Creation-Date: 2025-11-14 08:49+0100\n"
 "PO-Revision-Date: 2025-11-12 14:24+0000\n"
 "Last-Translator: projectmoon <projectmoon@agnos.is>\n"
 "Language-Team: Icelandic <https://hosted.weblate.org/projects/ubports/"
@@ -23,14 +23,14 @@ msgstr ""
 msgid "Add Database"
 msgstr "Bæta við Gangnagrunn"
 
-#: qml/pages/DBList.qml:74 qml/pages/UnlockPage.qml:34
-#: qml/pages/OpenDBPage.qml:47 qml/pages/SettingsPage.qml:11
+#: qml/pages/DBList.qml:74 qml/pages/OpenDBPage.qml:47
+#: qml/pages/UnlockPage.qml:34 qml/pages/SettingsPage.qml:11
 #: qml/pages/EntriesPage.qml:164
 msgid "Settings"
 msgstr "Stillingar"
 
-#: qml/pages/DBList.qml:81 qml/pages/UnlockPage.qml:41
-#: qml/pages/OpenDBPage.qml:54 qml/pages/AboutPage.qml:11
+#: qml/pages/DBList.qml:81 qml/pages/OpenDBPage.qml:54
+#: qml/pages/UnlockPage.qml:41 qml/pages/AboutPage.qml:11
 #: qml/pages/EntriesPage.qml:173
 msgid "About"
 msgstr "Um appið"
@@ -50,6 +50,27 @@ msgstr "Ýtið á + til að flytja inn gagnagrunn."
 #: qml/pages/DBList.qml:265
 msgid "It will only be removed from the app, not your device."
 msgstr ""
+
+#: qml/pages/OpenDBPage.qml:34 qml/pages/EntriesPage.qml:124
+#: qml/pages/SingleEntry.qml:96
+msgid "Back"
+msgstr "Til baka"
+
+#: qml/pages/OpenDBPage.qml:159
+msgid "Enter the database master password"
+msgstr "Sláðu inn aðallykilorð gagnagrunnsins"
+
+#: qml/pages/OpenDBPage.qml:172
+msgid "Master Password"
+msgstr "Aðallykilorð"
+
+#: qml/pages/OpenDBPage.qml:202
+msgid "Open"
+msgstr "Opna"
+
+#: qml/pages/OpenDBPage.qml:219
+msgid "Opening"
+msgstr "Í vinnslu"
 
 #: qml/pages/UnlockPage.qml:146
 msgid "Manual path set."
@@ -82,39 +103,6 @@ msgstr "Læsa með öryggi"
 #: qml/pages/UnlockPage.qml:244
 msgid "Database Not Opening?"
 msgstr "Er gagnagrunnur ekki að opna?"
-
-#: qml/pages/SingleEntry.qml:84
-msgid "Untitled Entry"
-msgstr "Ónefnd Færsla"
-
-#: qml/pages/SingleEntry.qml:96 qml/pages/OpenDBPage.qml:34
-#: qml/pages/EntriesPage.qml:124
-msgid "Back"
-msgstr "Til baka"
-
-#: qml/pages/SingleEntry.qml:222
-msgid "Notes"
-msgstr "Athugasemdir"
-
-#: qml/pages/SingleEntry.qml:230
-msgid "Tap to copy"
-msgstr "Ýtið á til að afrita"
-
-#: qml/pages/OpenDBPage.qml:159
-msgid "Enter the database master password"
-msgstr "Sláðu inn aðallykilorð gagnagrunnsins"
-
-#: qml/pages/OpenDBPage.qml:172
-msgid "Master Password"
-msgstr "Aðallykilorð"
-
-#: qml/pages/OpenDBPage.qml:202
-msgid "Open"
-msgstr "Opna"
-
-#: qml/pages/OpenDBPage.qml:219
-msgid "Opening"
-msgstr "Í vinnslu"
 
 #: qml/pages/SettingsPage.qml:44
 msgid ""
@@ -209,6 +197,18 @@ msgstr "Loka Gagnagrunn"
 #: qml/pages/EntriesPage.qml:224
 msgid "Search entries in this group"
 msgstr "Leitaðu að hlut í þessum flokki"
+
+#: qml/pages/SingleEntry.qml:84
+msgid "Untitled Entry"
+msgstr "Ónefnd Færsla"
+
+#: qml/pages/SingleEntry.qml:222
+msgid "Notes"
+msgstr "Athugasemdir"
+
+#: qml/pages/SingleEntry.qml:230
+msgid "Tap to copy"
+msgstr "Ýtið á til að afrita"
 
 #~ msgid "Enable database locking (ALPHA)"
 #~ msgstr "Virkja læsing gagnagrunnanna (ALPHA)"

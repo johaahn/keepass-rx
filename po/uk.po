@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-13 22:07+0100\n"
+"POT-Creation-Date: 2025-11-14 08:49+0100\n"
 "PO-Revision-Date: 2025-11-03 20:51+0000\n"
 "Last-Translator: Serhii Horichenko <serhii@horichenko.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/ubports/"
@@ -24,14 +24,14 @@ msgstr ""
 msgid "Add Database"
 msgstr "Додати базу даних"
 
-#: qml/pages/DBList.qml:74 qml/pages/UnlockPage.qml:34
-#: qml/pages/OpenDBPage.qml:47 qml/pages/SettingsPage.qml:11
+#: qml/pages/DBList.qml:74 qml/pages/OpenDBPage.qml:47
+#: qml/pages/UnlockPage.qml:34 qml/pages/SettingsPage.qml:11
 #: qml/pages/EntriesPage.qml:164
 msgid "Settings"
 msgstr "Налаштування"
 
-#: qml/pages/DBList.qml:81 qml/pages/UnlockPage.qml:41
-#: qml/pages/OpenDBPage.qml:54 qml/pages/AboutPage.qml:11
+#: qml/pages/DBList.qml:81 qml/pages/OpenDBPage.qml:54
+#: qml/pages/UnlockPage.qml:41 qml/pages/AboutPage.qml:11
 #: qml/pages/EntriesPage.qml:173
 msgid "About"
 msgstr "Інфо"
@@ -51,6 +51,27 @@ msgstr "Імпортуйте базу даних через +."
 #: qml/pages/DBList.qml:265
 msgid "It will only be removed from the app, not your device."
 msgstr "Це буде вилучене лише з програми, але залишиться на пристрої."
+
+#: qml/pages/OpenDBPage.qml:34 qml/pages/EntriesPage.qml:124
+#: qml/pages/SingleEntry.qml:96
+msgid "Back"
+msgstr "Назад"
+
+#: qml/pages/OpenDBPage.qml:159
+msgid "Enter the database master password"
+msgstr "Вкажіть майстер-пароль бази даних"
+
+#: qml/pages/OpenDBPage.qml:172
+msgid "Master Password"
+msgstr "Майстер-пароль"
+
+#: qml/pages/OpenDBPage.qml:202
+msgid "Open"
+msgstr "Відкрити"
+
+#: qml/pages/OpenDBPage.qml:219
+msgid "Opening"
+msgstr "Відкривається"
 
 #: qml/pages/UnlockPage.qml:146
 msgid "Manual path set."
@@ -83,39 +104,6 @@ msgstr "Безпечне блокування"
 #: qml/pages/UnlockPage.qml:244
 msgid "Database Not Opening?"
 msgstr "База даних не відкривається?"
-
-#: qml/pages/SingleEntry.qml:84
-msgid "Untitled Entry"
-msgstr "Елемент без назви"
-
-#: qml/pages/SingleEntry.qml:96 qml/pages/OpenDBPage.qml:34
-#: qml/pages/EntriesPage.qml:124
-msgid "Back"
-msgstr "Назад"
-
-#: qml/pages/SingleEntry.qml:222
-msgid "Notes"
-msgstr "Нотатки"
-
-#: qml/pages/SingleEntry.qml:230
-msgid "Tap to copy"
-msgstr "Торкніться для копіювання"
-
-#: qml/pages/OpenDBPage.qml:159
-msgid "Enter the database master password"
-msgstr "Вкажіть майстер-пароль бази даних"
-
-#: qml/pages/OpenDBPage.qml:172
-msgid "Master Password"
-msgstr "Майстер-пароль"
-
-#: qml/pages/OpenDBPage.qml:202
-msgid "Open"
-msgstr "Відкрити"
-
-#: qml/pages/OpenDBPage.qml:219
-msgid "Opening"
-msgstr "Відкривається"
 
 #: qml/pages/SettingsPage.qml:44
 msgid ""
@@ -210,6 +198,18 @@ msgstr "Закрити базу даних"
 #: qml/pages/EntriesPage.qml:224
 msgid "Search entries in this group"
 msgstr "Шукати записи у цій групі"
+
+#: qml/pages/SingleEntry.qml:84
+msgid "Untitled Entry"
+msgstr "Елемент без назви"
+
+#: qml/pages/SingleEntry.qml:222
+msgid "Notes"
+msgstr "Нотатки"
+
+#: qml/pages/SingleEntry.qml:230
+msgid "Tap to copy"
+msgstr "Торкніться для копіювання"
 
 #~ msgid "Enable database locking (ALPHA)"
 #~ msgstr "Активувати блокування бази даних (АЛЬФА)"

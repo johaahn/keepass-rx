@@ -2,7 +2,7 @@ use crate::crypto::MasterKey;
 
 use super::icons::RxIcon;
 use super::rx_loader::RxLoader;
-use super::{RxEntry, RxTotp, ZeroableDatabase};
+use super::{RxContainer, RxEntry, RxGroup, RxTemplate, RxTotp, ZeroableDatabase};
 use anyhow::{Result, anyhow};
 use indexmap::IndexMap;
 use keepass::config::DatabaseConfig;
@@ -16,83 +16,6 @@ use std::{collections::HashMap, str::FromStr};
 use unicase::UniCase;
 use uuid::Uuid;
 use zeroize::{Zeroize, Zeroizing};
-
-pub enum RxContainer<'a> {
-    Group(&'a RxGroup),
-    Template(&'a RxTemplate),
-}
-
-#[allow(dead_code)]
-impl RxContainer<'_> {
-    pub fn uuid(&self) -> Uuid {
-        match self {
-            RxContainer::Group(group) => group.uuid,
-            RxContainer::Template(template) => template.uuid,
-        }
-    }
-
-    pub fn name(&self) -> &str {
-        match self {
-            RxContainer::Group(group) => &group.name,
-            RxContainer::Template(template) => &template.name,
-        }
-    }
-}
-
-#[derive(Zeroize, Default, Clone)]
-pub struct RxGroup {
-    #[zeroize(skip)]
-    pub uuid: Uuid,
-
-    /// The parent UUID will be None if this is the root group.
-    #[zeroize(skip)]
-    pub parent: Option<Uuid>,
-
-    pub name: String,
-
-    #[zeroize(skip)]
-    pub icon: RxIcon,
-
-    #[zeroize(skip)]
-    pub subgroups: Vec<Uuid>,
-
-    #[zeroize(skip)]
-    pub entries: Vec<Uuid>,
-}
-
-impl RxGroup {
-    pub fn new(
-        group: &mut Group,
-        subgroups: Vec<Uuid>,
-        entries: Vec<Uuid>,
-        parent: Option<Uuid>,
-    ) -> Self {
-        let icon = match (group.custom_icon_uuid, group.icon_id) {
-            (Some(_custom_id), _) => RxIcon::None, // TODO support custom group icons
-            (_, Some(buitin_id)) => RxIcon::Builtin(buitin_id),
-            _ => RxIcon::None,
-        };
-
-        Self {
-            uuid: group.uuid,
-            name: mem::take(&mut group.name),
-            subgroups: subgroups,
-            entries: entries,
-            parent: parent,
-            icon: icon,
-        }
-    }
-}
-
-#[derive(Zeroize, Default, Clone, Hash, Eq, PartialEq)]
-pub struct RxTemplate {
-    #[zeroize(skip)]
-    pub uuid: Uuid,
-    pub name: String, // from the template's entry title.
-
-    #[zeroize(skip)]
-    pub entry_uuids: Vec<Uuid>,
-}
 
 // Determine if an entry should show up in search results, if a search
 // term was specified. term is assumed to be already lowecase here.
@@ -304,6 +227,10 @@ impl RxDatabase {
             .or_else(|| {
                 self.get_template(container_uuid)
                     .map(|template| RxContainer::Template(template))
+            })
+            .or_else(|| {
+                self.get_entry(container_uuid)
+                    .map(|ent| RxContainer::Entry(ent))
             })
     }
 

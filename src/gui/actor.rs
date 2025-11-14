@@ -330,6 +330,7 @@ impl Handler<PushContainer> for KeepassRxActor {
             let page_type = match container {
                 RxContainer::Group(_) => RxPageType::Group,
                 RxContainer::Template(_) => RxPageType::Template,
+                RxContainer::Entry(_) => RxPageType::Group, // TODO not accurate
             };
 
             let page = RxUiContainer {

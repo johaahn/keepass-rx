@@ -2,14 +2,14 @@ on: [push]
 jobs:
   build-amd64:
     runs-on: docker
-    container:
-      image: clickable/ci-20.04-amd64
     steps:
-      - name: Setup Noed
-        uses: https://code.forgejo.org/actions/setup-node@v4
-
       - name: Checkout Code
         uses: actions/checkout@v4
+
+      - name: Install Clickable
+        uses: https://github.com/threeal/pipx-install-action@v2.0.0
+        with:
+          packages: clickable-ut
 
       - name: Build
         run: clickable build --clean

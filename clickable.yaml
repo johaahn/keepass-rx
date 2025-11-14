@@ -6,3 +6,7 @@ install_root_data:
 - keepassrx.apparmor
 - keepassrx.desktop
 - assets
+image_setup:
+  run:
+  - curl -fsSL https://deb.nodesource.com/setup_current.x | bash -
+  - apt-get install -y nodejs

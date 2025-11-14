@@ -2,5 +2,25 @@ on: [push]
 jobs:
   test:
     runs-on: docker
+    container:
+      image: clickable/ci-20.04-amd64
     steps:
-      - run: echo All good!
+      - uses: actions/checkout@v4
+      - run: cargo test --no-default-features
+  build-amd64:
+    runs-on: docker
+    container:
+      image: clickable/ci-20.04-amd64
+    steps:
+      - uses: actions/checkout@v4
+      - run: clickable build --clean
+  artifact-amd64:
+    runs-on: docker
+    needs: [build-amd64]
+    container:
+      image: clickable/ci-20.04-amd64
+    steps:
+    - uses: actions/upload-artifact@v4
+      with:
+        name: amd64
+        path: build/x86_64-linux-gnu/app/keepassrx.projectmoon_*.click

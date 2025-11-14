@@ -23,5 +23,57 @@ jobs:
       - name: Upload Artifact
         uses: https://data.forgejo.org/forgejo/upload-artifact@v4
         with:
-          name: amd64
+          name: keepassrx-ci-amd64
           path: build/x86_64-linux-gnu/app/keepassrx.projectmoon_*.click
+
+  build-arm64:
+    runs-on: docker
+    container:
+      image: clickable/ci-20.04-arm64
+    steps:
+      - name: Add NodeJS deb repo
+        run: curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+
+      - name: Install NodeJS
+        run: apt update && apt install -y nodejs
+
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Build
+        run: clickable build --clean
+
+      - name: Test
+        run: clickable test
+
+      - name: Upload Artifact
+        uses: https://data.forgejo.org/forgejo/upload-artifact@v4
+        with:
+          name: keepassrx-ci-arm64
+          path: build/aarch64-linux-gnu/app/keepassrx.projectmoon_*.click
+
+  build-armhf:
+    runs-on: docker
+    container:
+      image: clickable/ci-20.04-armhf
+    steps:
+      - name: Add NodeJS deb repo
+        run: curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+
+      - name: Install NodeJS
+        run: apt update && apt install -y nodejs
+
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Build
+        run: clickable build --clean
+
+      - name: Test
+        run: clickable test
+
+      - name: Upload Artifact
+        uses: https://data.forgejo.org/forgejo/upload-artifact@v4
+        with:
+          name: keepassrx-ci-armhf
+          path: build/arm-linux-gnueabihf/app/keepassrx.projectmoon_*.click

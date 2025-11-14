@@ -3,8 +3,14 @@ jobs:
   build-amd64:
     runs-on: docker
     container:
-      image: ghcr.io/catthehacker/ubuntu:act-24.04
+      image: clickable/ci-20.04-amd64
     steps:
+      - name: Add NodeJS deb repo
+        run: curl -fsSL https://deb.nodesource.com/setup_22.x | sudo bash -
+
+      - name: Install NodeJS
+        run: apt update && apt install -y nodejs
+
       - name: Checkout Code
         uses: actions/checkout@v4
 

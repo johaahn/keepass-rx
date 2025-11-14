@@ -7,7 +7,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Clickable
-        uses: https://github.com/threeal/pipx-install-action@v2.0.0
+        uses: https://github.com/threeal/pipx-install-action@v1.0.0
         with:
           packages: clickable-ut
 

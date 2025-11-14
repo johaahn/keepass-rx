@@ -6,7 +6,7 @@ jobs:
       image: clickable/ci-20.04-amd64
     steps:
       - name: Add NodeJS deb repo
-        run: curl -fsSL https://deb.nodesource.com/setup_22.x | sudo bash -
+        run: curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
 
       - name: Install NodeJS
         run: apt update && apt install -y nodejs

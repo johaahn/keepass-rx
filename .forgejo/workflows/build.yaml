@@ -8,7 +8,7 @@ jobs:
     needs: [checkout]
     runs-on: docker
     container:
-      image: clickable/ci-20.04-amd64
+      image: rust:1.90
     steps:
       - run: cargo test --no-default-features
   build-amd64:

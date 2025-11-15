@@ -181,7 +181,6 @@ impl KeepassRx {
 
     pub fn setViewMode(&mut self, mode: RxViewMode) {
         self.viewMode = mode;
-
         self.container_stack.clear();
 
         if let RxViewMode::All = mode {

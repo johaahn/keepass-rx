@@ -14,6 +14,7 @@ use zeroize::{Zeroize, Zeroizing};
 use super::KeepassRx;
 use super::models::RxListItem;
 use crate::crypto::EncryptedPassword;
+use crate::rx::{AllTemplates, VirtualHierarchy};
 use crate::{
     gui::{
         RxViewMode,
@@ -244,7 +245,9 @@ impl Handler<OpenDatabase> for KeepassRxActor {
 
                         gui.rootGroupUuid = QString::from(rx_db.root_group().uuid.to_string());
                         gui.metadata = rx_db.metadata().into();
-                        this.curr_db = RefCell::new(Some(Zeroizing::new(rx_db)));
+
+                        //this.curr_db = RefCell::new(Some(Zeroizing::new(rx_db)));
+
                         gui.databaseOpen = true;
                         gui.databaseOpened();
                     }

@@ -243,6 +243,10 @@ impl RxDatabase {
             .find(|entry| entry.uuid == entry_uuid)
     }
 
+    pub fn templates(&self) -> &HashMap<Uuid, RxTemplate> {
+        &self.templates
+    }
+
     pub fn templates_iter(&self) -> impl Iterator<Item = &RxTemplate> {
         self.templates.values()
     }

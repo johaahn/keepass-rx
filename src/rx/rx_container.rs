@@ -1,5 +1,5 @@
 use keepass::db::Group;
-use std::mem;
+use std::{collections::HashMap, mem};
 use uuid::Uuid;
 use zeroize::Zeroize;
 
@@ -14,6 +14,16 @@ pub struct RxContainerRoot<'a> {
 }
 
 impl<'a> RxContainerRoot<'a> {
+    pub fn virtual_root() -> Self {
+        Self {
+            children: vec![],
+            root: RxContainer {
+                item: RxContainerItem::VirtualRoot,
+                is_root: true,
+            },
+        }
+    }
+
     pub fn children(&self) -> &[RxContainer<'a>] {
         self.children.as_slice()
     }
@@ -49,8 +59,13 @@ impl<'a> RxContainer<'a> {
     }
 }
 
-#[derive(Clone, Copy)]
+#[derive(Default, Clone, Copy)]
 pub enum RxContainerItem<'a> {
+    /// VirtualRoot is for containers that don't have a clear actual
+    /// existing root, e.g. list of all templates has no parent that
+    /// could be root.
+    #[default]
+    VirtualRoot,
     Grouping(RxContainerGrouping<'a>),
     Entry(&'a RxEntry),
 }
@@ -60,6 +75,7 @@ impl<'a> RxContainerItem<'a> {
         match self {
             Self::Grouping(grouping) => grouping.uuid(),
             Self::Entry(entry) => entry.uuid,
+            Self::VirtualRoot => Uuid::default(),
         }
     }
 }
@@ -200,5 +216,36 @@ impl<'db> RxRootWithDb<'db> {
             .into_iter()
             .map(|container| RxContainerWithDb(*container, self.db()))
             .collect()
+    }
+}
+
+// All of this will work, exept that we can never memoize or store it,
+// because it's all built on references. So the lifetime of one of
+// these is tied to the duration of a borrow of the DB. The proper
+// solution would be to use owned data, which sort of defeats the
+// purpose? But then again, it boils down to borrowing the
+// template/group/entry. So if we remove the refs on template/group
+// and just make the grouping a generic struct with a name, and then
+// store only UUIDs for entries, we can construct a hierarchy separate
+// from the main DB, and then keep RxRootWithDb functioning to
+// actually load entries.
+pub trait VirtualHierarchy<'db> {
+    fn create(self) -> RxRootWithDb<'db>;
+}
+
+#[derive(Clone, Copy)]
+pub struct AllTemplates<'db>(pub &'db RxDatabase);
+
+impl<'db> VirtualHierarchy<'db> for AllTemplates<'db> {
+    fn create(self) -> RxRootWithDb<'db> {
+        let mut root = RxContainerRoot::virtual_root();
+
+        root.children = self
+            .0
+            .templates_iter()
+            .map(|t| RxContainer::from(t, false))
+            .collect();
+
+        RxRootWithDb(root, self.0)
     }
 }

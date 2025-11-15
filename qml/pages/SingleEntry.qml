@@ -29,7 +29,7 @@ Page {
 
         if (entryUsername) {
             entryModel.append({
-                fieldName: "Username",
+                fieldName: i18n.ctr("Field name on single entry page", "Username"),
                 fieldValue: entryUsername,
                 fieldShown: true
             });
@@ -37,7 +37,7 @@ Page {
 
         if (entryPassword) {
             entryModel.append({
-                fieldName: "Password",
+                fieldName: i18n.ctr("Field name on single entry page", "Password"),
                 fieldValue: entryPassword,
                 fieldShown: false
             });
@@ -81,7 +81,7 @@ Page {
     }
 
     header: PageHeader {
-        title: entryTitle || i18n.tr('Untitled Entry')
+        title: entryTitle || i18n.ctr('Page header for single entry', 'Untitled Entry')
 
         StyleHints {
             backgroundColor: headerBackgroundColor()

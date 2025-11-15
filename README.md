@@ -6,6 +6,8 @@
 	<i>Password manager for Ubuntu Touch compatible with KeePass databases.</i>
 </p>
 
+[![Matrix Chat](https://img.shields.io/matrix/keepass-rx:agnos.is?label=matrix&server_fqdn=matrix.org)][matrix-room]
+
 KeePass password manager app, aiming to be a complete local password
 management solution for Ubuntu Touch. This is **alpha quality
 software** with a defined development roadmap for new functionality
@@ -105,3 +107,4 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 
 [original]: https://github.com/DavidVentura/Keepass
 [translate]: https://hosted.weblate.org/projects/ubports/keepassrx/
+[matrix-room]: https://matrix.to/#/#keepass-rx:agnos.is

@@ -1,7 +1,11 @@
+use anyhow::anyhow;
 use qmetaobject::{QMetaType, QObject, QString, QVariant, QVariantList, QVariantMap};
 use uuid::Uuid;
 
-use crate::rx::{RxEntry, RxGroup, RxMetadata, RxTemplate};
+use crate::rx::{
+    RxContainer, RxContainerGrouping, RxContainerItem, RxContainerWithDb, RxEntry, RxGroup,
+    RxMetadata, RxTemplate,
+};
 
 #[derive(QEnum, Clone, Default, Copy)]
 #[repr(C)]
@@ -199,6 +203,36 @@ pub enum RxPageType {
     #[default]
     Group,
     Template,
+}
+
+impl TryFrom<RxContainer<'_>> for RxPageType {
+    type Error = anyhow::Error;
+    fn try_from(value: RxContainer<'_>) -> Result<Self, Self::Error> {
+        match value.item() {
+            RxContainerItem::Grouping(RxContainerGrouping::Group(_)) => Ok(RxPageType::Group),
+            RxContainerItem::Grouping(RxContainerGrouping::Template(_)) => {
+                Ok(RxPageType::Template)
+            }
+            _ => Err(anyhow!(
+                "Not a thing that can be converted into a page type"
+            )),
+        }
+    }
+}
+
+impl TryFrom<RxContainerWithDb<'_>> for RxPageType {
+    type Error = anyhow::Error;
+    fn try_from(value: RxContainerWithDb<'_>) -> Result<Self, Self::Error> {
+        match value.container().item() {
+            RxContainerItem::Grouping(RxContainerGrouping::Group(_)) => Ok(RxPageType::Group),
+            RxContainerItem::Grouping(RxContainerGrouping::Template(_)) => {
+                Ok(RxPageType::Template)
+            }
+            _ => Err(anyhow!(
+                "Not a thing that can be converted into a page type"
+            )),
+        }
+    }
 }
 
 /// What group/template container we are in. Used in conjunction with

@@ -2,7 +2,10 @@ use crate::crypto::MasterKey;
 
 use super::icons::RxIcon;
 use super::rx_loader::RxLoader;
-use super::{RxContainer, RxEntry, RxGroup, RxTemplate, RxTotp, ZeroableDatabase};
+use super::{
+    RxContainer, RxContainerRoot, RxContainerWithDb, RxEntry, RxGroup, RxTemplate, RxTotp,
+    ZeroableDatabase,
+};
 use anyhow::{Result, anyhow};
 use indexmap::IndexMap;
 use keepass::config::DatabaseConfig;
@@ -221,17 +224,18 @@ impl RxDatabase {
         })
     }
 
-    pub fn get_container(&self, container_uuid: Uuid) -> Option<RxContainer<'_>> {
+    pub fn get_container(&self, container_uuid: Uuid) -> Option<RxContainerWithDb<'_>> {
         self.get_group(container_uuid)
-            .map(|group| RxContainer::Group(group))
+            .map(|group| RxContainer::from(group, group.uuid == self.root))
             .or_else(|| {
                 self.get_template(container_uuid)
-                    .map(|template| RxContainer::Template(template))
+                    .map(|template| RxContainer::from(template, false))
             })
             .or_else(|| {
                 self.get_entry(container_uuid)
-                    .map(|ent| RxContainer::Entry(ent))
+                    .map(|ent| RxContainer::from(ent, false))
             })
+            .map(|container| RxContainerWithDb::new(container, &self))
     }
 
     pub fn get_entry(&self, entry_uuid: Uuid) -> Option<&RxEntry> {

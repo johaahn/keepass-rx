@@ -20,7 +20,7 @@ use crate::{
         models::{RxPageType, RxUiContainer},
         utils::imported_databases_path,
     },
-    rx::{RxContainer, RxDatabase, RxFieldName, ZeroableDatabase},
+    rx::{RxContainerRoot, RxDatabase, RxFieldName, ZeroableDatabase},
 };
 
 #[derive(Default)]
@@ -327,11 +327,8 @@ impl Handler<PushContainer> for KeepassRxActor {
         };
 
         if let Some(container) = db.get_container(msg.0) {
-            let page_type = match container {
-                RxContainer::Group(_) => RxPageType::Group,
-                RxContainer::Template(_) => RxPageType::Template,
-                RxContainer::Entry(_) => RxPageType::Group, // TODO not accurate
-            };
+            let page_type =
+                RxPageType::try_from(container).expect("Could not convert page type");
 
             let page = RxUiContainer {
                 uuid: container.uuid(),

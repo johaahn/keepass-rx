@@ -4,7 +4,7 @@ use uuid::Uuid;
 
 use crate::rx::{
     RxContainer, RxContainerGrouping, RxContainerItem, RxContainerWithDb, RxEntry, RxGroup,
-    RxMetadata, RxTemplate,
+    RxGroupingType, RxMetadata, RxTemplate,
 };
 
 #[derive(QEnum, Clone, Default, Copy)]
@@ -205,14 +205,12 @@ pub enum RxPageType {
     Template,
 }
 
-impl TryFrom<RxContainer<'_>> for RxPageType {
+impl TryFrom<&RxContainer> for RxPageType {
     type Error = anyhow::Error;
-    fn try_from(value: RxContainer<'_>) -> Result<Self, Self::Error> {
-        match value.item() {
-            RxContainerItem::Grouping(RxContainerGrouping::Group(_)) => Ok(RxPageType::Group),
-            RxContainerItem::Grouping(RxContainerGrouping::Template(_)) => {
-                Ok(RxPageType::Template)
-            }
+    fn try_from(value: &RxContainer) -> Result<Self, Self::Error> {
+        match value.item().grouping_type() {
+            Some(RxGroupingType::Group) => Ok(RxPageType::Group),
+            Some(RxGroupingType::Template) => Ok(RxPageType::Template),
             _ => Err(anyhow!(
                 "Not a thing that can be converted into a page type"
             )),
@@ -220,14 +218,12 @@ impl TryFrom<RxContainer<'_>> for RxPageType {
     }
 }
 
-impl TryFrom<RxContainerWithDb<'_>> for RxPageType {
+impl TryFrom<&RxContainerWithDb<'_>> for RxPageType {
     type Error = anyhow::Error;
-    fn try_from(value: RxContainerWithDb<'_>) -> Result<Self, Self::Error> {
-        match value.container().item() {
-            RxContainerItem::Grouping(RxContainerGrouping::Group(_)) => Ok(RxPageType::Group),
-            RxContainerItem::Grouping(RxContainerGrouping::Template(_)) => {
-                Ok(RxPageType::Template)
-            }
+    fn try_from(value: &RxContainerWithDb<'_>) -> Result<Self, Self::Error> {
+        match value.container().item().grouping_type() {
+            Some(RxGroupingType::Group) => Ok(RxPageType::Group),
+            Some(RxGroupingType::Template) => Ok(RxPageType::Template),
             _ => Err(anyhow!(
                 "Not a thing that can be converted into a page type"
             )),

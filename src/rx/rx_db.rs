@@ -3,7 +3,7 @@ use crate::crypto::MasterKey;
 use super::icons::RxIcon;
 use super::rx_loader::RxLoader;
 use super::{
-    RxContainer, RxContainerRoot, RxContainerWithDb, RxEntry, RxGroup, RxTemplate, RxTotp,
+    RxContainer, RxContainerWithDb, RxEntry, RxGroup, RxRoot, RxTemplate, RxTotp,
     ZeroableDatabase,
 };
 use anyhow::{Result, anyhow};
@@ -224,7 +224,7 @@ impl RxDatabase {
         })
     }
 
-    pub fn get_container(&self, container_uuid: Uuid) -> Option<RxContainerWithDb<'_>> {
+    pub fn get_container(&self, container_uuid: Uuid) -> Option<RxContainer> {
         self.get_group(container_uuid)
             .map(|group| RxContainer::from(group, group.uuid == self.root))
             .or_else(|| {
@@ -235,7 +235,6 @@ impl RxDatabase {
                 self.get_entry(container_uuid)
                     .map(|ent| RxContainer::from(ent, false))
             })
-            .map(|container| RxContainerWithDb::new(container, &self))
     }
 
     pub fn get_entry(&self, entry_uuid: Uuid) -> Option<&RxEntry> {

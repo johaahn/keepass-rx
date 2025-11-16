@@ -36,7 +36,7 @@ pub struct KeepassRxActor {
     current_operation: Option<JoinHandle<Result<()>>>,
 
     // current view of the database.
-    current_view: Option<RxRoot>,
+    current_view: Option<Box<dyn VirtualHierarchy>>,
 }
 
 impl KeepassRxActor {
@@ -251,7 +251,7 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                     Ok(keepass_db) => {
                         let wrapped_db = Zeroizing::new(ZeroableDatabase(keepass_db));
                         let rx_db = RxDatabase::new(wrapped_db);
-                        let view = DefaultView(&rx_db).create();
+                        let view = Box::new(DefaultView::new(&rx_db));
 
                         gui.rootGroupUuid = QString::from(rx_db.root_group().uuid.to_string());
                         gui.metadata = rx_db.metadata().into();
@@ -341,7 +341,7 @@ impl Handler<PushContainer> for KeepassRxActor {
         };
 
         let view = self.current_view.as_ref().expect("No view?");
-        let viewable = view.with_db(db);
+        let viewable = view.root().with_db(db);
 
         if let Some(container) = viewable.get_container(msg.0) {
             let page_type =
@@ -551,7 +551,7 @@ impl Handler<GetEntries> for KeepassRxActor {
         // So now here we must instead use the current view thing.
         // Implement find_children on root? The view should have
         // different logic depending on the source of it.
-        let viewable = self.current_view.as_ref().unwrap().with_db(db);
+        let viewable = self.current_view.as_ref().unwrap().root().with_db(db);
 
         let container_uuid = match msg.container_uuid {
             Some(id) => id,

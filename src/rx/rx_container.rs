@@ -9,6 +9,7 @@ use zeroize::Zeroize;
 /// (of the same type) and any number of RxEntry objects.
 use super::{RxDatabase, RxEntry, RxGroup, RxTemplate, RxValue, icons::RxIcon};
 
+#[derive(Clone)]
 pub struct RxRoot {
     root_container: RxContainer,
     all_containers: IndexSet<Uuid>,
@@ -351,35 +352,59 @@ impl<'root, 'db> RxRootWithDb<'root, 'db> {
     }
 }
 
+// We now need to move search logic into these virtual hierarchies.
+// Right now the trait serves as basically a dumping ground for
+// business logic. But this will not work. We tried carrying the
+// source struct in. This was a bad idea. We instead need to carry the
+// source as an enum or something. Or even better, somehow do an impl
+// Search trait. We could tack a generic onto VirtualHierarchy that
+// makes it return a struct associated with the RxRoot. If we make
+// RxRoot contain a dyn Search impl, then we can use it?
+//
+// Or rather, we hold RxRoot AND search logic. Rework the
+// VirtualHierarchy impls to not borrow DB. Instead, they hold an
+// RxRoot, and we make functions that borrow DB to create the type.
+
 /// An arbitrary hierarchical view into the password database.
 pub trait VirtualHierarchy {
-    fn create(self) -> RxRoot;
+    fn root(&self) -> &RxRoot;
 }
 
-#[derive(Clone, Copy)]
-pub struct AllTemplates<'db>(pub &'db RxDatabase);
+#[derive(Clone)]
+pub struct AllTemplates(RxRoot);
 
-impl VirtualHierarchy for AllTemplates<'_> {
-    fn create(self) -> RxRoot {
-        let children: Vec<_> = self
-            .0
+impl AllTemplates {
+    pub fn new(db: &RxDatabase) -> Self {
+        let children: Vec<_> = db
             .templates_iter()
-            .map(|t| RxContainer::from(t, &self.0))
+            .map(|t| RxContainer::from(t, db))
             .collect();
 
-        RxRoot::virtual_root(children)
+        AllTemplates(RxRoot::virtual_root(children))
     }
 }
 
-pub struct DefaultView<'db>(pub &'db RxDatabase);
+impl VirtualHierarchy for AllTemplates {
+    fn root(&self) -> &RxRoot {
+        &self.0
+    }
+}
 
-impl VirtualHierarchy for DefaultView<'_> {
-    fn create(self) -> RxRoot {
-        let root = RxContainer::from(self.0.root_group(), self.0);
+pub struct DefaultView(RxRoot);
 
-        RxRoot {
+impl DefaultView {
+    pub fn new(db: &RxDatabase) -> Self {
+        let root = RxContainer::from(db.root_group(), db);
+
+        DefaultView(RxRoot {
             all_containers: root.all_children(),
             root_container: root,
-        }
+        })
+    }
+}
+
+impl VirtualHierarchy for DefaultView {
+    fn root(&self) -> &RxRoot {
+        &self.0
     }
 }

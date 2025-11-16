@@ -27,6 +27,7 @@ impl RxRoot {
             root_container: RxContainer {
                 item: RxContainerItem::VirtualRoot(children),
                 is_root: true,
+                contained_type: RxContainedType::VirtualRoot,
             },
         }
     }
@@ -40,10 +41,22 @@ pub trait IntoContainer {
     fn into_container(&self, db: &RxDatabase) -> RxContainer;
 }
 
+/// What exactly this container points to. The actual resource, as
+/// opposed to its function (e.g. a Grouping can be a Group or a
+/// Template).
+#[derive(Clone, Copy)]
+pub enum RxContainedType {
+    Entry,
+    Group,
+    Template,
+    VirtualRoot,
+}
+
 #[derive(Clone)]
 pub struct RxContainer {
     item: RxContainerItem,
     is_root: bool,
+    contained_type: RxContainedType,
 }
 
 impl RxContainer {
@@ -162,6 +175,7 @@ impl IntoContainer for &RxGroup {
 
         RxContainer {
             is_root: db.root_group().uuid == self.uuid,
+            contained_type: RxContainedType::Group,
             item: RxContainerItem::Grouping(RxContainerGrouping {
                 uuid: self.uuid,
                 children: children,
@@ -181,6 +195,7 @@ impl IntoContainer for &RxTemplate {
 
         RxContainer {
             is_root: false,
+            contained_type: RxContainedType::Template,
             item: RxContainerItem::Grouping(RxContainerGrouping {
                 uuid: self.uuid,
                 children: children,
@@ -193,6 +208,7 @@ impl IntoContainer for &RxTemplate {
 impl IntoContainer for &RxEntry {
     fn into_container(&self, _: &RxDatabase) -> RxContainer {
         RxContainer {
+            contained_type: RxContainedType::Entry,
             is_root: false,
             item: RxContainerItem::Entry(self.uuid),
         }
@@ -238,6 +254,24 @@ impl<'db> RxContainerWithDb<'db> {
 
     pub fn db(&self) -> &'db RxDatabase {
         self.1
+    }
+
+    pub fn get_ref(&self) -> Option<RxContainedRef<'db>> {
+        match self.container().contained_type {
+            RxContainedType::Group => self
+                .db()
+                .get_group(self.uuid())
+                .map(|g| RxContainedRef::Group(g)),
+            RxContainedType::Template => self
+                .db()
+                .get_template(self.uuid())
+                .map(|t| RxContainedRef::Template(t)),
+            RxContainedType::Entry => self
+                .db()
+                .get_entry(self.uuid())
+                .map(|e| RxContainedRef::Entry(e)),
+            _ => None,
+        }
     }
 
     pub fn uuid(&self) -> Uuid {
@@ -352,6 +386,14 @@ impl<'root, 'db> RxRootWithDb<'root, 'db> {
     }
 }
 
+/// A reference to the actual thing in the database, as pointed to by the container.
+#[derive(Clone, Copy)]
+pub enum RxContainedRef<'db> {
+    Entry(&'db RxEntry),
+    Group(&'db RxGroup),
+    Template(&'db RxTemplate),
+}
+
 // We now need to move search logic into these virtual hierarchies.
 // Right now the trait serves as basically a dumping ground for
 // business logic. But this will not work. We tried carrying the
@@ -368,6 +410,12 @@ impl<'root, 'db> RxRootWithDb<'root, 'db> {
 /// An arbitrary hierarchical view into the password database.
 pub trait VirtualHierarchy {
     fn root(&self) -> &RxRoot;
+    fn search(
+        &self,
+        db: &RxDatabase, // TODO eventually move to own struct?,
+        container_uuid: Uuid,
+        search_term: Option<&str>,
+    ) -> Vec<RxContainedRef<'_>>;
 }
 
 #[derive(Clone)]
@@ -388,6 +436,16 @@ impl VirtualHierarchy for AllTemplates {
     fn root(&self) -> &RxRoot {
         &self.0
     }
+
+    fn search(
+        &self,
+        db: &RxDatabase,
+        container_uuid: Uuid,
+        search_term: Option<&str>,
+    ) -> Vec<RxContainedRef<'_>> {
+        // let woot = self.root().with_db(db);
+        vec![]
+    }
 }
 
 pub struct DefaultView(RxRoot);
@@ -406,5 +464,14 @@ impl DefaultView {
 impl VirtualHierarchy for DefaultView {
     fn root(&self) -> &RxRoot {
         &self.0
+    }
+
+    fn search(
+        &self,
+        db: &RxDatabase,
+        container_uuid: Uuid,
+        search_term: Option<&str>,
+    ) -> Vec<RxContainedRef<'_>> {
+        vec![]
     }
 }

@@ -551,7 +551,7 @@ impl Handler<GetEntries> for KeepassRxActor {
         // So now here we must instead use the current view thing.
         // Implement find_children on root? The view should have
         // different logic depending on the source of it.
-        let viewable = self.current_view.as_ref().unwrap().root().with_db(db);
+        let viewable = self.current_view.as_ref().unwrap();
 
         let container_uuid = match msg.container_uuid {
             Some(id) => id,
@@ -560,6 +560,9 @@ impl Handler<GetEntries> for KeepassRxActor {
             _ => Uuid::default(),
         };
 
+        // So now we use viewable.search. Then we make
+        // From<RxContainerRef> for RxListItem.
+        let stuff = viewable.search(db, container_uuid, search_term);
         // Either load for the group, or for a template.
         let item_list = if let RxViewMode::All = view_mode {
             search_groups(&db, container_uuid, search_term)

@@ -1,3 +1,4 @@
+use indexmap::{IndexMap, IndexSet};
 use keepass::db::Group;
 use std::{collections::HashMap, mem};
 use uuid::Uuid;
@@ -8,18 +9,29 @@ use zeroize::Zeroize;
 /// (of the same type) and any number of RxEntry objects.
 use super::{RxDatabase, RxEntry, RxGroup, RxTemplate, RxValue, icons::RxIcon};
 
-pub struct RxRoot(RxContainer);
+pub struct RxRoot {
+    root_container: RxContainer,
+    all_containers: IndexSet<Uuid>,
+}
 
 impl RxRoot {
     pub fn virtual_root(children: Vec<RxContainer>) -> Self {
-        Self(RxContainer {
-            item: RxContainerItem::VirtualRoot(children),
-            is_root: true,
-        })
+        let all_child_uuids: IndexSet<Uuid> = children
+            .iter()
+            .flat_map(|child| child.all_children())
+            .collect();
+
+        Self {
+            all_containers: all_child_uuids,
+            root_container: RxContainer {
+                item: RxContainerItem::VirtualRoot(children),
+                is_root: true,
+            },
+        }
     }
 
     pub fn with_db<'root, 'db>(&'root self, db: &'db RxDatabase) -> RxRootWithDb<'root, 'db> {
-        RxRootWithDb(self, db)
+        RxRootWithDb::new(self, db)
     }
 }
 
@@ -55,6 +67,35 @@ impl RxContainer {
 
     pub fn children(&self) -> &[RxContainer] {
         self.item.children()
+    }
+
+    pub fn all_children(&self) -> IndexSet<Uuid> {
+        let mut these_uuids = IndexSet::new();
+
+        for child in self.children() {
+            these_uuids.insert(child.uuid());
+
+            for child_uuid in child.all_children() {
+                these_uuids.insert(child_uuid);
+            }
+        }
+
+        these_uuids
+    }
+
+    pub fn all_child_containers(&self) -> IndexMap<Uuid, &RxContainer> {
+        let mut children = IndexMap::new();
+
+        for child in self.children() {
+            children.insert(child.uuid(), child);
+            children.append(&mut child.all_child_containers());
+        }
+
+        children
+    }
+
+    pub fn find_child_recursive(&self, uuid: Uuid) -> Option<&RxContainer> {
+        self.all_child_containers().get(&uuid).map(|v| &**v)
     }
 }
 
@@ -100,12 +141,22 @@ impl From<&RxEntry> for RxContainerItem {
     }
 }
 
+fn get_container(db: &RxDatabase, uuid: Uuid) -> Option<RxContainer> {
+    db.get_group(uuid)
+        .map(|group| RxContainer::from(group, db))
+        .or_else(|| {
+            db.get_template(uuid)
+                .map(|template| RxContainer::from(template, db))
+        })
+        .or_else(|| db.get_entry(uuid).map(|ent| RxContainer::from(ent, db)))
+}
+
 impl IntoContainer for &RxGroup {
     fn into_container(&self, db: &RxDatabase) -> RxContainer {
         let children: Vec<_> = [self.subgroups.as_slice(), self.entries.as_slice()]
             .concat()
             .into_iter()
-            .flat_map(|id| db.get_container(id))
+            .flat_map(|id| get_container(db, id))
             .collect();
 
         RxContainer {
@@ -124,7 +175,7 @@ impl IntoContainer for &RxTemplate {
         let children: Vec<_> = self
             .entry_uuids
             .iter()
-            .flat_map(|id| db.get_container(*id))
+            .flat_map(|id| get_container(db, *id))
             .collect();
 
         RxContainer {
@@ -248,25 +299,50 @@ impl<'db> RxContainerWithDb<'db> {
     }
 }
 
-pub struct RxRootWithDb<'root, 'db>(&'root RxRoot, &'db RxDatabase)
+pub struct RxRootWithDb<'root, 'db>
 where
-    'root: 'db;
+    'root: 'db,
+{
+    root: &'root RxRoot,
+    all_containers: HashMap<Uuid, &'root RxContainer>,
+    db: &'db RxDatabase,
+}
 
 impl<'root, 'db> RxRootWithDb<'root, 'db> {
     pub fn new(root: &'root RxRoot, db: &'db RxDatabase) -> Self {
-        Self(root, db)
+        let all_containers: HashMap<_, _> = root
+            .all_containers
+            .iter()
+            .flat_map(|uuid| {
+                root.root_container
+                    .find_child_recursive(*uuid)
+                    .map(|container| (*uuid, container))
+            })
+            .collect();
+
+        Self {
+            root: root,
+            all_containers: all_containers,
+            db: db,
+        }
     }
 
     pub fn db(&self) -> &'db RxDatabase {
-        self.1
+        self.db
     }
 
     pub fn root(&self) -> RxContainerWithDb<'_> {
-        RxContainerWithDb(&self.0.0, self.db())
+        RxContainerWithDb(&self.root.root_container, self.db())
+    }
+
+    pub fn get_container(&self, container_uuid: Uuid) -> Option<RxContainerWithDb<'db>> {
+        self.all_containers
+            .get(&container_uuid)
+            .map(|container| RxContainerWithDb(&*container, self.db()))
     }
 
     pub fn children(&self) -> Vec<RxContainerWithDb<'_>> {
-        let containers: Vec<_> = self.0.0.children().into_iter().collect();
+        let containers: Vec<_> = self.root.root_container.children().into_iter().collect();
 
         containers
             .into_iter()
@@ -299,6 +375,11 @@ pub struct DefaultView<'db>(pub &'db RxDatabase);
 
 impl VirtualHierarchy for DefaultView<'_> {
     fn create(self) -> RxRoot {
-        RxRoot(RxContainer::from(self.0.root_group(), self.0))
+        let root = RxContainer::from(self.0.root_group(), self.0);
+
+        RxRoot {
+            all_containers: root.all_children(),
+            root_container: root,
+        }
     }
 }

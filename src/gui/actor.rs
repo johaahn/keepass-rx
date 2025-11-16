@@ -340,7 +340,10 @@ impl Handler<PushContainer> for KeepassRxActor {
             Err(err) => return gui.errorReceived(format!("{}", err)),
         };
 
-        if let Some(container) = db.get_container(msg.0) {
+        let view = self.current_view.as_ref().expect("No view?");
+        let viewable = view.with_db(db);
+
+        if let Some(container) = viewable.get_container(msg.0) {
             let page_type =
                 RxPageType::try_from(&container).expect("Could not convert page type");
 
@@ -544,6 +547,11 @@ impl Handler<GetEntries> for KeepassRxActor {
         };
 
         let search_term = msg.search_term.as_deref();
+
+        // So now here we must instead use the current view thing.
+        // Implement find_children on root? The view should have
+        // different logic depending on the source of it.
+        let viewable = self.current_view.as_ref().unwrap().with_db(db);
 
         let container_uuid = match msg.container_uuid {
             Some(id) => id,

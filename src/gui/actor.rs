@@ -14,7 +14,7 @@ use zeroize::{Zeroize, Zeroizing};
 use super::KeepassRx;
 use super::models::RxListItem;
 use crate::crypto::EncryptedPassword;
-use crate::rx::{AllTemplates, VirtualHierarchy};
+use crate::rx::{AllTemplates, DefaultView, RxRootWithDb, VirtualHierarchy};
 use crate::{
     gui::{
         RxViewMode,
@@ -34,6 +34,9 @@ pub struct KeepassRxActor {
     // any in-progress operation on another thread pool that might
     // need to be aborted.
     current_operation: Option<JoinHandle<Result<()>>>,
+
+    // current view of the database.
+    current_view: Option<RxRoot>,
 }
 
 impl KeepassRxActor {
@@ -194,6 +197,12 @@ pub struct InvalidateMasterPassword;
 #[rtype(result = "()")]
 pub struct CheckLockingStatus;
 
+// let db = self.curr_db.borrow();
+// let db = db.as_deref().expect("No database open");
+// let root = self.current_view.as_ref().expect("No view");
+
+// RxRootWithDb::new(root, db)
+
 impl Handler<OpenDatabase> for KeepassRxActor {
     type Result = AtomicResponse<Self, anyhow::Result<()>>;
     fn handle(&mut self, msg: OpenDatabase, _: &mut Self::Context) -> Self::Result {
@@ -242,11 +251,13 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                     Ok(keepass_db) => {
                         let wrapped_db = Zeroizing::new(ZeroableDatabase(keepass_db));
                         let rx_db = RxDatabase::new(wrapped_db);
+                        let view = DefaultView(&rx_db).create();
 
                         gui.rootGroupUuid = QString::from(rx_db.root_group().uuid.to_string());
                         gui.metadata = rx_db.metadata().into();
 
-                        //this.curr_db = RefCell::new(Some(Zeroizing::new(rx_db)));
+                        this.curr_db = RefCell::new(Some(Zeroizing::new(rx_db)));
+                        this.current_view = Some(view);
 
                         gui.databaseOpen = true;
                         gui.databaseOpened();

@@ -226,14 +226,14 @@ impl RxDatabase {
 
     pub fn get_container(&self, container_uuid: Uuid) -> Option<RxContainer> {
         self.get_group(container_uuid)
-            .map(|group| RxContainer::from(group, group.uuid == self.root))
+            .map(|group| RxContainer::from(group, self))
             .or_else(|| {
                 self.get_template(container_uuid)
-                    .map(|template| RxContainer::from(template, false))
+                    .map(|template| RxContainer::from(template, self))
             })
             .or_else(|| {
                 self.get_entry(container_uuid)
-                    .map(|ent| RxContainer::from(ent, false))
+                    .map(|ent| RxContainer::from(ent, self))
             })
     }
 

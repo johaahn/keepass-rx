@@ -8,29 +8,23 @@ use zeroize::Zeroize;
 /// (of the same type) and any number of RxEntry objects.
 use super::{RxDatabase, RxEntry, RxGroup, RxTemplate, RxValue, icons::RxIcon};
 
-pub struct RxRoot {
-    root: RxContainer,
-    children: Vec<RxContainer>,
-}
+pub struct RxRoot(RxContainer);
 
 impl RxRoot {
-    pub fn virtual_root() -> Self {
-        Self {
-            children: vec![],
-            root: RxContainer {
-                item: RxContainerItem::VirtualRoot,
-                is_root: true,
-            },
-        }
-    }
-
-    pub fn children(&self) -> &[RxContainer] {
-        self.children.as_slice()
+    pub fn virtual_root(children: Vec<RxContainer>) -> Self {
+        Self(RxContainer {
+            item: RxContainerItem::VirtualRoot(children),
+            is_root: true,
+        })
     }
 
     pub fn with_db<'root, 'db>(&'root self, db: &'db RxDatabase) -> RxRootWithDb<'root, 'db> {
         RxRootWithDb(self, db)
     }
+}
+
+pub trait IntoContainer {
+    fn into_container(&self, db: &RxDatabase) -> RxContainer;
 }
 
 #[derive(Clone)]
@@ -40,14 +34,11 @@ pub struct RxContainer {
 }
 
 impl RxContainer {
-    pub fn from<T>(item: T, is_root: bool) -> Self
+    pub fn from<T>(item: T, db: &RxDatabase) -> Self
     where
-        T: Into<RxContainerItem>,
+        T: IntoContainer,
     {
-        Self {
-            item: item.into(),
-            is_root,
-        }
+        item.into_container(db)
     }
 
     pub fn is_root(&self) -> bool {
@@ -61,15 +52,18 @@ impl RxContainer {
     pub fn item(&self) -> &RxContainerItem {
         &self.item
     }
+
+    pub fn children(&self) -> &[RxContainer] {
+        self.item.children()
+    }
 }
 
-#[derive(Default, Clone)]
+#[derive(Clone)]
 pub enum RxContainerItem {
     /// VirtualRoot is for containers that don't have a clear actual
     /// existing root, e.g. list of all templates has no parent that
     /// could be root.
-    #[default]
-    VirtualRoot,
+    VirtualRoot(Vec<RxContainer>),
     Grouping(RxContainerGrouping),
     Entry(Uuid),
 }
@@ -79,7 +73,7 @@ impl RxContainerItem {
         match self {
             Self::Grouping(grouping) => grouping.uuid(),
             Self::Entry(entry_uuid) => *entry_uuid,
-            Self::VirtualRoot => Uuid::default(),
+            Self::VirtualRoot(_) => Uuid::default(),
         }
     }
 
@@ -87,7 +81,15 @@ impl RxContainerItem {
         match self {
             Self::Grouping(grouping) => Some(grouping.grouping_type()),
             Self::Entry(_) => None,
-            Self::VirtualRoot => Some(RxGroupingType::Root),
+            Self::VirtualRoot(_) => Some(RxGroupingType::Root),
+        }
+    }
+
+    pub fn children(&self) -> &[RxContainer] {
+        match self {
+            Self::Grouping(grouping) => grouping.children.as_slice(),
+            Self::Entry(_) => &[],
+            Self::VirtualRoot(children) => children.as_slice(),
         }
     }
 }
@@ -98,27 +100,50 @@ impl From<&RxEntry> for RxContainerItem {
     }
 }
 
-impl From<&RxGroup> for RxContainerItem {
-    fn from(value: &RxGroup) -> Self {
-        let mut children = vec![];
-        children.append(&mut value.subgroups.clone());
-        children.append(&mut value.entries.clone());
+impl IntoContainer for &RxGroup {
+    fn into_container(&self, db: &RxDatabase) -> RxContainer {
+        let children: Vec<_> = [self.subgroups.as_slice(), self.entries.as_slice()]
+            .concat()
+            .into_iter()
+            .flat_map(|id| db.get_container(id))
+            .collect();
 
-        Self::Grouping(RxContainerGrouping {
-            uuid: value.uuid,
-            children: children,
-            grouping: RxGroupingType::Group,
-        })
+        RxContainer {
+            is_root: db.root_group().uuid == self.uuid,
+            item: RxContainerItem::Grouping(RxContainerGrouping {
+                uuid: self.uuid,
+                children: children,
+                grouping: RxGroupingType::Group,
+            }),
+        }
     }
 }
 
-impl From<&RxTemplate> for RxContainerItem {
-    fn from(value: &RxTemplate) -> Self {
-        Self::Grouping(RxContainerGrouping {
-            uuid: value.uuid,
-            children: value.entry_uuids.clone(),
-            grouping: RxGroupingType::Template,
-        })
+impl IntoContainer for &RxTemplate {
+    fn into_container(&self, db: &RxDatabase) -> RxContainer {
+        let children: Vec<_> = self
+            .entry_uuids
+            .iter()
+            .flat_map(|id| db.get_container(*id))
+            .collect();
+
+        RxContainer {
+            is_root: false,
+            item: RxContainerItem::Grouping(RxContainerGrouping {
+                uuid: self.uuid,
+                children: children,
+                grouping: RxGroupingType::Template,
+            }),
+        }
+    }
+}
+
+impl IntoContainer for &RxEntry {
+    fn into_container(&self, _: &RxDatabase) -> RxContainer {
+        RxContainer {
+            is_root: false,
+            item: RxContainerItem::Entry(self.uuid),
+        }
     }
 }
 
@@ -132,7 +157,7 @@ pub enum RxGroupingType {
 #[derive(Clone)]
 pub struct RxContainerGrouping {
     uuid: Uuid,
-    children: Vec<Uuid>,
+    children: Vec<RxContainer>,
     grouping: RxGroupingType,
 }
 
@@ -179,7 +204,7 @@ impl<'db> RxContainerWithDb<'db> {
                     if container.is_root() {
                         self.db()
                             .find_templates(search_term)
-                            .map(|tmplt| RxContainer::from(tmplt, false))
+                            .map(|tmplt| RxContainer::from(tmplt, self.db()))
                             .collect()
                     } else {
                         self.db()
@@ -190,7 +215,7 @@ impl<'db> RxContainerWithDb<'db> {
                                         template.entry_uuids.as_slice(),
                                         search_term,
                                     )
-                                    .map(|ent| RxContainer::from(ent, false))
+                                    .map(|ent| RxContainer::from(ent, self.db()))
                                     .collect::<Vec<_>>()
                             })
                             .unwrap_or_default()
@@ -204,13 +229,13 @@ impl<'db> RxContainerWithDb<'db> {
 
                     // Groups first, then entries below.
                     let mut item_list: Vec<_> = subgroups_iter
-                        .map(|subgroup| RxContainer::from(subgroup, false))
+                        .map(|subgroup| RxContainer::from(subgroup, self.db()))
                         .collect();
 
                     item_list.append(
                         &mut entries
                             .into_iter()
-                            .map(|ent| RxContainer::from(ent, false))
+                            .map(|ent| RxContainer::from(ent, self.db()))
                             .collect(),
                     );
 
@@ -228,33 +253,29 @@ where
     'root: 'db;
 
 impl<'root, 'db> RxRootWithDb<'root, 'db> {
+    pub fn new(root: &'root RxRoot, db: &'db RxDatabase) -> Self {
+        Self(root, db)
+    }
+
     pub fn db(&self) -> &'db RxDatabase {
         self.1
     }
 
     pub fn root(&self) -> RxContainerWithDb<'_> {
-        RxContainerWithDb(&self.0.root, self.db())
+        RxContainerWithDb(&self.0.0, self.db())
     }
 
     pub fn children(&self) -> Vec<RxContainerWithDb<'_>> {
-        self.0
-            .children()
+        let containers: Vec<_> = self.0.0.children().into_iter().collect();
+
+        containers
             .into_iter()
             .map(|container| RxContainerWithDb(container, self.db()))
             .collect()
     }
 }
 
-// All of this will work, exept that we can never memoize or store it,
-// because it's all built on references. So the lifetime of one of
-// these is tied to the duration of a borrow of the DB. The proper
-// solution would be to use owned data, which sort of defeats the
-// purpose? But then again, it boils down to borrowing the
-// template/group/entry. So if we remove the refs on template/group
-// and just make the grouping a generic struct with a name, and then
-// store only UUIDs for entries, we can construct a hierarchy separate
-// from the main DB, and then keep RxRootWithDb functioning to
-// actually load entries.
+/// An arbitrary hierarchical view into the password database.
 pub trait VirtualHierarchy {
     fn create(self) -> RxRoot;
 }
@@ -264,19 +285,20 @@ pub struct AllTemplates<'db>(pub &'db RxDatabase);
 
 impl VirtualHierarchy for AllTemplates<'_> {
     fn create(self) -> RxRoot {
-        let mut root = RxRoot::virtual_root();
-
-        root.children = self
+        let children: Vec<_> = self
             .0
             .templates_iter()
-            .map(|t| RxContainer::from(t, false))
+            .map(|t| RxContainer::from(t, &self.0))
             .collect();
 
-        root
+        RxRoot::virtual_root(children)
     }
 }
 
-// So now that we have converted this to owned data, we should be able
-// to store current RxRoot in actor. Then when we want to do stuff
-// with it, we can call with_db to get a usable ref thingy. Might need
-// to correct lifetimes. TODO fix the rxpagetype stuff.
+pub struct DefaultView<'db>(pub &'db RxDatabase);
+
+impl VirtualHierarchy for DefaultView<'_> {
+    fn create(self) -> RxRoot {
+        RxRoot(RxContainer::from(self.0.root_group(), self.0))
+    }
+}

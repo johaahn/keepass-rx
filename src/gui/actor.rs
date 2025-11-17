@@ -14,7 +14,8 @@ use zeroize::{Zeroize, Zeroizing};
 use super::KeepassRx;
 use super::models::RxListItem;
 use crate::crypto::EncryptedPassword;
-use crate::rx::{AllTemplates, DefaultView, RxRootWithDb, VirtualHierarchy};
+use crate::gui::models::RxList;
+use crate::rx::{AllTemplates, DefaultView, VirtualHierarchy};
 use crate::{
     gui::{
         RxViewMode,
@@ -331,21 +332,12 @@ impl Handler<PushContainer> for KeepassRxActor {
         let binding = binding.pinned();
         let mut gui = binding.borrow_mut();
 
-        let db_binding = self.curr_db.borrow();
-        let db = match db_binding
-            .as_ref()
-            .ok_or(anyhow!("PushContainer: Database not open"))
-        {
-            Ok(db) => db,
-            Err(err) => return gui.errorReceived(format!("{}", err)),
-        };
-
         let view = self.current_view.as_ref().expect("No view?");
-        let viewable = view.root().with_db(db);
+        let viewable = view.root();
 
         if let Some(container) = viewable.get_container(msg.0) {
             let page_type =
-                RxPageType::try_from(&container).expect("Could not convert page type");
+                RxPageType::try_from(container).expect("Could not convert page type");
 
             let page = RxUiContainer {
                 uuid: container.uuid(),
@@ -562,15 +554,13 @@ impl Handler<GetEntries> for KeepassRxActor {
 
         // So now we use viewable.search. Then we make
         // From<RxContainerRef> for RxListItem.
-        let stuff = viewable.search(db, container_uuid, search_term);
-        // Either load for the group, or for a template.
-        let item_list = if let RxViewMode::All = view_mode {
-            search_groups(&db, container_uuid, search_term)
-        } else {
-            search_templates(db, container_uuid, search_term)
-        };
+        let results: Vec<RxListItem> = viewable
+            .search(db, container_uuid, search_term)
+            .into_iter()
+            .map(|result| result.into())
+            .collect();
 
-        let q_entries: QVariantList = item_list.into_iter().collect();
+        let q_entries: QVariantList = results.into_iter().collect();
         gui.entriesReceived(q_entries);
     }
 }

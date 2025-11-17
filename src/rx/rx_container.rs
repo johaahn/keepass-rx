@@ -527,21 +527,21 @@ pub enum RxContainedRef<'db> {
 // VirtualHierarchy impls to not borrow DB. Instead, they hold an
 // RxRoot, and we make functions that borrow DB to create the type.
 
-/// An arbitrary hierarchical view into the password database.
+/// An arbitrary hierarchical view into the password database. A
+/// VirtualHierarchy manages two lifetimes when searching: the
+/// lifetime of the RxContainer ('cnt) and the lifetime of the
+/// RxDatabase ('db).
 pub trait VirtualHierarchy {
     fn root(&self) -> &RxRoot;
+
+    /// Search for child containers in the virtual hierarchy.
     fn search<'cnt, 'db>(
         &'cnt self,
         // TODO would be nice to have VirtualHierarchyWithDb or something.
         db: &'db RxDatabase,
         container_uuid: Uuid,
         search_term: Option<&str>,
-    ) -> VirtualHierarchySparse<'cnt, 'db>;
-}
-
-struct VirtualHierarchySparse<'cnt, 'db> {
-    db_root: RxContainerWithDb<'cnt, 'db>,
-    tree: Vec<RxContainedRef<'db>>,
+    ) -> Vec<RxContainedRef<'db>>;
 }
 
 #[derive(Clone)]
@@ -568,18 +568,13 @@ impl VirtualHierarchy for AllTemplates {
         db: &'db RxDatabase,
         container_uuid: Uuid,
         search_term: Option<&str>,
-    ) -> VirtualHierarchySparse<'cnt, 'db> {
+    ) -> Vec<RxContainedRef<'db>> {
         if container_uuid == self.root().root_uuid() {
             // searching from the (non existant) "root template"
             // means we should search all templates instead.
-            let db_root = self.root();
-            let with_db = db_root.with_db(db);
-            let results = with_db.search_children_immediate(search_term);
-
-            VirtualHierarchySparse {
-                db_root: with_db,
-                tree: results,
-            }
+            self.root()
+                .with_db(db)
+                .search_children_immediate(search_term)
         } else {
             // Otherwise, we search inside the template itself
             let maybe_template = self
@@ -587,15 +582,10 @@ impl VirtualHierarchy for AllTemplates {
                 .get_container(container_uuid)
                 .map(|container| container.with_db(db));
 
-            let results = maybe_template
+            maybe_template
                 .as_ref()
                 .map(|tmplt| tmplt.search_children_immediate(search_term))
-                .unwrap_or_default();
-
-            VirtualHierarchySparse {
-                db_root: maybe_template.unwrap(),
-                tree: results,
-            }
+                .unwrap_or_default()
         }
     }
 }
@@ -623,7 +613,7 @@ impl VirtualHierarchy for DefaultView {
         db: &'db RxDatabase,
         container_uuid: Uuid,
         search_term: Option<&str>,
-    ) -> VirtualHierarchySparse<'cnt, 'db> {
+    ) -> Vec<RxContainedRef<'db>> {
         todo!()
     }
 }

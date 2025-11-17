@@ -87,16 +87,16 @@ Page {
     Connections {
         target: keepassrx
 
-        onDatabaseOpened: {
+        function onDatabaseOpened() {
             busy = false;
         }
 
-        onDatabaseOpenFailed: (error) => {
+        function onDatabaseOpenFailed(error) {
             busy = false;
             errorMsg = `Error: ${error}`;
         }
 
-        onLockingStatusReceived: (status) => {
+        function onLockingStatusReceived(status) {
             if (status === 'unset') {
                 resetApp();
             }

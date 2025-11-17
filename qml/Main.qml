@@ -40,29 +40,29 @@ MainView {
 
     Connections {
 	target: keepassrx
-        onErrorReceived: (error) => {
+        function onErrorReceived(error) {
             console.error('Uncaught error (put me in a popup):', error);
         }
 
-        onDatabaseOpened: {
+        function onDatabaseOpened() {
             keepassrx.guiState = 'Open';
 	    keepassrx.encryptMasterPassword();
             adaptiveLayout.primaryPage = entriesPage;
 	    entriesPage.visible = true;
         }
 
-        onDatabaseOpenFailed: (error) => {
+        function onDatabaseOpenFailed(error) {
             keepassrx.guiState = 'NotOpen';
             keepassrx.invalidateMasterPassword();
         }
 
-        onMasterPasswordStored: {
+        function onMasterPasswordStored() {
             if (visible) {
                 keepassrx.openDatabase(keepassrx.lastDB, settings.lastKey);
             }
         }
 
-        onMasterPasswordDecrypted: {
+        function onMasterPasswordDecrypted() {
             console.log('Re-opening database from locked state.');
             keepassrx.openDatabase(keepassrx.lastDB,  settings.lastKey);
         }

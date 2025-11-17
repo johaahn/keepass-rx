@@ -321,7 +321,7 @@ Page {
     Connections {
         target: keepassrx
 
-        onDatabaseOpened: {
+        function onDatabaseOpened() {
             // This will trigger the cascade of async operations that
             // will fetch entries.
             keepassrx.viewMode = 'All';
@@ -342,12 +342,12 @@ Page {
             }
         }
 
-        onViewModeChanged: (mode) => {
+        function onViewModeChanged(mode) {
             entriesListModel.clear();
         }
 
         // newContainer is { containerUuid, containerType }
-        onCurrentContainerChanged: (newContainer) => {
+        function onCurrentContainerChanged(newContainer) {
 	    searchMode = false;
 	    searchField.text = '';
             entriesListModel.clear();
@@ -362,7 +362,7 @@ Page {
         // Put as list of folders. When tapped, load template entries
         // and onEntriesReceived takes care of the rest? BUT... we
         // also have to take into account the container UUIDs.
-        onContainerReceived: (thisContainerId, thisContainerName) => {
+        function onContainerReceived(thisContainerId, thisContainerName) {
             searchMode = false;
 	    searchField.text = '';
             entriesListModel.clear();
@@ -374,7 +374,7 @@ Page {
 	// List of entries for this container. It's an array of
 	// RxListItem entities. It includes both immediate subgroups
 	// and immediate child entries in the container.
-        onEntriesReceived: (entries) => {
+        function onEntriesReceived(entries) {
 	    entriesListModel.clear();
 
             for (const entry of entries) {

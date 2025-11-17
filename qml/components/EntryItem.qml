@@ -24,7 +24,7 @@ ListItem {
     Connections {
 	target: keepassrx
 
-	onFieldValueReceived: (entryUuid, fieldName, fieldValue) => {
+	function onFieldValueReceived(entryUuid, fieldName, fieldValue) {
 	    // fieldValue will be null if it's not in the entry.
 	    if (fieldValue) {
 		// TODO Add some better URL handling, for fields that
@@ -44,7 +44,7 @@ ListItem {
 	    }
 	}
 
-	onSingleEntryReceived: (entry) => {
+	function onSingleEntryReceived(entry) {
 	    if (!entry) {
 		console.error('no entry found?!');
 	    }
@@ -63,7 +63,7 @@ ListItem {
 	    )
 	}
 
-	onTotpReceived: (totp) => {
+	function onTotpReceived(totp) {
 	    if (!totp.error) {
 		Clipboard.push(totp.digits);
 		toast.show("Token '" + totp.digits + "' copied. Valid for " + totp.validFor);

@@ -16,7 +16,7 @@ use super::KeepassRx;
 use super::models::RxListItem;
 use crate::crypto::EncryptedPassword;
 use crate::gui::models::RxList;
-use crate::rx::{AllTemplates, DefaultView, VirtualHierarchy};
+use crate::rx::virtual_hierarchy::{AllTemplates, DefaultView, VirtualHierarchy};
 use crate::{
     gui::{
         RxViewMode,
@@ -814,46 +814,5 @@ impl Handler<DecryptMasterPassword> for KeepassRxActor {
         });
 
         self.current_operation = Some(handle);
-    }
-}
-
-fn search_groups(
-    db: &RxDatabase,
-    container_uuid: Uuid,
-    search_term: Option<&str>,
-) -> Vec<RxListItem> {
-    let subgroups_iter = db.filter_subgroups(container_uuid, search_term);
-    let entries = db.get_entries(container_uuid, search_term);
-
-    // Groups first, then entries below.
-    let mut item_list: Vec<RxListItem> = subgroups_iter.map(RxListItem::from).collect();
-
-    item_list.append(&mut entries.into_iter().map(RxListItem::from).collect());
-
-    item_list
-}
-
-fn search_templates(
-    db: &RxDatabase,
-    container_uuid: Uuid,
-    search_term: Option<&str>,
-) -> Vec<RxListItem> {
-    if container_uuid == Uuid::default() {
-        // searching from the (non existant) "root template"
-        // means we should search all templates instead.
-        db.find_templates(search_term)
-            .map(RxListItem::from)
-            .collect::<Vec<_>>()
-    } else {
-        // Otherwise, we search inside the template itself
-        let maybe_template = db.get_template(container_uuid);
-
-        maybe_template
-            .map(|template| {
-                db.entries_iter_by_uuid(template.entry_uuids.as_slice(), search_term)
-                    .map(RxListItem::from)
-                    .collect::<Vec<_>>()
-            })
-            .unwrap_or_default()
     }
 }

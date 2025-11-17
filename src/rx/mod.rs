@@ -4,6 +4,7 @@ mod rx_db;
 mod rx_entry;
 mod rx_group;
 mod rx_loader;
+pub(crate) mod virtual_hierarchy;
 mod zeroable_db;
 
 #[cfg(feature = "gui")]

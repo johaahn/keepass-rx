@@ -167,8 +167,6 @@ impl RxDatabase {
                 .map(|t| t.icon.clone())
                 .unwrap_or_default();
 
-            println!("Setting template icon to: {:?}", template_icon);
-
             rx_template.icon = template_icon;
             rx_template.name = template_name;
         }

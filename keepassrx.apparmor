@@ -2,5 +2,5 @@
     "policy_groups": [
         "content_exchange"
     ],
-    "policy_version": 20.04
+    "policy_version": "@APPARMOR_POLICY@"
 }

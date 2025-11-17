@@ -229,32 +229,12 @@ impl From<&RxEntry> for RxContainerItem {
     }
 }
 
-fn get_container(db: &RxDatabase, uuid: Uuid) -> Option<RxContainer> {
-    db.get_group(uuid)
-        .map(|group| RxContainer::from(group, db))
-        .or_else(|| {
-            db.get_template(uuid)
-                .map(|template| RxContainer::from(template, db))
-        })
-        .or_else(|| db.get_entry(uuid).map(|ent| RxContainer::from(ent, db)))
-}
-
-fn get_contained_ref(db: &RxDatabase, uuid: Uuid) -> Option<RxContainedRef<'_>> {
-    db.get_group(uuid)
-        .map(|group| RxContainedRef::Group(group))
-        .or_else(|| {
-            db.get_template(uuid)
-                .map(|template| RxContainedRef::Template(template))
-        })
-        .or_else(|| db.get_entry(uuid).map(|ent| RxContainedRef::Entry(ent)))
-}
-
 impl IntoContainer for &RxGroup {
     fn into_container(&self, db: &RxDatabase) -> RxContainer {
         let children: Vec<_> = [self.subgroups.as_slice(), self.entries.as_slice()]
             .concat()
             .into_iter()
-            .flat_map(|id| get_container(db, id))
+            .flat_map(|id| db.get_group(id).map(|group| RxContainer::from(group, db)))
             .collect();
 
         RxContainer {
@@ -274,7 +254,7 @@ impl IntoContainer for &RxTemplate {
         let children: Vec<_> = self
             .entry_uuids
             .iter()
-            .flat_map(|id| get_container(db, *id))
+            .flat_map(|id| db.get_entry(*id).map(|ent| RxContainer::from(ent, db)))
             .collect();
 
         RxContainer {

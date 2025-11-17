@@ -141,6 +141,16 @@ impl RxContainer {
         self.item.children()
     }
 
+    pub fn child_groupings(&self) -> Vec<&RxContainer> {
+        self.children()
+            .iter()
+            .filter_map(|child| match child.item {
+                RxContainerItem::Grouping(_) => Some(child),
+                _ => None,
+            })
+            .collect()
+    }
+
     pub fn child_uuids_recursive(&self) -> IndexSet<Uuid> {
         let mut these_uuids = IndexSet::new();
 
@@ -378,6 +388,14 @@ impl<'cnt, 'db> RxContainerWithDb<'cnt, 'db> {
             .collect::<Vec<_>>()
     }
 
+    pub fn child_groupings_immedate(&self) -> Vec<RxContainedRef<'db>> {
+        self.container()
+            .child_groupings()
+            .into_iter()
+            .flat_map(|child| child.with_db(self.db()).get_ref())
+            .collect()
+    }
+
     pub fn search_children_recursive(
         &'cnt self,
         container_uuid: Uuid,
@@ -410,105 +428,7 @@ impl<'cnt, 'db> RxContainerWithDb<'cnt, 'db> {
 
         filtered_by_search.unwrap_or_default()
     }
-
-    pub fn find_children(&self, search_term: Option<&str>) -> Vec<RxContainer> {
-        let container = self.container();
-        let item = container.item();
-
-        match item {
-            &RxContainerItem::Grouping(ref grouping) => match grouping {
-                RxContainerGrouping { uuid, grouping, .. }
-                    if matches!(grouping, RxGroupingType::Template) =>
-                {
-                    if container.is_root() {
-                        self.db()
-                            .find_templates(search_term)
-                            .map(|tmplt| RxContainer::from(tmplt, self.db()))
-                            .collect()
-                    } else {
-                        self.db()
-                            .get_template(*uuid)
-                            .map(|template| {
-                                self.1
-                                    .entries_iter_by_uuid(
-                                        template.entry_uuids.as_slice(),
-                                        search_term,
-                                    )
-                                    .map(|ent| RxContainer::from(ent, self.db()))
-                                    .collect::<Vec<_>>()
-                            })
-                            .unwrap_or_default()
-                    }
-                }
-                RxContainerGrouping { uuid, grouping, .. }
-                    if matches!(grouping, RxGroupingType::Group) =>
-                {
-                    let subgroups_iter = self.1.filter_subgroups(*uuid, search_term);
-                    let entries = self.1.get_entries(*uuid, search_term);
-
-                    // Groups first, then entries below.
-                    let mut item_list: Vec<_> = subgroups_iter
-                        .map(|subgroup| RxContainer::from(subgroup, self.db()))
-                        .collect();
-
-                    item_list.append(
-                        &mut entries
-                            .into_iter()
-                            .map(|ent| RxContainer::from(ent, self.db()))
-                            .collect(),
-                    );
-
-                    item_list
-                }
-                _ => vec![],
-            },
-            _ => vec![],
-        }
-    }
 }
-
-// pub struct RxRootWithDb<'root, 'db>
-// where
-//     'root: 'db,
-// {
-//     root: &'root RxRoot,
-//     all_containers: HashMap<Uuid, &'root RxContainer>,
-//     db: &'db RxDatabase,
-// }
-
-// impl<'root, 'db> RxRootWithDb<'root, 'db> {
-//     pub fn new(root: &'root RxRoot, db: &'db RxDatabase) -> Self {
-//         let all_containers: HashMap<_, _> = root
-//             .all_containers
-//             .iter()
-//             .flat_map(|uuid| {
-//                 root.root_container
-//                     .get_container_recursive(*uuid)
-//                     .map(|container| (*uuid, container))
-//             })
-//             .collect();
-
-//         Self {
-//             root: root,
-//             all_containers: all_containers,
-//             db: db,
-//         }
-//     }
-
-//     pub fn db(&'db self) -> &'db RxDatabase {
-//         self.db
-//     }
-
-//     pub fn root(&'db self) -> RxContainerWithDb<'db> {
-//         RxContainerWithDb(&self.root.root_container, self.db())
-//     }
-
-//     pub fn get_container(&'db self, container_uuid: Uuid) -> Option<RxContainerWithDb<'db>> {
-//         self.all_containers
-//             .get(&container_uuid)
-//             .map(|container| RxContainerWithDb(&*container, self.db()))
-//     }
-// }
 
 /// A reference to the actual thing in the database, as pointed to by the container.
 #[derive(Clone, Copy)]
@@ -524,6 +444,25 @@ impl RxContainedRef<'_> {
             RxContainedRef::Entry(entry) => entry.uuid,
             RxContainedRef::Group(group) => group.uuid,
             RxContainedRef::Template(template) => template.uuid,
+        }
+    }
+
+    pub fn name(&self) -> String {
+        match self {
+            RxContainedRef::Entry(entry) => entry
+                .title()
+                .and_then(|t| t.value().as_deref().cloned())
+                .unwrap_or_else(|| "Untitled".to_string()),
+            RxContainedRef::Group(group) => group.name.clone(),
+            RxContainedRef::Template(template) => template.name.clone(),
+        }
+    }
+
+    pub fn parent(&self) -> Option<Uuid> {
+        match self {
+            RxContainedRef::Entry(entry) => Some(entry.parent_group),
+            RxContainedRef::Group(group) => group.parent,
+            RxContainedRef::Template(template) => None,
         }
     }
 }

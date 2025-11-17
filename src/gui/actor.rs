@@ -520,21 +520,27 @@ impl Handler<GetGroup> for KeepassRxActor {
             Err(err) => return gui.errorReceived(format!("{}", err)),
         };
 
+        let view = self.current_view.as_ref().expect("GetGroup: No view set.");
+
         let group_uuid = match msg.group_uuid {
             Some(id) => id,
             None => db.root_group().uuid,
         };
 
-        let group = db.get_group(group_uuid);
+        let group = view
+            .root()
+            .get_container(group_uuid)
+            .expect("GetGroup: No group found")
+            .with_db(db)
+            .get_ref();
 
         let this_group_name = group
-            .as_ref()
-            .map(|grp| QString::from(grp.name.as_ref()))
+            .map(|grp| QString::from(grp.name()))
             .unwrap_or_default();
 
         let parent_group_uuid = group
-            .as_ref()
-            .and_then(|grp| grp.parent.map(|parent| QString::from(parent.to_string())))
+            .and_then(|grp| grp.parent())
+            .map(|pu| QString::from(pu.to_string()))
             .unwrap_or_default();
 
         let this_group_uuid = QString::from(group_uuid.to_string());
@@ -599,20 +605,11 @@ impl Handler<GetEntries> for KeepassRxActor {
             None => viewable.root().uuid(),
         };
 
-        println!(
-            "Searching container {} in view {} for term: {:?}",
-            container_uuid,
-            viewable.name(),
-            search_term
-        );
-
         let results: Vec<RxListItem> = viewable
             .search(db, container_uuid, search_term)
             .into_iter()
             .map(|result| result.into())
             .collect();
-
-        println!("Found {} results", results.len());
 
         let q_entries: QVariantList = results.into_iter().collect();
         gui.entriesReceived(q_entries);

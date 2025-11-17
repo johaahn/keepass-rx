@@ -82,8 +82,59 @@ Page {
         }
     }
 
-    header: PageHeader {
-        id: header
+    PageHeader {
+        id: opsBar
+        visible: searchMode
+        Layout.fillWidth: true
+        /* width: parent.width */
+        /* height: parent.height */
+
+        StyleHints {
+            backgroundColor: headerBackgroundColor()
+            foregroundColor: headerTextColor()
+        }
+
+        leadingActionBar.actions: [
+	    Action {
+                name: "Cancel Search"
+                //TRANSLATORS: End the search operation.
+                text: i18n.tr("Cancel Search")
+                iconName: "back"
+                onTriggered: {
+                    searchMode = false;
+                    searchField.text = '';
+                }
+            }
+        ]
+
+        /* anchors { */
+        /*     left: parent.left */
+        /*     right: parent.right */
+        /* } */
+
+        contents: RowLayout {
+            id: searchBar
+            Layout.fillWidth: true
+            width: parent.width
+            height: parent.height
+            TextField {
+                width: parent.width
+                Layout.fillWidth: true
+                visible: searchMode
+                id: searchField
+                // TRANSLATORS: Placeholder text of the search box for searching for database entries. Container is a container/folder of password manager entries.
+                placeholderText: i18n.tr("Search entries in this group")
+                inputMethodHints: Qt.ImhNoPredictiveText
+                onTextChanged: {
+                    getEntries(containerUuid);
+                }
+            }
+        }
+    }
+
+    PageHeader {
+        id: regularHeader
+        visible: !searchMode
         title: headerTitle()
 
         StyleHints {
@@ -148,8 +199,8 @@ Page {
             Action {
                 name: "Search"
                 // TRANSLATORS: Initiate (or stop) the search action.
-                text: !searchMode ? i18n.tr("Search") : i18n.tr("Cancel Search")
-                iconName: !searchMode ? "search" : "close"
+                text: i18n.tr("Search")
+                iconName: "search"
                 onTriggered: {
                     searchField.text = '';
                     searchMode = !searchMode;
@@ -199,43 +250,16 @@ Page {
                 }
             }
         ]
-
-        extension: ColumnLayout {
-            id: opsBar
-            Layout.fillWidth: true
-
-            anchors {
-                margins: units.gu(1)
-                left: parent.left
-                right: parent.right
-            }
-
-            RowLayout {
-                id: searchBar
-                Layout.fillWidth: true
-                width: parent.width
-
-                TextField {
-                    width: parent.width
-                    Layout.fillWidth: true
-                    visible: searchMode
-                    id: searchField
-                    // TRANSLATORS: Placeholder text of the search box for searching for database entries. Container is a container/folder of password manager entries.
-                    placeholderText: i18n.tr("Search entries in this group")
-                    inputMethodHints: Qt.ImhNoPredictiveText
-                    onTextChanged: {
-                        getEntries(containerUuid);
-                    }
-                }
-            }
-        }
     }
+
+    header: searchMode ? opsBar : regularHeader
 
     ListView {
 	id: entriesList
         clip: true
         z: 1
-        anchors.top: header.bottom
+        //anchors.top: searchMode ? opsBar.bottom : regularHeader.bottom
+        anchors.top: parent.header.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
@@ -346,16 +370,6 @@ Page {
         // Put as list of folders. When tapped, load template entries
         // and onEntriesReceived takes care of the rest? BUT... we
         // also have to take into account the container UUIDs.
-        onTemplatesReceived: (templates) => {
-	    searchMode = false;
-	    searchField.text = '';
-            entriesListModel.clear();
-
-            for (const template of templates) {
-                entriesListModel.append(template);
-            }
-        }
-
         onContainerReceived: (thisContainerId, thisContainerName) => {
             searchMode = false;
 	    searchField.text = '';
@@ -364,25 +378,6 @@ Page {
 	    containerName = thisContainerName;
             getEntries(thisContainerId);
         }
-
-        /* onGroupReceived: (parentContainerId, thisGroupId, thisGroupName) => { */
-	/*     // Clear out searching when switching between containers. */
-	/*     searchMode = false; */
-	/*     searchField.text = ''; */
-        /*     entriesListModel.clear(); */
-
-	/*     containerName = thisGroupName; */
-        /*     getEntries(thisGroupId); */
-        /* } */
-
-        /* onTemplateReceived: (thisTemplateUuid, thisTemplateName) => { */
-	/*     searchMode = false; */
-	/*     searchField.text = ''; */
-        /*     entriesListModel.clear(); */
-
-	/*     containerName = thisTemplateName; */
-        /*     getEntries(thisTemplateUuid); */
-        /* } */
 
 	// List of entries for this container. It's an array of
 	// RxListItem entities. It includes both immediate subgroups

@@ -194,23 +194,30 @@ pub enum RxContainerItem {
     /// could be root.
     VirtualRoot(Vec<RxContainer>),
     Grouping(RxContainerGrouping),
-    Entry(Uuid),
+    Entry(RxEntry),
 }
 
 impl RxContainerItem {
     pub fn uuid(&self) -> Uuid {
         match self {
             Self::Grouping(grouping) => grouping.uuid(),
-            Self::Entry(entry_uuid) => *entry_uuid,
+            Self::Entry(entry) => entry.uuid,
             Self::VirtualRoot(_) => Uuid::default(),
         }
     }
 
-    pub fn grouping_type(&self) -> Option<RxGroupingType> {
+    pub fn grouping(&self) -> Option<&RxGrouping> {
         match self {
-            Self::Grouping(grouping) => Some(grouping.grouping_type()),
+            Self::Grouping(grouping) => Some(grouping.grouping()),
             Self::Entry(_) => None,
-            Self::VirtualRoot(_) => Some(RxGroupingType::Root),
+            Self::VirtualRoot(_) => Some(&RxGrouping::VirtualRoot),
+        }
+    }
+
+    pub fn entry(&self) -> Option<&RxEntry> {
+        match self {
+            Self::Entry(entry) => Some(entry),
+            _ => None,
         }
     }
 
@@ -225,7 +232,7 @@ impl RxContainerItem {
 
 impl From<&RxEntry> for RxContainerItem {
     fn from(value: &RxEntry) -> Self {
-        Self::Entry(value.uuid)
+        Self::Entry(value.clone())
     }
 }
 
@@ -241,9 +248,8 @@ impl IntoContainer for &RxGroup {
             is_root: db.root_group().uuid == self.uuid,
             contained_type: RxContainedType::Group,
             item: RxContainerItem::Grouping(RxContainerGrouping {
-                uuid: self.uuid,
                 children: children,
-                grouping: RxGroupingType::Group,
+                grouping: RxGrouping::Group(self.clone().clone()),
             }),
         }
     }
@@ -261,9 +267,8 @@ impl IntoContainer for &RxTemplate {
             is_root: false,
             contained_type: RxContainedType::Template,
             item: RxContainerItem::Grouping(RxContainerGrouping {
-                uuid: self.uuid,
                 children: children,
-                grouping: RxGroupingType::Template,
+                grouping: RxGrouping::Template(self.clone().clone()),
             }),
         }
     }
@@ -274,33 +279,46 @@ impl IntoContainer for &RxEntry {
         RxContainer {
             contained_type: RxContainedType::Entry,
             is_root: false,
-            item: RxContainerItem::Entry(self.uuid),
+            item: RxContainerItem::Entry(self.clone().clone()),
         }
     }
 }
 
-#[derive(Clone, Copy)]
-pub enum RxGroupingType {
-    Template,
-    Group,
-    Root,
+#[derive(Clone)]
+pub enum RxGrouping {
+    Template(RxTemplate),
+    Group(RxGroup),
+    VirtualRoot,
+}
+
+impl RxGrouping {
+    pub fn contained_ref<'cnt>(&'cnt self) -> Option<RxContainedRef<'cnt>> {
+        match &self {
+            RxGrouping::Group(group) => Some(RxContainedRef::Group(group)),
+            RxGrouping::Template(template) => Some(RxContainedRef::Template(template)),
+            RxGrouping::VirtualRoot => None,
+        }
+    }
 }
 
 #[derive(Clone)]
 pub struct RxContainerGrouping {
-    uuid: Uuid,
     children: Vec<RxContainer>,
-    grouping: RxGroupingType,
+    grouping: RxGrouping,
 }
 
 #[allow(dead_code)]
 impl RxContainerGrouping {
     pub fn uuid(&self) -> Uuid {
-        self.uuid
+        match &self.grouping {
+            RxGrouping::Group(group) => group.uuid,
+            RxGrouping::Template(template) => template.uuid,
+            RxGrouping::VirtualRoot => Uuid::default(),
+        }
     }
 
-    pub fn grouping_type(&self) -> RxGroupingType {
-        self.grouping
+    pub fn grouping(&self) -> &RxGrouping {
+        &self.grouping
     }
 }
 
@@ -320,12 +338,18 @@ impl<'cnt, 'db> RxContainerWithDb<'cnt, 'db> {
         self.1
     }
 
-    pub fn get_ref(&self) -> Option<RxContainedRef<'db>> {
+    // self
+    //                 .db()
+    //                 .get_group(self.uuid())
+    //                 .map(|g| RxContainedRef::Group(g)),
+
+    pub fn get_ref(&'cnt self) -> Option<RxContainedRef<'cnt>> {
         match self.container().contained_type {
             RxContainedType::Group => self
-                .db()
-                .get_group(self.uuid())
-                .map(|g| RxContainedRef::Group(g)),
+                .container()
+                .item()
+                .grouping()
+                .and_then(|g| g.contained_ref()),
             RxContainedType::Template => self
                 .db()
                 .get_template(self.uuid())

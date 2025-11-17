@@ -4,7 +4,7 @@ use uuid::Uuid;
 
 use crate::rx::{
     RxContainedRef, RxContainer, RxContainerGrouping, RxContainerItem, RxContainerWithDb,
-    RxEntry, RxGroup, RxGroupingType, RxMetadata, RxTemplate,
+    RxEntry, RxGroup, RxGrouping, RxMetadata, RxTemplate,
 };
 
 #[derive(QEnum, Clone, Default, Copy)]
@@ -218,9 +218,9 @@ pub enum RxPageType {
 impl TryFrom<&RxContainer> for RxPageType {
     type Error = anyhow::Error;
     fn try_from(value: &RxContainer) -> Result<Self, Self::Error> {
-        match value.item().grouping_type() {
-            Some(RxGroupingType::Group) => Ok(RxPageType::Group),
-            Some(RxGroupingType::Template) => Ok(RxPageType::Template),
+        match value.item().grouping() {
+            Some(RxGrouping::Group(_)) => Ok(RxPageType::Group),
+            Some(RxGrouping::Template(_)) => Ok(RxPageType::Template),
             _ => Err(anyhow!(
                 "Not a thing that can be converted into a page type"
             )),

@@ -134,40 +134,53 @@ ListItem {
 	spacing: units.gu(1)
 
         // Group/Folder entry
-        Item {
+
+        Loader {
+            id: imgLoader
             width: units.gu(5)
             height: parent.height
-            visible: itemType != 'Entry' && itemType != 'Template'
+            sourceComponent: itemType == 'Group' ? folderImg : entryImg
 
-            // The folder icon itself (groups only, not templates)
-	    Icon {
-	        width: units.gu(5)
-	        height: parent.height
-	        y: parent.height / 2 - height / 2
-	        name: itemType == 'Group' || itemType == 'Template' ? 'folder' : 'up'
-	    }
+            Component {
+                id: folderImg
 
-            // Icon of the group/folder, if it has one.
-	    Image {
-	        id: groupEntryImg
-	        fillMode: Image.PreserveAspectFit
-	        source: resolveIconPath()
-	        width: units.gu(2.75)
-	        height: units.gu(2.75)
-	        y: parent.height - height * 1.5
-                x: parent.width - width / 1.25
-	    }
+                Item {
+                    width: units.gu(5)
+                    height: parent.height
+
+                    // The folder icon itself (groups only, not templates)
+	            Icon {
+	                width: units.gu(5)
+	                height: parent.height
+	                y: parent.height / 2 - height / 2
+	                name: itemType == 'Group' || itemType == 'Template' ? 'folder' : 'up'
+	            }
+
+                    // Icon of the group/folder, if it has one.
+	            Image {
+	                id: groupEntryImg
+	                fillMode: Image.PreserveAspectFit
+	                source: resolveIconPath()
+	                width: units.gu(2.75)
+	                height: units.gu(2.75)
+	                y: parent.height - height * 1.5
+                        x: parent.width - width / 1.25
+	            }
+                }
+            }
+
+            Component {
+                id: entryImg
+
+	        Image {
+	            fillMode: Image.PreserveAspectFit
+	            source: resolveIconPath()
+	            width: units.gu(5)
+	            height: parent.height
+	            y: parent.height / 2 - height / 2
+	        }
+            }
         }
-
-	Image {
-	    id: entryImg
-	    visible: itemType == 'Entry' || itemType == 'Template'
-	    fillMode: Image.PreserveAspectFit
-	    source: resolveIconPath()
-	    width: units.gu(5)
-	    height: parent.height
-	    y: parent.height / 2 - height / 2
-	}
 
 	Column {
 	    id: detailsColumn
@@ -192,7 +205,7 @@ ListItem {
 
     MouseArea {
 	x: parent.x
-	width: entryImg.width + detailsColumn.width
+	width: imgLoader.width + detailsColumn.width
 	height: parent.height
 	onClicked: {
 	    if (itemType == 'Group' || itemType == 'Template') {

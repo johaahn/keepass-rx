@@ -6,6 +6,7 @@ use secstr::SecUtf8;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::fs::File;
+use std::str::FromStr;
 use std::sync::Arc;
 use tokio::task::{JoinHandle, spawn_blocking};
 use uuid::Uuid;
@@ -14,13 +15,15 @@ use zeroize::{Zeroize, Zeroizing};
 use super::KeepassRx;
 use super::models::RxListItem;
 use crate::crypto::EncryptedPassword;
+use crate::gui::models::RxList;
+use crate::rx::virtual_hierarchy::{AllTemplates, DefaultView, VirtualHierarchy};
 use crate::{
     gui::{
         RxViewMode,
         models::{RxPageType, RxUiContainer},
         utils::imported_databases_path,
     },
-    rx::{RxContainer, RxDatabase, RxFieldName, ZeroableDatabase},
+    rx::{RxDatabase, RxFieldName, RxRoot, ZeroableDatabase},
 };
 
 #[derive(Default)]
@@ -33,6 +36,9 @@ pub struct KeepassRxActor {
     // any in-progress operation on another thread pool that might
     // need to be aborted.
     current_operation: Option<JoinHandle<Result<()>>>,
+
+    // current view of the database.
+    current_view: Option<Box<dyn VirtualHierarchy>>,
 }
 
 impl KeepassRxActor {
@@ -63,6 +69,10 @@ impl Actor for KeepassRxActor {
 }
 
 #[derive(Message)]
+#[rtype(result = "()")]
+pub struct SetViewMode(pub RxViewMode);
+
+#[derive(Message)]
 #[rtype(result = "anyhow::Result<()>")]
 pub struct OpenDatabase {
     pub db_name: String,
@@ -86,10 +96,6 @@ pub struct PushContainer(pub Uuid);
 #[derive(Message)]
 #[rtype(result = "()")]
 pub struct PopContainer;
-
-#[derive(Message)]
-#[rtype(result = "()")]
-pub struct GetTemplates;
 
 #[derive(Message)]
 #[rtype(result = "()")]
@@ -134,32 +140,22 @@ impl GetEntries {
 
 #[derive(Message)]
 #[rtype(result = "()")]
-pub struct GetGroup {
+pub struct GetContainer {
     // None = root uuid
-    pub group_uuid: Option<Uuid>,
+    pub container_uuid: Option<Uuid>,
 }
 
-impl GetGroup {
+impl GetContainer {
     pub fn root() -> Self {
-        Self { group_uuid: None }
+        Self {
+            container_uuid: None,
+        }
     }
 
     pub fn for_uuid(group_uuid: Uuid) -> Self {
         Self {
-            group_uuid: Some(group_uuid),
+            container_uuid: Some(group_uuid),
         }
-    }
-}
-
-#[derive(Message)]
-#[rtype(result = "()")]
-pub struct GetTemplate {
-    pub template_uuid: Uuid,
-}
-
-impl GetTemplate {
-    pub fn for_uuid(template_uuid: Uuid) -> Self {
-        Self { template_uuid }
     }
 }
 
@@ -192,6 +188,63 @@ pub struct InvalidateMasterPassword;
 #[derive(Message)]
 #[rtype(result = "()")]
 pub struct CheckLockingStatus;
+
+// let db = self.curr_db.borrow();
+// let db = db.as_deref().expect("No database open");
+// let root = self.current_view.as_ref().expect("No view");
+
+// RxRootWithDb::new(root, db)
+
+impl Handler<SetViewMode> for KeepassRxActor {
+    type Result = ();
+
+    fn handle(&mut self, msg: SetViewMode, _: &mut Self::Context) -> Self::Result {
+        let SetViewMode(mode) = msg;
+
+        let binding = self.gui.clone();
+        let binding = binding.pinned();
+        let mut gui = binding.borrow_mut();
+
+        let db_binding = self.curr_db.borrow();
+        let db = match db_binding
+            .as_ref()
+            .ok_or(anyhow!("PushContainer: Database not open"))
+        {
+            Ok(db) => db,
+            Err(err) => return gui.errorReceived(format!("{}", err)),
+        };
+
+        gui.viewMode = mode;
+        gui.container_stack.clear();
+
+        if let RxViewMode::All = mode {
+            self.current_view = Some(Box::new(DefaultView::new(db)));
+            let root_uuid = self.current_view.as_ref().unwrap().root().uuid();
+            gui.container_stack.push(RxUiContainer {
+                uuid: root_uuid,
+                page_type: RxPageType::Group,
+                is_root: true,
+            });
+        } else {
+            self.current_view = Some(Box::new(AllTemplates::new(db)));
+            let root_uuid = self.current_view.as_ref().unwrap().root().uuid();
+            gui.container_stack.push(RxUiContainer {
+                uuid: root_uuid,
+                page_type: RxPageType::Template,
+                is_root: true,
+            });
+        }
+
+        println!(
+            "Set view to: {}",
+            self.current_view.as_ref().unwrap().name()
+        );
+
+        let container = QVariantMap::from(&gui.container_stack[0]);
+        gui.viewModeChanged(mode);
+        gui.currentContainerChanged(container.into());
+    }
+}
 
 impl Handler<OpenDatabase> for KeepassRxActor {
     type Result = AtomicResponse<Self, anyhow::Result<()>>;
@@ -241,10 +294,14 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                     Ok(keepass_db) => {
                         let wrapped_db = Zeroizing::new(ZeroableDatabase(keepass_db));
                         let rx_db = RxDatabase::new(wrapped_db);
+                        let view = Box::new(DefaultView::new(&rx_db));
 
                         gui.rootGroupUuid = QString::from(rx_db.root_group().uuid.to_string());
                         gui.metadata = rx_db.metadata().into();
+
                         this.curr_db = RefCell::new(Some(Zeroizing::new(rx_db)));
+                        this.current_view = Some(view);
+
                         gui.databaseOpen = true;
                         gui.databaseOpened();
                     }
@@ -317,25 +374,17 @@ impl Handler<PushContainer> for KeepassRxActor {
         let binding = binding.pinned();
         let mut gui = binding.borrow_mut();
 
-        let db_binding = self.curr_db.borrow();
-        let db = match db_binding
-            .as_ref()
-            .ok_or(anyhow!("PushContainer: Database not open"))
-        {
-            Ok(db) => db,
-            Err(err) => return gui.errorReceived(format!("{}", err)),
-        };
+        let view = self.current_view.as_ref().expect("No view?");
+        let viewable = view.root();
 
-        if let Some(container) = db.get_container(msg.0) {
-            let page_type = match container {
-                RxContainer::Group(_) => RxPageType::Group,
-                RxContainer::Template(_) => RxPageType::Template,
-            };
+        if let Some(container) = viewable.get_container(msg.0) {
+            let page_type =
+                RxPageType::try_from(container).expect("Could not convert page type");
 
             let page = RxUiContainer {
                 uuid: container.uuid(),
                 page_type: page_type,
-                is_root: false,
+                is_root: container.is_root(),
             };
 
             let qvar = QVariantMap::from(&page);
@@ -355,30 +404,25 @@ impl Handler<PopContainer> for KeepassRxActor {
         let binding = binding.pinned();
         let mut gui = binding.borrow_mut();
 
-        let db_binding = self.curr_db.borrow();
-        let db = match db_binding
+        let view = self
+            .current_view
             .as_ref()
-            .ok_or(anyhow!("PushContainer: Database not open"))
-        {
-            Ok(db) => db,
-            Err(err) => return gui.errorReceived(format!("{}", err)),
-        };
+            .expect("PopContainer: No view set");
 
         if let Some(_) = gui.container_stack.pop() {
             let parent_container = gui.container_stack.last();
             let new_uuid = parent_container
                 .map(|page| page.uuid)
-                .unwrap_or_else(|| match gui.viewMode {
-                    RxViewMode::All => db.root_group().uuid,
-                    RxViewMode::Templates => Uuid::default(),
-                });
+                .unwrap_or_else(|| view.root().uuid());
 
             let new_page_type =
                 parent_container
                     .map(|page| page.page_type)
-                    .unwrap_or_else(|| match gui.viewMode {
-                        RxViewMode::All => RxPageType::Group,
-                        RxViewMode::Templates => RxPageType::Template,
+                    .unwrap_or_else(|| {
+                        view.root()
+                            .get_container(new_uuid)
+                            .and_then(|container| RxPageType::try_from(container).ok())
+                            .unwrap_or(RxPageType::Group)
                     });
 
             let is_root = parent_container
@@ -392,35 +436,13 @@ impl Handler<PopContainer> for KeepassRxActor {
             };
 
             let qvar = QVariantMap::from(&new_page);
-            let container: QVariant = qvar.into();
+            let ui_container: QVariant = qvar.into();
 
-            gui.currentContainer = container.clone();
-            gui.currentContainerChanged(container);
+            gui.currentContainer = ui_container.clone();
+            gui.currentContainerChanged(ui_container);
         } else {
             println!("Cannot go above root!");
         }
-    }
-}
-
-impl Handler<GetTemplates> for KeepassRxActor {
-    type Result = ();
-
-    fn handle(&mut self, _: GetTemplates, _: &mut Self::Context) -> Self::Result {
-        let binding = self.gui.clone();
-        let binding = binding.pinned();
-        let gui = binding.borrow();
-
-        let db_binding = self.curr_db.borrow();
-        let db = match db_binding
-            .as_ref()
-            .ok_or(anyhow!("GetTemplates: Database not open"))
-        {
-            Ok(db) => db,
-            Err(err) => return gui.errorReceived(format!("{}", err)),
-        };
-
-        let templates: QVariantList = db.templates_iter().map(RxListItem::from).collect();
-        gui.templatesReceived(templates);
     }
 }
 
@@ -435,7 +457,7 @@ impl Handler<GetMetadata> for KeepassRxActor {
         let db_binding = self.curr_db.borrow();
         let db = match db_binding
             .as_ref()
-            .ok_or(anyhow!("GetTemplates: Database not open"))
+            .ok_or(anyhow!("GetMetadata: Database not open"))
         {
             Ok(db) => db,
             Err(err) => return gui.errorReceived(format!("{}", err)),
@@ -445,10 +467,10 @@ impl Handler<GetMetadata> for KeepassRxActor {
     }
 }
 
-impl Handler<GetGroup> for KeepassRxActor {
+impl Handler<GetContainer> for KeepassRxActor {
     type Result = ();
 
-    fn handle(&mut self, msg: GetGroup, _: &mut Self::Context) -> Self::Result {
+    fn handle(&mut self, msg: GetContainer, _: &mut Self::Context) -> Self::Result {
         let binding = self.gui.clone();
         let binding = binding.pinned();
         let gui = binding.borrow();
@@ -462,54 +484,26 @@ impl Handler<GetGroup> for KeepassRxActor {
             Err(err) => return gui.errorReceived(format!("{}", err)),
         };
 
-        let group_uuid = match msg.group_uuid {
+        let view = self.current_view.as_ref().expect("GetGroup: No view set.");
+
+        let container_uuid = match msg.container_uuid {
             Some(id) => id,
-            None => db.root_group().uuid,
+            None => view.root().uuid(),
         };
 
-        let group = db.get_group(group_uuid);
+        let maybe_container = view
+            .root()
+            .get_container(container_uuid)
+            .expect("GetContainer: No container found")
+            .with_db(db)
+            .get_ref();
 
-        let this_group_name = group
-            .as_ref()
-            .map(|grp| QString::from(grp.name.as_ref()))
+        let this_container_name = maybe_container
+            .map(|container| QString::from(container.name()))
             .unwrap_or_default();
 
-        let parent_group_uuid = group
-            .as_ref()
-            .and_then(|grp| grp.parent.map(|parent| QString::from(parent.to_string())))
-            .unwrap_or_default();
-
-        let this_group_uuid = QString::from(group_uuid.to_string());
-        gui.groupReceived(parent_group_uuid, this_group_uuid, this_group_name);
-    }
-}
-
-impl Handler<GetTemplate> for KeepassRxActor {
-    type Result = ();
-
-    fn handle(&mut self, msg: GetTemplate, _: &mut Self::Context) -> Self::Result {
-        let binding = self.gui.clone();
-        let binding = binding.pinned();
-        let gui = binding.borrow();
-
-        let db_binding = self.curr_db.borrow();
-        let db = match db_binding
-            .as_ref()
-            .ok_or(anyhow!("GetGroups: Database not open"))
-        {
-            Ok(db) => db,
-            Err(err) => return gui.errorReceived(format!("{}", err)),
-        };
-
-        let template = db.get_template(msg.template_uuid);
-
-        let this_template_name = template
-            .as_ref()
-            .map(|template| QString::from(template.name.as_ref()))
-            .unwrap_or_default();
-
-        let this_template_uuid = QString::from(msg.template_uuid.to_string());
-        gui.templateReceived(this_template_uuid, this_template_name);
+        let this_container_uuid = QString::from(container_uuid.to_string());
+        gui.containerReceived(this_container_uuid, this_container_name);
     }
 }
 
@@ -520,7 +514,6 @@ impl Handler<GetEntries> for KeepassRxActor {
         let binding = self.gui.clone();
         let binding = binding.pinned();
         let gui = binding.borrow();
-        let view_mode = gui.viewMode;
 
         let db_binding = self.curr_db.borrow();
         let db = match db_binding
@@ -532,22 +525,23 @@ impl Handler<GetEntries> for KeepassRxActor {
         };
 
         let search_term = msg.search_term.as_deref();
+        let viewable = self
+            .current_view
+            .as_ref()
+            .expect("GetEntries: Viewable not set.");
 
         let container_uuid = match msg.container_uuid {
             Some(id) => id,
-            None if matches!(view_mode, RxViewMode::All) => db.root_group().uuid,
-            None if matches!(view_mode, RxViewMode::Templates) => Uuid::default(),
-            _ => Uuid::default(),
+            None => viewable.root().uuid(),
         };
 
-        // Either load for the group, or for a template.
-        let item_list = if let RxViewMode::All = view_mode {
-            search_groups(&db, container_uuid, search_term)
-        } else {
-            search_templates(db, container_uuid, search_term)
-        };
+        let results: Vec<RxListItem> = viewable
+            .search(db, container_uuid, search_term)
+            .into_iter()
+            .map(|result| result.into())
+            .collect();
 
-        let q_entries: QVariantList = item_list.into_iter().collect();
+        let q_entries: QVariantList = results.into_iter().collect();
         gui.entriesReceived(q_entries);
     }
 }
@@ -820,46 +814,5 @@ impl Handler<DecryptMasterPassword> for KeepassRxActor {
         });
 
         self.current_operation = Some(handle);
-    }
-}
-
-fn search_groups(
-    db: &RxDatabase,
-    container_uuid: Uuid,
-    search_term: Option<&str>,
-) -> Vec<RxListItem> {
-    let subgroups_iter = db.filter_subgroups(container_uuid, search_term);
-    let entries = db.get_entries(container_uuid, search_term);
-
-    // Groups first, then entries below.
-    let mut item_list: Vec<RxListItem> = subgroups_iter.map(RxListItem::from).collect();
-
-    item_list.append(&mut entries.into_iter().map(RxListItem::from).collect());
-
-    item_list
-}
-
-fn search_templates(
-    db: &RxDatabase,
-    container_uuid: Uuid,
-    search_term: Option<&str>,
-) -> Vec<RxListItem> {
-    if container_uuid == Uuid::default() {
-        // searching from the (non existant) "root template"
-        // means we should search all templates instead.
-        db.find_templates(search_term)
-            .map(RxListItem::from)
-            .collect::<Vec<_>>()
-    } else {
-        // Otherwise, we search inside the template itself
-        let maybe_template = db.get_template(container_uuid);
-
-        maybe_template
-            .map(|template| {
-                db.entries_iter_by_uuid(template.entry_uuids.as_slice(), search_term)
-                    .map(RxListItem::from)
-                    .collect::<Vec<_>>()
-            })
-            .unwrap_or_default()
     }
 }

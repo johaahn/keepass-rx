@@ -86,8 +86,6 @@ Page {
         id: opsBar
         visible: searchMode
         Layout.fillWidth: true
-        /* width: parent.width */
-        /* height: parent.height */
 
         StyleHints {
             backgroundColor: headerBackgroundColor()
@@ -106,11 +104,6 @@ Page {
                 }
             }
         ]
-
-        /* anchors { */
-        /*     left: parent.left */
-        /*     right: parent.right */
-        /* } */
 
         contents: RowLayout {
             id: searchBar
@@ -258,7 +251,6 @@ Page {
 	id: entriesList
         clip: true
         z: 1
-        //anchors.top: searchMode ? opsBar.bottom : regularHeader.bottom
         anchors.top: parent.header.bottom
         anchors.left: parent.left
         anchors.right: parent.right

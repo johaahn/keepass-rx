@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-14 08:49+0100\n"
+"POT-Creation-Date: 2025-11-17 14:27+0000\n"
 "PO-Revision-Date: 2025-11-13 11:51+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -135,8 +135,23 @@ msgstr ""
 "Broncode: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
+msgid "Untitled Entry"
+msgstr "Naamloos item"
+
+msgid "Notes"
+msgstr "Aantekeningen"
+
+msgid "Tap to copy"
+msgstr "Druk om te kopiëren"
+
 msgid "Special Categories"
 msgstr "Speciale categorieën"
+
+msgid "Cancel Search"
+msgstr "Zoekopdracht afbreken"
+
+msgid "Search entries in this group"
+msgstr "Deze groep doorzoeken"
 
 msgid "Lock"
 msgstr "Vergrendelen"
@@ -150,26 +165,11 @@ msgstr "Weergavemodus"
 msgid "Search"
 msgstr "Zoeken"
 
-msgid "Cancel Search"
-msgstr "Zoekopdracht afbreken"
-
 msgid "Lock Database"
 msgstr "Databank vergrendelen"
 
 msgid "Close Database"
 msgstr "Databank sluiten"
-
-msgid "Search entries in this group"
-msgstr "Deze groep doorzoeken"
-
-msgid "Untitled Entry"
-msgstr "Naamloos item"
-
-msgid "Notes"
-msgstr "Aantekeningen"
-
-msgid "Tap to copy"
-msgstr "Druk om te kopiëren"
 
 #~ msgid "Enable database locking (ALPHA)"
 #~ msgstr "Databanken vergrendelen (experimenteel)"

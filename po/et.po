@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-14 08:49+0100\n"
+"POT-Creation-Date: 2025-11-17 14:27+0000\n"
 "PO-Revision-Date: 2025-11-13 11:51+0000\n"
 "Last-Translator: Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/ubports/"
@@ -134,8 +134,23 @@ msgstr ""
 "Lähtekood: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
+msgid "Untitled Entry"
+msgstr "Pealkirjata kirje"
+
+msgid "Notes"
+msgstr "Märkmed"
+
+msgid "Tap to copy"
+msgstr "Kopeerimiseks klõpsa"
+
 msgid "Special Categories"
 msgstr "Erikategooriad"
+
+msgid "Cancel Search"
+msgstr "Katkesta otsing"
+
+msgid "Search entries in this group"
+msgstr "Otsi sellest grupist kirjeid"
 
 msgid "Lock"
 msgstr "Lukusta"
@@ -149,26 +164,11 @@ msgstr "Vaaterežiim"
 msgid "Search"
 msgstr "Otsi"
 
-msgid "Cancel Search"
-msgstr "Katkesta otsing"
-
 msgid "Lock Database"
 msgstr "Lukusta andmebaas"
 
 msgid "Close Database"
 msgstr "Sulge andmebaas"
-
-msgid "Search entries in this group"
-msgstr "Otsi sellest grupist kirjeid"
-
-msgid "Untitled Entry"
-msgstr "Pealkirjata kirje"
-
-msgid "Notes"
-msgstr "Märkmed"
-
-msgid "Tap to copy"
-msgstr "Kopeerimiseks klõpsa"
 
 #~ msgid "Enable database locking (ALPHA)"
 #~ msgstr ""

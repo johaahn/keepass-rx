@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-14 08:49+0100\n"
+"POT-Creation-Date: 2025-11-17 14:27+0000\n"
 "PO-Revision-Date: 2025-11-15 06:48+0000\n"
 "Last-Translator: Vlad Nirky <nirky.vlad@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -136,8 +136,23 @@ msgstr ""
 "Source : <a href='https ://git.agnos.is/projectmoon/keepass-rx'>https ://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
+msgid "Untitled Entry"
+msgstr "Entrée sans titre"
+
+msgid "Notes"
+msgstr "Notes"
+
+msgid "Tap to copy"
+msgstr "Appuyez pour copier"
+
 msgid "Special Categories"
 msgstr "Catégories spéciales"
+
+msgid "Cancel Search"
+msgstr "Annuler la recherche"
+
+msgid "Search entries in this group"
+msgstr "Rechercher les entrées dans ce groupe"
 
 msgid "Lock"
 msgstr "Verrouiller"
@@ -151,26 +166,11 @@ msgstr "Mode d'affichage"
 msgid "Search"
 msgstr "Chercher"
 
-msgid "Cancel Search"
-msgstr "Annuler la recherche"
-
 msgid "Lock Database"
 msgstr "Verrouiller la base de données"
 
 msgid "Close Database"
 msgstr "Fermer la base de données"
-
-msgid "Search entries in this group"
-msgstr "Rechercher les entrées dans ce groupe"
-
-msgid "Untitled Entry"
-msgstr "Entrée sans titre"
-
-msgid "Notes"
-msgstr "Notes"
-
-msgid "Tap to copy"
-msgstr "Appuyez pour copier"
 
 #~ msgid "Enable database locking (ALPHA)"
 #~ msgstr "Activer le verrouillage de la base de données (ALPHA)"

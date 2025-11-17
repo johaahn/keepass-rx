@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-14 08:49+0100\n"
+"POT-Creation-Date: 2025-11-17 14:27+0000\n"
 "PO-Revision-Date: 2025-11-12 14:24+0000\n"
 "Last-Translator: projectmoon <projectmoon@agnos.is>\n"
 "Language-Team: Icelandic <https://hosted.weblate.org/projects/ubports/"
@@ -128,8 +128,23 @@ msgstr ""
 "Uppruni: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
+msgid "Untitled Entry"
+msgstr "Ónefnd Færsla"
+
+msgid "Notes"
+msgstr "Athugasemdir"
+
+msgid "Tap to copy"
+msgstr "Ýtið á til að afrita"
+
 msgid "Special Categories"
 msgstr ""
+
+msgid "Cancel Search"
+msgstr "Hætta leit"
+
+msgid "Search entries in this group"
+msgstr "Leitaðu að hlut í þessum flokki"
 
 msgid "Lock"
 msgstr "Læsa"
@@ -143,26 +158,11 @@ msgstr ""
 msgid "Search"
 msgstr "Leita"
 
-msgid "Cancel Search"
-msgstr "Hætta leit"
-
 msgid "Lock Database"
 msgstr "Læsa Gangnagrunn"
 
 msgid "Close Database"
 msgstr "Loka Gagnagrunn"
-
-msgid "Search entries in this group"
-msgstr "Leitaðu að hlut í þessum flokki"
-
-msgid "Untitled Entry"
-msgstr "Ónefnd Færsla"
-
-msgid "Notes"
-msgstr "Athugasemdir"
-
-msgid "Tap to copy"
-msgstr "Ýtið á til að afrita"
 
 #~ msgid "Enable database locking (ALPHA)"
 #~ msgstr "Virkja læsing gagnagrunnanna (ALPHA)"

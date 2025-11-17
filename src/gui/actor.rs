@@ -99,10 +99,6 @@ pub struct PopContainer;
 
 #[derive(Message)]
 #[rtype(result = "()")]
-pub struct GetTemplates;
-
-#[derive(Message)]
-#[rtype(result = "()")]
 pub struct GetMetadata;
 
 #[derive(Message)]
@@ -144,32 +140,22 @@ impl GetEntries {
 
 #[derive(Message)]
 #[rtype(result = "()")]
-pub struct GetGroup {
+pub struct GetContainer {
     // None = root uuid
-    pub group_uuid: Option<Uuid>,
+    pub container_uuid: Option<Uuid>,
 }
 
-impl GetGroup {
+impl GetContainer {
     pub fn root() -> Self {
-        Self { group_uuid: None }
+        Self {
+            container_uuid: None,
+        }
     }
 
     pub fn for_uuid(group_uuid: Uuid) -> Self {
         Self {
-            group_uuid: Some(group_uuid),
+            container_uuid: Some(group_uuid),
         }
-    }
-}
-
-#[derive(Message)]
-#[rtype(result = "()")]
-pub struct GetTemplate {
-    pub template_uuid: Uuid,
-}
-
-impl GetTemplate {
-    pub fn for_uuid(template_uuid: Uuid) -> Self {
-        Self { template_uuid }
     }
 }
 
@@ -460,28 +446,6 @@ impl Handler<PopContainer> for KeepassRxActor {
     }
 }
 
-impl Handler<GetTemplates> for KeepassRxActor {
-    type Result = ();
-
-    fn handle(&mut self, _: GetTemplates, _: &mut Self::Context) -> Self::Result {
-        let binding = self.gui.clone();
-        let binding = binding.pinned();
-        let gui = binding.borrow();
-
-        let db_binding = self.curr_db.borrow();
-        let db = match db_binding
-            .as_ref()
-            .ok_or(anyhow!("GetTemplates: Database not open"))
-        {
-            Ok(db) => db,
-            Err(err) => return gui.errorReceived(format!("{}", err)),
-        };
-
-        let templates: QVariantList = db.templates_iter().map(RxListItem::from).collect();
-        gui.templatesReceived(templates);
-    }
-}
-
 impl Handler<GetMetadata> for KeepassRxActor {
     type Result = ();
 
@@ -493,7 +457,7 @@ impl Handler<GetMetadata> for KeepassRxActor {
         let db_binding = self.curr_db.borrow();
         let db = match db_binding
             .as_ref()
-            .ok_or(anyhow!("GetTemplates: Database not open"))
+            .ok_or(anyhow!("GetMetadata: Database not open"))
         {
             Ok(db) => db,
             Err(err) => return gui.errorReceived(format!("{}", err)),
@@ -503,10 +467,10 @@ impl Handler<GetMetadata> for KeepassRxActor {
     }
 }
 
-impl Handler<GetGroup> for KeepassRxActor {
+impl Handler<GetContainer> for KeepassRxActor {
     type Result = ();
 
-    fn handle(&mut self, msg: GetGroup, _: &mut Self::Context) -> Self::Result {
+    fn handle(&mut self, msg: GetContainer, _: &mut Self::Context) -> Self::Result {
         let binding = self.gui.clone();
         let binding = binding.pinned();
         let gui = binding.borrow();
@@ -522,64 +486,24 @@ impl Handler<GetGroup> for KeepassRxActor {
 
         let view = self.current_view.as_ref().expect("GetGroup: No view set.");
 
-        let group_uuid = match msg.group_uuid {
+        let container_uuid = match msg.container_uuid {
             Some(id) => id,
-            None => db.root_group().uuid,
+            None => view.root().uuid(),
         };
 
-        let group = view
+        let maybe_container = view
             .root()
-            .get_container(group_uuid)
-            .expect("GetGroup: No group found")
+            .get_container(container_uuid)
+            .expect("GetContainer: No container found")
             .with_db(db)
             .get_ref();
 
-        let this_group_name = group
-            .map(|grp| QString::from(grp.name()))
+        let this_container_name = maybe_container
+            .map(|container| QString::from(container.name()))
             .unwrap_or_default();
 
-        let parent_group_uuid = group
-            .and_then(|grp| grp.parent())
-            .map(|pu| QString::from(pu.to_string()))
-            .unwrap_or_default();
-
-        let this_group_uuid = QString::from(group_uuid.to_string());
-        gui.groupReceived(parent_group_uuid, this_group_uuid, this_group_name);
-    }
-}
-
-impl Handler<GetTemplate> for KeepassRxActor {
-    type Result = ();
-
-    fn handle(&mut self, msg: GetTemplate, _: &mut Self::Context) -> Self::Result {
-        let binding = self.gui.clone();
-        let binding = binding.pinned();
-        let gui = binding.borrow();
-
-        let db_binding = self.curr_db.borrow();
-        let db = match db_binding
-            .as_ref()
-            .ok_or(anyhow!("GetGroups: Database not open"))
-        {
-            Ok(db) => db,
-            Err(err) => return gui.errorReceived(format!("{}", err)),
-        };
-
-        let view = self.current_view.as_ref().expect("GetGroup: No view set.");
-
-        let template = view
-            .root()
-            .get_container(msg.template_uuid)
-            .expect("GetTemplate: No template found")
-            .with_db(db)
-            .get_ref();
-
-        let this_template_name = template
-            .map(|tmplt| QString::from(tmplt.name()))
-            .unwrap_or_default();
-
-        let this_template_uuid = QString::from(msg.template_uuid.to_string());
-        gui.templateReceived(this_template_uuid, this_template_name);
+        let this_container_uuid = QString::from(container_uuid.to_string());
+        gui.containerReceived(this_container_uuid, this_container_name);
     }
 }
 

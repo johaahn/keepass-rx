@@ -292,17 +292,9 @@ Page {
     // 4. onEntriesReceived
     function populate() {
 	if (isAtRoot()) {
-            if (containerType == 'Group') {
-                keepassrx.getRootGroup();
-            } else {
-                keepassrx.getTemplates();
-            }
+            keepassrx.getRootContainer();
 	} else {
-            if (containerType == 'Group') {
-                keepassrx.getGroup(containerUuid);
-            } else {
-                keepassrx.getTemplate(containerUuid);
-            }
+            keepassrx.getContainer(containerUuid);
 	}
     }
 
@@ -364,24 +356,33 @@ Page {
             }
         }
 
-        onGroupReceived: (parentContainerId, thisGroupId, thisGroupName) => {
-	    // Clear out searching when switching between containers.
-	    searchMode = false;
+        onContainerReceived: (thisContainerId, thisContainerName) => {
+            searchMode = false;
 	    searchField.text = '';
             entriesListModel.clear();
 
-	    containerName = thisGroupName;
-            getEntries(thisGroupId);
+	    containerName = thisContainerName;
+            getEntries(thisContainerId);
         }
 
-        onTemplateReceived: (thisTemplateUuid, thisTemplateName) => {
-	    searchMode = false;
-	    searchField.text = '';
-            entriesListModel.clear();
+        /* onGroupReceived: (parentContainerId, thisGroupId, thisGroupName) => { */
+	/*     // Clear out searching when switching between containers. */
+	/*     searchMode = false; */
+	/*     searchField.text = ''; */
+        /*     entriesListModel.clear(); */
 
-	    containerName = thisTemplateName;
-            getEntries(thisTemplateUuid);
-        }
+	/*     containerName = thisGroupName; */
+        /*     getEntries(thisGroupId); */
+        /* } */
+
+        /* onTemplateReceived: (thisTemplateUuid, thisTemplateName) => { */
+	/*     searchMode = false; */
+	/*     searchField.text = ''; */
+        /*     entriesListModel.clear(); */
+
+	/*     containerName = thisTemplateName; */
+        /*     getEntries(thisTemplateUuid); */
+        /* } */
 
 	// List of entries for this container. It's an array of
 	// RxListItem entities. It includes both immediate subgroups

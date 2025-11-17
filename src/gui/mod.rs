@@ -111,11 +111,8 @@ pub struct KeepassRx {
     deleteDatabase: qt_method!(fn(&self, db_name: String)),
 
     // group and entry management
-    getRootGroup: qt_method!(fn(&self)),
-    getTemplates: qt_method!(fn(&self)),
-    getTemplate: qt_method!(fn(&self, template_uuid: QString)),
-    getGroup: qt_method!(fn(&self, group_uuid: QString)),
-    getRootEntries: qt_method!(fn(&self, search_term: QString)),
+    getRootContainer: qt_method!(fn(&self)),
+    getContainer: qt_method!(fn(&self, container_uuid: QString)),
     getEntries: qt_method!(fn(&self, group_uuid: QString, search_term: QString)),
     getSingleEntry: qt_method!(fn(&self, entry_uuid: QString)),
     getTotp: qt_method!(fn(&self, entry_uuid: QString)),
@@ -148,9 +145,7 @@ pub struct KeepassRx {
 
     // data signals
     metadataChanged: qt_signal!(),
-    templatesReceived: qt_signal!(templates: QVariantList),
-    groupReceived: qt_signal!(parent_group_uuid: QString, this_group_uuid: QString, this_group_name: QString),
-    templateReceived: qt_signal!(this_template_uuid: QString, this_template_name: QString),
+    containerReceived: qt_signal!(this_container_uuid: QString, this_container_name: QString),
     entriesReceived: qt_signal!(entries: QVariantList),
     errorReceived: qt_signal!(error: String),
     totpReceived: qt_signal!(totp: QVariantMap),
@@ -314,46 +309,22 @@ impl KeepassRx {
     }
 
     #[with_executor]
-    pub fn getRootGroup(&self) {
+    pub fn getRootContainer(&self) {
         let actor = self.actor.clone().expect("Actor not initialized");
-        actix::spawn(actor.send(GetGroup::root()));
+        actix::spawn(actor.send(GetContainer::root()));
     }
 
     #[with_executor]
-    pub fn getGroup(&self, group_uuid: QString) {
+    pub fn getContainer(&self, group_uuid: QString) {
         let actor = self.actor.clone().expect("Actor not initialized");
         let maybe_uuid = Uuid::from_str(&group_uuid.to_string());
 
         match maybe_uuid {
             Ok(group_uuid) => {
-                actix::spawn(actor.send(GetGroup::for_uuid(group_uuid)));
+                actix::spawn(actor.send(GetContainer::for_uuid(group_uuid)));
             }
             Err(err) => self.errorReceived(format!("{}", err)),
         }
-    }
-
-    #[with_executor]
-    pub fn getTemplate(&self, template_uuid: QString) {
-        let actor = self.actor.clone().expect("Actor not initialized");
-        let maybe_uuid = Uuid::from_str(&template_uuid.to_string());
-
-        match maybe_uuid {
-            Ok(group_uuid) => {
-                actix::spawn(actor.send(GetTemplate::for_uuid(group_uuid)));
-            }
-            Err(err) => self.errorReceived(format!("{}", err)),
-        }
-    }
-
-    #[with_executor]
-    pub fn getRootEntries(&self, search_term: QString) {
-        let actor = self.actor.clone().expect("Actor not initialized");
-        let search_term = match search_term {
-            term if !term.is_null() => Some(term.to_string()),
-            _ => None,
-        };
-
-        actix::spawn(actor.send(GetEntries::root(search_term)));
     }
 
     #[with_executor]
@@ -426,12 +397,6 @@ impl KeepassRx {
     pub fn checkLockingStatus(&self) {
         let actor = self.actor.clone().expect("Actor not initialized");
         actix::spawn(actor.send(CheckLockingStatus));
-    }
-
-    #[with_executor]
-    pub fn getTemplates(&self) {
-        let actor = self.actor.clone().expect("Actor not initialized");
-        actix::spawn(actor.send(GetTemplates));
     }
 
     #[with_executor]

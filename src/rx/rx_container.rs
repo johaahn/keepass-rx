@@ -614,6 +614,9 @@ impl VirtualHierarchy for DefaultView {
         container_uuid: Uuid,
         search_term: Option<&str>,
     ) -> Vec<RxContainedRef<'db>> {
-        todo!()
+        self.root()
+            .get_container(container_uuid)
+            .map(|container| container.with_db(db).search_children_immediate(search_term))
+            .unwrap_or_default()
     }
 }

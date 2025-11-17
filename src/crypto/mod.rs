@@ -7,6 +7,7 @@ use libsodium_rs::crypto_kdf;
 use libsodium_rs::crypto_pwhash;
 use libsodium_rs::random;
 use libsodium_rs::utils::{SecureVec, vec_utils};
+use poison_guard::Poison;
 use secstr::SecUtf8;
 use std::cell::{Cell, RefCell};
 use std::rc::Rc;
@@ -48,11 +49,23 @@ fn hash_password(value: &str, pw_salt: &[u8]) -> Result<Vec<u8>> {
 
 /// Simple wrapper around the keyring library to store credentials in
 /// a secure(ish?) place.
-#[derive(Clone, Debug)]
 pub struct KernelBackedSecret {
-    poisoned: bool,
     service: String,
-    secret: Arc<KeyringEntry>,
+    secret: Poison<Arc<KeyringEntry>>,
+}
+
+impl Clone for KernelBackedSecret {
+    fn clone(&self) -> Self {
+        KernelBackedSecret {
+            service: self.service.clone(),
+            secret: Poison::new(
+                self.secret
+                    .get()
+                    .expect("Cannot clone poisoned encrypted password")
+                    .clone(),
+            ),
+        }
+    }
 }
 
 #[allow(dead_code)]
@@ -62,9 +75,8 @@ impl KernelBackedSecret {
         entry.set_secret(pw)?;
 
         Ok(Self {
-            poisoned: false,
             service: id.to_owned(),
-            secret: Arc::new(entry),
+            secret: Poison::new(Arc::new(entry)),
         })
     }
 
@@ -72,19 +84,26 @@ impl KernelBackedSecret {
         Self::new_with_id("keepassrx", pw)
     }
 
-    pub fn retrieve(&self) -> Result<Vec<u8>> {
-        let value = self.secret.get_secret()?;
-        Ok(value)
+    pub fn retrieve(&mut self) -> Result<Vec<u8>> {
+        let value = Poison::unless_recovered(&mut self.secret)
+            .map_err(|poisoned| poisoned.into_error())?;
+
+        let result = Ok(value.get_secret()?);
+        Poison::recover(value);
+
+        result
     }
 
     pub fn poison(&mut self) -> Result<()> {
-        self.poisoned = true;
-        self.secret.delete_credential()?;
+        let secret = Poison::unless_recovered(&mut self.secret)
+            .map_err(|poisoned| poisoned.into_error())?;
+
+        secret.delete_credential()?;
         Ok(())
     }
 
     pub fn is_poisoned(&self) -> bool {
-        self.poisoned
+        self.secret.is_poisoned()
     }
 }
 
@@ -152,7 +171,6 @@ impl EncryptedPassword {
 // Must be exactly 8 bytes
 const CONTEXT: &[u8; 8] = b"KEEPSSRX";
 
-#[derive(Clone, Debug)]
 pub struct MasterKey {
     key: RefCell<KernelBackedSecret>,
 }
@@ -170,7 +188,7 @@ impl MasterKey {
     }
 
     fn get_kdf_key(&self) -> Result<KdfKey> {
-        let raw_bytes = &self.key.borrow().retrieve()?;
+        let raw_bytes = &self.key.borrow_mut().retrieve()?;
         let key = KdfKey::from_slice(&raw_bytes)?;
         Ok(key)
     }

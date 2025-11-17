@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-17 14:27+0000\n"
+"POT-Creation-Date: 2025-11-17 20:15+0000\n"
 "PO-Revision-Date: 2025-11-13 11:51+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -41,21 +41,6 @@ msgid "It will only be removed from the app, not your device."
 msgstr ""
 "Let op: de databank wordt alleen verwijderd uit de app, niet van je apparaat."
 
-msgid "Back"
-msgstr "Terug"
-
-msgid "Enter the database master password"
-msgstr "Voer het hoofdwachtwoord in"
-
-msgid "Master Password"
-msgstr "Hoofdwachtwoord"
-
-msgid "Open"
-msgstr "Openen"
-
-msgid "Opening"
-msgstr "Bezig met openen…"
-
 msgid "Manual path set."
 msgstr "Stel de locatie handmatig in."
 
@@ -80,6 +65,21 @@ msgstr "Veilig vergrendelen"
 
 msgid "Database Not Opening?"
 msgstr "Wordt de databank niet geopend?"
+
+msgid "Back"
+msgstr "Terug"
+
+msgid "Enter the database master password"
+msgstr "Voer het hoofdwachtwoord in"
+
+msgid "Master Password"
+msgstr "Hoofdwachtwoord"
+
+msgid "Open"
+msgstr "Openen"
+
+msgid "Opening"
+msgstr "Bezig met openen…"
 
 msgid ""
 "Change settings based on your preferences. Any change to the settings "
@@ -135,9 +135,6 @@ msgstr ""
 "Broncode: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
-msgid "Untitled Entry"
-msgstr "Naamloos item"
-
 msgid "Notes"
 msgstr "Aantekeningen"
 
@@ -170,6 +167,9 @@ msgstr "Databank vergrendelen"
 
 msgid "Close Database"
 msgstr "Databank sluiten"
+
+#~ msgid "Untitled Entry"
+#~ msgstr "Naamloos item"
 
 #~ msgid "Enable database locking (ALPHA)"
 #~ msgstr "Databanken vergrendelen (experimenteel)"

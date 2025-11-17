@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-17 14:27+0000\n"
+"POT-Creation-Date: 2025-11-17 20:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -39,21 +39,6 @@ msgstr ""
 msgid "It will only be removed from the app, not your device."
 msgstr ""
 
-msgid "Back"
-msgstr ""
-
-msgid "Enter the database master password"
-msgstr ""
-
-msgid "Master Password"
-msgstr ""
-
-msgid "Open"
-msgstr ""
-
-msgid "Opening"
-msgstr ""
-
 msgid "Manual path set."
 msgstr ""
 
@@ -75,6 +60,21 @@ msgid "Securely Locking"
 msgstr ""
 
 msgid "Database Not Opening?"
+msgstr ""
+
+msgid "Back"
+msgstr ""
+
+msgid "Enter the database master password"
+msgstr ""
+
+msgid "Master Password"
+msgstr ""
+
+msgid "Open"
+msgstr ""
+
+msgid "Opening"
 msgstr ""
 
 msgid ""
@@ -117,9 +117,6 @@ msgstr ""
 msgid ""
 "Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
-msgstr ""
-
-msgid "Untitled Entry"
 msgstr ""
 
 msgid "Notes"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-17 14:27+0000\n"
+"POT-Creation-Date: 2025-11-17 20:15+0000\n"
 "PO-Revision-Date: 2025-11-12 14:24+0000\n"
 "Last-Translator: projectmoon <projectmoon@agnos.is>\n"
 "Language-Team: Icelandic <https://hosted.weblate.org/projects/ubports/"
@@ -40,21 +40,6 @@ msgstr "Ýtið á + til að flytja inn gagnagrunn."
 msgid "It will only be removed from the app, not your device."
 msgstr ""
 
-msgid "Back"
-msgstr "Til baka"
-
-msgid "Enter the database master password"
-msgstr "Sláðu inn aðallykilorð gagnagrunnsins"
-
-msgid "Master Password"
-msgstr "Aðallykilorð"
-
-msgid "Open"
-msgstr "Opna"
-
-msgid "Opening"
-msgstr "Í vinnslu"
-
 msgid "Manual path set."
 msgstr ""
 
@@ -79,6 +64,21 @@ msgstr "Læsa með öryggi"
 
 msgid "Database Not Opening?"
 msgstr "Er gagnagrunnur ekki að opna?"
+
+msgid "Back"
+msgstr "Til baka"
+
+msgid "Enter the database master password"
+msgstr "Sláðu inn aðallykilorð gagnagrunnsins"
+
+msgid "Master Password"
+msgstr "Aðallykilorð"
+
+msgid "Open"
+msgstr "Opna"
+
+msgid "Opening"
+msgstr "Í vinnslu"
 
 msgid ""
 "Change settings based on your preferences. Any change to the settings "
@@ -128,9 +128,6 @@ msgstr ""
 "Uppruni: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
-msgid "Untitled Entry"
-msgstr "Ónefnd Færsla"
-
 msgid "Notes"
 msgstr "Athugasemdir"
 
@@ -163,6 +160,9 @@ msgstr "Læsa Gangnagrunn"
 
 msgid "Close Database"
 msgstr "Loka Gagnagrunn"
+
+#~ msgid "Untitled Entry"
+#~ msgstr "Ónefnd Færsla"
 
 #~ msgid "Enable database locking (ALPHA)"
 #~ msgstr "Virkja læsing gagnagrunnanna (ALPHA)"

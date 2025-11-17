@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-17 14:27+0000\n"
+"POT-Creation-Date: 2025-11-17 20:15+0000\n"
 "PO-Revision-Date: 2025-11-15 06:48+0000\n"
 "Last-Translator: Vlad Nirky <nirky.vlad@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -40,21 +40,6 @@ msgstr "Appuyer + pour importer une base de données."
 msgid "It will only be removed from the app, not your device."
 msgstr "Elle sera simplement retirée de l’application, pas de votre appareil."
 
-msgid "Back"
-msgstr "Retour"
-
-msgid "Enter the database master password"
-msgstr "Entrez le mot de passe principal de la base de données"
-
-msgid "Master Password"
-msgstr "Mot de passe principal"
-
-msgid "Open"
-msgstr "Ouvrir"
-
-msgid "Opening"
-msgstr "Ouverture"
-
 msgid "Manual path set."
 msgstr "Chemin défini manuellement."
 
@@ -80,6 +65,21 @@ msgstr "Verrouillage sécurisé"
 
 msgid "Database Not Opening?"
 msgstr "La base de données ne s'ouvre pas ?"
+
+msgid "Back"
+msgstr "Retour"
+
+msgid "Enter the database master password"
+msgstr "Entrez le mot de passe principal de la base de données"
+
+msgid "Master Password"
+msgstr "Mot de passe principal"
+
+msgid "Open"
+msgstr "Ouvrir"
+
+msgid "Opening"
+msgstr "Ouverture"
 
 msgid ""
 "Change settings based on your preferences. Any change to the settings "
@@ -136,9 +136,6 @@ msgstr ""
 "Source : <a href='https ://git.agnos.is/projectmoon/keepass-rx'>https ://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
-msgid "Untitled Entry"
-msgstr "Entrée sans titre"
-
 msgid "Notes"
 msgstr "Notes"
 
@@ -171,6 +168,9 @@ msgstr "Verrouiller la base de données"
 
 msgid "Close Database"
 msgstr "Fermer la base de données"
+
+#~ msgid "Untitled Entry"
+#~ msgstr "Entrée sans titre"
 
 #~ msgid "Enable database locking (ALPHA)"
 #~ msgstr "Activer le verrouillage de la base de données (ALPHA)"

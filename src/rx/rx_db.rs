@@ -155,12 +155,21 @@ impl RxDatabase {
             .map(|(_, t)| Rc::get_mut(t).expect("Could not acquire mutable template ref"));
 
         for rx_template in rx_templates {
-            let template_name = db
-                .get_entry(rx_template.uuid)
+            let template_entry = db.get_entry(rx_template.uuid);
+            let template_name = template_entry
+                .as_ref()
                 .and_then(|t| t.title().and_then(|v| v.value()))
                 .map(|template_name| template_name.to_string())
                 .unwrap_or_else(|| "Unknown Template".to_string());
 
+            let template_icon = template_entry
+                .as_ref()
+                .map(|t| t.icon.clone())
+                .unwrap_or_default();
+
+            println!("Setting template icon to: {:?}", template_icon);
+
+            rx_template.icon = template_icon;
             rx_template.name = template_name;
         }
 

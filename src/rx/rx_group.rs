@@ -49,11 +49,14 @@ impl RxGroup {
     }
 }
 
-#[derive(Zeroize, ZeroizeOnDrop, Default, Clone, Hash, Eq, PartialEq)]
+#[derive(Zeroize, ZeroizeOnDrop, Default, Clone)]
 pub struct RxTemplate {
     #[zeroize(skip)]
     pub uuid: Uuid,
     pub name: String, // from the template's entry title.
+
+    #[zeroize(skip)]
+    pub icon: RxIcon,
 
     #[zeroize(skip)]
     pub entry_uuids: Vec<Uuid>,

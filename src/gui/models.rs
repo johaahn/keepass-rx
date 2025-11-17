@@ -82,8 +82,13 @@ impl From<&RxTemplate> for RxListItem {
             hasURL: false,
             hasTOTP: false,
 
-            iconPath: QString::default(),
-            iconBuiltin: false,
+            iconPath: value
+                .icon
+                .icon_path()
+                .map(QString::from)
+                .unwrap_or_default(),
+
+            iconBuiltin: value.icon.is_builtin(),
             title: QString::from(value.name.as_ref()),
             subtitle: QString::from(""),
         }

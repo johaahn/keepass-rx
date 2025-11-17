@@ -137,9 +137,9 @@ ListItem {
         Item {
             width: units.gu(5)
             height: parent.height
-            visible: itemType != 'Entry'
+            visible: itemType != 'Entry' && itemType != 'Template'
 
-            // The folder icon itself
+            // The folder icon itself (groups only, not templates)
 	    Icon {
 	        width: units.gu(5)
 	        height: parent.height
@@ -161,7 +161,7 @@ ListItem {
 
 	Image {
 	    id: entryImg
-	    visible: itemType == 'Entry'
+	    visible: itemType == 'Entry' || itemType == 'Template'
 	    fillMode: Image.PreserveAspectFit
 	    source: resolveIconPath()
 	    width: units.gu(5)

@@ -52,7 +52,7 @@ impl QMetaType for RxGuiState {
     const CONVERSION_TO_STRING: Option<fn(&Self) -> QString> = Some(gui_state_to_string);
 }
 
-#[derive(Default, QEnum, Clone, Copy)]
+#[derive(Debug, Default, QEnum, Clone, Copy)]
 #[repr(C)]
 pub enum RxViewMode {
     #[default]
@@ -179,27 +179,10 @@ impl KeepassRx {
         self.viewMode
     }
 
+    #[with_executor]
     pub fn setViewMode(&mut self, mode: RxViewMode) {
-        self.viewMode = mode;
-        self.container_stack.clear();
-
-        if let RxViewMode::All = mode {
-            self.container_stack.push(RxUiContainer {
-                uuid: Uuid::from_str(&self.rootGroupUuid.to_string()).unwrap(),
-                page_type: RxPageType::Group,
-                is_root: true,
-            });
-        } else {
-            self.container_stack.push(RxUiContainer {
-                uuid: Uuid::default(),
-                page_type: RxPageType::Template,
-                is_root: true,
-            });
-        }
-
-        let container = QVariantMap::from(&self.container_stack[0]);
-        self.viewModeChanged(mode);
-        self.currentContainerChanged(container.into());
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(SetViewMode(mode)));
     }
 
     pub fn getLastDB(&self) -> QString {

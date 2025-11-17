@@ -6,6 +6,7 @@ use secstr::SecUtf8;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::fs::File;
+use std::str::FromStr;
 use std::sync::Arc;
 use tokio::task::{JoinHandle, spawn_blocking};
 use uuid::Uuid;
@@ -66,6 +67,10 @@ impl Actor for KeepassRxActor {
         self.gui.pinned().borrow_mut().actor = Some(ctx.address());
     }
 }
+
+#[derive(Message)]
+#[rtype(result = "()")]
+pub struct SetViewMode(pub RxViewMode);
 
 #[derive(Message)]
 #[rtype(result = "anyhow::Result<()>")]
@@ -203,6 +208,57 @@ pub struct CheckLockingStatus;
 // let root = self.current_view.as_ref().expect("No view");
 
 // RxRootWithDb::new(root, db)
+
+impl Handler<SetViewMode> for KeepassRxActor {
+    type Result = ();
+
+    fn handle(&mut self, msg: SetViewMode, _: &mut Self::Context) -> Self::Result {
+        let SetViewMode(mode) = msg;
+
+        let binding = self.gui.clone();
+        let binding = binding.pinned();
+        let mut gui = binding.borrow_mut();
+
+        let db_binding = self.curr_db.borrow();
+        let db = match db_binding
+            .as_ref()
+            .ok_or(anyhow!("PushContainer: Database not open"))
+        {
+            Ok(db) => db,
+            Err(err) => return gui.errorReceived(format!("{}", err)),
+        };
+
+        gui.viewMode = mode;
+        gui.container_stack.clear();
+
+        if let RxViewMode::All = mode {
+            self.current_view = Some(Box::new(DefaultView::new(db)));
+            let root_uuid = self.current_view.as_ref().unwrap().root().uuid();
+            gui.container_stack.push(RxUiContainer {
+                uuid: root_uuid,
+                page_type: RxPageType::Group,
+                is_root: true,
+            });
+        } else {
+            self.current_view = Some(Box::new(AllTemplates::new(db)));
+            let root_uuid = self.current_view.as_ref().unwrap().root().uuid();
+            gui.container_stack.push(RxUiContainer {
+                uuid: root_uuid,
+                page_type: RxPageType::Template,
+                is_root: true,
+            });
+        }
+
+        println!(
+            "Set view to: {}",
+            self.current_view.as_ref().unwrap().name()
+        );
+
+        let container = QVariantMap::from(&gui.container_stack[0]);
+        gui.viewModeChanged(mode);
+        gui.currentContainerChanged(container.into());
+    }
+}
 
 impl Handler<OpenDatabase> for KeepassRxActor {
     type Result = AtomicResponse<Self, anyhow::Result<()>>;
@@ -342,7 +398,7 @@ impl Handler<PushContainer> for KeepassRxActor {
             let page = RxUiContainer {
                 uuid: container.uuid(),
                 page_type: page_type,
-                is_root: false,
+                is_root: container.is_root(),
             };
 
             let qvar = QVariantMap::from(&page);
@@ -362,30 +418,25 @@ impl Handler<PopContainer> for KeepassRxActor {
         let binding = binding.pinned();
         let mut gui = binding.borrow_mut();
 
-        let db_binding = self.curr_db.borrow();
-        let db = match db_binding
+        let view = self
+            .current_view
             .as_ref()
-            .ok_or(anyhow!("PushContainer: Database not open"))
-        {
-            Ok(db) => db,
-            Err(err) => return gui.errorReceived(format!("{}", err)),
-        };
+            .expect("PopContainer: No view set");
 
         if let Some(_) = gui.container_stack.pop() {
             let parent_container = gui.container_stack.last();
             let new_uuid = parent_container
                 .map(|page| page.uuid)
-                .unwrap_or_else(|| match gui.viewMode {
-                    RxViewMode::All => db.root_group().uuid,
-                    RxViewMode::Templates => Uuid::default(),
-                });
+                .unwrap_or_else(|| view.root().uuid());
 
             let new_page_type =
                 parent_container
                     .map(|page| page.page_type)
-                    .unwrap_or_else(|| match gui.viewMode {
-                        RxViewMode::All => RxPageType::Group,
-                        RxViewMode::Templates => RxPageType::Template,
+                    .unwrap_or_else(|| {
+                        view.root()
+                            .get_container(new_uuid)
+                            .and_then(|container| RxPageType::try_from(container).ok())
+                            .unwrap_or(RxPageType::Group)
                     });
 
             let is_root = parent_container
@@ -399,10 +450,10 @@ impl Handler<PopContainer> for KeepassRxActor {
             };
 
             let qvar = QVariantMap::from(&new_page);
-            let container: QVariant = qvar.into();
+            let ui_container: QVariant = qvar.into();
 
-            gui.currentContainer = container.clone();
-            gui.currentContainerChanged(container);
+            gui.currentContainer = ui_container.clone();
+            gui.currentContainerChanged(ui_container);
         } else {
             println!("Cannot go above root!");
         }
@@ -527,7 +578,6 @@ impl Handler<GetEntries> for KeepassRxActor {
         let binding = self.gui.clone();
         let binding = binding.pinned();
         let gui = binding.borrow();
-        let view_mode = gui.viewMode;
 
         let db_binding = self.curr_db.borrow();
         let db = match db_binding
@@ -539,26 +589,30 @@ impl Handler<GetEntries> for KeepassRxActor {
         };
 
         let search_term = msg.search_term.as_deref();
-
-        // So now here we must instead use the current view thing.
-        // Implement find_children on root? The view should have
-        // different logic depending on the source of it.
-        let viewable = self.current_view.as_ref().unwrap();
+        let viewable = self
+            .current_view
+            .as_ref()
+            .expect("GetEntries: Viewable not set.");
 
         let container_uuid = match msg.container_uuid {
             Some(id) => id,
-            None if matches!(view_mode, RxViewMode::All) => db.root_group().uuid,
-            None if matches!(view_mode, RxViewMode::Templates) => Uuid::default(),
-            _ => Uuid::default(),
+            None => viewable.root().uuid(),
         };
 
-        // So now we use viewable.search. Then we make
-        // From<RxContainerRef> for RxListItem.
+        println!(
+            "Searching container {} in view {} for term: {:?}",
+            container_uuid,
+            viewable.name(),
+            search_term
+        );
+
         let results: Vec<RxListItem> = viewable
             .search(db, container_uuid, search_term)
             .into_iter()
             .map(|result| result.into())
             .collect();
+
+        println!("Found {} results", results.len());
 
         let q_entries: QVariantList = results.into_iter().collect();
         gui.entriesReceived(q_entries);

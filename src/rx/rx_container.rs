@@ -13,9 +13,13 @@ use super::{RxDatabase, RxEntry, RxGroup, RxTemplate, RxValue, icons::RxIcon};
 fn search_contained_ref(contained_ref: &RxContainedRef, term: &str) -> bool {
     match contained_ref {
         RxContainedRef::Entry(entry) => search_entry(entry, term),
-        RxContainedRef::Group(group) => true,
+        RxContainedRef::Group(group) => search_group(group, term),
         RxContainedRef::Template(template) => search_template(template, term),
     }
+}
+
+fn search_group(group: &RxGroup, term: &str) -> bool {
+    UniCase::new(&group.name).to_folded_case().contains(term)
 }
 
 fn search_template(template: &RxTemplate, term: &str) -> bool {
@@ -52,7 +56,7 @@ pub struct RxRoot {
 }
 
 impl RxRoot {
-    pub fn root_uuid(&self) -> Uuid {
+    pub fn uuid(&self) -> Uuid {
         self.root_container.uuid()
     }
 
@@ -514,6 +518,16 @@ pub enum RxContainedRef<'db> {
     Template(&'db RxTemplate),
 }
 
+impl RxContainedRef<'_> {
+    pub fn uuid(&self) -> Uuid {
+        match self {
+            RxContainedRef::Entry(entry) => entry.uuid,
+            RxContainedRef::Group(group) => group.uuid,
+            RxContainedRef::Template(template) => template.uuid,
+        }
+    }
+}
+
 // We now need to move search logic into these virtual hierarchies.
 // Right now the trait serves as basically a dumping ground for
 // business logic. But this will not work. We tried carrying the
@@ -533,6 +547,8 @@ pub enum RxContainedRef<'db> {
 /// RxDatabase ('db).
 pub trait VirtualHierarchy {
     fn root(&self) -> &RxRoot;
+
+    fn name(&self) -> &str;
 
     /// Search for child containers in the virtual hierarchy.
     fn search<'cnt, 'db>(
@@ -559,6 +575,10 @@ impl AllTemplates {
 }
 
 impl VirtualHierarchy for AllTemplates {
+    fn name(&self) -> &str {
+        "All Templates"
+    }
+
     fn root(&self) -> &RxRoot {
         &self.0
     }
@@ -569,7 +589,7 @@ impl VirtualHierarchy for AllTemplates {
         container_uuid: Uuid,
         search_term: Option<&str>,
     ) -> Vec<RxContainedRef<'db>> {
-        if container_uuid == self.root().root_uuid() {
+        if container_uuid == self.root().uuid() {
             // searching from the (non existant) "root template"
             // means we should search all templates instead.
             self.root()
@@ -606,6 +626,10 @@ impl DefaultView {
 impl VirtualHierarchy for DefaultView {
     fn root(&self) -> &RxRoot {
         &self.0
+    }
+
+    fn name(&self) -> &str {
+        "Default View"
     }
 
     fn search<'cnt, 'db>(

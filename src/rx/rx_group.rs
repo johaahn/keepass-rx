@@ -1,10 +1,10 @@
 use keepass::db::Group;
 use uuid::Uuid;
-use zeroize::Zeroize;
+use zeroize::{Zeroize, ZeroizeOnDrop};
 
 use super::icons::RxIcon;
 
-#[derive(Zeroize, Default, Clone)]
+#[derive(Zeroize, ZeroizeOnDrop, Default, Clone)]
 pub struct RxGroup {
     #[zeroize(skip)]
     pub uuid: Uuid,
@@ -49,7 +49,7 @@ impl RxGroup {
     }
 }
 
-#[derive(Zeroize, Default, Clone, Hash, Eq, PartialEq)]
+#[derive(Zeroize, ZeroizeOnDrop, Default, Clone, Hash, Eq, PartialEq)]
 pub struct RxTemplate {
     #[zeroize(skip)]
     pub uuid: Uuid,

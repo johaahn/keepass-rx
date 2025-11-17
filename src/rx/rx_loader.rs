@@ -64,7 +64,9 @@ impl RxLoader {
         let root_group = self.load_groups_recursive(&mut db_root, None);
 
         let root_uuid = root_group.uuid;
-        self.state.all_groups.insert(root_group.uuid, root_group);
+        self.state
+            .all_groups
+            .insert(root_group.uuid, Rc::new(root_group));
 
         let rx_metadata = RxMetadata::new(
             mem::take(&mut self.db()?.config),
@@ -117,8 +119,11 @@ impl RxLoader {
                     // Build up template entries as we go. Name of the
                     // template will be set later, in RxDatabase::new.
                     if let Some(template_uuid) = rx_entry.template_uuid {
-                        let rx_template =
-                            self.state.templates.entry(template_uuid).or_default();
+                        let rx_template = Rc::get_mut(
+                            self.state.templates.entry(template_uuid).or_default(),
+                        )
+                        .expect("Could not update template");
+
                         rx_template.uuid = template_uuid;
                         rx_template.entry_uuids.push(rx_entry.uuid);
                     }
@@ -136,11 +141,13 @@ impl RxLoader {
         );
 
         for subgroup in subgroups {
-            self.state.all_groups.insert(subgroup.uuid, subgroup);
+            self.state
+                .all_groups
+                .insert(subgroup.uuid, Rc::new(subgroup));
         }
 
         for entry in entries {
-            self.state.all_entries.insert(entry.uuid, entry);
+            self.state.all_entries.insert(entry.uuid, Rc::new(entry));
         }
 
         this_group
@@ -151,9 +158,9 @@ impl RxLoader {
 /// loading, that are returned to the final RxDatabase object.
 #[derive(Default)]
 pub struct LoadState {
-    pub templates: HashMap<Uuid, RxTemplate>,
-    pub all_groups: IndexMap<Uuid, RxGroup>,
-    pub all_entries: IndexMap<Uuid, RxEntry>,
+    pub templates: HashMap<Uuid, Rc<RxTemplate>>,
+    pub all_groups: IndexMap<Uuid, Rc<RxGroup>>,
+    pub all_entries: IndexMap<Uuid, Rc<RxEntry>>,
 }
 
 #[cfg(test)]

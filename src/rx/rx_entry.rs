@@ -67,7 +67,7 @@ fn should_hide_field(field_name: &str) -> bool {
             .any(|wildcard| field_name.starts_with(wildcard))
 }
 
-#[derive(Clone, Zeroize)]
+#[derive(Clone, Zeroize, ZeroizeOnDrop)]
 pub struct RxEntry {
     #[zeroize(skip)]
     pub uuid: Uuid,
@@ -362,7 +362,7 @@ impl<'a> RxValueKeyRef<'a> {
 }
 
 /// Not Sync or Send, because of SecureVec using *mut u8.
-#[derive(Default, Clone)]
+#[derive(Default, ZeroizeOnDrop, Clone)]
 pub enum RxValue {
     /// Fully hidden by default. Used for passwords etc.
     Protected(EncryptedValue),
@@ -508,7 +508,7 @@ impl From<String> for RxFieldName {
     }
 }
 
-#[derive(Zeroize, Clone)]
+#[derive(Zeroize, ZeroizeOnDrop, Clone)]
 pub struct RxCustomFields {
     #[zeroize(skip)]
     master_key: Rc<MasterKey>,

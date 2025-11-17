@@ -475,15 +475,6 @@ impl Handler<GetContainer> for KeepassRxActor {
         let binding = binding.pinned();
         let gui = binding.borrow();
 
-        let db_binding = self.curr_db.borrow();
-        let db = match db_binding
-            .as_ref()
-            .ok_or(anyhow!("GetGroups: Database not open"))
-        {
-            Ok(db) => db,
-            Err(err) => return gui.errorReceived(format!("{}", err)),
-        };
-
         let view = self.current_view.as_ref().expect("GetGroup: No view set.");
 
         let container_uuid = match msg.container_uuid {
@@ -495,7 +486,6 @@ impl Handler<GetContainer> for KeepassRxActor {
             .root()
             .get_container(container_uuid)
             .expect("GetContainer: No container found")
-            .with_db(db)
             .get_ref();
 
         let this_container_name = maybe_container
@@ -515,15 +505,6 @@ impl Handler<GetEntries> for KeepassRxActor {
         let binding = binding.pinned();
         let gui = binding.borrow();
 
-        let db_binding = self.curr_db.borrow();
-        let db = match db_binding
-            .as_ref()
-            .ok_or(anyhow!("GetEntries: Database not open"))
-        {
-            Ok(db) => db,
-            Err(err) => return gui.errorReceived(format!("{}", err)),
-        };
-
         let search_term = msg.search_term.as_deref();
         let viewable = self
             .current_view
@@ -536,7 +517,7 @@ impl Handler<GetEntries> for KeepassRxActor {
         };
 
         let results: Vec<RxListItem> = viewable
-            .search(db, container_uuid, search_term)
+            .search(container_uuid, search_term)
             .into_iter()
             .map(|result| result.into())
             .collect();
@@ -564,7 +545,7 @@ impl Handler<GetSingleEntry> for KeepassRxActor {
 
         let entry = db.get_entry(msg.entry_uuid);
 
-        let q_entry = match entry.map(QVariantMap::from) {
+        let q_entry = match entry.as_deref().map(QVariantMap::from) {
             Some(map) => map.to_qvariant(),
             None => QVariant::default(), // null
         };

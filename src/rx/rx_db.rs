@@ -2,10 +2,7 @@ use crate::crypto::MasterKey;
 
 use super::icons::RxIcon;
 use super::rx_loader::RxLoader;
-use super::{
-    RxContainer, RxContainerWithDb, RxEntry, RxGroup, RxRoot, RxTemplate, RxTotp,
-    ZeroableDatabase,
-};
+use super::{RxContainer, RxEntry, RxGroup, RxRoot, RxTemplate, RxTotp, ZeroableDatabase};
 use anyhow::{Result, anyhow};
 use indexmap::IndexMap;
 use keepass::config::DatabaseConfig;
@@ -77,24 +74,42 @@ pub struct RxDatabase {
     master_key: Rc<MasterKey>,
     metadata: RxMetadata,
     root: Uuid,
-    templates: HashMap<Uuid, RxTemplate>,
-    all_groups: IndexMap<Uuid, RxGroup>,
-    all_entries: IndexMap<Uuid, RxEntry>,
+    templates: HashMap<Uuid, Rc<RxTemplate>>,
+    all_groups: IndexMap<Uuid, Rc<RxGroup>>,
+    all_entries: IndexMap<Uuid, Rc<RxEntry>>,
 }
 
 impl Zeroize for RxDatabase {
     fn zeroize(&mut self) {
         let _ = self.master_key.poison();
 
-        for template in self.templates.values_mut() {
+        let templates = self
+            .templates
+            .values_mut()
+            .into_iter()
+            .flat_map(|t| Rc::get_mut(t));
+
+        let groups = self
+            .all_groups
+            .values_mut()
+            .into_iter()
+            .flat_map(|g| Rc::get_mut(g));
+
+        let entries = self
+            .all_entries
+            .values_mut()
+            .into_iter()
+            .flat_map(|e| Rc::get_mut(e));
+
+        for template in templates {
             template.zeroize();
         }
 
-        for group in self.all_groups.values_mut() {
+        for group in groups {
             group.zeroize();
         }
 
-        for entry in self.all_entries.values_mut() {
+        for entry in entries {
             entry.zeroize();
         }
     }
@@ -133,7 +148,13 @@ impl RxDatabase {
         };
 
         // Map templates. Easier to do when we have access to DB logic.
-        for (_, rx_template) in loaded.state.templates.iter_mut() {
+        let rx_templates = loaded
+            .state
+            .templates
+            .iter_mut()
+            .map(|(_, t)| Rc::get_mut(t).expect("Could not acquire mutable template ref"));
+
+        for rx_template in rx_templates {
             let template_name = db
                 .get_entry(rx_template.uuid)
                 .and_then(|t| t.title().and_then(|v| v.value()))
@@ -157,40 +178,32 @@ impl RxDatabase {
         &self.metadata
     }
 
-    pub fn root_group(&self) -> &RxGroup {
+    pub fn root_group(&self) -> &Rc<RxGroup> {
         self.all_groups.get(&self.root).expect("No root group")
     }
 
     pub fn all_groups_iter(&self) -> impl Iterator<Item = &RxGroup> {
-        self.all_groups.values()
+        self.all_groups.values().map(|g| g.as_ref())
     }
 
-    pub fn all_entries_iter(&self) -> impl Iterator<Item = &RxEntry> {
+    fn all_entries_iter(&self) -> impl Iterator<Item = &Rc<RxEntry>> {
         self.all_entries.values()
     }
 
-    pub fn get_group(&self, group_uuid: Uuid) -> Option<&RxGroup> {
-        self.all_groups.get(&group_uuid)
+    pub fn get_group(&self, group_uuid: Uuid) -> Option<Rc<RxGroup>> {
+        self.all_groups.get(&group_uuid).cloned()
     }
 
-    pub fn get_entry(&self, entry_uuid: Uuid) -> Option<&RxEntry> {
-        self.all_entries_iter()
-            .find(|entry| entry.uuid == entry_uuid)
+    pub fn get_entry(&self, entry_uuid: Uuid) -> Option<Rc<RxEntry>> {
+        self.all_entries.get(&entry_uuid).cloned()
     }
 
-    pub fn templates(&self) -> &HashMap<Uuid, RxTemplate> {
-        &self.templates
-    }
-
-    pub fn templates_iter(&self) -> impl Iterator<Item = &RxTemplate> {
+    pub fn templates_iter(&self) -> impl Iterator<Item = &Rc<RxTemplate>> {
         self.templates.values()
     }
 
-    pub fn get_template(&self, template_uuid: Uuid) -> Option<&RxTemplate> {
-        self.templates
-            .iter()
-            .find(|(uuid, _)| **uuid == template_uuid)
-            .map(|(_, template)| template)
+    pub fn get_template(&self, template_uuid: Uuid) -> Option<Rc<RxTemplate>> {
+        self.templates.get(&template_uuid).cloned()
     }
 
     pub fn get_totp(&self, entry_uuid: &str) -> Result<RxTotp> {

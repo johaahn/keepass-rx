@@ -1,3 +1,5 @@
+use std::rc::Rc;
+
 use uuid::Uuid;
 
 use super::{RxContainedRef, RxContainer, RxDatabase, RxRoot};
@@ -12,13 +14,7 @@ pub trait VirtualHierarchy {
     fn name(&self) -> &str;
 
     /// Search for child containers in the virtual hierarchy.
-    fn search<'cnt, 'db>(
-        &'cnt self,
-        // TODO would be nice to have VirtualHierarchyWithDb or something.
-        db: &'db RxDatabase,
-        container_uuid: Uuid,
-        search_term: Option<&str>,
-    ) -> Vec<RxContainedRef<'db>>;
+    fn search(&self, container_uuid: Uuid, search_term: Option<&str>) -> Vec<RxContainedRef>;
 }
 
 #[derive(Clone)]
@@ -28,7 +24,7 @@ impl AllTemplates {
     pub fn new(db: &RxDatabase) -> Self {
         let children: Vec<_> = db
             .templates_iter()
-            .map(|t| RxContainer::from(t, db))
+            .map(|t| RxContainer::from(t.clone(), db))
             .collect();
 
         AllTemplates(RxRoot::virtual_root(children))
@@ -44,24 +40,16 @@ impl VirtualHierarchy for AllTemplates {
         &self.0
     }
 
-    fn search<'cnt, 'db>(
-        &'cnt self,
-        db: &'db RxDatabase,
-        container_uuid: Uuid,
-        search_term: Option<&str>,
-    ) -> Vec<RxContainedRef<'db>> {
+    fn search(&self, container_uuid: Uuid, search_term: Option<&str>) -> Vec<RxContainedRef> {
         if container_uuid == self.root().uuid() {
             // searching from the (non existant) "root template"
             // means we should search all templates instead.
             self.root()
-                .with_db(db)
+                .root_container
                 .search_children_immediate(search_term)
         } else {
             // Otherwise, we search inside the template itself
-            let maybe_template = self
-                .root()
-                .get_container(container_uuid)
-                .map(|container| container.with_db(db));
+            let maybe_template = self.root().get_container(container_uuid);
 
             maybe_template
                 .as_ref()
@@ -75,11 +63,11 @@ pub struct DefaultView(RxRoot);
 
 impl DefaultView {
     pub fn new(db: &RxDatabase) -> Self {
-        let root = RxContainer::from(db.root_group(), db);
+        let root = RxContainer::from(db.root_group().clone(), db);
 
         DefaultView(RxRoot {
             all_containers: root.child_uuids_recursive(),
-            root_container: root,
+            root_container: Rc::new(root),
         })
     }
 }
@@ -93,15 +81,10 @@ impl VirtualHierarchy for DefaultView {
         "Default View"
     }
 
-    fn search<'cnt, 'db>(
-        &'cnt self,
-        db: &'db RxDatabase,
-        container_uuid: Uuid,
-        search_term: Option<&str>,
-    ) -> Vec<RxContainedRef<'db>> {
+    fn search(&self, container_uuid: Uuid, search_term: Option<&str>) -> Vec<RxContainedRef> {
         self.root()
             .get_container(container_uuid)
-            .map(|container| container.with_db(db).search_children_immediate(search_term))
+            .map(|container| container.search_children_immediate(search_term))
             .unwrap_or_default()
     }
 }

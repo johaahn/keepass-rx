@@ -1108,6 +1108,7 @@ dependencies = [
  "libsodium-rs",
  "palette",
  "paste",
+ "poison-guard",
  "qmeta-async",
  "qmetaobject",
  "querystring",
@@ -1517,6 +1518,12 @@ name = "pkg-config"
 version = "0.3.32"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7edddbd0b52d732b21ad9a5fab5c704c14cd949e5e9a1ec5929a24fded1b904c"
+
+[[package]]
+name = "poison-guard"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9a0e0cf9c5476743e11a67a0b537a8efcb92516b6f9c6564bdcc1f476ce2977d"
 
 [[package]]
 name = "polyval"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-17 14:27+0000\n"
+"POT-Creation-Date: 2025-11-17 20:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,15 +21,15 @@ msgstr ""
 msgid "Add Database"
 msgstr ""
 
-#: qml/pages/DBList.qml:74 qml/pages/OpenDBPage.qml:47
-#: qml/pages/UnlockPage.qml:34 qml/pages/SettingsPage.qml:11
-#: qml/pages/EntriesPage.qml:215
+#: qml/pages/DBList.qml:74 qml/pages/UnlockPage.qml:34
+#: qml/pages/OpenDBPage.qml:47 qml/pages/SettingsPage.qml:11
+#: qml/pages/EntriesPage.qml:208
 msgid "Settings"
 msgstr ""
 
-#: qml/pages/DBList.qml:81 qml/pages/OpenDBPage.qml:54
-#: qml/pages/UnlockPage.qml:41 qml/pages/AboutPage.qml:11
-#: qml/pages/EntriesPage.qml:224
+#: qml/pages/DBList.qml:81 qml/pages/UnlockPage.qml:41
+#: qml/pages/OpenDBPage.qml:54 qml/pages/AboutPage.qml:11
+#: qml/pages/EntriesPage.qml:217
 msgid "About"
 msgstr ""
 
@@ -47,27 +47,6 @@ msgstr ""
 
 #: qml/pages/DBList.qml:265
 msgid "It will only be removed from the app, not your device."
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:34 qml/pages/SingleEntry.qml:96
-#: qml/pages/EntriesPage.qml:175
-msgid "Back"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:159
-msgid "Enter the database master password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:172
-msgid "Master Password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:202
-msgid "Open"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:219
-msgid "Opening"
 msgstr ""
 
 #: qml/pages/UnlockPage.qml:146
@@ -98,6 +77,27 @@ msgstr ""
 
 #: qml/pages/UnlockPage.qml:244
 msgid "Database Not Opening?"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:34 qml/pages/SingleEntry.qml:96
+#: qml/pages/EntriesPage.qml:168
+msgid "Back"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:159
+msgid "Enter the database master password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:172
+msgid "Master Password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:202
+msgid "Open"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:219
+msgid "Opening"
 msgstr ""
 
 #: qml/pages/SettingsPage.qml:44
@@ -152,10 +152,6 @@ msgid ""
 "agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:84
-msgid "Untitled Entry"
-msgstr ""
-
 #: qml/pages/SingleEntry.qml:222
 msgid "Notes"
 msgstr ""
@@ -168,34 +164,34 @@ msgstr ""
 msgid "Special Categories"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:101
+#: qml/pages/EntriesPage.qml:99
 msgid "Cancel Search"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:126
+#: qml/pages/EntriesPage.qml:119
 msgid "Search entries in this group"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:151
+#: qml/pages/EntriesPage.qml:144
 msgid "Lock"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:163
+#: qml/pages/EntriesPage.qml:156
 msgid "Close"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:188
+#: qml/pages/EntriesPage.qml:181
 msgid "View Mode"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:202
+#: qml/pages/EntriesPage.qml:195
 msgid "Search"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:236
+#: qml/pages/EntriesPage.qml:229
 msgid "Lock Database"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:246
+#: qml/pages/EntriesPage.qml:239
 msgid "Close Database"
 msgstr ""

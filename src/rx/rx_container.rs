@@ -1,6 +1,7 @@
 use indexmap::{IndexMap, IndexSet};
 use keepass::db::Group;
 use std::{collections::HashMap, mem};
+use unicase::UniCase;
 use uuid::Uuid;
 use zeroize::Zeroize;
 
@@ -9,6 +10,41 @@ use zeroize::Zeroize;
 /// (of the same type) and any number of RxEntry objects.
 use super::{RxDatabase, RxEntry, RxGroup, RxTemplate, RxValue, icons::RxIcon};
 
+fn search_contained_ref(contained_ref: &RxContainedRef, term: &str) -> bool {
+    match contained_ref {
+        RxContainedRef::Entry(entry) => search_entry(entry, term),
+        RxContainedRef::Group(group) => true,
+        RxContainedRef::Template(template) => search_template(template, term),
+    }
+}
+
+fn search_template(template: &RxTemplate, term: &str) -> bool {
+    UniCase::new(&template.name).to_folded_case().contains(term)
+}
+
+fn search_entry(entry: &RxEntry, term: &str) -> bool {
+    let username = entry.username().and_then(|u| {
+        u.value()
+            .map(|secret| UniCase::new(secret).to_folded_case())
+    });
+
+    let url = entry.url().and_then(|u| {
+        u.value()
+            .map(|secret| UniCase::new(secret).to_folded_case())
+    });
+
+    let title = entry.title().and_then(|u| {
+        u.value()
+            .map(|secret| UniCase::new(secret).to_folded_case())
+    });
+
+    let contains_username = username.map(|u| u.contains(term)).unwrap_or(false);
+    let contains_url = url.map(|u| u.contains(term)).unwrap_or(false);
+    let contains_title = title.map(|t| t.contains(term)).unwrap_or(false);
+
+    contains_username || contains_url || contains_title
+}
+
 #[derive(Clone)]
 pub struct RxRoot {
     root_container: RxContainer,
@@ -16,10 +52,14 @@ pub struct RxRoot {
 }
 
 impl RxRoot {
+    pub fn root_uuid(&self) -> Uuid {
+        self.root_container.uuid()
+    }
+
     pub fn virtual_root(children: Vec<RxContainer>) -> Self {
         let all_child_uuids: IndexSet<Uuid> = children
             .iter()
-            .flat_map(|child| child.all_children())
+            .flat_map(|child| child.child_uuids_recursive())
             .collect();
 
         Self {
@@ -32,8 +72,15 @@ impl RxRoot {
         }
     }
 
-    pub fn with_db<'root, 'db>(&'root self, db: &'db RxDatabase) -> RxRootWithDb<'root, 'db> {
-        RxRootWithDb::new(self, db)
+    pub fn with_db<'root, 'db>(
+        &'root self,
+        db: &'db RxDatabase,
+    ) -> RxContainerWithDb<'root, 'db> {
+        RxContainerWithDb::new(&self.root_container, db)
+    }
+
+    pub fn get_container(&self, container_uuid: Uuid) -> Option<&RxContainer> {
+        self.root_container.get_container_recursive(container_uuid)
     }
 }
 
@@ -67,6 +114,13 @@ impl RxContainer {
         item.into_container(db)
     }
 
+    pub fn with_db<'cnt, 'db>(
+        &'cnt self,
+        db: &'db RxDatabase,
+    ) -> RxContainerWithDb<'cnt, 'db> {
+        RxContainerWithDb(self, db)
+    }
+
     pub fn is_root(&self) -> bool {
         self.is_root
     }
@@ -83,13 +137,13 @@ impl RxContainer {
         self.item.children()
     }
 
-    pub fn all_children(&self) -> IndexSet<Uuid> {
+    pub fn child_uuids_recursive(&self) -> IndexSet<Uuid> {
         let mut these_uuids = IndexSet::new();
 
         for child in self.children() {
             these_uuids.insert(child.uuid());
 
-            for child_uuid in child.all_children() {
+            for child_uuid in child.child_uuids_recursive() {
                 these_uuids.insert(child_uuid);
             }
         }
@@ -97,19 +151,25 @@ impl RxContainer {
         these_uuids
     }
 
-    pub fn all_child_containers(&self) -> IndexMap<Uuid, &RxContainer> {
+    pub fn child_containers_recursive(&self) -> IndexMap<Uuid, &RxContainer> {
         let mut children = IndexMap::new();
 
         for child in self.children() {
             children.insert(child.uuid(), child);
-            children.append(&mut child.all_child_containers());
+            children.append(&mut child.child_containers_recursive());
         }
 
         children
     }
 
-    pub fn find_child_recursive(&self, uuid: Uuid) -> Option<&RxContainer> {
-        self.all_child_containers().get(&uuid).map(|v| &**v)
+    /// Recursively fetch a container by UUID somewhere in this tree
+    /// (including this container itself).
+    pub fn get_container_recursive(&self, uuid: Uuid) -> Option<&RxContainer> {
+        if self.uuid() == uuid {
+            Some(self)
+        } else {
+            self.child_containers_recursive().get(&uuid).map(|v| &**v)
+        }
     }
 }
 
@@ -163,6 +223,16 @@ fn get_container(db: &RxDatabase, uuid: Uuid) -> Option<RxContainer> {
                 .map(|template| RxContainer::from(template, db))
         })
         .or_else(|| db.get_entry(uuid).map(|ent| RxContainer::from(ent, db)))
+}
+
+fn get_contained_ref(db: &RxDatabase, uuid: Uuid) -> Option<RxContainedRef<'_>> {
+    db.get_group(uuid)
+        .map(|group| RxContainedRef::Group(group))
+        .or_else(|| {
+            db.get_template(uuid)
+                .map(|template| RxContainedRef::Template(template))
+        })
+        .or_else(|| db.get_entry(uuid).map(|ent| RxContainedRef::Entry(ent)))
 }
 
 impl IntoContainer for &RxGroup {
@@ -241,10 +311,10 @@ impl RxContainerGrouping {
 }
 
 #[derive(Clone)]
-pub struct RxContainerWithDb<'db>(&'db RxContainer, &'db RxDatabase);
+pub struct RxContainerWithDb<'cnt, 'db>(&'cnt RxContainer, &'db RxDatabase);
 
-impl<'db> RxContainerWithDb<'db> {
-    pub fn new(container: &'db RxContainer, db: &'db RxDatabase) -> Self {
+impl<'cnt, 'db> RxContainerWithDb<'cnt, 'db> {
+    pub fn new(container: &'cnt RxContainer, db: &'db RxDatabase) -> Self {
         Self(container, db)
     }
 
@@ -276,6 +346,65 @@ impl<'db> RxContainerWithDb<'db> {
 
     pub fn uuid(&self) -> Uuid {
         self.container().uuid()
+    }
+
+    pub fn search_children_immediate(
+        &'cnt self,
+        search_term: Option<&str>,
+    ) -> Vec<RxContainedRef<'db>> {
+        let search_term = search_term.map(|term| UniCase::new(term).to_folded_case());
+        let containers_in_tree = self.container().children();
+
+        containers_in_tree
+            .into_iter()
+            .map(|child| {
+                let maybe_contained_ref = child.with_db(self.db()).get_ref();
+                maybe_contained_ref.and_then(|contained_ref| {
+                    if let Some(term) = &search_term {
+                        match search_contained_ref(&contained_ref, term) {
+                            true => Some(contained_ref),
+                            false => None,
+                        }
+                    } else {
+                        Some(contained_ref)
+                    }
+                })
+            })
+            .flatten()
+            .collect::<Vec<_>>()
+    }
+
+    pub fn search_children_recursive(
+        &'cnt self,
+        container_uuid: Uuid,
+        search_term: Option<&str>,
+    ) -> Vec<RxContainedRef<'db>> {
+        let search_term = search_term.map(|term| UniCase::new(term).to_folded_case());
+        let container = self.container().get_container_recursive(container_uuid);
+
+        let containers_in_tree = container
+            .map(|container| container.child_containers_recursive())
+            .map(|child_containers| child_containers.into_iter().map(|(_, child)| child));
+
+        let filtered_by_search = containers_in_tree.map(|containers_iter| {
+            containers_iter
+                .filter_map(|container| {
+                    let maybe_contained_ref = container.with_db(self.db()).get_ref();
+                    maybe_contained_ref.and_then(|contained_ref| {
+                        if let Some(term) = &search_term {
+                            match search_contained_ref(&contained_ref, term) {
+                                true => Some(contained_ref),
+                                false => None,
+                            }
+                        } else {
+                            Some(contained_ref)
+                        }
+                    })
+                })
+                .collect::<Vec<_>>()
+        });
+
+        filtered_by_search.unwrap_or_default()
     }
 
     pub fn find_children(&self, search_term: Option<&str>) -> Vec<RxContainer> {
@@ -334,57 +463,48 @@ impl<'db> RxContainerWithDb<'db> {
     }
 }
 
-pub struct RxRootWithDb<'root, 'db>
-where
-    'root: 'db,
-{
-    root: &'root RxRoot,
-    all_containers: HashMap<Uuid, &'root RxContainer>,
-    db: &'db RxDatabase,
-}
+// pub struct RxRootWithDb<'root, 'db>
+// where
+//     'root: 'db,
+// {
+//     root: &'root RxRoot,
+//     all_containers: HashMap<Uuid, &'root RxContainer>,
+//     db: &'db RxDatabase,
+// }
 
-impl<'root, 'db> RxRootWithDb<'root, 'db> {
-    pub fn new(root: &'root RxRoot, db: &'db RxDatabase) -> Self {
-        let all_containers: HashMap<_, _> = root
-            .all_containers
-            .iter()
-            .flat_map(|uuid| {
-                root.root_container
-                    .find_child_recursive(*uuid)
-                    .map(|container| (*uuid, container))
-            })
-            .collect();
+// impl<'root, 'db> RxRootWithDb<'root, 'db> {
+//     pub fn new(root: &'root RxRoot, db: &'db RxDatabase) -> Self {
+//         let all_containers: HashMap<_, _> = root
+//             .all_containers
+//             .iter()
+//             .flat_map(|uuid| {
+//                 root.root_container
+//                     .get_container_recursive(*uuid)
+//                     .map(|container| (*uuid, container))
+//             })
+//             .collect();
 
-        Self {
-            root: root,
-            all_containers: all_containers,
-            db: db,
-        }
-    }
+//         Self {
+//             root: root,
+//             all_containers: all_containers,
+//             db: db,
+//         }
+//     }
 
-    pub fn db(&self) -> &'db RxDatabase {
-        self.db
-    }
+//     pub fn db(&'db self) -> &'db RxDatabase {
+//         self.db
+//     }
 
-    pub fn root(&self) -> RxContainerWithDb<'_> {
-        RxContainerWithDb(&self.root.root_container, self.db())
-    }
+//     pub fn root(&'db self) -> RxContainerWithDb<'db> {
+//         RxContainerWithDb(&self.root.root_container, self.db())
+//     }
 
-    pub fn get_container(&self, container_uuid: Uuid) -> Option<RxContainerWithDb<'db>> {
-        self.all_containers
-            .get(&container_uuid)
-            .map(|container| RxContainerWithDb(&*container, self.db()))
-    }
-
-    pub fn children(&self) -> Vec<RxContainerWithDb<'_>> {
-        let containers: Vec<_> = self.root.root_container.children().into_iter().collect();
-
-        containers
-            .into_iter()
-            .map(|container| RxContainerWithDb(container, self.db()))
-            .collect()
-    }
-}
+//     pub fn get_container(&'db self, container_uuid: Uuid) -> Option<RxContainerWithDb<'db>> {
+//         self.all_containers
+//             .get(&container_uuid)
+//             .map(|container| RxContainerWithDb(&*container, self.db()))
+//     }
+// }
 
 /// A reference to the actual thing in the database, as pointed to by the container.
 #[derive(Clone, Copy)]
@@ -410,12 +530,18 @@ pub enum RxContainedRef<'db> {
 /// An arbitrary hierarchical view into the password database.
 pub trait VirtualHierarchy {
     fn root(&self) -> &RxRoot;
-    fn search(
-        &self,
-        db: &RxDatabase, // TODO eventually move to own struct?,
+    fn search<'cnt, 'db>(
+        &'cnt self,
+        // TODO would be nice to have VirtualHierarchyWithDb or something.
+        db: &'db RxDatabase,
         container_uuid: Uuid,
         search_term: Option<&str>,
-    ) -> Vec<RxContainedRef<'_>>;
+    ) -> VirtualHierarchySparse<'cnt, 'db>;
+}
+
+struct VirtualHierarchySparse<'cnt, 'db> {
+    db_root: RxContainerWithDb<'cnt, 'db>,
+    tree: Vec<RxContainedRef<'db>>,
 }
 
 #[derive(Clone)]
@@ -437,14 +563,40 @@ impl VirtualHierarchy for AllTemplates {
         &self.0
     }
 
-    fn search(
-        &self,
-        db: &RxDatabase,
+    fn search<'cnt, 'db>(
+        &'cnt self,
+        db: &'db RxDatabase,
         container_uuid: Uuid,
         search_term: Option<&str>,
-    ) -> Vec<RxContainedRef<'_>> {
-        // let woot = self.root().with_db(db);
-        vec![]
+    ) -> VirtualHierarchySparse<'cnt, 'db> {
+        if container_uuid == self.root().root_uuid() {
+            // searching from the (non existant) "root template"
+            // means we should search all templates instead.
+            let db_root = self.root();
+            let with_db = db_root.with_db(db);
+            let results = with_db.search_children_immediate(search_term);
+
+            VirtualHierarchySparse {
+                db_root: with_db,
+                tree: results,
+            }
+        } else {
+            // Otherwise, we search inside the template itself
+            let maybe_template = self
+                .root()
+                .get_container(container_uuid)
+                .map(|container| container.with_db(db));
+
+            let results = maybe_template
+                .as_ref()
+                .map(|tmplt| tmplt.search_children_immediate(search_term))
+                .unwrap_or_default();
+
+            VirtualHierarchySparse {
+                db_root: maybe_template.unwrap(),
+                tree: results,
+            }
+        }
     }
 }
 
@@ -455,7 +607,7 @@ impl DefaultView {
         let root = RxContainer::from(db.root_group(), db);
 
         DefaultView(RxRoot {
-            all_containers: root.all_children(),
+            all_containers: root.child_uuids_recursive(),
             root_container: root,
         })
     }
@@ -466,12 +618,12 @@ impl VirtualHierarchy for DefaultView {
         &self.0
     }
 
-    fn search(
-        &self,
-        db: &RxDatabase,
+    fn search<'cnt, 'db>(
+        &'cnt self,
+        db: &'db RxDatabase,
         container_uuid: Uuid,
         search_term: Option<&str>,
-    ) -> Vec<RxContainedRef<'_>> {
-        vec![]
+    ) -> VirtualHierarchySparse<'cnt, 'db> {
+        todo!()
     }
 }

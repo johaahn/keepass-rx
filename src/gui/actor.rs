@@ -565,11 +565,17 @@ impl Handler<GetTemplate> for KeepassRxActor {
             Err(err) => return gui.errorReceived(format!("{}", err)),
         };
 
-        let template = db.get_template(msg.template_uuid);
+        let view = self.current_view.as_ref().expect("GetGroup: No view set.");
+
+        let template = view
+            .root()
+            .get_container(msg.template_uuid)
+            .expect("GetTemplate: No template found")
+            .with_db(db)
+            .get_ref();
 
         let this_template_name = template
-            .as_ref()
-            .map(|template| QString::from(template.name.as_ref()))
+            .map(|tmplt| QString::from(tmplt.name()))
             .unwrap_or_default();
 
         let this_template_uuid = QString::from(msg.template_uuid.to_string());

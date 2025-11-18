@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-17 20:15+0000\n"
+"POT-Creation-Date: 2025-11-18 09:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -61,21 +61,6 @@ msgstr ""
 msgid "Database Not Opening?"
 msgstr ""
 
-msgid "Back"
-msgstr ""
-
-msgid "Enter the database master password"
-msgstr ""
-
-msgid "Master Password"
-msgstr ""
-
-msgid "Open"
-msgstr ""
-
-msgid "Opening"
-msgstr ""
-
 msgid ""
 "Change settings based on your preferences. Any change to the settings "
 "requires a restart to take effect."
@@ -118,13 +103,13 @@ msgid ""
 "git.agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
 
+msgid "Back"
+msgstr ""
+
 msgid "Notes"
 msgstr ""
 
 msgid "Tap to copy"
-msgstr ""
-
-msgid "Special Categories"
 msgstr ""
 
 msgid "Cancel Search"
@@ -149,4 +134,22 @@ msgid "Lock Database"
 msgstr ""
 
 msgid "Close Database"
+msgstr ""
+
+msgid "Change View"
+msgstr ""
+
+msgid "Select View"
+msgstr ""
+
+msgid "Enter the database master password"
+msgstr ""
+
+msgid "Master Password"
+msgstr ""
+
+msgid "Open"
+msgstr ""
+
+msgid "Opening"
 msgstr ""

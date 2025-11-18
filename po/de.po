@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-17 20:15+0000\n"
+"POT-Creation-Date: 2025-11-18 09:26+0000\n"
 "PO-Revision-Date: 2025-11-07 14:51+0000\n"
 "Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -65,21 +65,6 @@ msgstr "Sicheres Sperren"
 msgid "Database Not Opening?"
 msgstr "Datenbank öffnet sich nicht?"
 
-msgid "Back"
-msgstr "Zurück"
-
-msgid "Enter the database master password"
-msgstr "Datenbankpasswort eingeben"
-
-msgid "Master Password"
-msgstr "Datenbankpasswort"
-
-msgid "Open"
-msgstr "Öffnen"
-
-msgid "Opening"
-msgstr "Öffne"
-
 msgid ""
 "Change settings based on your preferences. Any change to the settings "
 "requires a restart to take effect."
@@ -129,14 +114,14 @@ msgstr ""
 "Quelle: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
+msgid "Back"
+msgstr "Zurück"
+
 msgid "Notes"
 msgstr "Notizen"
 
 msgid "Tap to copy"
 msgstr "Antippen zum Kopieren"
-
-msgid "Special Categories"
-msgstr ""
 
 msgid "Cancel Search"
 msgstr "Suche abbrechen"
@@ -161,6 +146,24 @@ msgstr "Datenbank sperren"
 
 msgid "Close Database"
 msgstr "Datenbank schließen"
+
+msgid "Change View"
+msgstr ""
+
+msgid "Select View"
+msgstr ""
+
+msgid "Enter the database master password"
+msgstr "Datenbankpasswort eingeben"
+
+msgid "Master Password"
+msgstr "Datenbankpasswort"
+
+msgid "Open"
+msgstr "Öffnen"
+
+msgid "Opening"
+msgstr "Öffne"
 
 #~ msgid "Untitled Entry"
 #~ msgstr "Unbenannter Eintrag"

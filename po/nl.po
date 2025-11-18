@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-17 20:15+0000\n"
+"POT-Creation-Date: 2025-11-18 09:26+0000\n"
 "PO-Revision-Date: 2025-11-13 11:51+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -66,21 +66,6 @@ msgstr "Veilig vergrendelen"
 msgid "Database Not Opening?"
 msgstr "Wordt de databank niet geopend?"
 
-msgid "Back"
-msgstr "Terug"
-
-msgid "Enter the database master password"
-msgstr "Voer het hoofdwachtwoord in"
-
-msgid "Master Password"
-msgstr "Hoofdwachtwoord"
-
-msgid "Open"
-msgstr "Openen"
-
-msgid "Opening"
-msgstr "Bezig met openen…"
-
 msgid ""
 "Change settings based on your preferences. Any change to the settings "
 "requires a restart to take effect."
@@ -135,14 +120,14 @@ msgstr ""
 "Broncode: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
+msgid "Back"
+msgstr "Terug"
+
 msgid "Notes"
 msgstr "Aantekeningen"
 
 msgid "Tap to copy"
 msgstr "Druk om te kopiëren"
-
-msgid "Special Categories"
-msgstr "Speciale categorieën"
 
 msgid "Cancel Search"
 msgstr "Zoekopdracht afbreken"
@@ -167,6 +152,27 @@ msgstr "Databank vergrendelen"
 
 msgid "Close Database"
 msgstr "Databank sluiten"
+
+msgid "Change View"
+msgstr ""
+
+msgid "Select View"
+msgstr ""
+
+msgid "Enter the database master password"
+msgstr "Voer het hoofdwachtwoord in"
+
+msgid "Master Password"
+msgstr "Hoofdwachtwoord"
+
+msgid "Open"
+msgstr "Openen"
+
+msgid "Opening"
+msgstr "Bezig met openen…"
+
+#~ msgid "Special Categories"
+#~ msgstr "Speciale categorieën"
 
 #~ msgid "Untitled Entry"
 #~ msgstr "Naamloos item"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-17 20:15+0000\n"
+"POT-Creation-Date: 2025-11-18 09:26+0000\n"
 "PO-Revision-Date: 2025-11-13 11:51+0000\n"
 "Last-Translator: Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/ubports/"
@@ -65,21 +65,6 @@ msgstr "Turvaline lukustamine"
 msgid "Database Not Opening?"
 msgstr "Kas andmebaas ei avane?"
 
-msgid "Back"
-msgstr "Tagasi"
-
-msgid "Enter the database master password"
-msgstr "Sisesta andmebaasi üldsalasõna"
-
-msgid "Master Password"
-msgstr "Üldsalasõna"
-
-msgid "Open"
-msgstr "Ava"
-
-msgid "Opening"
-msgstr "Avamisel"
-
 msgid ""
 "Change settings based on your preferences. Any change to the settings "
 "requires a restart to take effect."
@@ -134,14 +119,14 @@ msgstr ""
 "Lähtekood: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
+msgid "Back"
+msgstr "Tagasi"
+
 msgid "Notes"
 msgstr "Märkmed"
 
 msgid "Tap to copy"
 msgstr "Kopeerimiseks klõpsa"
-
-msgid "Special Categories"
-msgstr "Erikategooriad"
 
 msgid "Cancel Search"
 msgstr "Katkesta otsing"
@@ -166,6 +151,27 @@ msgstr "Lukusta andmebaas"
 
 msgid "Close Database"
 msgstr "Sulge andmebaas"
+
+msgid "Change View"
+msgstr ""
+
+msgid "Select View"
+msgstr ""
+
+msgid "Enter the database master password"
+msgstr "Sisesta andmebaasi üldsalasõna"
+
+msgid "Master Password"
+msgstr "Üldsalasõna"
+
+msgid "Open"
+msgstr "Ava"
+
+msgid "Opening"
+msgstr "Avamisel"
+
+#~ msgid "Special Categories"
+#~ msgstr "Erikategooriad"
 
 #~ msgid "Untitled Entry"
 #~ msgstr "Pealkirjata kirje"

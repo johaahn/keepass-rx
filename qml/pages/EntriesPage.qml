@@ -242,8 +242,6 @@ Page {
 
     Item {
         id: changeViewMode
-        width: units.gu(80)
-        height: units.gu(80)
 
         Component {
             id: viewModeDialog
@@ -253,28 +251,30 @@ Page {
                 // TRANSLATORS: Change list of entries that are shown (all, templated, 2fa, etc).
                 title: i18n.tr("Change View")
 
-
                 ListModel {
                     id: viewModes
                     ListElement {
                         name: "All"
                         menuText: "All Entries"
+                        description: QT_TR_NOOP("All groups and entries.")
                     }
                     ListElement {
                         name: "Templates"
-                        // TRANSLATORS: List of entries that have templates (credit card, etc).
                         menuText: "Special Categories"
+                        // TRANSLATORS: List of entries that have templates (credit card, etc).
+                        description: QT_TR_NOOP("Entries grouped by template.")
                     }
                     ListElement {
                         name: "Totp";
-                        // TRANSLATORS: Two-factor/OTP codes.
                         menuText: "2FA Codes"
+                        // TRANSLATORS: Two-factor/OTP codes.
+                        description: QT_TR_NOOP("Entries with 2FA codes.")
                     }
                 }
 
                 Component {
                     id: viewModeDelegate
-                    OptionSelectorDelegate { text: menuText }
+                    OptionSelectorDelegate { text: menuText; subText: i18n.tr(description) }
                 }
 
                 OptionSelector {
@@ -295,16 +295,14 @@ Page {
                         }
                     }
 
-                    return 0; // All
+                    return 0; // All entries (default)
                 }
 
                 Button {
                     text: "Go"
                     color: LomiriColors.green
                     onClicked: {
-                        // Change view mode
                         const selection = viewModes.get(viewModeSelector.selectedIndex);
-                        console.log('Picked', JSON.stringify(selection));
                         keepassrx.viewMode = selection.name;
                         PopupUtils.close(viewModeDialogInner)
                     }

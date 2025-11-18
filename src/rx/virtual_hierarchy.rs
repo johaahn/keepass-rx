@@ -1,5 +1,5 @@
+use gettextrs::{gettext, pgettext};
 use std::rc::Rc;
-
 use uuid::Uuid;
 
 use super::{RxContainedRef, RxContainer, RxDatabase, RxRoot};
@@ -11,7 +11,7 @@ use super::{RxContainedRef, RxContainer, RxDatabase, RxRoot};
 pub trait VirtualHierarchy {
     fn root(&self) -> &RxRoot;
 
-    fn name(&self) -> &str;
+    fn name(&self) -> String;
 
     /// Search for child containers in the virtual hierarchy.
     fn search(&self, container_uuid: Uuid, search_term: Option<&str>) -> Vec<RxContainedRef>;
@@ -27,13 +27,16 @@ impl AllTemplates {
             .map(|t| RxContainer::from(t.clone(), db))
             .collect();
 
-        AllTemplates(RxRoot::virtual_root("Special Categories", children))
+        AllTemplates(RxRoot::virtual_root(
+            &gettext("Special Categories"),
+            children,
+        ))
     }
 }
 
 impl VirtualHierarchy for AllTemplates {
-    fn name(&self) -> &str {
-        "All Templates"
+    fn name(&self) -> String {
+        gettext("All Templates")
     }
 
     fn root(&self) -> &RxRoot {
@@ -77,8 +80,11 @@ impl VirtualHierarchy for DefaultView {
         &self.0
     }
 
-    fn name(&self) -> &str {
-        "Default View"
+    fn name(&self) -> String {
+        pgettext(
+            "Default view of the password database (all entries)",
+            "Default View",
+        )
     }
 
     fn search(&self, container_uuid: Uuid, search_term: Option<&str>) -> Vec<RxContainedRef> {
@@ -100,15 +106,16 @@ impl TotpEntries {
             .map(|ent| RxContainer::from(ent, db))
             .collect();
 
-        let root = RxRoot::virtual_root("2FA Codes", entries);
+        let root =
+            RxRoot::virtual_root(&pgettext("Two-factor/OTP codes", "2FA Codes"), entries);
 
         TotpEntries(root)
     }
 }
 
 impl VirtualHierarchy for TotpEntries {
-    fn name(&self) -> &str {
-        "2FA Entries"
+    fn name(&self) -> String {
+        pgettext("Two-factor/OTP codes", "2FA Codes")
     }
 
     fn root(&self) -> &RxRoot {

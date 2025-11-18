@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-18 11:57+0100\n"
-"PO-Revision-Date: 2025-11-13 11:51+0000\n"
+"PO-Revision-Date: 2025-11-18 17:51+0000\n"
 "Last-Translator: Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/ubports/"
 "keepassrx/et/>\n"
@@ -153,22 +153,22 @@ msgid "Close Database"
 msgstr "Sulge andmebaas"
 
 msgid "Change View"
-msgstr ""
+msgstr "Muuda vaadet"
 
 msgid "All groups and entries."
-msgstr ""
+msgstr "Kõik grupid ja kirjed."
 
 msgid "Entries grouped by template."
-msgstr ""
+msgstr "Malli alusel rühmitatud kirjed."
 
 msgid "Entries with 2FA codes."
-msgstr ""
+msgstr "2FA-koodidega kirjed."
 
 msgid "Select View"
-msgstr ""
+msgstr "Vali vaade"
 
 msgid "Select"
-msgstr ""
+msgstr "Vali"
 
 msgid "Enter the database master password"
 msgstr "Sisesta andmebaasi üldsalasõna"
@@ -186,15 +186,15 @@ msgid "Special Categories"
 msgstr "Erikategooriad"
 
 msgid "All Templates"
-msgstr ""
+msgstr "Kõik mallid"
 
 msgctxt "Default view of the password database (all entries)"
 msgid "Default View"
-msgstr ""
+msgstr "Vaikimisi vaade"
 
 msgctxt "Two-factor/OTP codes (keep phrase short as possible)"
 msgid "2FA Codes"
-msgstr ""
+msgstr "2FA-koodid"
 
 #~ msgid "Untitled Entry"
 #~ msgstr "Pealkirjata kirje"

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-18 11:57+0100\n"
-"PO-Revision-Date: 2025-11-15 06:48+0000\n"
+"PO-Revision-Date: 2025-11-18 18:53+0000\n"
 "Last-Translator: Vlad Nirky <nirky.vlad@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
 "fr/>\n"
@@ -155,22 +155,22 @@ msgid "Close Database"
 msgstr "Fermer la base de données"
 
 msgid "Change View"
-msgstr ""
+msgstr "Changer d'affichage"
 
 msgid "All groups and entries."
-msgstr ""
+msgstr "Tous les groupes et toutes les entrées."
 
 msgid "Entries grouped by template."
-msgstr ""
+msgstr "Entrées regroupées par modèle."
 
 msgid "Entries with 2FA codes."
-msgstr ""
+msgstr "Entrées avec codes 2FA."
 
 msgid "Select View"
-msgstr ""
+msgstr "Sélectionner Affichage"
 
 msgid "Select"
-msgstr ""
+msgstr "Sélectionner"
 
 msgid "Enter the database master password"
 msgstr "Entrez le mot de passe principal de la base de données"
@@ -188,15 +188,15 @@ msgid "Special Categories"
 msgstr "Catégories spéciales"
 
 msgid "All Templates"
-msgstr ""
+msgstr "Tous les modèles"
 
 msgctxt "Default view of the password database (all entries)"
 msgid "Default View"
-msgstr ""
+msgstr "Affichage par défaut"
 
 msgctxt "Two-factor/OTP codes (keep phrase short as possible)"
 msgid "2FA Codes"
-msgstr ""
+msgstr "Codes 2FA"
 
 #~ msgid "Untitled Entry"
 #~ msgstr "Entrée sans titre"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-18 11:57+0100\n"
+"POT-Creation-Date: 2025-11-18 20:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -62,6 +62,21 @@ msgstr ""
 msgid "Database Not Opening?"
 msgstr ""
 
+msgid "Back"
+msgstr ""
+
+msgid "Enter the database master password"
+msgstr ""
+
+msgid "Master Password"
+msgstr ""
+
+msgid "Open"
+msgstr ""
+
+msgid "Opening"
+msgstr ""
+
 msgid ""
 "Change settings based on your preferences. Any change to the settings "
 "requires a restart to take effect."
@@ -102,9 +117,6 @@ msgstr ""
 msgid ""
 "Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
-msgstr ""
-
-msgid "Back"
 msgstr ""
 
 msgid "Notes"
@@ -149,22 +161,13 @@ msgstr ""
 msgid "Entries with 2FA codes."
 msgstr ""
 
+msgid "Entries grouped by tag."
+msgstr ""
+
 msgid "Select View"
 msgstr ""
 
 msgid "Select"
-msgstr ""
-
-msgid "Enter the database master password"
-msgstr ""
-
-msgid "Master Password"
-msgstr ""
-
-msgid "Open"
-msgstr ""
-
-msgid "Opening"
 msgstr ""
 
 msgid "Special Categories"
@@ -179,4 +182,11 @@ msgstr ""
 
 msgctxt "Two-factor/OTP codes (keep phrase short as possible)"
 msgid "2FA Codes"
+msgstr ""
+
+msgctxt "List of entries with tags"
+msgid "Tags"
+msgstr ""
+
+msgid "Tags"
 msgstr ""

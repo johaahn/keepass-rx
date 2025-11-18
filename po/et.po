@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-18 11:57+0100\n"
+"POT-Creation-Date: 2025-11-18 20:37+0000\n"
 "PO-Revision-Date: 2025-11-18 17:51+0000\n"
 "Last-Translator: Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/ubports/"
@@ -65,6 +65,21 @@ msgstr "Turvaline lukustamine"
 msgid "Database Not Opening?"
 msgstr "Kas andmebaas ei avane?"
 
+msgid "Back"
+msgstr "Tagasi"
+
+msgid "Enter the database master password"
+msgstr "Sisesta andmebaasi üldsalasõna"
+
+msgid "Master Password"
+msgstr "Üldsalasõna"
+
+msgid "Open"
+msgstr "Ava"
+
+msgid "Opening"
+msgstr "Avamisel"
+
 msgid ""
 "Change settings based on your preferences. Any change to the settings "
 "requires a restart to take effect."
@@ -119,9 +134,6 @@ msgstr ""
 "Lähtekood: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
-msgid "Back"
-msgstr "Tagasi"
-
 msgid "Notes"
 msgstr "Märkmed"
 
@@ -164,23 +176,14 @@ msgstr "Malli alusel rühmitatud kirjed."
 msgid "Entries with 2FA codes."
 msgstr "2FA-koodidega kirjed."
 
+msgid "Entries grouped by tag."
+msgstr ""
+
 msgid "Select View"
 msgstr "Vali vaade"
 
 msgid "Select"
 msgstr "Vali"
-
-msgid "Enter the database master password"
-msgstr "Sisesta andmebaasi üldsalasõna"
-
-msgid "Master Password"
-msgstr "Üldsalasõna"
-
-msgid "Open"
-msgstr "Ava"
-
-msgid "Opening"
-msgstr "Avamisel"
 
 msgid "Special Categories"
 msgstr "Erikategooriad"
@@ -195,6 +198,13 @@ msgstr "Vaikimisi vaade"
 msgctxt "Two-factor/OTP codes (keep phrase short as possible)"
 msgid "2FA Codes"
 msgstr "2FA-koodid"
+
+msgctxt "List of entries with tags"
+msgid "Tags"
+msgstr ""
+
+msgid "Tags"
+msgstr ""
 
 #~ msgid "Untitled Entry"
 #~ msgstr "Pealkirjata kirje"

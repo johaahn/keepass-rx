@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-18 11:57+0100\n"
+"POT-Creation-Date: 2025-11-18 20:37+0000\n"
 "PO-Revision-Date: 2025-11-18 09:39+0000\n"
 "Last-Translator: projectmoon <projectmoon@agnos.is>\n"
 "Language-Team: Icelandic <https://hosted.weblate.org/projects/ubports/"
@@ -65,6 +65,21 @@ msgstr "Læsa með öryggi"
 msgid "Database Not Opening?"
 msgstr "Er gagnagrunnur ekki að opna?"
 
+msgid "Back"
+msgstr "Til baka"
+
+msgid "Enter the database master password"
+msgstr "Sláðu inn aðallykilorð gagnagrunnsins"
+
+msgid "Master Password"
+msgstr "Aðallykilorð"
+
+msgid "Open"
+msgstr "Opna"
+
+msgid "Opening"
+msgstr "Í vinnslu"
+
 msgid ""
 "Change settings based on your preferences. Any change to the settings "
 "requires a restart to take effect."
@@ -114,9 +129,6 @@ msgstr ""
 "Uppruni: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
-msgid "Back"
-msgstr "Til baka"
-
 msgid "Notes"
 msgstr "Athugasemdir"
 
@@ -159,23 +171,14 @@ msgstr ""
 msgid "Entries with 2FA codes."
 msgstr ""
 
+msgid "Entries grouped by tag."
+msgstr ""
+
 msgid "Select View"
 msgstr ""
 
 msgid "Select"
 msgstr ""
-
-msgid "Enter the database master password"
-msgstr "Sláðu inn aðallykilorð gagnagrunnsins"
-
-msgid "Master Password"
-msgstr "Aðallykilorð"
-
-msgid "Open"
-msgstr "Opna"
-
-msgid "Opening"
-msgstr "Í vinnslu"
 
 msgid "Special Categories"
 msgstr ""
@@ -189,6 +192,13 @@ msgstr ""
 
 msgctxt "Two-factor/OTP codes (keep phrase short as possible)"
 msgid "2FA Codes"
+msgstr ""
+
+msgctxt "List of entries with tags"
+msgid "Tags"
+msgstr ""
+
+msgid "Tags"
 msgstr ""
 
 #~ msgid "Untitled Entry"

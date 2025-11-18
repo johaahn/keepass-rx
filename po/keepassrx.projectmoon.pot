@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-18 11:40+0100\n"
+"POT-Creation-Date: 2025-11-18 11:57+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -194,6 +194,10 @@ msgstr ""
 
 #: qml/pages/EntriesPage.qml:284
 msgid "Select View"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:303
+msgid "Select"
 msgstr ""
 
 #: qml/pages/OpenDBPage.qml:159

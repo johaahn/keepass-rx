@@ -300,7 +300,7 @@ Page {
                 }
 
                 Button {
-                    text: "Go"
+                    text: i18n.tr("Select")
                     color: LomiriColors.green
                     onClicked: {
                         const selection = viewModes.get(viewModeSelector.selectedIndex);

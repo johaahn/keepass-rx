@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-18 10:37+0000\n"
+"POT-Creation-Date: 2025-11-18 11:57+0100\n"
 "PO-Revision-Date: 2025-11-13 11:51+0000\n"
 "Last-Translator: Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/ubports/"
@@ -165,6 +165,9 @@ msgid "Entries with 2FA codes."
 msgstr ""
 
 msgid "Select View"
+msgstr ""
+
+msgid "Select"
 msgstr ""
 
 msgid "Enter the database master password"

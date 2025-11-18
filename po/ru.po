@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-18 10:37+0000\n"
+"POT-Creation-Date: 2025-11-18 11:57+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -150,6 +150,9 @@ msgid "Entries with 2FA codes."
 msgstr ""
 
 msgid "Select View"
+msgstr ""
+
+msgid "Select"
 msgstr ""
 
 msgid "Enter the database master password"

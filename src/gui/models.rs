@@ -4,7 +4,7 @@ use uuid::Uuid;
 
 use crate::rx::{
     RxContainedRef, RxContainer, RxContainerGrouping, RxContainerItem, RxEntry, RxGroup,
-    RxGrouping, RxMetadata, RxTemplate,
+    RxGrouping, RxMetadata, RxTag, RxTemplate,
 };
 
 #[derive(QEnum, Clone, Default, Copy)]
@@ -14,6 +14,7 @@ pub enum RxItemType {
     Entry,
     Group,
     Template,
+    Tag,
 }
 
 fn entry_type_from_string(qval: &QString) -> RxItemType {
@@ -21,6 +22,7 @@ fn entry_type_from_string(qval: &QString) -> RxItemType {
         "Group" => RxItemType::Group,
         "Entry" => RxItemType::Entry,
         "Template" => RxItemType::Template,
+        "Tag" => RxItemType::Tag,
         _ => panic!("Invalid entry type: {}", qval),
     }
 }
@@ -30,6 +32,7 @@ fn entry_type_to_string(entry_type: &RxItemType) -> QString {
         RxItemType::Group => "Group",
         RxItemType::Entry => "Entry",
         RxItemType::Template => "Template",
+        RxItemType::Tag => "Tag",
     }
     .into()
 }
@@ -86,7 +89,29 @@ impl From<RxContainedRef> for RxListItem {
             RxContainedRef::Entry(entry) => RxListItem::from(entry.as_ref()),
             RxContainedRef::Group(group) => RxListItem::from(group.as_ref()),
             RxContainedRef::Template(template) => RxListItem::from(template.as_ref()),
+            RxContainedRef::Tag(tag) => RxListItem::from(&tag),
             RxContainedRef::VirtualRoot(root_name) => RxListItem::for_virtual_root(root_name),
+        }
+    }
+}
+
+impl From<&RxTag> for RxListItem {
+    fn from(value: &RxTag) -> Self {
+        RxListItem {
+            base: Default::default(),
+            itemType: RxItemType::Tag,
+            uuid: QString::from(value.uuid.to_string()),
+            parentUuid: QString::default(),
+
+            hasUsername: false,
+            hasPassword: false,
+            hasURL: false,
+            hasTOTP: false,
+
+            iconPath: QString::default(),
+            iconBuiltin: false,
+            title: QString::from(value.name.as_ref()),
+            subtitle: QString::from("Tag"),
         }
     }
 }

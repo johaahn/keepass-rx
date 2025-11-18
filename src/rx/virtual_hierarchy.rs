@@ -1,8 +1,12 @@
 use gettextrs::{gettext, pgettext};
-use std::rc::Rc;
+use indexmap::IndexSet;
+use std::{
+    collections::{HashMap, HashSet},
+    rc::Rc,
+};
 use uuid::Uuid;
 
-use super::{RxContainedRef, RxContainer, RxDatabase, RxRoot};
+use super::{RxContainedRef, RxContainer, RxDatabase, RxRoot, RxTag};
 
 /// An arbitrary hierarchical view into the password database. A
 /// VirtualHierarchy manages two lifetimes when searching: the
@@ -124,6 +128,50 @@ impl VirtualHierarchy for TotpEntries {
             "Two-factor/OTP codes (keep phrase short as possible)",
             "2FA Codes",
         )
+    }
+
+    fn root(&self) -> &RxRoot {
+        &self.0
+    }
+
+    fn search(&self, container_uuid: Uuid, search_term: Option<&str>) -> Vec<RxContainedRef> {
+        self.root()
+            .get_container(container_uuid)
+            .map(|container| container.search_children_immediate(search_term))
+            .unwrap_or_default()
+    }
+}
+
+pub struct AllTags(RxRoot);
+
+impl AllTags {
+    pub fn new(db: &RxDatabase) -> Self {
+        let mut tags: HashMap<String, Vec<Uuid>> = HashMap::new();
+
+        let tagged_entries = db.all_entries_iter().filter(|ent| ent.has_tags());
+
+        for ent in tagged_entries {
+            for tag in ent.as_ref().tags.as_slice() {
+                let map_entry = tags.entry(tag.clone()).or_insert_with(|| vec![]);
+                map_entry.push(ent.uuid);
+            }
+        }
+
+        let children: Vec<_> = tags
+            .into_iter()
+            .map(|(tag, entry_uuids)| RxContainer::from(RxTag::new(tag, entry_uuids), db))
+            .collect();
+
+        let root =
+            RxRoot::virtual_root(&pgettext("List of entries with tags", "Tags"), children);
+
+        AllTags(root)
+    }
+}
+
+impl VirtualHierarchy for AllTags {
+    fn name(&self) -> String {
+        gettext("Tags")
     }
 
     fn root(&self) -> &RxRoot {

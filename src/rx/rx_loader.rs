@@ -16,9 +16,8 @@ use unicase::UniCase;
 use uuid::Uuid;
 use zeroize::{Zeroize, Zeroizing};
 
-#[derive(Default)]
 pub struct RxLoader {
-    db: Option<Zeroizing<ZeroableDatabase>>,
+    db: Zeroizing<ZeroableDatabase>,
     state: LoadState,
     root: Option<RxGroup>,
     master_key: Option<Rc<MasterKey>>,
@@ -35,18 +34,21 @@ pub struct Loaded {
 impl RxLoader {
     pub fn new(db: Zeroizing<ZeroableDatabase>) -> Self {
         Self {
-            db: Some(db),
-            ..Default::default()
+            db: db,
+            state: Default::default(),
+            root: Default::default(),
+            master_key: Default::default(),
+            icons: Default::default(),
         }
     }
 
-    fn db(&mut self) -> Result<&mut Zeroizing<ZeroableDatabase>> {
-        self.db.as_mut().ok_or(anyhow!("No database to load"))
+    fn db(&mut self) -> &mut Zeroizing<ZeroableDatabase> {
+        &mut self.db
     }
 
     pub fn load(mut self) -> Result<Loaded> {
         self.icons = self
-            .db()?
+            .db()
             .meta
             .custom_icons
             .icons
@@ -57,9 +59,10 @@ impl RxLoader {
         self.master_key = Some(Rc::new(
             MasterKey::new().expect("Could not create a master key"),
         ));
+
         self.state = LoadState::default();
 
-        let mut db_root = mem::take(&mut self.db()?.root);
+        let mut db_root = mem::take(&mut self.db().root);
 
         let root_group = self.load_groups_recursive(&mut db_root, None);
 
@@ -69,8 +72,8 @@ impl RxLoader {
             .insert(root_group.uuid, Rc::new(root_group));
 
         let rx_metadata = RxMetadata::new(
-            mem::take(&mut self.db()?.config),
-            mem::take(&mut self.db()?.meta),
+            mem::take(&mut self.db().config),
+            mem::take(&mut self.db().meta),
         );
 
         self.db.zeroize();

@@ -59,6 +59,7 @@ pub enum RxViewMode {
     All,
     Templates,
     Totp,
+    Tags,
 }
 
 fn view_mode_from_string(qval: &QString) -> RxViewMode {
@@ -66,6 +67,7 @@ fn view_mode_from_string(qval: &QString) -> RxViewMode {
         "All" => RxViewMode::All,
         "Templates" => RxViewMode::Templates,
         "Totp" => RxViewMode::Totp,
+        "Tags" => RxViewMode::Tags,
         _ => panic!("Invalid view mode: {}", qval),
     }
 }
@@ -75,6 +77,7 @@ fn view_mode_to_string(view_mode: &RxViewMode) -> QString {
         RxViewMode::All => "All",
         RxViewMode::Templates => "Templates",
         RxViewMode::Totp => "Totp",
+        RxViewMode::Tags => "Tags",
     }
     .into()
 }

@@ -8,15 +8,20 @@ use unicase::UniCase;
 use uuid::Uuid;
 use zeroize::Zeroize;
 
-use super::{RxDatabase, RxEntry, RxGroup, RxTemplate, RxValue, icons::RxIcon};
+use super::{RxDatabase, RxEntry, RxGroup, RxTag, RxTemplate, RxValue, icons::RxIcon};
 
 fn search_contained_ref(contained_ref: &RxContainedRef, term: &str) -> bool {
     match contained_ref {
         RxContainedRef::Entry(entry) => search_entry(entry, term),
         RxContainedRef::Group(group) => search_group(group, term),
         RxContainedRef::Template(template) => search_template(template, term),
+        RxContainedRef::Tag(tag) => search_tag(tag, term),
         RxContainedRef::VirtualRoot(_) => true,
     }
+}
+
+fn search_tag(tag: &RxTag, term: &str) -> bool {
+    UniCase::new(&tag.name).to_folded_case().contains(term)
 }
 
 fn search_group(group: &RxGroup, term: &str) -> bool {
@@ -88,12 +93,13 @@ pub trait IntoContainer {
 
 /// What exactly this container points to. The actual resource, as
 /// opposed to its function (e.g. a Grouping can be a Group or a
-/// Template).
-#[derive(Clone, Copy)]
+/// Template or a Tag).
+#[derive(Clone, Copy, Eq, PartialEq)]
 pub enum RxContainedType {
     Entry,
     Group,
     Template,
+    Tag,
     VirtualRoot,
 }
 
@@ -130,11 +136,9 @@ impl RxContainer {
 
     pub fn get_ref(&self) -> Option<RxContainedRef> {
         match self.contained_type {
-            RxContainedType::Group => self.item().grouping().and_then(|g| g.contained_ref()),
-            RxContainedType::Template => {
+            RxContainedType::Group | RxContainedType::Template | RxContainedType::Tag => {
                 self.item().grouping().and_then(|g| g.contained_ref())
             }
-
             RxContainedType::Entry => self.item().entry().map(|e| RxContainedRef::Entry(e)),
             RxContainedType::VirtualRoot => match self.item() {
                 RxContainerItem::VirtualRoot(name, _) => {
@@ -301,6 +305,26 @@ impl From<Rc<RxEntry>> for RxContainerItem {
     }
 }
 
+impl IntoContainer for RxTag {
+    fn into_container(&self, db: &RxDatabase) -> RxContainer {
+        let entries: Vec<_> = self
+            .entry_uuids
+            .as_slice()
+            .into_iter()
+            .flat_map(|id| db.get_entry(*id).map(|entry| RxContainer::from(entry, db)))
+            .collect();
+
+        RxContainer {
+            is_root: false,
+            contained_type: RxContainedType::Tag,
+            item: RxContainerItem::Grouping(RxContainerGrouping {
+                children: entries,
+                grouping: RxGrouping::Tag(self.clone()),
+            }),
+        }
+    }
+}
+
 impl IntoContainer for Rc<RxGroup> {
     fn into_container(&self, db: &RxDatabase) -> RxContainer {
         let mut subgroups: Vec<_> = self
@@ -364,6 +388,7 @@ impl IntoContainer for Rc<RxEntry> {
 #[derive(Clone)]
 pub enum RxGrouping {
     Template(Rc<RxTemplate>),
+    Tag(RxTag),
     Group(Rc<RxGroup>),
     VirtualRoot,
 }
@@ -373,6 +398,7 @@ impl RxGrouping {
         match &self {
             RxGrouping::Group(group) => Some(RxContainedRef::Group(group.clone())),
             RxGrouping::Template(template) => Some(RxContainedRef::Template(template.clone())),
+            RxGrouping::Tag(tag) => Some(RxContainedRef::Tag(tag.clone())),
             RxGrouping::VirtualRoot => None,
         }
     }
@@ -390,6 +416,7 @@ impl RxContainerGrouping {
         match &self.grouping {
             RxGrouping::Group(group) => group.uuid,
             RxGrouping::Template(template) => template.uuid,
+            RxGrouping::Tag(tag) => tag.uuid,
             RxGrouping::VirtualRoot => Uuid::default(),
         }
     }
@@ -405,6 +432,7 @@ pub enum RxContainedRef {
     Entry(Rc<RxEntry>),
     Group(Rc<RxGroup>),
     Template(Rc<RxTemplate>),
+    Tag(RxTag),
     VirtualRoot(String), // name
 }
 
@@ -414,6 +442,7 @@ impl RxContainedRef {
             RxContainedRef::Entry(entry) => entry.uuid,
             RxContainedRef::Group(group) => group.uuid,
             RxContainedRef::Template(template) => template.uuid,
+            RxContainedRef::Tag(tag) => tag.uuid,
             RxContainedRef::VirtualRoot(_) => Uuid::default(),
         }
     }
@@ -426,6 +455,7 @@ impl RxContainedRef {
                 .unwrap_or_else(|| "Untitled".to_string()),
             RxContainedRef::Group(group) => group.name.clone(),
             RxContainedRef::Template(template) => template.name.clone(),
+            RxContainedRef::Tag(tag) => tag.name.clone(),
             RxContainedRef::VirtualRoot(name) => name.clone(),
         }
     }
@@ -434,7 +464,7 @@ impl RxContainedRef {
         match self {
             RxContainedRef::Entry(entry) => Some(entry.parent_group),
             RxContainedRef::Group(group) => group.parent,
-            RxContainedRef::Template(_) => Some(Uuid::default()), //virtual root
+            RxContainedRef::Template(_) | RxContainedRef::Tag(_) => Some(Uuid::default()), //virtual root
             RxContainedRef::VirtualRoot(_) => None,
         }
     }

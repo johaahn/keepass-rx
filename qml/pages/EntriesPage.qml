@@ -271,6 +271,12 @@ Page {
                         // TRANSLATORS: Two-factor/OTP codes. Keep sentence as short as possible.
                         description: QT_TR_NOOP("Entries with 2FA codes.")
                     }
+                    ListElement {
+                        name: "Tags";
+                        menuText: "Tags"
+                        // TRANSLATORS: Lists of tagged entries. Keep sentence as short as possible.
+                        description: QT_TR_NOOP("Entries grouped by tag.")
+                    }
                 }
 
                 Component {

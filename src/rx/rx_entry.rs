@@ -86,6 +86,7 @@ pub struct RxEntry {
     pub(super) username: Option<RxValue>,
     pub(super) password: Option<RxValue>,
     pub(super) notes: Option<RxValue>,
+    pub(super) tags: Vec<String>,
 
     pub custom_fields: RxCustomFields,
 
@@ -155,6 +156,7 @@ impl DefaultWithKey for RxEntry {
             url: Default::default(),
             username: Default::default(),
             uuid: Default::default(),
+            tags: Default::default(),
         }
     }
 }
@@ -168,6 +170,7 @@ impl RxEntry {
         icon: Option<Icon>,
     ) -> Self {
         let master_key = master_key.clone();
+
         let custom_data = mem::take(&mut entry.custom_data);
 
         let title = extract_value(&master_key, &mut entry, "Title");
@@ -212,6 +215,7 @@ impl RxEntry {
             url: url,
             raw_otp_value: raw_otp_value,
             icon: rx_icon,
+            tags: mem::take(&mut entry.tags),
         }
     }
 
@@ -277,6 +281,10 @@ impl RxEntry {
                     })
             }
         }
+    }
+
+    pub fn has_tags(&self) -> bool {
+        self.tags.len() > 0
     }
 
     pub fn has_otp(&self) -> bool {

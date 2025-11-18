@@ -16,7 +16,9 @@ use super::KeepassRx;
 use super::models::RxListItem;
 use crate::crypto::EncryptedPassword;
 use crate::gui::models::RxList;
-use crate::rx::virtual_hierarchy::{AllTemplates, DefaultView, TotpEntries, VirtualHierarchy};
+use crate::rx::virtual_hierarchy::{
+    AllTags, AllTemplates, DefaultView, TotpEntries, VirtualHierarchy,
+};
 use crate::{
     gui::{RxViewMode, models::RxUiContainer, utils::imported_databases_path},
     rx::{RxDatabase, RxFieldName, RxRoot, ZeroableDatabase},
@@ -213,12 +215,11 @@ impl Handler<SetViewMode> for KeepassRxActor {
         gui.viewMode = mode;
         gui.container_stack.clear();
 
-        let view = match mode {
-            RxViewMode::All => Box::new(DefaultView::new(db)) as Box<dyn VirtualHierarchy>,
-            RxViewMode::Templates => {
-                Box::new(AllTemplates::new(db)) as Box<dyn VirtualHierarchy>
-            }
-            RxViewMode::Totp => Box::new(TotpEntries::new(db)) as Box<dyn VirtualHierarchy>,
+        let view: Box<dyn VirtualHierarchy> = match mode {
+            RxViewMode::All => Box::new(DefaultView::new(db)),
+            RxViewMode::Templates => Box::new(AllTemplates::new(db)),
+            RxViewMode::Totp => Box::new(TotpEntries::new(db)),
+            RxViewMode::Tags => Box::new(AllTags::new(db)),
         };
 
         self.current_view = Some(view);

@@ -13,7 +13,7 @@ pub fn to_builtin_icon(icon_id: usize) -> Option<String> {
     }
 }
 
-#[derive(Default, Clone, Debug)]
+#[derive(Default, Clone, Debug, Hash, Eq, PartialEq)]
 pub enum RxIcon {
     Builtin(usize),
     Image(Vec<u8>),

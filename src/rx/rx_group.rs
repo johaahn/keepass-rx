@@ -1,3 +1,5 @@
+use std::sync::atomic::{AtomicUsize, Ordering};
+
 use keepass::db::Group;
 use uuid::Uuid;
 use zeroize::{Zeroize, ZeroizeOnDrop};
@@ -60,4 +62,25 @@ pub struct RxTemplate {
 
     #[zeroize(skip)]
     pub entry_uuids: Vec<Uuid>,
+}
+
+static TAG_ID_COUNTER: AtomicUsize = AtomicUsize::new(1);
+
+#[derive(Zeroize, ZeroizeOnDrop, Default, Clone)]
+pub struct RxTag {
+    #[zeroize(skip)]
+    pub(crate) uuid: Uuid,
+    pub(crate) name: String,
+    #[zeroize(skip)]
+    pub(crate) entry_uuids: Vec<Uuid>,
+}
+
+impl RxTag {
+    pub fn new(name: String, entry_uuids: Vec<Uuid>) -> Self {
+        Self {
+            uuid: Uuid::new_v4(), // TODO check for collision?
+            name: name,
+            entry_uuids: entry_uuids,
+        }
+    }
 }

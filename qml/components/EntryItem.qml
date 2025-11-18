@@ -9,6 +9,16 @@ ListItem {
     height: units.gu(10)
     id: entireItem
 
+    function resolveFolderIconName(itemType) {
+        if (itemType == 'Group' || itemType == 'Template') {
+            return 'folder';
+        } else if (itemType == 'Tag') {
+            return 'tag';
+        } else {
+            return 'up';
+        }
+    }
+
     function resolveIconPath() {
         if (iconPath) {
             if (iconBuiltin) {
@@ -139,7 +149,7 @@ ListItem {
             id: imgLoader
             width: units.gu(5)
             height: parent.height
-            sourceComponent: itemType == 'Group' ? folderImg : entryImg
+            sourceComponent: itemType == 'Group' || itemType == 'Tag' ? folderImg : entryImg
 
             Component {
                 id: folderImg
@@ -148,17 +158,18 @@ ListItem {
                     width: units.gu(5)
                     height: parent.height
 
-                    // The folder icon itself (groups only, not templates)
+                    // The folder icon itself (groups + tags only, not templates)
 	            Icon {
 	                width: units.gu(5)
 	                height: parent.height
 	                y: parent.height / 2 - height / 2
-	                name: itemType == 'Group' || itemType == 'Template' ? 'folder' : 'up'
+	                name: resolveFolderIconName(itemType)
 	            }
 
                     // Icon of the group/folder, if it has one.
 	            Image {
 	                id: groupEntryImg
+                        visible: itemType !== 'Tag' // no tiny images for tags.
 	                fillMode: Image.PreserveAspectFit
 	                source: resolveIconPath()
 	                width: units.gu(2.75)
@@ -208,13 +219,14 @@ ListItem {
 	width: imgLoader.width + detailsColumn.width
 	height: parent.height
 	onClicked: {
-	    if (itemType == 'Group' || itemType == 'Template') {
-                keepassrx.pushContainer(uuid);
-	    } else if (itemType == 'Entry') {
+            if (itemType == 'Entry') {
 		keepassrx.getSingleEntry(uuid);
 	    } else if (itemType == 'GoBack') {
 		keepassrx.popContainer();
-	    }
+	    } else {
+                // We assume anything else is a grouping.
+                keepassrx.pushContainer(uuid);
+            }
 	}
     }
 

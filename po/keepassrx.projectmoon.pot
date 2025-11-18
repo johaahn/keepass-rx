@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-18 11:57+0100\n"
+"POT-Creation-Date: 2025-11-18 20:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,14 +22,14 @@ msgid "Add Database"
 msgstr ""
 
 #: qml/pages/DBList.qml:74 qml/pages/UnlockPage.qml:34
-#: qml/pages/SettingsPage.qml:11 qml/pages/EntriesPage.qml:201
-#: qml/pages/OpenDBPage.qml:47
+#: qml/pages/OpenDBPage.qml:47 qml/pages/SettingsPage.qml:11
+#: qml/pages/EntriesPage.qml:201
 msgid "Settings"
 msgstr ""
 
 #: qml/pages/DBList.qml:81 qml/pages/UnlockPage.qml:41
-#: qml/pages/AboutPage.qml:11 qml/pages/EntriesPage.qml:210
-#: qml/pages/OpenDBPage.qml:54
+#: qml/pages/OpenDBPage.qml:54 qml/pages/AboutPage.qml:11
+#: qml/pages/EntriesPage.qml:210
 msgid "About"
 msgstr ""
 
@@ -77,6 +77,27 @@ msgstr ""
 
 #: qml/pages/UnlockPage.qml:244
 msgid "Database Not Opening?"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:34 qml/pages/SingleEntry.qml:96
+#: qml/pages/EntriesPage.qml:165
+msgid "Back"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:159
+msgid "Enter the database master password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:172
+msgid "Master Password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:202
+msgid "Open"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:219
+msgid "Opening"
 msgstr ""
 
 #: qml/pages/SettingsPage.qml:44
@@ -127,13 +148,8 @@ msgstr ""
 
 #: qml/pages/AboutPage.qml:76
 msgid ""
-"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
-"git.agnos.is/projectmoon/keepass-rx</a>"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:96 qml/pages/EntriesPage.qml:165
-#: qml/pages/OpenDBPage.qml:34
-msgid "Back"
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
+"agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
 
 #: qml/pages/SingleEntry.qml:222
@@ -192,44 +208,41 @@ msgstr ""
 msgid "Entries with 2FA codes."
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:284
+#: qml/pages/EntriesPage.qml:278
+msgid "Entries grouped by tag."
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:290
 msgid "Select View"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:303
+#: qml/pages/EntriesPage.qml:309
 msgid "Select"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:159
-msgid "Enter the database master password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:172
-msgid "Master Password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:202
-msgid "Open"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:219
-msgid "Opening"
-msgstr ""
-
-#: src/rx/virtual_hierarchy.rs:31
+#: src/rx/virtual_hierarchy.rs:35
 msgid "Special Categories"
 msgstr ""
 
-#: src/rx/virtual_hierarchy.rs:39
+#: src/rx/virtual_hierarchy.rs:43
 msgid "All Templates"
 msgstr ""
 
-#: src/rx/virtual_hierarchy.rs:86
+#: src/rx/virtual_hierarchy.rs:90
 msgctxt "Default view of the password database (all entries)"
 msgid "Default View"
 msgstr ""
 
-#: src/rx/virtual_hierarchy.rs:112 src/rx/virtual_hierarchy.rs:125
+#: src/rx/virtual_hierarchy.rs:116 src/rx/virtual_hierarchy.rs:129
 msgctxt "Two-factor/OTP codes (keep phrase short as possible)"
 msgid "2FA Codes"
+msgstr ""
+
+#: src/rx/virtual_hierarchy.rs:166
+msgctxt "List of entries with tags"
+msgid "Tags"
+msgstr ""
+
+#: src/rx/virtual_hierarchy.rs:174
+msgid "Tags"
 msgstr ""

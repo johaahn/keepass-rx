@@ -256,18 +256,19 @@ Page {
                     ListElement {
                         name: "All"
                         menuText: "All Entries"
+                        // TRANSLATORS: Keep sentence as short as possible.
                         description: QT_TR_NOOP("All groups and entries.")
                     }
                     ListElement {
                         name: "Templates"
                         menuText: "Special Categories"
-                        // TRANSLATORS: List of entries that have templates (credit card, etc).
+                        // TRANSLATORS: Keep sentence as short as possible.
                         description: QT_TR_NOOP("Entries grouped by template.")
                     }
                     ListElement {
                         name: "Totp";
                         menuText: "2FA Codes"
-                        // TRANSLATORS: Two-factor/OTP codes.
+                        // TRANSLATORS: Two-factor/OTP codes. Keep sentence as short as possible.
                         description: QT_TR_NOOP("Entries with 2FA codes.")
                     }
                 }

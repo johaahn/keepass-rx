@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-18 10:29+0000\n"
+"POT-Creation-Date: 2025-11-18 10:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -180,7 +180,19 @@ msgstr ""
 msgid "Change View"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:283
+#: qml/pages/EntriesPage.qml:260
+msgid "All groups and entries."
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:266
+msgid "Entries grouped by template."
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:272
+msgid "Entries with 2FA codes."
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:284
 msgid "Select View"
 msgstr ""
 

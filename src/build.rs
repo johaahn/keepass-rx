@@ -96,6 +96,8 @@ fn update_language_files() {
             "--qt",
             "--keyword=tr",
             "--keyword=tr:1,2",
+            "--keyword=QT_TR_NOOP",
+            "--keyword=QT_TR_NOOP:1,2",
             "--add-comments=i18n",
             "--from-code=UTF-8",
         ])

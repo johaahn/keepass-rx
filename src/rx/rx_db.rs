@@ -193,7 +193,7 @@ impl RxDatabase {
         self.all_groups.values().map(|g| g.as_ref())
     }
 
-    fn all_entries_iter(&self) -> impl Iterator<Item = &Rc<RxEntry>> {
+    pub fn all_entries_iter(&self) -> impl Iterator<Item = &Rc<RxEntry>> {
         self.all_entries.values()
     }
 

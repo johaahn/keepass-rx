@@ -16,13 +16,9 @@ use super::KeepassRx;
 use super::models::RxListItem;
 use crate::crypto::EncryptedPassword;
 use crate::gui::models::RxList;
-use crate::rx::virtual_hierarchy::{AllTemplates, DefaultView, VirtualHierarchy};
+use crate::rx::virtual_hierarchy::{AllTemplates, DefaultView, TotpEntries, VirtualHierarchy};
 use crate::{
-    gui::{
-        RxViewMode,
-        models::{RxPageType, RxUiContainer},
-        utils::imported_databases_path,
-    },
+    gui::{RxViewMode, models::RxUiContainer, utils::imported_databases_path},
     rx::{RxDatabase, RxFieldName, RxRoot, ZeroableDatabase},
 };
 
@@ -217,23 +213,21 @@ impl Handler<SetViewMode> for KeepassRxActor {
         gui.viewMode = mode;
         gui.container_stack.clear();
 
-        if let RxViewMode::All = mode {
-            self.current_view = Some(Box::new(DefaultView::new(db)));
-            let root_uuid = self.current_view.as_ref().unwrap().root().uuid();
-            gui.container_stack.push(RxUiContainer {
-                uuid: root_uuid,
-                page_type: RxPageType::Group,
-                is_root: true,
-            });
-        } else {
-            self.current_view = Some(Box::new(AllTemplates::new(db)));
-            let root_uuid = self.current_view.as_ref().unwrap().root().uuid();
-            gui.container_stack.push(RxUiContainer {
-                uuid: root_uuid,
-                page_type: RxPageType::Template,
-                is_root: true,
-            });
-        }
+        let view = match mode {
+            RxViewMode::All => Box::new(DefaultView::new(db)) as Box<dyn VirtualHierarchy>,
+            RxViewMode::Templates => {
+                Box::new(AllTemplates::new(db)) as Box<dyn VirtualHierarchy>
+            }
+            RxViewMode::Totp => Box::new(TotpEntries::new(db)) as Box<dyn VirtualHierarchy>,
+        };
+
+        self.current_view = Some(view);
+
+        let root_uuid = self.current_view.as_ref().unwrap().root().uuid();
+        gui.container_stack.push(RxUiContainer {
+            uuid: root_uuid,
+            is_root: true,
+        });
 
         println!(
             "Set view to: {}",
@@ -378,12 +372,8 @@ impl Handler<PushContainer> for KeepassRxActor {
         let viewable = view.root();
 
         if let Some(container) = viewable.get_container(msg.0) {
-            let page_type =
-                RxPageType::try_from(container).expect("Could not convert page type");
-
             let page = RxUiContainer {
                 uuid: container.uuid(),
-                page_type: page_type,
                 is_root: container.is_root(),
             };
 
@@ -415,23 +405,12 @@ impl Handler<PopContainer> for KeepassRxActor {
                 .map(|page| page.uuid)
                 .unwrap_or_else(|| view.root().uuid());
 
-            let new_page_type =
-                parent_container
-                    .map(|page| page.page_type)
-                    .unwrap_or_else(|| {
-                        view.root()
-                            .get_container(new_uuid)
-                            .and_then(|container| RxPageType::try_from(container).ok())
-                            .unwrap_or(RxPageType::Group)
-                    });
-
             let is_root = parent_container
                 .map(|container| container.is_root)
                 .unwrap_or(false);
 
             let new_page = RxUiContainer {
                 uuid: new_uuid,
-                page_type: new_page_type,
                 is_root: is_root,
             };
 

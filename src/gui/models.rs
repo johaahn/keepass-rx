@@ -59,12 +59,34 @@ pub struct RxListItem {
     hasTOTP: qt_property!(bool),
 }
 
+impl RxListItem {
+    pub fn for_virtual_root(name: String) -> Self {
+        RxListItem {
+            base: Default::default(),
+            itemType: RxItemType::Group,
+            uuid: QString::from(Uuid::default().to_string()),
+            parentUuid: QString::default(),
+
+            hasUsername: false,
+            hasPassword: false,
+            hasURL: false,
+            hasTOTP: false,
+
+            iconPath: QString::default(),
+            iconBuiltin: false,
+            title: QString::from(name.as_ref()),
+            subtitle: QString::from(""),
+        }
+    }
+}
+
 impl From<RxContainedRef> for RxListItem {
     fn from(value: RxContainedRef) -> Self {
         match value {
             RxContainedRef::Entry(entry) => RxListItem::from(entry.as_ref()),
             RxContainedRef::Group(group) => RxListItem::from(group.as_ref()),
             RxContainedRef::Template(template) => RxListItem::from(template.as_ref()),
+            RxContainedRef::VirtualRoot(root_name) => RxListItem::for_virtual_root(root_name),
         }
     }
 }
@@ -213,43 +235,13 @@ impl From<RxList> for QVariantList {
     }
 }
 
-#[derive(Default, Clone, Copy)]
-pub enum RxPageType {
-    #[default]
-    Group,
-    Template,
-}
-
-impl TryFrom<&RxContainer> for RxPageType {
-    type Error = anyhow::Error;
-    fn try_from(value: &RxContainer) -> Result<Self, Self::Error> {
-        match value.item().grouping() {
-            Some(RxGrouping::Group(_)) => Ok(RxPageType::Group),
-            Some(RxGrouping::Template(_)) => Ok(RxPageType::Template),
-            _ => Err(anyhow!(
-                "Not a thing that can be converted into a page type"
-            )),
-        }
-    }
-}
-
 /// What group/template container we are in. Used in conjunction with
 /// RxViewMode to determine if we should be able to travel back up the
 /// tree and so on.
 #[derive(Default, Clone)]
 pub struct RxUiContainer {
     pub uuid: Uuid,
-    pub page_type: RxPageType,
     pub is_root: bool,
-}
-
-impl ToString for RxPageType {
-    fn to_string(&self) -> String {
-        match self {
-            RxPageType::Template => "Template".to_string(),
-            RxPageType::Group => "Group".to_string(),
-        }
-    }
 }
 
 impl From<&RxUiContainer> for QVariantMap {
@@ -258,11 +250,6 @@ impl From<&RxUiContainer> for QVariantMap {
         qvar.insert(
             "containerUuid".into(),
             QString::from(value.uuid.to_string()).into(),
-        );
-
-        qvar.insert(
-            "containerType".into(),
-            QString::from(value.page_type.to_string()).into(),
         );
 
         qvar.insert("isRoot".into(), value.is_root.into());

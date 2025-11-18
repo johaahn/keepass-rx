@@ -2,6 +2,8 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.3
 import Lomiri.Components 1.3
+import Lomiri.Components.Popups 1.3
+import Lomiri.Content 1.3
 import Qt.labs.settings 1.0
 
 import "../components"
@@ -18,7 +20,6 @@ Page {
     // The default values of these properties control what we should fetch first.
     property string containerUuid
     property string containerName
-    property string containerType: 'Group'
     property bool atRoot: true
     property bool searchMode: false
 
@@ -52,14 +53,10 @@ Page {
     }
 
     function headerTitle() {
-        if (containerName && !isAtRoot()) {
+        if (containerName && !isAtRoot() || keepassrx.viewMode != 'All') {
             return containerName;
         } else {
-            if (containerType == 'Group') {
-                return settings.showAccents && publicDatabaseName ? publicDatabaseName : "KeePassRX";
-            } else {
-                return i18n.tr("Special Categories");
-            }
+            return settings.showAccents && publicDatabaseName ? publicDatabaseName : "KeePassRX";
         }
     }
 
@@ -181,11 +178,7 @@ Page {
                 text: i18n.tr("View Mode")
                 iconName: "filters"
                 onTriggered: {
-                    if (keepassrx.viewMode == 'Templates') {
-                        keepassrx.viewMode = 'All';
-                    } else {
-                        keepassrx.viewMode = 'Templates';
-                    }
+                    PopupUtils.open(viewModeDialog);
                 }
             },
 
@@ -246,6 +239,79 @@ Page {
     }
 
     header: searchMode ? opsBar : regularHeader
+
+    Item {
+        id: changeViewMode
+        width: units.gu(80)
+        height: units.gu(80)
+
+        Component {
+            id: viewModeDialog
+
+            Dialog {
+                id: viewModeDialogInner
+                // TRANSLATORS: Change list of entries that are shown (all, templated, 2fa, etc).
+                title: i18n.tr("Change View")
+
+
+                ListModel {
+                    id: viewModes
+                    ListElement {
+                        name: "All"
+                        menuText: "All Entries"
+                    }
+                    ListElement {
+                        name: "Templates"
+                        // TRANSLATORS: List of entries that have templates (credit card, etc).
+                        menuText: "Special Categories"
+                    }
+                    ListElement {
+                        name: "Totp";
+                        // TRANSLATORS: Two-factor/OTP codes.
+                        menuText: "2FA Codes"
+                    }
+                }
+
+                Component {
+                    id: viewModeDelegate
+                    OptionSelectorDelegate { text: menuText }
+                }
+
+                OptionSelector {
+                    id: viewModeSelector
+                    // TRANSLATORS: Select the list of entries that are shown
+                    text: i18n.tr("Select View")
+                    expanded: true
+                    model: viewModes
+                    delegate: viewModeDelegate
+                    selectedIndex: getSelectedView()
+                }
+
+                function getSelectedView() {
+                    for (let c = 0; c < viewModes.count; c++) {
+                        const item = viewModes.get(c);
+                        if (item.name == keepassrx.viewMode) {
+                            return c;
+                        }
+                    }
+
+                    return 0; // All
+                }
+
+                Button {
+                    text: "Go"
+                    color: LomiriColors.green
+                    onClicked: {
+                        // Change view mode
+                        const selection = viewModes.get(viewModeSelector.selectedIndex);
+                        console.log('Picked', JSON.stringify(selection));
+                        keepassrx.viewMode = selection.name;
+                        PopupUtils.close(viewModeDialogInner)
+                    }
+                }
+            }
+        }
+    }
 
     ListView {
 	id: entriesList
@@ -344,18 +410,22 @@ Page {
 
         function onViewModeChanged(mode) {
             entriesListModel.clear();
+
+            // Forces virtual roots to change. They use
+            // Uuid::default(), which is always the same value.
+            containerUuid = null;
         }
 
-        // newContainer is { containerUuid, containerType }
+        // newContainer is { containerUuid, isRoot }
         function onCurrentContainerChanged(newContainer) {
 	    searchMode = false;
 	    searchField.text = '';
             entriesListModel.clear();
 
             // Type must be set before UUID due to uuid change signal
-            // triggering entry list update.
+            // triggering entry list update. The container UUID change
+            // signal will trigger changes.
             atRoot = newContainer.isRoot;
-            containerType = newContainer.containerType;
             containerUuid = newContainer.containerUuid;
         }
 

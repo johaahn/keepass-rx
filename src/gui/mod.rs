@@ -1,7 +1,7 @@
 use actix::prelude::*;
 use anyhow::{Result, anyhow};
 use colors::wash_out_by_blending;
-use models::{RxPageType, RxUiContainer};
+use models::RxUiContainer;
 use qmeta_async::with_executor;
 use qmetaobject::*;
 use secstr::SecUtf8;
@@ -58,12 +58,14 @@ pub enum RxViewMode {
     #[default]
     All,
     Templates,
+    Totp,
 }
 
 fn view_mode_from_string(qval: &QString) -> RxViewMode {
     match qval.to_string().as_str() {
         "All" => RxViewMode::All,
         "Templates" => RxViewMode::Templates,
+        "Totp" => RxViewMode::Totp,
         _ => panic!("Invalid view mode: {}", qval),
     }
 }
@@ -72,6 +74,7 @@ fn view_mode_to_string(view_mode: &RxViewMode) -> QString {
     match view_mode {
         RxViewMode::All => "All",
         RxViewMode::Templates => "Templates",
+        RxViewMode::Totp => "Totp",
     }
     .into()
 }

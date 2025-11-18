@@ -27,7 +27,7 @@ impl AllTemplates {
             .map(|t| RxContainer::from(t.clone(), db))
             .collect();
 
-        AllTemplates(RxRoot::virtual_root(children))
+        AllTemplates(RxRoot::virtual_root("Special Categories", children))
     }
 }
 
@@ -79,6 +79,40 @@ impl VirtualHierarchy for DefaultView {
 
     fn name(&self) -> &str {
         "Default View"
+    }
+
+    fn search(&self, container_uuid: Uuid, search_term: Option<&str>) -> Vec<RxContainedRef> {
+        self.root()
+            .get_container(container_uuid)
+            .map(|container| container.search_children_immediate(search_term))
+            .unwrap_or_default()
+    }
+}
+
+pub struct TotpEntries(RxRoot);
+
+impl TotpEntries {
+    pub fn new(db: &RxDatabase) -> Self {
+        let entries: Vec<_> = db
+            .all_entries_iter()
+            .filter(|ent| ent.has_otp())
+            .cloned()
+            .map(|ent| RxContainer::from(ent, db))
+            .collect();
+
+        let root = RxRoot::virtual_root("2FA Codes", entries);
+
+        TotpEntries(root)
+    }
+}
+
+impl VirtualHierarchy for TotpEntries {
+    fn name(&self) -> &str {
+        "2FA Entries"
+    }
+
+    fn root(&self) -> &RxRoot {
+        &self.0
     }
 
     fn search(&self, container_uuid: Uuid, search_term: Option<&str>) -> Vec<RxContainedRef> {

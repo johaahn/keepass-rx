@@ -279,6 +279,10 @@ impl RxEntry {
         }
     }
 
+    pub fn has_otp(&self) -> bool {
+        self.raw_otp_value.is_some()
+    }
+
     pub fn has_steam_otp(&self) -> bool {
         expose!(&self.master_key, self.raw_otp_value).starts_with("otpauth://totp/Steam:")
     }

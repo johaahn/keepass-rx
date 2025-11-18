@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-17 21:18+0000\n"
+"POT-Creation-Date: 2025-11-18 09:08+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,14 +22,14 @@ msgid "Add Database"
 msgstr ""
 
 #: qml/pages/DBList.qml:74 qml/pages/UnlockPage.qml:34
-#: qml/pages/OpenDBPage.qml:47 qml/pages/SettingsPage.qml:11
-#: qml/pages/EntriesPage.qml:208
+#: qml/pages/SettingsPage.qml:11 qml/pages/EntriesPage.qml:201
+#: qml/pages/OpenDBPage.qml:47
 msgid "Settings"
 msgstr ""
 
 #: qml/pages/DBList.qml:81 qml/pages/UnlockPage.qml:41
-#: qml/pages/OpenDBPage.qml:54 qml/pages/AboutPage.qml:11
-#: qml/pages/EntriesPage.qml:217
+#: qml/pages/AboutPage.qml:11 qml/pages/EntriesPage.qml:210
+#: qml/pages/OpenDBPage.qml:54
 msgid "About"
 msgstr ""
 
@@ -77,27 +77,6 @@ msgstr ""
 
 #: qml/pages/UnlockPage.qml:244
 msgid "Database Not Opening?"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:34 qml/pages/SingleEntry.qml:96
-#: qml/pages/EntriesPage.qml:168
-msgid "Back"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:159
-msgid "Enter the database master password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:172
-msgid "Master Password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:202
-msgid "Open"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:219
-msgid "Opening"
 msgstr ""
 
 #: qml/pages/SettingsPage.qml:44
@@ -152,6 +131,11 @@ msgid ""
 "agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
 
+#: qml/pages/SingleEntry.qml:96 qml/pages/EntriesPage.qml:165
+#: qml/pages/OpenDBPage.qml:34
+msgid "Back"
+msgstr ""
+
 #: qml/pages/SingleEntry.qml:222
 msgid "Notes"
 msgstr ""
@@ -160,38 +144,58 @@ msgstr ""
 msgid "Tap to copy"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:61
-msgid "Special Categories"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:99
+#: qml/pages/EntriesPage.qml:96
 msgid "Cancel Search"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:119
+#: qml/pages/EntriesPage.qml:116
 msgid "Search entries in this group"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:144
+#: qml/pages/EntriesPage.qml:141
 msgid "Lock"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:156
+#: qml/pages/EntriesPage.qml:153
 msgid "Close"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:181
+#: qml/pages/EntriesPage.qml:178
 msgid "View Mode"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:195
+#: qml/pages/EntriesPage.qml:188
 msgid "Search"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:229
+#: qml/pages/EntriesPage.qml:222
 msgid "Lock Database"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:239
+#: qml/pages/EntriesPage.qml:232
 msgid "Close Database"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:254
+msgid "Change View"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:283
+msgid "Select View"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:159
+msgid "Enter the database master password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:172
+msgid "Master Password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:202
+msgid "Open"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:219
+msgid "Opening"
 msgstr ""

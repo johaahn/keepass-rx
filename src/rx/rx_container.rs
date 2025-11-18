@@ -15,6 +15,7 @@ fn search_contained_ref(contained_ref: &RxContainedRef, term: &str) -> bool {
         RxContainedRef::Entry(entry) => search_entry(entry, term),
         RxContainedRef::Group(group) => search_group(group, term),
         RxContainedRef::Template(template) => search_template(template, term),
+        RxContainedRef::VirtualRoot(_) => true,
     }
 }
 
@@ -60,7 +61,7 @@ impl RxRoot {
         self.root_container.uuid()
     }
 
-    pub fn virtual_root(children: Vec<RxContainer>) -> Self {
+    pub fn virtual_root(name: &str, children: Vec<RxContainer>) -> Self {
         let all_child_uuids: IndexSet<Uuid> = children
             .iter()
             .flat_map(|child| child.child_uuids_recursive())
@@ -69,7 +70,7 @@ impl RxRoot {
         Self {
             all_containers: all_child_uuids,
             root_container: Rc::new(RxContainer {
-                item: RxContainerItem::VirtualRoot(children),
+                item: RxContainerItem::VirtualRoot(name.to_owned(), children),
                 is_root: true,
                 contained_type: RxContainedType::VirtualRoot,
             }),
@@ -135,7 +136,12 @@ impl RxContainer {
             }
 
             RxContainedType::Entry => self.item().entry().map(|e| RxContainedRef::Entry(e)),
-            _ => None,
+            RxContainedType::VirtualRoot => match self.item() {
+                RxContainerItem::VirtualRoot(name, _) => {
+                    Some(RxContainedRef::VirtualRoot(name.clone()))
+                }
+                _ => None,
+            },
         }
     }
 
@@ -251,7 +257,7 @@ pub enum RxContainerItem {
     /// VirtualRoot is for containers that don't have a clear actual
     /// existing root, e.g. list of all templates has no parent that
     /// could be root.
-    VirtualRoot(Vec<RxContainer>),
+    VirtualRoot(String, Vec<RxContainer>), // name + children
     Grouping(RxContainerGrouping),
     Entry(Rc<RxEntry>),
 }
@@ -261,7 +267,7 @@ impl RxContainerItem {
         match self {
             Self::Grouping(grouping) => grouping.uuid(),
             Self::Entry(entry) => entry.uuid,
-            Self::VirtualRoot(_) => Uuid::default(),
+            Self::VirtualRoot(_, _) => Uuid::default(),
         }
     }
 
@@ -269,7 +275,7 @@ impl RxContainerItem {
         match self {
             Self::Grouping(grouping) => Some(grouping.grouping()),
             Self::Entry(_) => None,
-            Self::VirtualRoot(_) => Some(&RxGrouping::VirtualRoot),
+            Self::VirtualRoot(_, _) => Some(&RxGrouping::VirtualRoot),
         }
     }
 
@@ -284,7 +290,7 @@ impl RxContainerItem {
         match self {
             Self::Grouping(grouping) => grouping.children.as_slice(),
             Self::Entry(_) => &[],
-            Self::VirtualRoot(children) => children.as_slice(),
+            Self::VirtualRoot(_, children) => children.as_slice(),
         }
     }
 }
@@ -399,6 +405,7 @@ pub enum RxContainedRef {
     Entry(Rc<RxEntry>),
     Group(Rc<RxGroup>),
     Template(Rc<RxTemplate>),
+    VirtualRoot(String), // name
 }
 
 impl RxContainedRef {
@@ -407,6 +414,7 @@ impl RxContainedRef {
             RxContainedRef::Entry(entry) => entry.uuid,
             RxContainedRef::Group(group) => group.uuid,
             RxContainedRef::Template(template) => template.uuid,
+            RxContainedRef::VirtualRoot(_) => Uuid::default(),
         }
     }
 
@@ -418,6 +426,7 @@ impl RxContainedRef {
                 .unwrap_or_else(|| "Untitled".to_string()),
             RxContainedRef::Group(group) => group.name.clone(),
             RxContainedRef::Template(template) => template.name.clone(),
+            RxContainedRef::VirtualRoot(name) => name.clone(),
         }
     }
 
@@ -425,8 +434,8 @@ impl RxContainedRef {
         match self {
             RxContainedRef::Entry(entry) => Some(entry.parent_group),
             RxContainedRef::Group(group) => group.parent,
-            // Templates never have a parent UUID, due to virtual root.
-            RxContainedRef::Template(_) => None,
+            RxContainedRef::Template(_) => Some(Uuid::default()), //virtual root
+            RxContainedRef::VirtualRoot(_) => None,
         }
     }
 }

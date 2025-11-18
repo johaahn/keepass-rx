@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-18 09:26+0000\n"
+"POT-Creation-Date: 2025-11-18 10:37+0000\n"
 "PO-Revision-Date: 2025-11-07 14:51+0000\n"
 "Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -150,6 +150,15 @@ msgstr "Datenbank schließen"
 msgid "Change View"
 msgstr ""
 
+msgid "All groups and entries."
+msgstr ""
+
+msgid "Entries grouped by template."
+msgstr ""
+
+msgid "Entries with 2FA codes."
+msgstr ""
+
 msgid "Select View"
 msgstr ""
 
@@ -164,6 +173,20 @@ msgstr "Öffnen"
 
 msgid "Opening"
 msgstr "Öffne"
+
+msgid "Special Categories"
+msgstr ""
+
+msgid "All Templates"
+msgstr ""
+
+msgctxt "Default view of the password database (all entries)"
+msgid "Default View"
+msgstr ""
+
+msgctxt "Two-factor/OTP codes (keep phrase short as possible)"
+msgid "2FA Codes"
+msgstr ""
 
 #~ msgid "Untitled Entry"
 #~ msgstr "Unbenannter Eintrag"

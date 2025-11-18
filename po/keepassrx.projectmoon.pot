@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-18 09:26+0000\n"
+"POT-Creation-Date: 2025-11-18 10:29+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -198,4 +198,22 @@ msgstr ""
 
 #: qml/pages/OpenDBPage.qml:219
 msgid "Opening"
+msgstr ""
+
+#: src/rx/virtual_hierarchy.rs:31
+msgid "Special Categories"
+msgstr ""
+
+#: src/rx/virtual_hierarchy.rs:39
+msgid "All Templates"
+msgstr ""
+
+#: src/rx/virtual_hierarchy.rs:86
+msgctxt "Default view of the password database (all entries)"
+msgid "Default View"
+msgstr ""
+
+#: src/rx/virtual_hierarchy.rs:112 src/rx/virtual_hierarchy.rs:125
+msgctxt "Two-factor/OTP codes (keep phrase short as possible)"
+msgid "2FA Codes"
 msgstr ""

@@ -140,7 +140,13 @@ fn update_language_files() {
 /// Obtains a list of all QML files
 fn source_files() -> Vec<PathBuf> {
     // Directory in which to search for QML files and file extension
-    walk_dir(PathBuf::from("qml"), "qml")
+    let mut qml = walk_dir(PathBuf::from("qml"), "qml");
+    let mut src = walk_dir(PathBuf::from("src"), "rs");
+
+    let mut files = vec![];
+    files.append(&mut qml);
+    files.append(&mut src);
+    files
 }
 
 /// Obtains a list of all translation files
@@ -195,6 +201,7 @@ fn main() {
 
     println!("cargo:rerun-if-changed=src/main.rs");
     println!("cargo:rerun-if-changed=src/rx/icons.rs");
+    println!("cargo:rerun-if-changed=src/rx/virtual_hierarchy.rs");
     println!("cargo:rerun-if-changed=po/*");
 
     println!("cargo:rustc-link-search{macos_lib_search}={qt_library_path}");

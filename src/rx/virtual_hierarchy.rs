@@ -106,8 +106,13 @@ impl TotpEntries {
             .map(|ent| RxContainer::from(ent, db))
             .collect();
 
-        let root =
-            RxRoot::virtual_root(&pgettext("Two-factor/OTP codes", "2FA Codes"), entries);
+        let root = RxRoot::virtual_root(
+            &pgettext(
+                "Two-factor/OTP codes (keep phrase short as possible)",
+                "2FA Codes",
+            ),
+            entries,
+        );
 
         TotpEntries(root)
     }
@@ -115,7 +120,10 @@ impl TotpEntries {
 
 impl VirtualHierarchy for TotpEntries {
     fn name(&self) -> String {
-        pgettext("Two-factor/OTP codes", "2FA Codes")
+        pgettext(
+            "Two-factor/OTP codes (keep phrase short as possible)",
+            "2FA Codes",
+        )
     }
 
     fn root(&self) -> &RxRoot {

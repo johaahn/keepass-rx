@@ -45,6 +45,11 @@ impl QMetaType for RxItemType {
     const CONVERSION_TO_STRING: Option<fn(&Self) -> QString> = Some(entry_type_to_string);
 }
 
+/// A setting that controls how an RxListItem is rendered in the UI.
+/// Note that the UI container of the list item must also have the
+/// feature enabled for the feature to be enabled. This prevents,
+/// e.g., rendering 2FA codes in the list outside of the 2FA codes
+/// view.
 #[derive(QEnum, Clone, Default, Copy, PartialEq)]
 #[repr(C)]
 pub enum RxUiFeature {

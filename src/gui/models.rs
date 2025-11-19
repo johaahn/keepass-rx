@@ -45,6 +45,55 @@ impl QMetaType for RxItemType {
     const CONVERSION_TO_STRING: Option<fn(&Self) -> QString> = Some(entry_type_to_string);
 }
 
+#[derive(QEnum, Clone, Default, Copy, PartialEq)]
+#[repr(C)]
+pub enum RxUiFeature {
+    #[default]
+    None,
+    DisplayTwoFactorAuth,
+}
+
+impl std::fmt::Display for RxUiFeature {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", ui_feature_to_string(self).to_string())
+    }
+}
+
+fn ui_feature_from_string(qval: &QString) -> RxUiFeature {
+    match qval.to_string().as_str() {
+        "None" => RxUiFeature::None,
+        "DisplayTwoFactorAuth" => RxUiFeature::DisplayTwoFactorAuth,
+        _ => panic!("Not a UI feature: {}", qval),
+    }
+}
+
+fn ui_feature_to_string(ui_feature: &RxUiFeature) -> QString {
+    match ui_feature {
+        RxUiFeature::None => "None",
+        RxUiFeature::DisplayTwoFactorAuth => "DisplayTwoFactorAuth",
+    }
+    .into()
+}
+
+impl QMetaType for RxUiFeature {
+    const CONVERSION_FROM_STRING: Option<fn(&QString) -> Self> = Some(ui_feature_from_string);
+    const CONVERSION_TO_STRING: Option<fn(&Self) -> QString> = Some(ui_feature_to_string);
+
+    fn to_qvariant(&self) -> QVariant {
+        QVariant::from(ui_feature_to_string(self))
+    }
+
+    fn from_qvariant(variant: QVariant) -> Option<Self> {
+        let qstr = variant.to_qstring();
+
+        if !qstr.is_null() && !qstr.is_empty() {
+            Some(ui_feature_from_string(&qstr))
+        } else {
+            None
+        }
+    }
+}
+
 /// Create translatable string for counting a list of entries.
 fn entry_count<T>(entries: &[T]) -> QString {
     format!(
@@ -63,26 +112,26 @@ fn entry_count<T>(entries: &[T]) -> QString {
 #[derive(QObject, Default)]
 #[allow(dead_code, non_snake_case)]
 pub struct RxListItem {
-    base: qt_base_class!(trait QObject),
-    itemType: qt_property!(RxItemType),
+    pub(super) base: qt_base_class!(trait QObject),
+    pub(super) itemType: qt_property!(RxItemType),
 
-    uuid: qt_property!(QString),
-    parentUuid: qt_property!(QString),
-    title: qt_property!(QString),       // Large text
-    subtitle: qt_property!(QString),    // Second line
-    description: qt_property!(QString), // Third line, description
-    iconPath: qt_property!(QString),
-    iconBuiltin: qt_property!(bool),
+    pub(super) uuid: qt_property!(QString),
+    pub(super) parentUuid: qt_property!(QString),
+    pub(super) title: qt_property!(QString), // Large text
+    pub(super) subtitle: qt_property!(QString), // Second line
+    pub(super) description: qt_property!(QString), // Third line, description
+    pub(super) iconPath: qt_property!(QString),
+    pub(super) iconBuiltin: qt_property!(bool),
 
     // A "feature" that changes how the item is rendered. For example,
     // displaying a 2FA code.
-    feature: qt_property!(QString),
+    pub(super) feature: qt_property!(RxUiFeature),
 
     // Mostly for passwords entries. Does not really apply to groups.
-    hasUsername: qt_property!(bool),
-    hasPassword: qt_property!(bool),
-    hasURL: qt_property!(bool),
-    hasTOTP: qt_property!(bool),
+    pub(super) hasUsername: qt_property!(bool),
+    pub(super) hasPassword: qt_property!(bool),
+    pub(super) hasURL: qt_property!(bool),
+    pub(super) hasTOTP: qt_property!(bool),
 }
 
 impl RxListItem {
@@ -92,7 +141,7 @@ impl RxListItem {
             itemType: RxItemType::Group,
             uuid: QString::from(Uuid::default().to_string()),
             parentUuid: QString::default(),
-            feature: QString::default(),
+            feature: RxUiFeature::None,
             description: QString::default(),
 
             hasUsername: false,
@@ -127,7 +176,7 @@ impl From<&RxTag> for RxListItem {
             itemType: RxItemType::Tag,
             uuid: QString::from(value.uuid.to_string()),
             parentUuid: QString::default(),
-            feature: QString::default(),
+            feature: RxUiFeature::None,
 
             hasUsername: false,
             hasPassword: false,
@@ -150,7 +199,7 @@ impl From<&RxTemplate> for RxListItem {
             itemType: RxItemType::Template,
             uuid: QString::from(value.uuid.to_string()),
             parentUuid: QString::default(),
-            feature: QString::default(),
+            feature: RxUiFeature::None,
 
             hasUsername: false,
             hasPassword: false,
@@ -179,9 +228,9 @@ impl From<&RxEntry> for RxListItem {
             uuid: QString::from(value.uuid.to_string()),
             parentUuid: QString::from(value.parent_group.to_string()),
             feature: if value.has_otp() {
-                QString::from("2fa")
+                RxUiFeature::DisplayTwoFactorAuth
             } else {
-                QString::default()
+                RxUiFeature::None
             },
 
             hasUsername: value.username().is_some(),
@@ -229,7 +278,7 @@ impl From<&RxGroup> for RxListItem {
             base: Default::default(),
             itemType: RxItemType::Group,
             uuid: QString::from(value.uuid.to_string()),
-            feature: QString::default(),
+            feature: RxUiFeature::None,
 
             parentUuid: value
                 .parent
@@ -290,7 +339,7 @@ impl From<RxListItem> for QVariantMap {
         map.insert("hasTOTP".into(), value.hasTOTP.to_qvariant());
         map.insert("iconPath".into(), value.iconPath.to_qvariant());
         map.insert("iconBuiltin".into(), value.iconBuiltin.to_qvariant());
-        map.insert("feature".into(), value.feature.into());
+        map.insert("feature".into(), value.feature.to_qvariant());
 
         map
     }
@@ -312,6 +361,7 @@ impl From<RxList> for QVariantList {
 pub struct RxUiContainer {
     pub uuid: Uuid,
     pub is_root: bool,
+    pub available_feature: RxUiFeature,
 }
 
 impl From<&RxUiContainer> for QVariantMap {
@@ -323,6 +373,11 @@ impl From<&RxUiContainer> for QVariantMap {
         );
 
         qvar.insert("isRoot".into(), value.is_root.into());
+
+        qvar.insert(
+            "availableFeature".into(),
+            ui_feature_to_string(&value.available_feature).into(),
+        );
 
         qvar
     }

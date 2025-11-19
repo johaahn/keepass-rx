@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-19 12:08+0000\n"
+"POT-Creation-Date: 2025-11-19 12:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -252,7 +252,7 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
-#: src/gui/models.rs:54
+#: src/gui/models.rs:103
 msgid "entry"
 msgid_plural "entries"
 msgstr[0] ""

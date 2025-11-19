@@ -50,7 +50,7 @@ ListItem {
         function onFieldValueReceived(entryUuid, fieldName, fieldValue) {
             if (fieldValue) {
                 // 2fa stuff handled by other signal.
-                if (hasFeature('2fa')) {
+                if (hasFeature('DisplayTwoFactorAuth')) {
                     return;
                 }
 
@@ -229,7 +229,7 @@ ListItem {
             Text {
                 elide: Text.ElideRight
                 color: theme.palette.normal.activity
-                text: hasFeature('2fa')
+                text: hasFeature('DisplayTwoFactorAuth')
                     ? i18n.tr("Tap 2FA to copy")
                     : (description)
             }
@@ -237,7 +237,7 @@ ListItem {
 
         Loader {
             id: featureLoader
-            sourceComponent: hasFeature('2fa') ? totpFeature : noFeatures
+            sourceComponent: hasFeature('DisplayTwoFactorAuth') ? totpFeature : noFeatures
 
             width: parent.width - parent.spacing - units.gu(6)
             height: parent.height
@@ -283,7 +283,7 @@ ListItem {
                         target: keepassrx
 
                         function onFieldValueReceived(entryUuid, fieldName, fieldValue) {
-                            if (fieldValue && hasFeature('2fa')) {
+                            if (fieldValue && hasFeature('DisplayTwoFactorAuth')) {
                                 current2FACode.text = fieldValue;
                                 return;
                             }
@@ -294,7 +294,8 @@ ListItem {
                         id: current2FATimer
                         repeat: true
                         interval: 1000
-                        running: hasFeature('2fa')
+                        running: hasFeature('DisplayTwoFactorAuth')
+                        triggeredOnStart: true
                         onTriggered: {
                           if (uuid) {
                               keepassrx.getFieldValue(uuid, "CurrentTOTP");
@@ -304,7 +305,7 @@ ListItem {
 
                     Rectangle {
                         id: featuresColumn
-                        visible: hasFeature('2fa')
+                        visible: hasFeature('DisplayTwoFactorAuth')
                         color: "transparent"
                         width: parent.width
                         height: parent.height

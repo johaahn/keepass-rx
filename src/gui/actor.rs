@@ -15,7 +15,7 @@ use zeroize::{Zeroize, Zeroizing};
 use super::KeepassRx;
 use super::models::RxListItem;
 use crate::crypto::EncryptedPassword;
-use crate::gui::models::RxList;
+use crate::gui::models::{RxList, RxUiFeature};
 use crate::rx::virtual_hierarchy::{
     AllTags, AllTemplates, DefaultView, TotpEntries, VirtualHierarchy,
 };
@@ -222,12 +222,18 @@ impl Handler<SetViewMode> for KeepassRxActor {
             RxViewMode::Tags => Box::new(AllTags::new(db)),
         };
 
+        let feature: RxUiFeature = match mode {
+            RxViewMode::Totp => RxUiFeature::DisplayTwoFactorAuth,
+            _ => RxUiFeature::None,
+        };
+
         self.current_view = Some(view);
 
         let root_uuid = self.current_view.as_ref().unwrap().root().uuid();
         gui.container_stack.push(RxUiContainer {
             uuid: root_uuid,
             is_root: true,
+            available_feature: feature,
         });
 
         println!(
@@ -372,10 +378,17 @@ impl Handler<PushContainer> for KeepassRxActor {
         let view = self.current_view.as_ref().expect("No view?");
         let viewable = view.root();
 
+        let parent_feature = gui
+            .container_stack
+            .last()
+            .map(|page| page.available_feature)
+            .unwrap_or_default();
+
         if let Some(container) = viewable.get_container(msg.0) {
             let page = RxUiContainer {
                 uuid: container.uuid(),
                 is_root: container.is_root(),
+                available_feature: parent_feature,
             };
 
             let qvar = QVariantMap::from(&page);
@@ -402,6 +415,10 @@ impl Handler<PopContainer> for KeepassRxActor {
 
         if let Some(_) = gui.container_stack.pop() {
             let parent_container = gui.container_stack.last();
+            let parent_feature = parent_container
+                .map(|page| page.available_feature)
+                .unwrap_or_default();
+
             let new_uuid = parent_container
                 .map(|page| page.uuid)
                 .unwrap_or_else(|| view.root().uuid());
@@ -413,6 +430,7 @@ impl Handler<PopContainer> for KeepassRxActor {
             let new_page = RxUiContainer {
                 uuid: new_uuid,
                 is_root: is_root,
+                available_feature: parent_feature,
             };
 
             let qvar = QVariantMap::from(&new_page);
@@ -496,11 +514,36 @@ impl Handler<GetEntries> for KeepassRxActor {
             None => viewable.root().uuid(),
         };
 
-        let results: Vec<RxListItem> = viewable
+        let mut results: Vec<RxListItem> = viewable
             .search(container_uuid, search_term)
             .into_iter()
             .map(|result| result.into())
             .collect();
+
+        // Only allow available feature of list item if the current UI
+        // container has it enabled.
+        let current_feature = gui
+            .container_stack
+            .last()
+            .map(|c| c.available_feature)
+            .unwrap_or_default();
+
+        let mut disabled_feature_count = 0;
+        for ui_list_item in results.iter_mut() {
+            ui_list_item.feature = match current_feature {
+                feat if feat == ui_list_item.feature => feat,
+                _ => {
+                    disabled_feature_count += 1;
+                    RxUiFeature::None
+                }
+            }
+        }
+
+        if disabled_feature_count > 0 {
+            println!(
+                "WARN: At least one entry had a UI feature disabled in current UI container."
+            )
+        }
 
         let q_entries: QVariantList = results.into_iter().collect();
         gui.entriesReceived(q_entries);

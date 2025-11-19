@@ -1,5 +1,5 @@
 use anyhow::anyhow;
-use gettextrs::ngettext;
+use gettextrs::npgettext;
 use qmetaobject::{
     QMetaType, QObject, QString, QStringList, QVariant, QVariantList, QVariantMap,
 };
@@ -104,7 +104,8 @@ fn entry_count<T>(entries: &[T]) -> QString {
     format!(
         "{} {}",
         entries.len(),
-        ngettext(
+        npgettext(
+            "Count of password entries in a group/folder in the main list.",
             "entry",
             "entries",
             // Convert to usize without panicking
@@ -118,7 +119,8 @@ fn entry_count_len(len: usize) -> QString {
     format!(
         "{} {}",
         len,
-        ngettext(
+        npgettext(
+            "Count of password entries in a group/folder in the main list.",
             "entry",
             "entries",
             // Convert to usize without panicking

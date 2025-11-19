@@ -375,43 +375,6 @@ Page {
         delegate: EntryItem {}
     }
 
-    Popup {
-        id: toast
-        padding: units.dp(12)
-
-        x: parent.width / 2 - width / 2
-        y: parent.height - height - units.dp(20)
-
-        background: Rectangle {
-            color: "#111111"
-            opacity: 0.7
-            radius: units.dp(10)
-        }
-
-        Text {
-            id: popupLabel
-            anchors.fill: parent
-            horizontalAlignment: Text.AlignHCenter
-            color: "#ffffff"
-            font.pixelSize: units.dp(14)
-        }
-
-        Timer {
-            id: popupTimer
-            interval: 3000
-            running: true
-            onTriggered: {
-                toast.close()
-            }
-        }
-
-        function show(text) {
-            popupLabel.text = text
-            open()
-            popupTimer.start()
-        }
-    }
-
     // Welcome to async hell:
     // 1. getContainers
     // 2. onContainersReceived

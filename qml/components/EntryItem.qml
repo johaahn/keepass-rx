@@ -3,7 +3,6 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import Lomiri.Components 1.3
 import QtGraphicalEffects 1.0
-//import "."
 
 ListItem {
     property bool passwordVisible: false
@@ -86,16 +85,6 @@ ListItem {
                         entryCustomFields: entry.customFields ? entry.customFields : null
                     }
                 )
-            }
-        }
-
-        function onTotpReceived(totp) {
-            if (!totp.error) {
-                Clipboard.push(totp.digits);
-                toast.show("Token '" + totp.digits + "' copied. Valid for " + totp.validFor);
-                clearClipboardTimer.start();
-            } else {
-                toast.show(totp.error);
             }
         }
     }
@@ -287,17 +276,6 @@ ListItem {
         repeat: false
         interval: 1500
         onTriggered: passwordVisible = false
-    }
-
-    Timer {
-        id: clearClipboardTimer
-        repeat: false
-        running: false
-        interval: 30000
-        onTriggered: {
-            Clipboard.clear();
-            toast.show('KeePassRX: Clipboard cleared.');
-        }
     }
 
     function hasFeature(featureName) {

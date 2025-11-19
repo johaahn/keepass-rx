@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-19 12:37+0000\n"
+"POT-Creation-Date: 2025-11-19 14:10+0000\n"
 "PO-Revision-Date: 2025-11-19 08:54+0000\n"
 "Last-Translator: Daniel Frost <one@frostinfo.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -19,7 +19,22 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.15-dev\n"
 
-msgid "Tap 2FA to copy"
+msgid "Copy Username"
+msgstr ""
+
+msgid "Copy Password"
+msgstr ""
+
+msgid "Open URL"
+msgstr ""
+
+msgid "Copy 2FA Code"
+msgstr ""
+
+msgid "View Entry"
+msgstr ""
+
+msgid "Tap to copy 2FA code"
 msgstr ""
 
 msgid "Add Database"
@@ -42,31 +57,6 @@ msgstr "Mit + eine Datenbank importieren."
 
 msgid "It will only be removed from the app, not your device."
 msgstr "Diese wird nur aus der App entfernt, aber nicht vom Gerät gelöscht."
-
-msgid "Manual path set."
-msgstr "Manueller Pfad gesetzt."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"Das Passwort sind die ersten fünf Zeichen des Datenbankpassworts (oder das "
-"gesamte Passwort, falls es weniger als 5 Zeichen hat)."
-
-msgid "Passcode"
-msgstr "Passwort"
-
-msgid "Unlock"
-msgstr "Entsperren"
-
-msgid "Securely Unlocking"
-msgstr "Sicheres entsperren"
-
-msgid "Securely Locking"
-msgstr "Sicheres Sperren"
-
-msgid "Database Not Opening?"
-msgstr "Datenbank öffnet sich nicht?"
 
 msgid ""
 "Change settings based on your preferences. Any change to the settings "
@@ -189,6 +179,34 @@ msgstr "Wähle Ansicht"
 msgid "Select"
 msgstr "Auswählen"
 
+msgid "Cancel"
+msgstr ""
+
+msgid "Manual path set."
+msgstr "Manueller Pfad gesetzt."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"Das Passwort sind die ersten fünf Zeichen des Datenbankpassworts (oder das "
+"gesamte Passwort, falls es weniger als 5 Zeichen hat)."
+
+msgid "Passcode"
+msgstr "Passwort"
+
+msgid "Unlock"
+msgstr "Entsperren"
+
+msgid "Securely Unlocking"
+msgstr "Sicheres entsperren"
+
+msgid "Securely Locking"
+msgstr "Sicheres Sperren"
+
+msgid "Database Not Opening?"
+msgstr "Datenbank öffnet sich nicht?"
+
 msgid "Special Categories"
 msgstr "Spezielle Kategorien"
 
@@ -214,6 +232,11 @@ msgid "entry"
 msgid_plural "entries"
 msgstr[0] ""
 msgstr[1] ""
+
+msgid ""
+"<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
+"using its action bar."
+msgstr ""
 
 #~ msgid "Untitled Entry"
 #~ msgstr "Unbenannter Eintrag"

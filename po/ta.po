@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-19 12:37+0000\n"
+"POT-Creation-Date: 2025-11-19 14:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,7 +17,22 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-msgid "Tap 2FA to copy"
+msgid "Copy Username"
+msgstr ""
+
+msgid "Copy Password"
+msgstr ""
+
+msgid "Open URL"
+msgstr ""
+
+msgid "Copy 2FA Code"
+msgstr ""
+
+msgid "View Entry"
+msgstr ""
+
+msgid "Tap to copy 2FA code"
 msgstr ""
 
 msgid "Add Database"
@@ -39,29 +54,6 @@ msgid "Tap + to import a database."
 msgstr ""
 
 msgid "It will only be removed from the app, not your device."
-msgstr ""
-
-msgid "Manual path set."
-msgstr ""
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-
-msgid "Passcode"
-msgstr ""
-
-msgid "Unlock"
-msgstr ""
-
-msgid "Securely Unlocking"
-msgstr ""
-
-msgid "Securely Locking"
-msgstr ""
-
-msgid "Database Not Opening?"
 msgstr ""
 
 msgid ""
@@ -172,6 +164,32 @@ msgstr ""
 msgid "Select"
 msgstr ""
 
+msgid "Cancel"
+msgstr ""
+
+msgid "Manual path set."
+msgstr ""
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+
+msgid "Passcode"
+msgstr ""
+
+msgid "Unlock"
+msgstr ""
+
+msgid "Securely Unlocking"
+msgstr ""
+
+msgid "Securely Locking"
+msgstr ""
+
+msgid "Database Not Opening?"
+msgstr ""
+
 msgid "Special Categories"
 msgstr ""
 
@@ -197,3 +215,8 @@ msgid "entry"
 msgid_plural "entries"
 msgstr[0] ""
 msgstr[1] ""
+
+msgid ""
+"<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
+"using its action bar."
+msgstr ""

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-19 21:15+0000\n"
+"POT-Creation-Date: 2025-11-19 22:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,27 +17,27 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: qml/components/EntryItem.qml:111
+#: qml/components/EntryItem.qml:112
 msgid "Copy Username"
 msgstr ""
 
-#: qml/components/EntryItem.qml:119
+#: qml/components/EntryItem.qml:120
 msgid "Copy Password"
 msgstr ""
 
-#: qml/components/EntryItem.qml:128
+#: qml/components/EntryItem.qml:129
 msgid "Open URL"
 msgstr ""
 
-#: qml/components/EntryItem.qml:135
+#: qml/components/EntryItem.qml:136
 msgid "Copy 2FA Code"
 msgstr ""
 
-#: qml/components/EntryItem.qml:147
+#: qml/components/EntryItem.qml:148
 msgid "View Entry"
 msgstr ""
 
-#: qml/components/EntryItem.qml:243
+#: qml/components/EntryItem.qml:244
 msgid "Tap to copy 2FA code"
 msgstr ""
 

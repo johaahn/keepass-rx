@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-19 14:10+0000\n"
+"POT-Creation-Date: 2025-11-19 16:02+0000\n"
 "PO-Revision-Date: 2025-11-18 09:39+0000\n"
 "Last-Translator: projectmoon <projectmoon@agnos.is>\n"
 "Language-Team: Icelandic <https://hosted.weblate.org/projects/ubports/"
@@ -128,6 +128,31 @@ msgstr "Opna"
 msgid "Opening"
 msgstr "Í vinnslu"
 
+msgid "Manual path set."
+msgstr "Handvirk leið staðsett."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"Stutt lykilorðið er fyrstu fimm stafirnar af lykilorðinu gagnagrunnar (eða "
+"heilt lykilorð ef það er stuttara en fimm stafir)."
+
+msgid "Passcode"
+msgstr "Stutt lykilorð"
+
+msgid "Unlock"
+msgstr "Aflæsa"
+
+msgid "Securely Unlocking"
+msgstr "Að aflæsa með öryggi"
+
+msgid "Securely Locking"
+msgstr "Læsa með öryggi"
+
+msgid "Database Not Opening?"
+msgstr "Er gagnagrunnur ekki að opna?"
+
 msgid "Cancel Search"
 msgstr "Hætta leit"
 
@@ -176,31 +201,6 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-msgid "Manual path set."
-msgstr "Handvirk leið staðsett."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"Stutt lykilorðið er fyrstu fimm stafirnar af lykilorðinu gagnagrunnar (eða "
-"heilt lykilorð ef það er stuttara en fimm stafir)."
-
-msgid "Passcode"
-msgstr "Stutt lykilorð"
-
-msgid "Unlock"
-msgstr "Aflæsa"
-
-msgid "Securely Unlocking"
-msgstr "Að aflæsa með öryggi"
-
-msgid "Securely Locking"
-msgstr "Læsa með öryggi"
-
-msgid "Database Not Opening?"
-msgstr "Er gagnagrunnur ekki að opna?"
-
 msgid "Special Categories"
 msgstr ""
 
@@ -221,11 +221,6 @@ msgstr ""
 
 msgid "Tags"
 msgstr ""
-
-msgid "entry"
-msgid_plural "entries"
-msgstr[0] ""
-msgstr[1] ""
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

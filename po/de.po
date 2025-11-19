@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-19 14:10+0000\n"
+"POT-Creation-Date: 2025-11-19 16:02+0000\n"
 "PO-Revision-Date: 2025-11-19 08:54+0000\n"
 "Last-Translator: Daniel Frost <one@frostinfo.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -134,6 +134,31 @@ msgstr "Öffnen"
 msgid "Opening"
 msgstr "Öffne"
 
+msgid "Manual path set."
+msgstr "Manueller Pfad gesetzt."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"Das Passwort sind die ersten fünf Zeichen des Datenbankpassworts (oder das "
+"gesamte Passwort, falls es weniger als 5 Zeichen hat)."
+
+msgid "Passcode"
+msgstr "Passwort"
+
+msgid "Unlock"
+msgstr "Entsperren"
+
+msgid "Securely Unlocking"
+msgstr "Sicheres entsperren"
+
+msgid "Securely Locking"
+msgstr "Sicheres Sperren"
+
+msgid "Database Not Opening?"
+msgstr "Datenbank öffnet sich nicht?"
+
 msgid "Cancel Search"
 msgstr "Suche abbrechen"
 
@@ -182,31 +207,6 @@ msgstr "Auswählen"
 msgid "Cancel"
 msgstr ""
 
-msgid "Manual path set."
-msgstr "Manueller Pfad gesetzt."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"Das Passwort sind die ersten fünf Zeichen des Datenbankpassworts (oder das "
-"gesamte Passwort, falls es weniger als 5 Zeichen hat)."
-
-msgid "Passcode"
-msgstr "Passwort"
-
-msgid "Unlock"
-msgstr "Entsperren"
-
-msgid "Securely Unlocking"
-msgstr "Sicheres entsperren"
-
-msgid "Securely Locking"
-msgstr "Sicheres Sperren"
-
-msgid "Database Not Opening?"
-msgstr "Datenbank öffnet sich nicht?"
-
 msgid "Special Categories"
 msgstr "Spezielle Kategorien"
 
@@ -227,11 +227,6 @@ msgstr "Schlagwörter"
 
 msgid "Tags"
 msgstr "Schlagwörter"
-
-msgid "entry"
-msgid_plural "entries"
-msgstr[0] ""
-msgstr[1] ""
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

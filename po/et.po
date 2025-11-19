@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-19 14:10+0000\n"
+"POT-Creation-Date: 2025-11-19 16:02+0000\n"
 "PO-Revision-Date: 2025-11-19 16:51+0000\n"
 "Last-Translator: Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/ubports/"
@@ -133,6 +133,31 @@ msgstr "Ava"
 msgid "Opening"
 msgstr "Avamisel"
 
+msgid "Manual path set."
+msgstr "Käsitsi määratud asukoht on seadistatud."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"Salakood on andmebaasi salasõna viis esimest tähemärki (või kogu salasõna, "
+"kui ta on alla viie tähemärgi pikk)."
+
+msgid "Passcode"
+msgstr "Salakood"
+
+msgid "Unlock"
+msgstr "Eemalda lukustus"
+
+msgid "Securely Unlocking"
+msgstr "Turvaline lukustuse eemaldamine"
+
+msgid "Securely Locking"
+msgstr "Turvaline lukustamine"
+
+msgid "Database Not Opening?"
+msgstr "Kas andmebaas ei avane?"
+
 msgid "Cancel Search"
 msgstr "Katkesta otsing"
 
@@ -181,31 +206,6 @@ msgstr "Vali"
 msgid "Cancel"
 msgstr "Katkesta"
 
-msgid "Manual path set."
-msgstr "Käsitsi määratud asukoht on seadistatud."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"Salakood on andmebaasi salasõna viis esimest tähemärki (või kogu salasõna, "
-"kui ta on alla viie tähemärgi pikk)."
-
-msgid "Passcode"
-msgstr "Salakood"
-
-msgid "Unlock"
-msgstr "Eemalda lukustus"
-
-msgid "Securely Unlocking"
-msgstr "Turvaline lukustuse eemaldamine"
-
-msgid "Securely Locking"
-msgstr "Turvaline lukustamine"
-
-msgid "Database Not Opening?"
-msgstr "Kas andmebaas ei avane?"
-
 msgid "Special Categories"
 msgstr "Erikategooriad"
 
@@ -227,17 +227,17 @@ msgstr "Sildid"
 msgid "Tags"
 msgstr "Sildid"
 
-msgid "entry"
-msgid_plural "entries"
-msgstr[0] "kirje"
-msgstr[1] "kirjet"
-
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
 msgstr ""
 "<b>Näitan kõiki andmebaasi 2FA-koode.</b><br/>Kirje üksikasju näed tema "
 "tegevuste ribalt."
+
+#~ msgid "entry"
+#~ msgid_plural "entries"
+#~ msgstr[0] "kirje"
+#~ msgstr[1] "kirjet"
 
 #~ msgid "Tap 2FA to copy"
 #~ msgstr "2FA-koodi kopeerimsieks klõpsa teda"

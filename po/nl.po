@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-19 14:10+0000\n"
+"POT-Creation-Date: 2025-11-19 16:02+0000\n"
 "PO-Revision-Date: 2025-11-19 12:39+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -134,6 +134,31 @@ msgstr "Openen"
 msgid "Opening"
 msgstr "Bezig met openen…"
 
+msgid "Manual path set."
+msgstr "Stel de locatie handmatig in."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"De toegangscode bestaat uit de eerste vijf tekens van het databankwachtwoord "
+"(of het gehele wachtwoord, indien minder dan vijf tekens)."
+
+msgid "Passcode"
+msgstr "Toegangscode"
+
+msgid "Unlock"
+msgstr "Ontgrendelen"
+
+msgid "Securely Unlocking"
+msgstr "Veilig ontgrendelen"
+
+msgid "Securely Locking"
+msgstr "Veilig vergrendelen"
+
+msgid "Database Not Opening?"
+msgstr "Wordt de databank niet geopend?"
+
 msgid "Cancel Search"
 msgstr "Zoekopdracht afbreken"
 
@@ -182,31 +207,6 @@ msgstr "Kiezen"
 msgid "Cancel"
 msgstr ""
 
-msgid "Manual path set."
-msgstr "Stel de locatie handmatig in."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"De toegangscode bestaat uit de eerste vijf tekens van het databankwachtwoord "
-"(of het gehele wachtwoord, indien minder dan vijf tekens)."
-
-msgid "Passcode"
-msgstr "Toegangscode"
-
-msgid "Unlock"
-msgstr "Ontgrendelen"
-
-msgid "Securely Unlocking"
-msgstr "Veilig ontgrendelen"
-
-msgid "Securely Locking"
-msgstr "Veilig vergrendelen"
-
-msgid "Database Not Opening?"
-msgstr "Wordt de databank niet geopend?"
-
 msgid "Special Categories"
 msgstr "Speciale categorieën"
 
@@ -227,11 +227,6 @@ msgstr "Labels"
 
 msgid "Tags"
 msgstr "Labels"
-
-msgid "entry"
-msgid_plural "entries"
-msgstr[0] ""
-msgstr[1] ""
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

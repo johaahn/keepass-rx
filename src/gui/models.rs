@@ -109,6 +109,20 @@ fn entry_count<T>(entries: &[T]) -> QString {
     .into()
 }
 
+fn entry_count_len(len: usize) -> QString {
+    format!(
+        "{} {}",
+        len,
+        ngettext(
+            "entry",
+            "entries",
+            // Convert to usize without panicking
+            len.try_into().ok().unwrap_or(0u32)
+        )
+    )
+    .into()
+}
+
 #[derive(QObject, Default)]
 #[allow(dead_code, non_snake_case)]
 pub struct RxListItem {
@@ -287,7 +301,7 @@ impl From<&RxGroup> for RxListItem {
 
             title: value.name.clone().into(),
             subtitle: QString::from("Group"),
-            description: entry_count(&value.entries),
+            description: entry_count_len(value.entries.len() + value.subgroups.len()),
 
             iconPath: value
                 .icon

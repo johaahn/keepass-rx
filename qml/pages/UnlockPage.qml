@@ -77,16 +77,16 @@ Page {
     Connections {
         target: keepassrx
 
-        onDatabaseOpened: {
+        function onDatabaseOpened() {
             busy = false;
         }
 
-        onDatabaseOpenFailed: (error) => {
+        function onDatabaseOpenFailed(error) {
             busy = false;
             errorMsg = `Error: ${error}`;
         }
 
-        onDecryptionFailed: (error) => {
+        function onDecryptionFailed(error) {
             busy = false;
             errorMsg = `Error: ${error}. Wrong passcode?`;
         }

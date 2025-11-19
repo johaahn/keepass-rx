@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-18 20:37+0000\n"
-"PO-Revision-Date: 2025-11-13 11:51+0000\n"
+"PO-Revision-Date: 2025-11-19 12:39+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/ubports/keepassrx/"
 "nl/>\n"
@@ -166,46 +166,46 @@ msgid "Close Database"
 msgstr "Databank sluiten"
 
 msgid "Change View"
-msgstr ""
+msgstr "Weergave aanpassen"
 
 msgid "All groups and entries."
-msgstr ""
+msgstr "Alle groepen en items."
 
 msgid "Entries grouped by template."
-msgstr ""
+msgstr "Items gegroepeerd op sjabloon."
 
 msgid "Entries with 2FA codes."
-msgstr ""
+msgstr "Items met 2FA-codes."
 
 msgid "Entries grouped by tag."
-msgstr ""
+msgstr "Items gegroepeerd op label."
 
 msgid "Select View"
-msgstr ""
+msgstr "Kies een weergave"
 
 msgid "Select"
-msgstr ""
+msgstr "Kiezen"
 
 msgid "Special Categories"
 msgstr "Speciale categorieën"
 
 msgid "All Templates"
-msgstr ""
+msgstr "Alle sjablonen"
 
 msgctxt "Default view of the password database (all entries)"
 msgid "Default View"
-msgstr ""
+msgstr "Standaardweergave"
 
 msgctxt "Two-factor/OTP codes (keep phrase short as possible)"
 msgid "2FA Codes"
-msgstr ""
+msgstr "2FA-codes"
 
 msgctxt "List of entries with tags"
 msgid "Tags"
-msgstr ""
+msgstr "Labels"
 
 msgid "Tags"
-msgstr ""
+msgstr "Labels"
 
 #~ msgid "Untitled Entry"
 #~ msgstr "Naamloos item"

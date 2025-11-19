@@ -272,9 +272,10 @@ impl RxEntry {
                 .title
                 .as_ref()
                 .map(|val| RxValueKeyRef::new(val, &self.master_key)),
-            RxFieldName::CurrentTotp => self.totp().ok().map(|val| {
-                RxValueKeyRef::new(RxValue::Unprotected(val.code), &self.master_key)
-            }),
+            RxFieldName::CurrentTotp => self
+                .totp()
+                .ok()
+                .map(|val| RxValueKeyRef::new(RxValue::CurrentTotp(val), &self.master_key)),
             RxFieldName::CustomField(name) => {
                 self.custom_fields
                     .data
@@ -379,6 +380,10 @@ impl<'a> RxValueKeyRef<'a> {
     pub fn is_hidden_by_default(&self) -> bool {
         self.0.is_hidden_by_default()
     }
+
+    pub fn totp_value(&self) -> Option<&RxTotp> {
+        self.0.totp_value()
+    }
 }
 
 impl<'a> From<RxValue> for Cow<'a, RxValue> {
@@ -406,6 +411,9 @@ pub enum RxValue {
     /// Regular value not hidden or treated specially by memory
     /// protection.
     Unprotected(String),
+
+    /// Unprotected, used when generating a TOTP value for the given moment.
+    CurrentTotp(RxTotp),
 
     #[default]
     Unsupported,
@@ -460,6 +468,13 @@ impl RxValue {
             _ => None,
         }
     }
+
+    pub fn totp_value(&self) -> Option<&RxTotp> {
+        match self {
+            RxValue::CurrentTotp(totp) => Some(totp),
+            _ => None,
+        }
+    }
 }
 
 impl std::fmt::Display for RxValue {
@@ -508,6 +523,7 @@ pub struct RxTotp {
     pub valid_for: String,
 }
 
+#[derive(Clone, PartialEq)]
 pub enum RxFieldName {
     Title,
     Username,

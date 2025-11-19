@@ -47,7 +47,7 @@ ListItem {
 
         // When the UI requests getting a single value from one of the
         // button presses.
-        function onFieldValueReceived(entryUuid, fieldName, fieldValue) {
+        function onFieldValueReceived(entryUuid, fieldName, fieldValue, fieldExtra) {
             if (fieldValue) {
                 // 2fa stuff handled by other signal.
                 if (hasFeature('DisplayTwoFactorAuth')) {
@@ -292,9 +292,10 @@ ListItem {
                     Connections {
                         target: keepassrx
 
-                        function onFieldValueReceived(entryUuid, fieldName, fieldValue) {
-                            if (fieldValue && hasFeature('DisplayTwoFactorAuth')) {
-                                current2FACode.text = fieldValue;
+                        function onFieldValueReceived(entryUuid, fieldName, totpCode, totpValidFor) {
+                            if (totpCode && totpValidFor && hasFeature('DisplayTwoFactorAuth')) {
+                                current2FACode.text = totpCode;
+                                current2FAValidFor.text = totpValidFor;
                                 return;
                             }
                         }
@@ -334,17 +335,41 @@ ListItem {
                         Text {
                             id: current2FACode
                             elide: Text.ElideRight
-                            height: parent.height
+                            height: parent.height / 2
                             width: parent.width
                             verticalAlignment: Text.AlignVCenter
                             color: theme.palette.normal.backgroundTertiaryText
                             text: "------"
                         }
+
+                        Text {
+                            id: current2FAValidFor
+                            elide: Text.ElideRight
+                            anchors.top: current2FACode.bottom
+                            height: parent.height / 2
+                            width: parent.width
+                            verticalAlignment: Text.AlignVCenter
+                            color: theme.palette.normal.backgroundTertiaryText
+                            text: "------"
+                        }
+
+                        Icon {
+                            width: units.gu(1.5)
+                            height: units.gu(1.5)
+                            anchors.top: current2FAValidFor.top
+                            anchors.left: current2FAValidFor.left
+
+                            // Puts almost past the XXs
+                            anchors.leftMargin: width * 2
+                            anchors.topMargin: height
+                            name: 'clock'
+                        }
                     }
                 }
             }
-        } // end Features Loader
-    }
+        }
+    } // end Features Loader
+
 
     // Main handler for "Doing The Thing" when tapping an entry.
     MouseArea {

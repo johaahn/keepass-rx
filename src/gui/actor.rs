@@ -581,6 +581,44 @@ impl Handler<GetSingleEntry> for KeepassRxActor {
     }
 }
 
+fn get_value(
+    db: &RxDatabase,
+    entry_uuid: Uuid,
+    field_name: &RxFieldName,
+) -> (QString, Option<QString>) {
+    // TOTP must be handled a bit differently, because we want to
+    // include extra info about how long is left.
+    if *field_name == RxFieldName::CurrentTotp {
+        let maybe_totp = db.get_entry(entry_uuid);
+        let maybe_totp = maybe_totp
+            .as_deref()
+            .and_then(|entry| entry.get_field_value(&field_name))
+            .and_then(|totp| totp.totp_value().cloned());
+
+        maybe_totp
+            .map(|totp| {
+                (
+                    totp.code.clone().into(),
+                    Some(totp.valid_for.clone().into()),
+                )
+            })
+            .unwrap_or_else(|| ("No TOTP".into(), Some("Error".into())))
+    } else {
+        let value = db
+            .get_entry(entry_uuid)
+            .and_then(|entry| {
+                entry.get_field_value(&field_name).map(|val| {
+                    val.value()
+                        .map(|s| QString::from(s.as_str()))
+                        .unwrap_or_default()
+                })
+            })
+            .unwrap_or_default();
+
+        (value, None)
+    }
+}
+
 impl Handler<GetFieldValue> for KeepassRxActor {
     type Result = ();
     fn handle(&mut self, msg: GetFieldValue, _: &mut Self::Context) -> Self::Result {
@@ -597,21 +635,13 @@ impl Handler<GetFieldValue> for KeepassRxActor {
             Err(err) => return gui.errorReceived(format!("{}", err)),
         };
 
-        let value: QString = db
-            .get_entry(msg.entry_uuid)
-            .and_then(|entry| {
-                entry.get_field_value(&msg.field_name).map(|val| {
-                    val.value()
-                        .map(|s| QString::from(s.as_str()))
-                        .unwrap_or_default()
-                })
-            })
-            .unwrap_or_default();
+        let (value, extra) = get_value(db, msg.entry_uuid, &msg.field_name);
 
         gui.fieldValueReceived(
             QString::from(msg.entry_uuid.to_string()),
             QString::from(msg.field_name.to_string()),
             value,
+            extra.unwrap_or_default(),
         );
     }
 }

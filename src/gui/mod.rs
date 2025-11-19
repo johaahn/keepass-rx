@@ -157,7 +157,7 @@ pub struct KeepassRx {
     errorReceived: qt_signal!(error: String),
     totpReceived: qt_signal!(totp: QVariantMap),
     singleEntryReceived: qt_signal!(entry: QVariant),
-    fieldValueReceived: qt_signal!(entry_uuid: QString, field_name: QString, field_value: QString),
+    fieldValueReceived: qt_signal!(entry_uuid: QString, field_name: QString, field_value: QString, field_extra: QString),
 
     // easy-open signals
     masterPasswordStored: qt_signal!(),

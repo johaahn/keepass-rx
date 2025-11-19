@@ -9,6 +9,17 @@ ListItem {
     height: units.gu(10)
     id: entireItem
 
+    function handleEntryClick() {
+        if (itemType == 'Entry') {
+            keepassrx.getSingleEntry(uuid);
+        } else if (itemType == 'GoBack') {
+            keepassrx.popContainer();
+        } else {
+          // We assume anything else is a grouping.
+          keepassrx.pushContainer(uuid);
+        }
+    }
+
     function resolveFolderIconName(itemType) {
         if (itemType == 'Group' || itemType == 'Template') {
             return 'folder';
@@ -19,7 +30,7 @@ ListItem {
         }
     }
 
-    function resolveIconPath() {
+    function resolveImagePath() {
         if (iconPath) {
             if (iconBuiltin) {
                 return `../../assets/icons/${iconPath}`;
@@ -32,119 +43,121 @@ ListItem {
     }
 
     Connections {
-	target: keepassrx
+        target: keepassrx
 
-	function onFieldValueReceived(entryUuid, fieldName, fieldValue) {
-	    // fieldValue will be null if it's not in the entry.
-	    if (fieldValue) {
-		// TODO Add some better URL handling, for fields that
-		// are not marked specifically with title "URL".
-		if (fieldName.toLowerCase() == "url") {
-		    if (entry.url.indexOf('//') === -1) {
-			Qt.openUrlExternally('http://' + url);
-			return;
-		    }
+        // When the UI requests getting a single value from one of the
+        // button presses.
+        function onFieldValueReceived(entryUuid, fieldName, fieldValue) {
+            if (fieldValue) {
+                // 2fa stuff handled by other signal.
+                if (hasFeature('2fa')) {
+                    return;
+                }
 
-		    Qt.openUrlExternally(url);
-		} else {
-		    Clipboard.push(fieldValue);
-		    toast.show(`${fieldName} copied to clipboard (30 secs)`);
-		    clearClipboardTimer.start();
-		}
-	    }
-	}
+                // TODO Add some better URL handling, for fields that
+                // are not marked specifically with title "URL".
+                if (fieldName.toLowerCase() == "url") {
+                    if (entry.url.indexOf('//') === -1) {
+                        Qt.openUrlExternally('http://' + url);
+                        return;
+                    }
 
-	function onSingleEntryReceived(entry) {
-	    if (!entry) {
-		console.error('no entry found?!');
-	    }
+                    Qt.openUrlExternally(url);
+                } else {
+                    Clipboard.push(fieldValue);
+                    toast.show(`${fieldName} copied to clipboard (30 secs)`);
+                    clearClipboardTimer.start();
+                }
+            }
+        }
 
-	    pageStack.addPageToNextColumn(
-		entriesPage,
-		Qt.resolvedUrl("../pages/SingleEntry.qml"),
-		{
-		    entryTitle: entry.title ? entry.title : null,
-		    entryUsername: entry.username ? entry.username : null,
-		    entryPassword: entry.password ? entry.password : null,
-		    entryUrl: entry.url ? entry.url : null,
-		    entryNotes: entry.notes ? entry.notes : null,
-		    entryCustomFields: entry.customFields ? entry.customFields : null
-		}
-	    )
-	}
+        function onSingleEntryReceived(entry) {
+            if (entry) {
+                pageStack.addPageToNextColumn(
+                    entriesPage,
+                    Qt.resolvedUrl("../pages/SingleEntry.qml"),
+                    {
+                        entryTitle: entry.title ? entry.title : null,
+                        entryUsername: entry.username ? entry.username : null,
+                        entryPassword: entry.password ? entry.password : null,
+                        entryUrl: entry.url ? entry.url : null,
+                        entryNotes: entry.notes ? entry.notes : null,
+                        entryCustomFields: entry.customFields ? entry.customFields : null
+                    }
+                )
+            }
+        }
 
-	function onTotpReceived(totp) {
-	    if (!totp.error) {
-		Clipboard.push(totp.digits);
-		toast.show("Token '" + totp.digits + "' copied. Valid for " + totp.validFor);
-		clearClipboardTimer.start();
-	    } else {
-		toast.show(totp.error);
-	    }
-	}
+        function onTotpReceived(totp) {
+            if (!totp.error) {
+                Clipboard.push(totp.digits);
+                toast.show("Token '" + totp.digits + "' copied. Valid for " + totp.validFor);
+                clearClipboardTimer.start();
+            } else {
+                toast.show(totp.error);
+            }
+        }
     }
 
-    //override the trailing action panels defaul colors. use #808080
-    //for icon color, this is the default keycolor of `Icon` and will
-    //then be changed to the themed color
     StyleHints {
-	trailingPanelColor: theme.palette.normal.foreground
-	trailingForegroundColor: theme.palette.normal.foregroundText
+        trailingPanelColor: theme.palette.normal.foreground
+        trailingForegroundColor: theme.palette.normal.foregroundText
     }
 
     trailingActions: ListItemActions {
-	actions: [
-	    Action {
-		visible: hasUsername
-		iconName: "account"
-		onTriggered: {
-		    keepassrx.getFieldValue(uuid, "Username");
-		}
-	    },
-	    Action {
-		visible: hasPassword
-		iconName: "stock_key"
-		onTriggered: {
-		    keepassrx.getFieldValue(uuid, "Password");
-		}
-	    },
-	    Action {
-		visible: hasURL
-		iconName: "external-link"
-		onTriggered: {
-		    keepassrx.getFieldValue(uuid, "URL");
-		}
-	    },
-	    Action {
-		visible: hasTOTP
-		iconSource: "../../assets/2fa.svg"
-		iconName: "totp-code"
-		onTriggered: {
-		    // Need to fetch current TOTP because it shifts
-		    // with time. Response is handled by the
-		    // onTotpReceived event.
-		    keepassrx.getTotp(uuid);
-		}
-	    }
-	]
+        actions: [
+            Action {
+                visible: hasUsername
+                iconName: "account"
+                onTriggered: {
+                    keepassrx.getFieldValue(uuid, "Username");
+                }
+            },
+            Action {
+                visible: hasPassword
+                iconName: "stock_key"
+                onTriggered: {
+                    keepassrx.getFieldValue(uuid, "Password");
+                }
+            },
+            Action {
+                visible: hasURL
+                iconName: "external-link"
+                onTriggered: {
+                    keepassrx.getFieldValue(uuid, "URL");
+                }
+            },
+            Action {
+                visible: hasTOTP
+                iconSource: "../../assets/2fa.svg"
+                iconName: "totp-code"
+                onTriggered: {
+                    // Need to fetch current TOTP because it shifts
+                    // with time. Response is handled by the
+                    // onTotpReceived event.
+                    keepassrx.getTotp(uuid);
+                }
+            }
+        ]
     }
 
     Rectangle {
-	anchors.fill: parent
-	color: theme.palette.normal.background
+        anchors.fill: parent
+        color: theme.palette.normal.background
     }
 
     Row {
-	anchors.leftMargin: units.gu(2)
-	anchors.rightMargin: units.gu(2)
-	anchors.topMargin: units.gu(1)
-	anchors.bottomMargin: units.gu(1)
-	anchors.fill: parent
+        anchors.leftMargin: units.gu(2)
+        anchors.rightMargin: units.gu(2)
+        anchors.topMargin: units.gu(1)
+        anchors.bottomMargin: units.gu(1)
+        anchors.fill: parent
 
-	spacing: units.gu(1)
+        spacing: units.gu(1)
 
-        // Group/Folder entry
-
+        // The Loader will return either a folder + custom image, or
+        // just a custom image, depending on if we are a tag/group or
+        // an entry.
         Loader {
             id: imgLoader
             width: units.gu(5)
@@ -159,92 +172,197 @@ ListItem {
                     height: parent.height
 
                     // The folder icon itself (groups + tags only, not templates)
-	            Icon {
-	                width: units.gu(5)
-	                height: parent.height
-	                y: parent.height / 2 - height / 2
-	                name: resolveFolderIconName(itemType)
-	            }
+                    Icon {
+                        width: units.gu(5)
+                        height: parent.height
+                        y: parent.height / 2 - height / 2
+                        name: resolveFolderIconName(itemType)
+                    }
 
                     // Icon of the group/folder, if it has one.
-	            Image {
-	                id: groupEntryImg
+                    Image {
+                        id: groupEntryImg
                         visible: itemType !== 'Tag' // no tiny images for tags.
-	                fillMode: Image.PreserveAspectFit
-	                source: resolveIconPath()
-	                width: units.gu(2.75)
-	                height: units.gu(2.75)
-	                y: parent.height - height * 1.5
+                        fillMode: Image.PreserveAspectFit
+                        source: resolveImagePath()
+                        width: units.gu(2.75)
+                        height: units.gu(2.75)
+                        y: parent.height - height * 1.5
                         x: parent.width - width / 1.25
-	            }
+                    }
                 }
             }
 
             Component {
                 id: entryImg
 
-	        Image {
-	            fillMode: Image.PreserveAspectFit
-	            source: resolveIconPath()
-	            width: units.gu(5)
-	            height: parent.height
-	            y: parent.height / 2 - height / 2
-	        }
+                Image {
+                    fillMode: Image.PreserveAspectFit
+                    source: resolveImagePath()
+                    width: units.gu(5)
+                    height: parent.height
+                    y: parent.height / 2 - height / 2
+                }
             }
         }
 
-	Column {
-	    id: detailsColumn
-	    width: parent.width - parent.spacing - units.gu(6)
-	    Text {
-		id: titleText
-		width: parent.width
-		elide: Text.ElideRight
-		font.pointSize: units.gu(1.5)
-		color: theme.palette.normal.foregroundText
-		text: title
-	    }
+        Column {
+            id: detailsColumn
+            width: parent.width - parent.spacing - units.gu(12)
 
-	    Text {
-		width: parent.width
-		elide: Text.ElideRight
-		color: theme.palette.normal.backgroundTertiaryText
-		text: subtitle
-	    }
-	}
-    }
-
-    MouseArea {
-	x: parent.x
-	width: imgLoader.width + detailsColumn.width
-	height: parent.height
-	onClicked: {
-            if (itemType == 'Entry') {
-		keepassrx.getSingleEntry(uuid);
-	    } else if (itemType == 'GoBack') {
-		keepassrx.popContainer();
-	    } else {
-                // We assume anything else is a grouping.
-                keepassrx.pushContainer(uuid);
+            Text {
+                id: titleText
+                width: parent.width
+                elide: Text.ElideRight
+                font.pointSize: units.gu(1.5)
+                color: theme.palette.normal.foregroundText
+                text: title
             }
-	}
+
+            Text {
+                width: parent.width
+                elide: Text.ElideRight
+                color: theme.palette.normal.backgroundTertiaryText
+                text: subtitle
+            }
+
+            Text {
+                elide: Text.ElideRight
+                color: theme.palette.normal.activity
+                text: hasFeature('2fa')
+                    ? i18n.tr("Tap 2FA to copy")
+                    : (hasPassword ? '••••••' : '')
+            }
+        }
+
+        Loader {
+            id: featureLoader
+            sourceComponent: hasFeature('2fa') ? totpFeature : noFeatures
+
+            width: parent.width - parent.spacing - units.gu(6)
+            height: parent.height
+
+            Component {
+                id: noFeatures
+                Item {
+                    width: parent.width
+                    height: parent.height
+
+                    Rectangle {
+                        color: "transparent"
+                        width: parent.width
+                        height: parent.height
+
+                        MouseArea {
+                            x: parent.x
+                            width: parent.width
+                            height: parent.height
+                            onClicked: handleEntryClick()
+                        }
+
+                        Icon {
+                            width: units.gu(3)
+                            height: units.gu(3)
+                            color: theme.palette.normal.foregroundText
+                            x: parent.width - width / 2
+                            y: parent.height / 2 - height / 2
+                            name: 'next'
+                        }
+                    }
+                }
+            }
+
+            Component {
+                id: totpFeature
+
+                Item {
+                    width: parent.width
+                    height: parent.height
+
+                    Connections {
+                        target: keepassrx
+
+                        function onFieldValueReceived(entryUuid, fieldName, fieldValue) {
+                            if (fieldValue && hasFeature('2fa')) {
+                                current2FACode.text = fieldValue;
+                                return;
+                            }
+                        }
+                    }
+
+                    Timer {
+                        id: current2FATimer
+                        repeat: true
+                        interval: 1000
+                        running: hasFeature('2fa')
+                        onTriggered: {
+                          if (uuid) {
+                              keepassrx.getFieldValue(uuid, "CurrentTOTP");
+                          }
+                        }
+                    }
+
+                    Rectangle {
+                        id: featuresColumn
+                        visible: hasFeature('2fa')
+                        color: "transparent"
+                        width: parent.width
+                        height: parent.height
+
+                        MouseArea {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            z: 10
+                            width: parent.height
+                            height: parent.width
+                            onClicked: {
+                                keepassrx.getTotp(uuid);
+                            }
+                        }
+
+                        Text {
+                            id: current2FACode
+                            elide: Text.ElideRight
+                            height: parent.height
+                            width: parent.width
+                            verticalAlignment: Text.AlignVCenter
+                            color: theme.palette.normal.backgroundTertiaryText
+                            text: "------"
+                        }
+                    }
+                }
+            }
+        } // end Features Loader
+    }
+
+    // Main handler for "Doing The Thing" when tapping an entry.
+    MouseArea {
+        id: mainAction
+        x: parent.x
+        width: imgLoader.width + detailsColumn.width
+        height: parent.height
+        onClicked: handleEntryClick()
     }
 
     Timer {
-	id: timer
-	repeat: false
-	interval: 1500
-	onTriggered: passwordVisible = false
+        id: timer
+        repeat: false
+        interval: 1500
+        onTriggered: passwordVisible = false
     }
 
     Timer {
-	id: clearClipboardTimer
-	repeat: false
-	running: false
-	interval: 30000
-	onTriggered: {
-	    Clipboard.clear();
-	    toast.show('KeePassRX: Clipboard cleared.');
-	}
+        id: clearClipboardTimer
+        repeat: false
+        running: false
+        interval: 30000
+        onTriggered: {
+            Clipboard.clear();
+            toast.show('KeePassRX: Clipboard cleared.');
+        }
+    }
+
+    function hasFeature(featureName) {
+        return feature !== undefined && feature == featureName
     }
 }

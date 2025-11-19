@@ -1,5 +1,7 @@
 use anyhow::anyhow;
-use qmetaobject::{QMetaType, QObject, QString, QVariant, QVariantList, QVariantMap};
+use qmetaobject::{
+    QMetaType, QObject, QString, QStringList, QVariant, QVariantList, QVariantMap,
+};
 use uuid::Uuid;
 
 use crate::rx::{
@@ -55,6 +57,10 @@ pub struct RxListItem {
     iconPath: qt_property!(QString),
     iconBuiltin: qt_property!(bool),
 
+    // A "feature" that changes how the item is rendered. For example,
+    // displaying a 2FA code.
+    feature: qt_property!(QString),
+
     // Mostly for passwords entries. Does not really apply to groups.
     hasUsername: qt_property!(bool),
     hasPassword: qt_property!(bool),
@@ -69,6 +75,7 @@ impl RxListItem {
             itemType: RxItemType::Group,
             uuid: QString::from(Uuid::default().to_string()),
             parentUuid: QString::default(),
+            feature: QString::default(),
 
             hasUsername: false,
             hasPassword: false,
@@ -102,6 +109,7 @@ impl From<&RxTag> for RxListItem {
             itemType: RxItemType::Tag,
             uuid: QString::from(value.uuid.to_string()),
             parentUuid: QString::default(),
+            feature: QString::default(),
 
             hasUsername: false,
             hasPassword: false,
@@ -123,6 +131,7 @@ impl From<&RxTemplate> for RxListItem {
             itemType: RxItemType::Template,
             uuid: QString::from(value.uuid.to_string()),
             parentUuid: QString::default(),
+            feature: QString::default(),
 
             hasUsername: false,
             hasPassword: false,
@@ -149,6 +158,11 @@ impl From<&RxEntry> for RxListItem {
             itemType: RxItemType::Entry,
             uuid: QString::from(value.uuid.to_string()),
             parentUuid: QString::from(value.parent_group.to_string()),
+            feature: if value.has_otp() {
+                QString::from("2fa")
+            } else {
+                QString::default()
+            },
 
             hasUsername: value.username().is_some(),
             hasPassword: value.password().is_some(),
@@ -190,6 +204,8 @@ impl From<&RxGroup> for RxListItem {
             base: Default::default(),
             itemType: RxItemType::Group,
             uuid: QString::from(value.uuid.to_string()),
+            feature: QString::default(),
+
             parentUuid: value
                 .parent
                 .map(|parent| QString::from(parent.to_string()))
@@ -246,6 +262,7 @@ impl From<RxListItem> for QVariantMap {
         map.insert("hasTOTP".into(), value.hasTOTP.to_qvariant());
         map.insert("iconPath".into(), value.iconPath.to_qvariant());
         map.insert("iconBuiltin".into(), value.iconBuiltin.to_qvariant());
+        map.insert("feature".into(), value.feature.into());
 
         map
     }

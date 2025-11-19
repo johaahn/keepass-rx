@@ -10,6 +10,7 @@ use keepass::db::{CustomData, Entry, Icon, TOTP as KeePassTOTP, Value};
 use libsodium_rs::utils::{SecureVec, vec_utils};
 use querystring::querify;
 use secstr::SecStr;
+use std::borrow::Cow;
 use std::rc::Rc;
 use std::str::FromStr;
 use std::sync::atomic::Ordering;
@@ -222,31 +223,31 @@ impl RxEntry {
     pub fn username(&self) -> Option<RxValueKeyRef<'_>> {
         self.username
             .as_ref()
-            .map(|v| RxValueKeyRef(v, &self.master_key))
+            .map(|v| RxValueKeyRef::new(v, &self.master_key))
     }
 
     pub fn password(&self) -> Option<RxValueKeyRef<'_>> {
         self.password
             .as_ref()
-            .map(|p| RxValueKeyRef(p, &self.master_key))
+            .map(|p| RxValueKeyRef::new(p, &self.master_key))
     }
 
     pub fn title(&self) -> Option<RxValueKeyRef<'_>> {
         self.title
             .as_ref()
-            .map(|t| RxValueKeyRef(t, &self.master_key))
+            .map(|t| RxValueKeyRef::new(t, &self.master_key))
     }
 
     pub fn url(&self) -> Option<RxValueKeyRef<'_>> {
         self.url
             .as_ref()
-            .map(|u| RxValueKeyRef(u, &self.master_key))
+            .map(|u| RxValueKeyRef::new(u, &self.master_key))
     }
 
     pub fn raw_otp_value(&self) -> Option<RxValueKeyRef<'_>> {
         self.raw_otp_value
             .as_ref()
-            .map(|t| RxValueKeyRef(t, &self.master_key))
+            .map(|t| RxValueKeyRef::new(t, &self.master_key))
     }
 
     pub(super) fn master_key(&self) -> &MasterKey {
@@ -258,25 +259,28 @@ impl RxEntry {
             RxFieldName::Username => self
                 .username
                 .as_ref()
-                .map(|val| RxValueKeyRef(val, &self.master_key)),
+                .map(|val| RxValueKeyRef::new(val, &self.master_key)),
             RxFieldName::Password => self
                 .password
                 .as_ref()
-                .map(|val| RxValueKeyRef(val, &self.master_key)),
+                .map(|val| RxValueKeyRef::new(val, &self.master_key)),
             RxFieldName::Url => self
                 .url
                 .as_ref()
-                .map(|val| RxValueKeyRef(val, &self.master_key)),
+                .map(|val| RxValueKeyRef::new(val, &self.master_key)),
             RxFieldName::Title => self
                 .title
                 .as_ref()
-                .map(|val| RxValueKeyRef(val, &self.master_key)),
+                .map(|val| RxValueKeyRef::new(val, &self.master_key)),
+            RxFieldName::CurrentTotp => self.totp().ok().map(|val| {
+                RxValueKeyRef::new(RxValue::Unprotected(val.code), &self.master_key)
+            }),
             RxFieldName::CustomField(name) => {
                 self.custom_fields
                     .data
                     .iter()
                     .find_map(|(key, value)| match key == name {
-                        true => Some(RxValueKeyRef(value, &self.master_key)),
+                        true => Some(RxValueKeyRef::new(value, &self.master_key)),
                         false => None,
                     })
             }
@@ -357,11 +361,15 @@ impl RxEntry {
     }
 }
 
-pub struct RxValueKeyRef<'a>(&'a RxValue, &'a MasterKey);
+#[derive(Clone)]
+pub struct RxValueKeyRef<'a>(Cow<'a, RxValue>, &'a MasterKey);
 
 impl<'a> RxValueKeyRef<'a> {
-    pub fn new(value: &'a RxValue, key: &'a MasterKey) -> Self {
-        Self(value, key)
+    pub fn new<V>(value: V, key: &'a MasterKey) -> Self
+    where
+        V: Into<Cow<'a, RxValue>>,
+    {
+        Self(value.into(), key)
     }
 
     pub fn value(&self) -> Option<Zeroizing<String>> {
@@ -370,6 +378,18 @@ impl<'a> RxValueKeyRef<'a> {
 
     pub fn is_hidden_by_default(&self) -> bool {
         self.0.is_hidden_by_default()
+    }
+}
+
+impl<'a> From<RxValue> for Cow<'a, RxValue> {
+    fn from(value: RxValue) -> Self {
+        Cow::Owned(value)
+    }
+}
+
+impl<'a> From<&'a RxValue> for Cow<'a, RxValue> {
+    fn from(value: &'a RxValue) -> Self {
+        Cow::Borrowed(value)
     }
 }
 
@@ -493,6 +513,7 @@ pub enum RxFieldName {
     Username,
     Password,
     Url,
+    CurrentTotp,
     CustomField(String),
 }
 
@@ -503,6 +524,7 @@ impl ToString for RxFieldName {
             RxFieldName::Password => "Password".to_string(),
             RxFieldName::Title => "Title".to_string(),
             RxFieldName::Url => "URL".to_string(),
+            RxFieldName::CurrentTotp => "CurrentTOTP".to_string(),
             RxFieldName::CustomField(name) => name.to_owned(),
         }
     }
@@ -515,6 +537,7 @@ impl From<String> for RxFieldName {
             "password" => RxFieldName::Password,
             "title" => RxFieldName::Title,
             "url" => RxFieldName::Url,
+            "currenttotp" => RxFieldName::CurrentTotp,
             _ => RxFieldName::CustomField(value),
         }
     }
@@ -549,7 +572,7 @@ impl RxCustomFields {
     pub fn iter(&self) -> impl Iterator<Item = (&String, RxValueKeyRef<'_>)> {
         self.data
             .iter()
-            .map(|(key, value)| (key, RxValueKeyRef(value, &self.master_key)))
+            .map(|(key, value)| (key, RxValueKeyRef::new(value, &self.master_key)))
     }
 
     fn from_custom_data(master_key: &Rc<MasterKey>, value: CustomData) -> Self {

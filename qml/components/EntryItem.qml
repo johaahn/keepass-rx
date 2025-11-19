@@ -294,6 +294,8 @@ ListItem {
                         target: keepassrx
 
                         function onFieldValueReceived(entryUuid, fieldName, totpCode, totpValidFor) {
+                            // Because this is a global listener, we only want to update if this item is the
+                            // target for this update. Otherwise, all the TOTP codes are the same value!
                             if (uuid == entryUuid && totpCode && totpValidFor && hasFeature('DisplayTwoFactorAuth')) {
                                 current2FACode.text = totpCode;
                                 current2FAValidFor.text = totpValidFor;

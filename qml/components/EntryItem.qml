@@ -231,7 +231,7 @@ ListItem {
                 color: theme.palette.normal.activity
                 text: hasFeature('2fa')
                     ? i18n.tr("Tap 2FA to copy")
-                    : (hasPassword ? '••••••' : '')
+                    : (description)
             }
         }
 

@@ -1,4 +1,5 @@
 use anyhow::anyhow;
+use gettextrs::ngettext;
 use qmetaobject::{
     QMetaType, QObject, QString, QStringList, QVariant, QVariantList, QVariantMap,
 };
@@ -44,6 +45,21 @@ impl QMetaType for RxItemType {
     const CONVERSION_TO_STRING: Option<fn(&Self) -> QString> = Some(entry_type_to_string);
 }
 
+/// Create translatable string for counting a list of entries.
+fn entry_count<T>(entries: &[T]) -> QString {
+    format!(
+        "{} {}",
+        entries.len(),
+        ngettext(
+            "entry",
+            "entries",
+            // Convert to usize without panicking
+            entries.len().try_into().ok().unwrap_or(0u32)
+        )
+    )
+    .into()
+}
+
 #[derive(QObject, Default)]
 #[allow(dead_code, non_snake_case)]
 pub struct RxListItem {
@@ -52,8 +68,9 @@ pub struct RxListItem {
 
     uuid: qt_property!(QString),
     parentUuid: qt_property!(QString),
-    title: qt_property!(QString),
-    subtitle: qt_property!(QString),
+    title: qt_property!(QString),       // Large text
+    subtitle: qt_property!(QString),    // Second line
+    description: qt_property!(QString), // Third line, description
     iconPath: qt_property!(QString),
     iconBuiltin: qt_property!(bool),
 
@@ -76,6 +93,7 @@ impl RxListItem {
             uuid: QString::from(Uuid::default().to_string()),
             parentUuid: QString::default(),
             feature: QString::default(),
+            description: QString::default(),
 
             hasUsername: false,
             hasPassword: false,
@@ -120,6 +138,7 @@ impl From<&RxTag> for RxListItem {
             iconBuiltin: false,
             title: QString::from(value.name.as_ref()),
             subtitle: QString::from("Tag"),
+            description: entry_count(&value.entry_uuids),
         }
     }
 }
@@ -146,7 +165,8 @@ impl From<&RxTemplate> for RxListItem {
 
             iconBuiltin: value.icon.is_builtin(),
             title: QString::from(value.name.as_ref()),
-            subtitle: QString::from(""),
+            subtitle: QString::from("Template"),
+            description: entry_count(&value.entry_uuids),
         }
     }
 }
@@ -188,6 +208,11 @@ impl From<&RxEntry> for RxListItem {
                 .and_then(|username| username.value().map(|u| u.to_string()))
                 .unwrap_or_else(|| "".to_string())
                 .into(),
+
+            description: QString::from(match value.password() {
+                Some(_) => "••••••",
+                _ => "",
+            }),
         }
     }
 }
@@ -213,6 +238,8 @@ impl From<&RxGroup> for RxListItem {
 
             title: value.name.clone().into(),
             subtitle: QString::from("Group"),
+            description: entry_count(&value.entries),
+
             iconPath: value
                 .icon
                 .icon_path()
@@ -256,6 +283,7 @@ impl From<RxListItem> for QVariantMap {
         map.insert("uuid".into(), value.uuid.to_qvariant());
         map.insert("title".into(), value.title.to_qvariant());
         map.insert("subtitle".into(), value.subtitle.to_qvariant());
+        map.insert("description".into(), value.description.to_qvariant());
         map.insert("hasUsername".into(), value.hasUsername.to_qvariant());
         map.insert("hasPassword".into(), value.hasPassword.to_qvariant());
         map.insert("hasURL".into(), value.hasURL.to_qvariant());

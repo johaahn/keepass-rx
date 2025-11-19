@@ -13,6 +13,7 @@ use uuid::Uuid;
 use zeroize::{Zeroize, Zeroizing};
 
 use super::KeepassRx;
+use super::instructions::get_instructions;
 use super::models::RxListItem;
 use crate::crypto::EncryptedPassword;
 use crate::gui::models::{RxList, RxUiFeature};
@@ -234,6 +235,7 @@ impl Handler<SetViewMode> for KeepassRxActor {
             uuid: root_uuid,
             is_root: true,
             available_feature: feature,
+            instructions: get_instructions(&feature),
         });
 
         println!(
@@ -389,6 +391,7 @@ impl Handler<PushContainer> for KeepassRxActor {
                 uuid: container.uuid(),
                 is_root: container.is_root(),
                 available_feature: parent_feature,
+                instructions: get_instructions(&parent_feature),
             };
 
             let qvar = QVariantMap::from(&page);
@@ -431,6 +434,7 @@ impl Handler<PopContainer> for KeepassRxActor {
                 uuid: new_uuid,
                 is_root: is_root,
                 available_feature: parent_feature,
+                instructions: get_instructions(&parent_feature),
             };
 
             let qvar = QVariantMap::from(&new_page);

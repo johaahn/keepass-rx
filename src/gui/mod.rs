@@ -12,6 +12,7 @@ use uuid::Uuid;
 
 pub(crate) mod actor;
 pub(crate) mod colors;
+pub(crate) mod instructions;
 pub(crate) mod models;
 pub(crate) mod utils;
 

@@ -20,6 +20,7 @@ Page {
     // The default values of these properties control what we should fetch first.
     property string containerUuid
     property string containerName
+    property string containerInstructions
     property bool atRoot: true
     property bool searchMode: false
 
@@ -314,6 +315,45 @@ Page {
                         PopupUtils.close(viewModeDialogInner)
                     }
                 }
+
+                Button {
+                    text: i18n.tr("Cancel")
+                    color: LomiriColors.silk
+                    onClicked: {
+                        PopupUtils.close(viewModeDialogInner)
+                    }
+                }
+            }
+        }
+    }
+
+    Row {
+        id: containerInstructionsLabel
+        height: containerInstructionsText.height + containerInstructionsBottom.height
+        anchors.top: parent.header.bottom
+        width: parent.width
+        visible: containerInstructions != null && containerInstructions.length > 0
+
+        Column {
+            width: parent.width
+            Layout.fillWidth: true
+
+            Text {
+                id: containerInstructionsText
+                text: containerInstructions
+                color: theme.palette.normal.backgroundSecondaryText
+                padding: units.gu(0.5)
+                width: parent.width
+                Layout.fillWidth: true
+                wrapMode: Text.Wrap
+            }
+
+            Rectangle {
+                id: containerInstructionsBottom
+                Layout.fillWidth: true
+                width: parent.width
+                height: 1
+                color: LomiriColors.orange
             }
         }
     }
@@ -322,7 +362,7 @@ Page {
 	id: entriesList
         clip: true
         z: 1
-        anchors.top: parent.header.bottom
+        anchors.top: containerInstructionsLabel.visible ? containerInstructionsLabel.bottom : parent.header.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
@@ -421,7 +461,7 @@ Page {
             containerUuid = null;
         }
 
-        // newContainer is { containerUuid, isRoot }
+        // newContainer is { containerUuid, isRoot, instructions, availableFeature }
         function onCurrentContainerChanged(newContainer) {
 	    searchMode = false;
 	    searchField.text = '';
@@ -431,6 +471,7 @@ Page {
             // triggering entry list update. The container UUID change
             // signal will trigger changes.
             atRoot = newContainer.isRoot;
+            containerInstructions = newContainer.instructions;
             containerUuid = newContainer.containerUuid;
         }
 

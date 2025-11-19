@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-19 12:57+0000\n"
+"POT-Creation-Date: 2025-11-19 14:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -47,13 +47,13 @@ msgid "Add Database"
 msgstr ""
 
 #: qml/pages/DBList.qml:74 qml/pages/SettingsPage.qml:11
-#: qml/pages/OpenDBPage.qml:47 qml/pages/EntriesPage.qml:201
+#: qml/pages/OpenDBPage.qml:47 qml/pages/EntriesPage.qml:202
 #: qml/pages/UnlockPage.qml:34
 msgid "Settings"
 msgstr ""
 
 #: qml/pages/DBList.qml:81 qml/pages/AboutPage.qml:11
-#: qml/pages/OpenDBPage.qml:54 qml/pages/EntriesPage.qml:210
+#: qml/pages/OpenDBPage.qml:54 qml/pages/EntriesPage.qml:211
 #: qml/pages/UnlockPage.qml:41
 msgid "About"
 msgstr ""
@@ -127,7 +127,7 @@ msgid ""
 msgstr ""
 
 #: qml/pages/SingleEntry.qml:96 qml/pages/OpenDBPage.qml:34
-#: qml/pages/EntriesPage.qml:165
+#: qml/pages/EntriesPage.qml:166
 msgid "Back"
 msgstr ""
 
@@ -155,64 +155,68 @@ msgstr ""
 msgid "Opening"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:96
+#: qml/pages/EntriesPage.qml:97
 msgid "Cancel Search"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:116
+#: qml/pages/EntriesPage.qml:117
 msgid "Search entries in this group"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:141
+#: qml/pages/EntriesPage.qml:142
 msgid "Lock"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:153
+#: qml/pages/EntriesPage.qml:154
 msgid "Close"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:178
+#: qml/pages/EntriesPage.qml:179
 msgid "View Mode"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:188
+#: qml/pages/EntriesPage.qml:189
 msgid "Search"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:222
+#: qml/pages/EntriesPage.qml:223
 msgid "Lock Database"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:232
+#: qml/pages/EntriesPage.qml:233
 msgid "Close Database"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:252
+#: qml/pages/EntriesPage.qml:253
 msgid "Change View"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:260
+#: qml/pages/EntriesPage.qml:261
 msgid "All groups and entries."
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:266
+#: qml/pages/EntriesPage.qml:267
 msgid "Entries grouped by template."
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:272
+#: qml/pages/EntriesPage.qml:273
 msgid "Entries with 2FA codes."
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:278
+#: qml/pages/EntriesPage.qml:279
 msgid "Entries grouped by tag."
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:290
+#: qml/pages/EntriesPage.qml:291
 msgid "Select View"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:309
+#: qml/pages/EntriesPage.qml:310
 msgid "Select"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:320
+msgid "Cancel"
 msgstr ""
 
 #: qml/pages/UnlockPage.qml:146
@@ -277,3 +281,9 @@ msgid "entry"
 msgid_plural "entries"
 msgstr[0] ""
 msgstr[1] ""
+
+#: src/gui/instructions.rs:9
+msgid ""
+"<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
+"using its action bar."
+msgstr ""

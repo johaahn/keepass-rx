@@ -381,6 +381,7 @@ pub struct RxUiContainer {
     pub uuid: Uuid,
     pub is_root: bool,
     pub available_feature: RxUiFeature,
+    pub instructions: Option<String>,
 }
 
 impl From<&RxUiContainer> for QVariantMap {
@@ -396,6 +397,16 @@ impl From<&RxUiContainer> for QVariantMap {
         qvar.insert(
             "availableFeature".into(),
             ui_feature_to_string(&value.available_feature).into(),
+        );
+
+        qvar.insert(
+            "instructions".into(),
+            value
+                .instructions
+                .as_deref()
+                .map(QString::from)
+                .unwrap_or_default()
+                .into(),
         );
 
         qvar

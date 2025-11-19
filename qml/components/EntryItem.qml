@@ -261,10 +261,10 @@ ListItem {
                         }
 
                         Icon {
-                            width: units.gu(3)
-                            height: units.gu(3)
+                            width: units.gu(2.8)
+                            height: units.gu(2.8)
                             color: theme.palette.normal.foregroundText
-                            x: parent.width - width / 2
+                            x: parent.x + width / 1.25
                             y: parent.height / 2 - height / 2
                             name: 'next'
                         }

@@ -332,7 +332,7 @@ Page {
             id: entriesListModel
         }
 
-      delegate: EntryItem {}
+        delegate: EntryItem {}
     }
 
     Popup {

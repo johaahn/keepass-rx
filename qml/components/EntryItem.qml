@@ -355,14 +355,14 @@ ListItem {
                         }
 
                         Icon {
+                            id: clockIcon
                             name: 'clock'
                             width: units.gu(2)
                             height: units.gu(2)
 
                             anchors.bottom: current2FAValidFor.bottom
                             anchors.right: current2FAValidFor.right
-                            anchors.rightMargin: width
-                            anchors.bottomMargin: height
+                            anchors.rightMargin: clockIcon.width * 1.025
                             anchors.verticalCenter: current2FAValidFor.verticalCenter
                         }
                     }

@@ -108,6 +108,7 @@ ListItem {
         actions: [
             Action {
                 visible: hasUsername
+                name: i18n.tr('Copy Username')
                 iconName: "account"
                 onTriggered: {
                     keepassrx.getFieldValue(uuid, "Username");
@@ -115,6 +116,7 @@ ListItem {
             },
             Action {
                 visible: hasPassword
+                name: i18n.tr('Copy Password')
                 iconName: "stock_key"
                 onTriggered: {
                     keepassrx.getFieldValue(uuid, "Password");
@@ -123,12 +125,14 @@ ListItem {
             Action {
                 visible: hasURL
                 iconName: "external-link"
+                name: i18n.tr('Open URL')
                 onTriggered: {
                     keepassrx.getFieldValue(uuid, "URL");
                 }
             },
             Action {
-                visible: hasTOTP
+                visible: hasTOTP && !hasFeature('DisplayTwoFactorAuth')
+                name: i18n.tr('Copy 2FA Code')
                 iconSource: "../../assets/2fa.svg"
                 iconName: "totp-code"
                 onTriggered: {
@@ -137,6 +141,12 @@ ListItem {
                     // onTotpReceived event.
                     keepassrx.getTotp(uuid);
                 }
+            },
+            Action {
+                visible: hasFeature('DisplayTwoFactorAuth')
+                name: i18n.tr('View Entry')
+                iconName: "next"
+                onTriggered: handleEntryClick()
             }
         ]
     }
@@ -230,7 +240,7 @@ ListItem {
                 elide: Text.ElideRight
                 color: theme.palette.normal.activity
                 text: hasFeature('DisplayTwoFactorAuth')
-                    ? i18n.tr("Tap 2FA to copy")
+                    ? i18n.tr("Tap to copy 2FA code")
                     : (description)
             }
         }
@@ -342,7 +352,13 @@ ListItem {
         x: parent.x
         width: imgLoader.width + detailsColumn.width
         height: parent.height
-        onClicked: handleEntryClick()
+        onClicked: {
+            if (hasFeature('DisplayTwoFactorAuth')) {
+                keepassrx.getTotp(uuid);
+            } else {
+                handleEntryClick();
+            }
+        }
     }
 
     Timer {

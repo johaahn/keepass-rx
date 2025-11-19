@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-19 12:43+0000\n"
+"POT-Creation-Date: 2025-11-19 12:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,23 +18,43 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: qml/components/EntryItem.qml:233
-msgid "Tap 2FA to copy"
+#: qml/components/EntryItem.qml:111
+msgid "Copy Username"
+msgstr ""
+
+#: qml/components/EntryItem.qml:119
+msgid "Copy Password"
+msgstr ""
+
+#: qml/components/EntryItem.qml:128
+msgid "Open URL"
+msgstr ""
+
+#: qml/components/EntryItem.qml:135
+msgid "Copy 2FA Code"
+msgstr ""
+
+#: qml/components/EntryItem.qml:147
+msgid "View Entry"
+msgstr ""
+
+#: qml/components/EntryItem.qml:243
+msgid "Tap to copy 2FA code"
 msgstr ""
 
 #: qml/pages/DBList.qml:67
 msgid "Add Database"
 msgstr ""
 
-#: qml/pages/DBList.qml:74 qml/pages/UnlockPage.qml:34
-#: qml/pages/SettingsPage.qml:11 qml/pages/OpenDBPage.qml:47
-#: qml/pages/EntriesPage.qml:201
+#: qml/pages/DBList.qml:74 qml/pages/SettingsPage.qml:11
+#: qml/pages/OpenDBPage.qml:47 qml/pages/EntriesPage.qml:201
+#: qml/pages/UnlockPage.qml:34
 msgid "Settings"
 msgstr ""
 
-#: qml/pages/DBList.qml:81 qml/pages/UnlockPage.qml:41
-#: qml/pages/AboutPage.qml:11 qml/pages/OpenDBPage.qml:54
-#: qml/pages/EntriesPage.qml:210
+#: qml/pages/DBList.qml:81 qml/pages/AboutPage.qml:11
+#: qml/pages/OpenDBPage.qml:54 qml/pages/EntriesPage.qml:210
+#: qml/pages/UnlockPage.qml:41
 msgid "About"
 msgstr ""
 
@@ -52,36 +72,6 @@ msgstr ""
 
 #: qml/pages/DBList.qml:265
 msgid "It will only be removed from the app, not your device."
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:146
-msgid "Manual path set."
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:163
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:181
-msgid "Passcode"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:213
-msgid "Unlock"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:232
-msgid "Securely Unlocking"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:233
-msgid "Securely Locking"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:244
-msgid "Database Not Opening?"
 msgstr ""
 
 #: qml/pages/SettingsPage.qml:44
@@ -225,6 +215,36 @@ msgstr ""
 msgid "Select"
 msgstr ""
 
+#: qml/pages/UnlockPage.qml:146
+msgid "Manual path set."
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:163
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:181
+msgid "Passcode"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:213
+msgid "Unlock"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:232
+msgid "Securely Unlocking"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:233
+msgid "Securely Locking"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:244
+msgid "Database Not Opening?"
+msgstr ""
+
 #: src/rx/virtual_hierarchy.rs:35
 msgid "Special Categories"
 msgstr ""
@@ -252,7 +272,7 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
-#: src/gui/models.rs:103 src/gui/models.rs:117
+#: src/gui/models.rs:108 src/gui/models.rs:122
 msgid "entry"
 msgid_plural "entries"
 msgstr[0] ""

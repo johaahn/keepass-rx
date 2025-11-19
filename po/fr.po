@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-18 20:37+0000\n"
+"POT-Creation-Date: 2025-11-19 12:37+0000\n"
 "PO-Revision-Date: 2025-11-18 18:53+0000\n"
 "Last-Translator: Vlad Nirky <nirky.vlad@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -18,6 +18,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Weblate 5.15-dev\n"
+
+msgid "Tap 2FA to copy"
+msgstr ""
 
 msgid "Add Database"
 msgstr "Ajouter une base de données"
@@ -65,21 +68,6 @@ msgstr "Verrouillage sécurisé"
 
 msgid "Database Not Opening?"
 msgstr "La base de données ne s'ouvre pas ?"
-
-msgid "Back"
-msgstr "Retour"
-
-msgid "Enter the database master password"
-msgstr "Entrez le mot de passe principal de la base de données"
-
-msgid "Master Password"
-msgstr "Mot de passe principal"
-
-msgid "Open"
-msgstr "Ouvrir"
-
-msgid "Opening"
-msgstr "Ouverture"
 
 msgid ""
 "Change settings based on your preferences. Any change to the settings "
@@ -136,11 +124,26 @@ msgstr ""
 "Source : <a href='https ://git.agnos.is/projectmoon/keepass-rx'>https ://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
+msgid "Back"
+msgstr "Retour"
+
 msgid "Notes"
 msgstr "Notes"
 
 msgid "Tap to copy"
 msgstr "Appuyez pour copier"
+
+msgid "Enter the database master password"
+msgstr "Entrez le mot de passe principal de la base de données"
+
+msgid "Master Password"
+msgstr "Mot de passe principal"
+
+msgid "Open"
+msgstr "Ouvrir"
+
+msgid "Opening"
+msgstr "Ouverture"
 
 msgid "Cancel Search"
 msgstr "Annuler la recherche"
@@ -207,6 +210,11 @@ msgstr ""
 
 msgid "Tags"
 msgstr ""
+
+msgid "entry"
+msgid_plural "entries"
+msgstr[0] ""
+msgstr[1] ""
 
 #~ msgid "Untitled Entry"
 #~ msgstr "Entrée sans titre"

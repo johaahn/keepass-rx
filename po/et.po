@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-18 20:37+0000\n"
+"POT-Creation-Date: 2025-11-19 12:37+0000\n"
 "PO-Revision-Date: 2025-11-18 17:51+0000\n"
 "Last-Translator: Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/ubports/"
@@ -18,6 +18,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.15-dev\n"
+
+msgid "Tap 2FA to copy"
+msgstr ""
 
 msgid "Add Database"
 msgstr "Lisa andmebaas"
@@ -64,21 +67,6 @@ msgstr "Turvaline lukustamine"
 
 msgid "Database Not Opening?"
 msgstr "Kas andmebaas ei avane?"
-
-msgid "Back"
-msgstr "Tagasi"
-
-msgid "Enter the database master password"
-msgstr "Sisesta andmebaasi üldsalasõna"
-
-msgid "Master Password"
-msgstr "Üldsalasõna"
-
-msgid "Open"
-msgstr "Ava"
-
-msgid "Opening"
-msgstr "Avamisel"
 
 msgid ""
 "Change settings based on your preferences. Any change to the settings "
@@ -134,11 +122,26 @@ msgstr ""
 "Lähtekood: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
+msgid "Back"
+msgstr "Tagasi"
+
 msgid "Notes"
 msgstr "Märkmed"
 
 msgid "Tap to copy"
 msgstr "Kopeerimiseks klõpsa"
+
+msgid "Enter the database master password"
+msgstr "Sisesta andmebaasi üldsalasõna"
+
+msgid "Master Password"
+msgstr "Üldsalasõna"
+
+msgid "Open"
+msgstr "Ava"
+
+msgid "Opening"
+msgstr "Avamisel"
 
 msgid "Cancel Search"
 msgstr "Katkesta otsing"
@@ -205,6 +208,11 @@ msgstr ""
 
 msgid "Tags"
 msgstr ""
+
+msgid "entry"
+msgid_plural "entries"
+msgstr[0] ""
+msgstr[1] ""
 
 #~ msgid "Untitled Entry"
 #~ msgstr "Pealkirjata kirje"

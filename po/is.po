@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-18 20:37+0000\n"
+"POT-Creation-Date: 2025-11-19 12:37+0000\n"
 "PO-Revision-Date: 2025-11-18 09:39+0000\n"
 "Last-Translator: projectmoon <projectmoon@agnos.is>\n"
 "Language-Team: Icelandic <https://hosted.weblate.org/projects/ubports/"
@@ -18,6 +18,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n % 10 != 1 || n % 100 == 11;\n"
 "X-Generator: Weblate 5.15-dev\n"
+
+msgid "Tap 2FA to copy"
+msgstr ""
 
 msgid "Add Database"
 msgstr "Bæta við Gangnagrunn"
@@ -64,21 +67,6 @@ msgstr "Læsa með öryggi"
 
 msgid "Database Not Opening?"
 msgstr "Er gagnagrunnur ekki að opna?"
-
-msgid "Back"
-msgstr "Til baka"
-
-msgid "Enter the database master password"
-msgstr "Sláðu inn aðallykilorð gagnagrunnsins"
-
-msgid "Master Password"
-msgstr "Aðallykilorð"
-
-msgid "Open"
-msgstr "Opna"
-
-msgid "Opening"
-msgstr "Í vinnslu"
 
 msgid ""
 "Change settings based on your preferences. Any change to the settings "
@@ -129,11 +117,26 @@ msgstr ""
 "Uppruni: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
+msgid "Back"
+msgstr "Til baka"
+
 msgid "Notes"
 msgstr "Athugasemdir"
 
 msgid "Tap to copy"
 msgstr "Ýtið á til að afrita"
+
+msgid "Enter the database master password"
+msgstr "Sláðu inn aðallykilorð gagnagrunnsins"
+
+msgid "Master Password"
+msgstr "Aðallykilorð"
+
+msgid "Open"
+msgstr "Opna"
+
+msgid "Opening"
+msgstr "Í vinnslu"
 
 msgid "Cancel Search"
 msgstr "Hætta leit"
@@ -200,6 +203,11 @@ msgstr ""
 
 msgid "Tags"
 msgstr ""
+
+msgid "entry"
+msgid_plural "entries"
+msgstr[0] ""
+msgstr[1] ""
 
 #~ msgid "Untitled Entry"
 #~ msgstr "Ónefnd Færsla"

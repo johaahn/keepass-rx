@@ -249,7 +249,8 @@ ListItem {
             id: featureLoader
             sourceComponent: hasFeature('DisplayTwoFactorAuth') ? totpFeature : noFeatures
 
-            width: parent.width - parent.spacing - units.gu(6)
+            //width: parent.width - parent.spacing - units.gu(6)
+            width: parent.width - imgLoader.width - detailsColumn.width
             height: parent.height
 
             Component {
@@ -293,7 +294,7 @@ ListItem {
                         target: keepassrx
 
                         function onFieldValueReceived(entryUuid, fieldName, totpCode, totpValidFor) {
-                            if (totpCode && totpValidFor && hasFeature('DisplayTwoFactorAuth')) {
+                            if (uuid == entryUuid && totpCode && totpValidFor && hasFeature('DisplayTwoFactorAuth')) {
                                 current2FACode.text = totpCode;
                                 current2FAValidFor.text = totpValidFor;
                                 return;
@@ -354,15 +355,15 @@ ListItem {
                         }
 
                         Icon {
-                            width: units.gu(1.5)
-                            height: units.gu(1.5)
-                            anchors.top: current2FAValidFor.top
-                            anchors.left: current2FAValidFor.left
-
-                            // Puts almost past the XXs
-                            anchors.leftMargin: width * 2
-                            anchors.topMargin: height
                             name: 'clock'
+                            width: units.gu(2)
+                            height: units.gu(2)
+
+                            anchors.bottom: current2FAValidFor.bottom
+                            anchors.right: current2FAValidFor.right
+                            anchors.rightMargin: width
+                            anchors.bottomMargin: height
+                            anchors.verticalCenter: current2FAValidFor.verticalCenter
                         }
                     }
                 }

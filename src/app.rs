@@ -19,17 +19,17 @@ pub fn current() -> &'static KeepassRxApp {
 #[derive(Debug)]
 #[allow(dead_code)]
 pub struct KeepassRxApp {
-    gui_actor: Addr<KeepassRxActor>,
+    app_actor: Addr<KeepassRxActor>,
 }
 
 impl KeepassRxApp {
-    pub fn new(gui_actor: Addr<KeepassRxActor>) -> Self {
+    pub fn new(app_actor: Addr<KeepassRxActor>) -> Self {
         Self {
-            gui_actor: gui_actor,
+            app_actor: app_actor,
         }
     }
 
-    pub fn gui_actor(&self) -> Addr<KeepassRxActor> {
-        self.gui_actor.clone()
+    pub fn app_actor(&self) -> Addr<KeepassRxActor> {
+        self.app_actor.clone()
     }
 }

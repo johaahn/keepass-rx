@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-19 22:16+0000\n"
+"POT-Creation-Date: 2025-11-20 09:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,15 +45,15 @@ msgstr ""
 msgid "Add Database"
 msgstr ""
 
-#: qml/pages/DBList.qml:74 qml/pages/OpenDBPage.qml:47
-#: qml/pages/SettingsPage.qml:11 qml/pages/EntriesPage.qml:202
-#: qml/pages/UnlockPage.qml:34
+#: qml/pages/DBList.qml:74 qml/pages/SettingsPage.qml:11
+#: qml/pages/OpenDBPage.qml:47 qml/pages/UnlockPage.qml:34
+#: qml/pages/EntriesPage.qml:202
 msgid "Settings"
 msgstr ""
 
-#: qml/pages/DBList.qml:81 qml/pages/OpenDBPage.qml:54
-#: qml/pages/AboutPage.qml:11 qml/pages/EntriesPage.qml:211
-#: qml/pages/UnlockPage.qml:41
+#: qml/pages/DBList.qml:81 qml/pages/AboutPage.qml:11
+#: qml/pages/OpenDBPage.qml:54 qml/pages/UnlockPage.qml:41
+#: qml/pages/EntriesPage.qml:211
 msgid "About"
 msgstr ""
 
@@ -71,27 +71,6 @@ msgstr ""
 
 #: qml/pages/DBList.qml:265
 msgid "It will only be removed from the app, not your device."
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:34 qml/pages/SingleEntry.qml:96
-#: qml/pages/EntriesPage.qml:166
-msgid "Back"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:159
-msgid "Enter the database master password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:172
-msgid "Master Password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:202
-msgid "Open"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:219
-msgid "Opening"
 msgstr ""
 
 #: qml/pages/SettingsPage.qml:44
@@ -146,12 +125,63 @@ msgid ""
 "agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
 
+#: qml/pages/SingleEntry.qml:96 qml/pages/OpenDBPage.qml:34
+#: qml/pages/EntriesPage.qml:166
+msgid "Back"
+msgstr ""
+
 #: qml/pages/SingleEntry.qml:222
 msgid "Notes"
 msgstr ""
 
 #: qml/pages/SingleEntry.qml:230
 msgid "Tap to copy"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:159
+msgid "Enter the database master password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:172
+msgid "Master Password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:202
+msgid "Open"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:219
+msgid "Opening"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:146
+msgid "Manual path set."
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:163
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:181
+msgid "Passcode"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:213
+msgid "Unlock"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:232
+msgid "Securely Unlocking"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:233
+msgid "Securely Locking"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:244
+msgid "Database Not Opening?"
 msgstr ""
 
 #: qml/pages/EntriesPage.qml:97
@@ -216,36 +246,6 @@ msgstr ""
 
 #: qml/pages/EntriesPage.qml:320
 msgid "Cancel"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:146
-msgid "Manual path set."
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:163
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:181
-msgid "Passcode"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:213
-msgid "Unlock"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:232
-msgid "Securely Unlocking"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:233
-msgid "Securely Locking"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:244
-msgid "Database Not Opening?"
 msgstr ""
 
 #: src/rx/virtual_hierarchy.rs:35

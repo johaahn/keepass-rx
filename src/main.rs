@@ -106,18 +106,16 @@ fn load_gui() -> Result<()> {
         let mut view = with_executor(|| -> Result<QQuickView> {
             // TODO store these in some global state?
 
-            let keepassrx = Arc::new(QObjectBox::new(KeepassRx::new(last_db)));
-            let keepassrx_actor = KeepassRxActor::new(&keepassrx).start();
+            let gui = Arc::new(QObjectBox::new(KeepassRx::new(last_db)));
+            let gui_actor = KeepassRxActor::new(&gui).start();
 
-            let app = KeepassRxApp {
-                gui: keepassrx,
-                gui_actor: keepassrx_actor,
-            };
+            let app = KeepassRxApp::new(gui_actor);
+
+            crate::app::initialize(app)?;
 
             let mut view = QQuickView::new();
-
             let engine = view.engine();
-            engine.set_property("keepassrx".into(), app.gui.pinned().into());
+            engine.set_property("keepassrx".into(), gui.pinned().into());
             view.set_source("qrc:/qml/Main.qml".into());
             Ok(view)
         })

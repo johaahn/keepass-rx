@@ -27,7 +27,6 @@ extern crate libsodium_rs;
 
 use actix::Actor;
 use anyhow::Result;
-use app::KeepassRxApp;
 use cpp::cpp;
 use gettextrs::{bindtextdomain, textdomain};
 use qmeta_async::with_executor;
@@ -61,7 +60,11 @@ use crate::gui::{
 
 #[cfg(feature = "gui")]
 fn load_gui() -> Result<()> {
-    use gui::{RxViewMode, colors::RxColorType, models::RxUiFeature, qml::RxUiEntry};
+    use crate::app::KeepassRxApp;
+    use crate::gui::RxViewMode;
+    use crate::gui::colors::RxColorType;
+    use crate::gui::models::RxUiFeature;
+    use crate::gui::qml::RxUiEntry;
 
     init_gettext();
 

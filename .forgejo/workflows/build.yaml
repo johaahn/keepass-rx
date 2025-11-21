@@ -17,17 +17,35 @@ jobs:
       - name: Setup Cache
         uses: https://github.com/Swatinem/rust-cache@v2
 
-      - name: Install Cargo Deny
-        run: clickable run cargo install cargo-deny
-
-      - name: License Check
-        run: clickable run cargo deny check licenses
-
       - name: Test
         run: clickable run cargo test --no-default-features
 
-  build-amd64:
+  license-check:
     needs: [test]
+    runs-on: docker
+    container:
+      image: rust:1.91.0
+    steps:
+      - name: Add NodeJS deb repo
+        run: curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+
+      - name: Install NodeJS
+        run: apt update && apt install -y nodejs
+
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Cache
+        uses: https://github.com/Swatinem/rust-cache@v2
+
+      - name: Install Cargo Deny
+        run: cargo install cargo-deny
+
+      - name: License Check
+        run: cargo deny check licenses
+
+  build-amd64:
+    needs: [test, license-check]
     runs-on: docker
     container:
       image: clickable/ci-20.04-amd64
@@ -54,7 +72,7 @@ jobs:
           path: build/x86_64-linux-gnu/app/keepassrx.projectmoon_*.click
 
   build-arm64:
-    needs: [test]
+    needs: [test, license-check]
     runs-on: docker
     container:
       image: clickable/ci-20.04-arm64
@@ -81,7 +99,7 @@ jobs:
           path: build/aarch64-linux-gnu/app/keepassrx.projectmoon_*.click
 
   build-armhf:
-    needs: [test]
+    needs: [test, license-check]
     runs-on: docker
     container:
       image: clickable/ci-20.04-armhf

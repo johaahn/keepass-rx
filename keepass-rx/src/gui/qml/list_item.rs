@@ -15,7 +15,7 @@ use qmetaobject::{
 };
 use uuid::Uuid;
 
-use crate::actor::{ActixEvent, EventObserving, ModelContext, ObservingModelActor};
+use crate::actor::{EventObserving, ModelContext, ObservingModelActor};
 use crate::app::{self, AppState};
 use crate::rx::virtual_hierarchy::{RxViewFeature, VirtualHierarchy};
 use crate::rx::{

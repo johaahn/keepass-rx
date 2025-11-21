@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2019-2025 Ruben De Smet, Markus Törnqvist, 2025 projectmoon
+ *
+ * Modified Whisperfish actor binding code via proc-macro. The license of
+ * Whisperfish follows:
+ *
+ * Whisperfish is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or (at
+ * your option) any later version.
+ * Whisperfish is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero
+ * General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see
+ * <https://www.gnu.org/licenses/>.
+ */
 use std::rc::Rc;
 
 use actix::prelude::*;
@@ -7,13 +25,6 @@ use qmetaobject::QPointer;
 pub use actor_macro::observing_model;
 
 use crate::app::AppState;
-
-// TODO temporary
-#[derive(Message)]
-#[rtype(result = "()")]
-pub struct ActixEvent {
-    pub event_name: String,
-}
 
 pub trait EventObserving<M>
 where

@@ -207,7 +207,7 @@ fn main() {
     println!("cargo:rerun-if-changed=src/main.rs");
     println!("cargo:rerun-if-changed=src/rx/icons.rs");
     println!("cargo:rerun-if-changed=src/rx/virtual_hierarchy.rs");
-    println!("cargo:rerun-if-changed=po/*");
+    println!("cargo:rerun-if-changed=../po/*");
 
     println!("cargo:rustc-link-search{macos_lib_search}={qt_library_path}");
     println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}Widgets");

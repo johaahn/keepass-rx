@@ -15,11 +15,9 @@ use zeroize::{Zeroize, Zeroizing};
 
 use super::KeepassRx;
 use super::instructions::get_instructions;
-use super::models::RxListItem;
 use crate::actor::ActixEvent;
 use crate::app::AppState;
 use crate::crypto::EncryptedPassword;
-use crate::gui::models::{RxList, RxUiFeature};
 use crate::rx::virtual_hierarchy::{
     AllTags, AllTemplates, DefaultView, TotpEntries, VirtualHierarchy,
 };
@@ -39,9 +37,6 @@ pub struct KeepassRxActor {
     // any in-progress operation on another thread pool that might
     // need to be aborted.
     current_operation: Option<JoinHandle<Result<()>>>,
-
-    // current view of the database.
-    current_view: Option<Box<dyn VirtualHierarchy>>,
 }
 
 impl KeepassRxActor {
@@ -72,38 +67,6 @@ impl Actor for KeepassRxActor {
 
     fn started(&mut self, ctx: &mut Self::Context) {
         self.gui.pinned().borrow_mut().actor = Some(ctx.address());
-    }
-}
-
-#[derive(Message)]
-#[rtype(result = "()")]
-pub struct TestReply {
-    pub value: String,
-}
-
-#[derive(Message)]
-#[rtype(result = "()")]
-pub struct Test {
-    pub callback: Recipient<ActixEvent>,
-}
-
-impl Handler<Test> for KeepassRxActor {
-    type Result = AtomicResponse<Self, ()>;
-
-    fn handle(&mut self, msg: Test, ctx: &mut Self::Context) -> Self::Result {
-        AtomicResponse::new(Box::pin(
-            async move {
-                msg.callback
-                    .send(ActixEvent {
-                        event_name: "Hello this is a test".to_string(),
-                    })
-                    .await
-            }
-            .into_actor(self)
-            .map(|res, _, _| {
-                println!("send result: {:?}", res);
-            }),
-        ))
     }
 }
 
@@ -228,12 +191,6 @@ pub struct InvalidateMasterPassword;
 #[rtype(result = "()")]
 pub struct CheckLockingStatus;
 
-// let db = self.curr_db.borrow();
-// let db = db.as_deref().expect("No database open");
-// let root = self.current_view.as_ref().expect("No view");
-
-// RxRootWithDb::new(root, db)
-
 impl Handler<SetViewMode> for KeepassRxActor {
     type Result = ();
 
@@ -245,14 +202,10 @@ impl Handler<SetViewMode> for KeepassRxActor {
         let mut gui = binding.borrow_mut();
 
         let app_state = self.app_state.pinned();
-        let app_state = app_state.borrow();
+        let mut app_state = app_state.borrow_mut();
         let db_binding = app_state.curr_db();
-        let db_binding = db_binding.as_deref();
 
-        let db = match db_binding
-            .as_ref()
-            .ok_or(anyhow!("PushContainer: Database not open"))
-        {
+        let db = match db_binding {
             Ok(db) => db,
             Err(err) => return gui.errorReceived(format!("{}", err)),
         };
@@ -261,30 +214,27 @@ impl Handler<SetViewMode> for KeepassRxActor {
         gui.container_stack.clear();
 
         let view: Box<dyn VirtualHierarchy> = match mode {
-            RxViewMode::All => Box::new(DefaultView::new(db)),
-            RxViewMode::Templates => Box::new(AllTemplates::new(db)),
-            RxViewMode::Totp => Box::new(TotpEntries::new(db)),
-            RxViewMode::Tags => Box::new(AllTags::new(db)),
+            RxViewMode::All => Box::new(DefaultView::new(&db)),
+            RxViewMode::Templates => Box::new(AllTemplates::new(&db)),
+            RxViewMode::Totp => Box::new(TotpEntries::new(&db)),
+            RxViewMode::Tags => Box::new(AllTags::new(&db)),
         };
 
-        let feature: RxUiFeature = match mode {
-            RxViewMode::Totp => RxUiFeature::DisplayTwoFactorAuth,
-            _ => RxUiFeature::None,
-        };
+        app_state.set_curr_view(view);
 
-        self.current_view = Some(view);
+        let curr_view = app_state.curr_view();
+        let curr_view = curr_view.as_ref().unwrap();
+        let root_uuid = curr_view.root().uuid();
 
-        let root_uuid = self.current_view.as_ref().unwrap().root().uuid();
         gui.container_stack.push(RxUiContainer {
             uuid: root_uuid,
             is_root: true,
-            available_feature: feature,
-            instructions: get_instructions(&feature),
+            instructions: get_instructions(&curr_view.feature()),
         });
 
         println!(
             "Set view to: {}",
-            self.current_view.as_ref().unwrap().name()
+            app_state.curr_view().as_ref().unwrap().name()
         );
 
         let container = QVariantMap::from(&gui.container_stack[0]);
@@ -344,13 +294,13 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                         let view = Box::new(DefaultView::new(&rx_db));
 
                         let app_state = this.app_state.pinned();
-                        let app_state = app_state.borrow_mut();
+                        let mut app_state = app_state.borrow_mut();
 
                         gui.rootGroupUuid = QString::from(rx_db.root_group().uuid.to_string());
                         gui.metadata = rx_db.metadata().into();
 
-                        app_state.set_db(Some(Zeroizing::new(rx_db)));
-                        this.current_view = Some(view);
+                        app_state.set_db(Zeroizing::new(rx_db));
+                        app_state.set_curr_view(view);
 
                         gui.databaseOpen = true;
                         gui.databaseOpened();
@@ -370,13 +320,13 @@ impl Handler<CloseDatabase> for KeepassRxActor {
     fn handle(&mut self, _: CloseDatabase, _: &mut Self::Context) -> Self::Result {
         // Remove from cell
         let app_state = self.app_state.pinned();
-        let app_state = app_state.borrow();
+        let mut app_state = app_state.borrow_mut();
         let db = app_state.take_db();
 
         AtomicResponse::new(Box::pin(
             async move {
                 // Remove from option.
-                let mut db = db.ok_or(anyhow!("CloseDatabase: Database not open"))?;
+                let mut db = db?;
                 db.close();
                 Ok(())
             }
@@ -422,25 +372,21 @@ impl Handler<PushContainer> for KeepassRxActor {
     type Result = ();
 
     fn handle(&mut self, msg: PushContainer, _: &mut Self::Context) -> Self::Result {
+        let app_state = self.app_state.pinned();
+        let app_state = app_state.borrow();
+
         let binding = self.gui.clone();
         let binding = binding.pinned();
         let mut gui = binding.borrow_mut();
 
-        let view = self.current_view.as_ref().expect("No view?");
-        let viewable = view.root();
+        let view = app_state.curr_view().expect("No view?");
+        let view_root = view.root();
 
-        let parent_feature = gui
-            .container_stack
-            .last()
-            .map(|page| page.available_feature)
-            .unwrap_or_default();
-
-        if let Some(container) = viewable.get_container(msg.0) {
+        if let Some(container) = view_root.get_container(msg.0) {
             let page = RxUiContainer {
                 uuid: container.uuid(),
                 is_root: container.is_root(),
-                available_feature: parent_feature,
-                instructions: get_instructions(&parent_feature),
+                instructions: get_instructions(&view.feature()),
             };
 
             let qvar = QVariantMap::from(&page);
@@ -456,20 +402,17 @@ impl Handler<PushContainer> for KeepassRxActor {
 impl Handler<PopContainer> for KeepassRxActor {
     type Result = ();
     fn handle(&mut self, _: PopContainer, _: &mut Self::Context) -> Self::Result {
+        let app_state = self.app_state.pinned();
+        let app_state = app_state.borrow();
+
         let binding = self.gui.clone();
         let binding = binding.pinned();
         let mut gui = binding.borrow_mut();
 
-        let view = self
-            .current_view
-            .as_ref()
-            .expect("PopContainer: No view set");
+        let view = app_state.curr_view().expect("PopContainer: No view set");
 
         if let Some(_) = gui.container_stack.pop() {
             let parent_container = gui.container_stack.last();
-            let parent_feature = parent_container
-                .map(|page| page.available_feature)
-                .unwrap_or_default();
 
             let new_uuid = parent_container
                 .map(|page| page.uuid)
@@ -482,8 +425,7 @@ impl Handler<PopContainer> for KeepassRxActor {
             let new_page = RxUiContainer {
                 uuid: new_uuid,
                 is_root: is_root,
-                available_feature: parent_feature,
-                instructions: get_instructions(&parent_feature),
+                instructions: get_instructions(&view.feature()),
             };
 
             let qvar = QVariantMap::from(&new_page);
@@ -508,12 +450,8 @@ impl Handler<GetMetadata> for KeepassRxActor {
         let app_state = self.app_state.pinned();
         let app_state = app_state.borrow();
         let db_binding = app_state.curr_db();
-        let db_binding = db_binding.as_deref();
 
-        let db = match db_binding
-            .as_ref()
-            .ok_or(anyhow!("GetMetadata: Database not open"))
-        {
+        let db = match db_binding {
             Ok(db) => db,
             Err(err) => return gui.errorReceived(format!("{}", err)),
         };
@@ -526,11 +464,14 @@ impl Handler<GetContainer> for KeepassRxActor {
     type Result = ();
 
     fn handle(&mut self, msg: GetContainer, _: &mut Self::Context) -> Self::Result {
+        let app_state = self.app_state.pinned();
+        let app_state = app_state.borrow();
+
         let binding = self.gui.clone();
         let binding = binding.pinned();
         let gui = binding.borrow();
 
-        let view = self.current_view.as_ref().expect("GetGroup: No view set.");
+        let view = app_state.curr_view().expect("GetGroup: No view set.");
 
         let container_uuid = match msg.container_uuid {
             Some(id) => id,
@@ -556,14 +497,16 @@ impl Handler<GetEntries> for KeepassRxActor {
     type Result = ();
 
     fn handle(&mut self, msg: GetEntries, _: &mut Self::Context) -> Self::Result {
+        let app_state = self.app_state.pinned();
+        let app_state = app_state.borrow();
+
         let binding = self.gui.clone();
         let binding = binding.pinned();
         let gui = binding.borrow();
 
         let search_term = msg.search_term.as_deref();
-        let viewable = self
-            .current_view
-            .as_ref()
+        let viewable = app_state
+            .curr_view()
             .expect("GetEntries: Viewable not set.");
 
         let container_uuid = match msg.container_uuid {
@@ -571,39 +514,13 @@ impl Handler<GetEntries> for KeepassRxActor {
             None => viewable.root().uuid(),
         };
 
-        let mut results: Vec<RxListItem> = viewable
+        let results: QStringList = viewable
             .search(container_uuid, search_term)
             .into_iter()
-            .map(|result| result.into())
+            .map(|container| container.uuid().to_string())
             .collect();
 
-        // Only allow available feature of list item if the current UI
-        // container has it enabled.
-        let current_feature = gui
-            .container_stack
-            .last()
-            .map(|c| c.available_feature)
-            .unwrap_or_default();
-
-        let mut disabled_feature_count = 0;
-        for ui_list_item in results.iter_mut() {
-            ui_list_item.feature = match current_feature {
-                feat if feat == ui_list_item.feature => feat,
-                _ => {
-                    disabled_feature_count += 1;
-                    RxUiFeature::None
-                }
-            }
-        }
-
-        if disabled_feature_count > 0 {
-            println!(
-                "WARN: At least one entry had a UI feature disabled in current UI container."
-            )
-        }
-
-        let q_entries: QVariantList = results.into_iter().collect();
-        gui.entriesReceived(q_entries);
+        gui.entriesReceived(results);
     }
 }
 
@@ -617,12 +534,8 @@ impl Handler<GetSingleEntry> for KeepassRxActor {
         let app_state = self.app_state.pinned();
         let app_state = app_state.borrow();
         let db_binding = app_state.curr_db();
-        let db_binding = db_binding.as_deref();
 
-        let db = match db_binding
-            .as_ref()
-            .ok_or(anyhow!("GetSingleEntry: Database not open"))
-        {
+        let db = match db_binding {
             Ok(db) => db,
             Err(err) => return gui.errorReceived(format!("{}", err)),
         };
@@ -638,42 +551,16 @@ impl Handler<GetSingleEntry> for KeepassRxActor {
     }
 }
 
-fn get_value(
-    db: &RxDatabase,
-    entry_uuid: Uuid,
-    field_name: &RxFieldName,
-) -> (QString, Option<QString>) {
-    // TOTP must be handled a bit differently, because we want to
-    // include extra info about how long is left.
-    if *field_name == RxFieldName::CurrentTotp {
-        let maybe_totp = db.get_entry(entry_uuid);
-        let maybe_totp = maybe_totp
-            .as_deref()
-            .and_then(|entry| entry.get_field_value(&field_name))
-            .and_then(|totp| totp.totp_value().cloned());
-
-        maybe_totp
-            .map(|totp| {
-                (
-                    totp.code.clone().into(),
-                    Some(totp.valid_for.clone().into()),
-                )
+fn get_value(db: &RxDatabase, entry_uuid: Uuid, field_name: &RxFieldName) -> QString {
+    db.get_entry(entry_uuid)
+        .and_then(|entry| {
+            entry.get_field_value(&field_name).map(|val| {
+                val.value()
+                    .map(|s| QString::from(s.as_str()))
+                    .unwrap_or_default()
             })
-            .unwrap_or_else(|| ("No TOTP".into(), Some("Error".into())))
-    } else {
-        let value = db
-            .get_entry(entry_uuid)
-            .and_then(|entry| {
-                entry.get_field_value(&field_name).map(|val| {
-                    val.value()
-                        .map(|s| QString::from(s.as_str()))
-                        .unwrap_or_default()
-                })
-            })
-            .unwrap_or_default();
-
-        (value, None)
-    }
+        })
+        .unwrap_or_default()
 }
 
 impl Handler<GetFieldValue> for KeepassRxActor {
@@ -688,21 +575,18 @@ impl Handler<GetFieldValue> for KeepassRxActor {
         let db_binding = app_state.curr_db();
         let db_binding = db_binding.as_deref();
 
-        let db = match db_binding
-            .as_ref()
-            .ok_or(anyhow!("GetSingleEntry: Database not open"))
-        {
+        let db = match db_binding {
             Ok(db) => db,
             Err(err) => return gui.errorReceived(format!("{}", err)),
         };
 
-        let (value, extra) = get_value(db, msg.entry_uuid, &msg.field_name);
+        let value = get_value(db, msg.entry_uuid, &msg.field_name);
 
         gui.fieldValueReceived(
             QString::from(msg.entry_uuid.to_string()),
             QString::from(msg.field_name.to_string()),
             value,
-            extra.unwrap_or_default(),
+            QString::default(), // Extra info for this field.
         );
     }
 }
@@ -719,10 +603,7 @@ impl Handler<GetTotp> for KeepassRxActor {
         let db_binding = app_state.curr_db();
         let db_binding = db_binding.as_deref();
 
-        let db = match db_binding
-            .as_ref()
-            .ok_or(anyhow!("GetTotp: Database not open"))
-        {
+        let db = match db_binding {
             Ok(db) => db,
             Err(err) => return gui.errorReceived(format!("{}", err)),
         };

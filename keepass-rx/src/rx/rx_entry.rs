@@ -272,10 +272,6 @@ impl RxEntry {
                 .title
                 .as_ref()
                 .map(|val| RxValueKeyRef::new(val, &self.master_key)),
-            RxFieldName::CurrentTotp => self
-                .totp()
-                .ok()
-                .map(|val| RxValueKeyRef::new(RxValue::CurrentTotp(val), &self.master_key)),
             RxFieldName::CustomField(name) => {
                 self.custom_fields
                     .data
@@ -529,7 +525,6 @@ pub enum RxFieldName {
     Username,
     Password,
     Url,
-    CurrentTotp,
     CustomField(String),
 }
 
@@ -540,7 +535,6 @@ impl ToString for RxFieldName {
             RxFieldName::Password => "Password".to_string(),
             RxFieldName::Title => "Title".to_string(),
             RxFieldName::Url => "URL".to_string(),
-            RxFieldName::CurrentTotp => "CurrentTOTP".to_string(),
             RxFieldName::CustomField(name) => name.to_owned(),
         }
     }
@@ -553,7 +547,6 @@ impl From<String> for RxFieldName {
             "password" => RxFieldName::Password,
             "title" => RxFieldName::Title,
             "url" => RxFieldName::Url,
-            "currenttotp" => RxFieldName::CurrentTotp,
             _ => RxFieldName::CustomField(value),
         }
     }

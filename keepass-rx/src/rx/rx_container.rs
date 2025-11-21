@@ -82,6 +82,7 @@ impl RxRoot {
         }
     }
 
+    /// Find a container somewhere in this root.
     pub fn get_container(&self, container_uuid: Uuid) -> Option<&RxContainer> {
         self.root_container.get_container_recursive(container_uuid)
     }

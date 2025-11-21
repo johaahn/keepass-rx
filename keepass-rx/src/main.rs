@@ -36,10 +36,11 @@ use std::path::PathBuf;
 use std::rc::Rc;
 use std::sync::Arc;
 
-mod actor;
 mod crypto;
 mod rx;
 
+#[cfg(feature = "gui")]
+mod actor;
 #[cfg(feature = "gui")]
 mod app;
 #[cfg(feature = "gui")]
@@ -51,20 +52,18 @@ mod qrc;
 use crate::app::AppState;
 
 #[cfg(feature = "gui")]
-use crate::gui::{
-    KeepassRx, RxGuiState,
-    actor::KeepassRxActor,
-    models::{RxItemType, RxListItem},
-    utils::{app_data_path, imported_databases_path, move_old_db},
-};
-
-#[cfg(feature = "gui")]
 fn load_gui() -> Result<()> {
+    use crate::gui::{
+        KeepassRx, RxGuiState,
+        actor::KeepassRxActor,
+        utils::{app_data_path, imported_databases_path, move_old_db},
+    };
+
     use crate::app::KeepassRxApp;
     use crate::gui::RxViewMode;
     use crate::gui::colors::RxColorType;
-    use crate::gui::models::RxUiFeature;
-    use crate::gui::qml::RxUiEntry;
+    use crate::gui::qml::{RxItemType, RxListItem, RxUiEntry};
+    use crate::rx::virtual_hierarchy::RxViewFeature;
 
     init_gettext();
 
@@ -88,7 +87,7 @@ fn load_gui() -> Result<()> {
     qml_register_enum::<RxItemType>(uri, 1, 0, cstr!("RxItemType"));
     qml_register_enum::<RxGuiState>(uri, 1, 0, cstr!("RxGuiState"));
     qml_register_enum::<RxViewMode>(uri, 1, 0, cstr!("RxViewMode"));
-    qml_register_enum::<RxUiFeature>(uri, 1, 0, cstr!("RxUiFeature"));
+    qml_register_enum::<RxViewFeature>(uri, 1, 0, cstr!("RxViewFeature"));
     qml_register_enum::<RxColorType>(uri, 1, 0, cstr!("RxColorType"));
 
     // Load last db

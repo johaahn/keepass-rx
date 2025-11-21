@@ -6,20 +6,21 @@ import QtGraphicalEffects 1.0
 import keepassrx 1.0
 
 ListItem {
+    property string uuid
     property bool passwordVisible: false
     height: units.gu(10)
     id: entireItem
 
-    RxUiEntry {
+    RxListItem {
         id: theEntry
         entryUuid: uuid
         app: AppState
     }
 
     function handleEntryClick() {
-        if (itemType == 'Entry') {
+        if (theEntry.itemType == 'Entry') {
             keepassrx.getSingleEntry(uuid);
-        } else if (itemType == 'GoBack') {
+        } else if (theEntry.itemType == 'GoBack') {
             keepassrx.popContainer();
         } else {
           // We assume anything else is a grouping.
@@ -28,9 +29,9 @@ ListItem {
     }
 
     function resolveFolderIconName(itemType) {
-        if (itemType == 'Group' || itemType == 'Template') {
+        if (theEntry.itemType == 'Group' || theEntry.itemType == 'Template') {
             return 'folder';
-        } else if (itemType == 'Tag') {
+        } else if (theEntry.itemType == 'Tag') {
             return 'tag';
         } else {
             return 'up';
@@ -38,11 +39,11 @@ ListItem {
     }
 
     function resolveImagePath() {
-        if (iconPath) {
-            if (iconBuiltin) {
-                return `../../assets/icons/${iconPath}`;
+        if (theEntry.iconPath) {
+            if (theEntry.iconBuiltin) {
+                return `../../assets/icons/${theEntry.iconPath}`;
             } else {
-                return iconPath;
+                return theEntry.iconPath;
             }
         } else {
             return '../../assets/placeholder.png';
@@ -51,32 +52,6 @@ ListItem {
 
     Connections {
         target: keepassrx
-
-        // When the UI requests getting a single value from one of the
-        // button presses.
-        function onFieldValueReceived(entryUuid, fieldName, fieldValue, fieldExtra) {
-            if (fieldValue) {
-                // 2fa stuff handled by other signal.
-                if (hasFeature('DisplayTwoFactorAuth')) {
-                    return;
-                }
-
-                // TODO Add some better URL handling, for fields that
-                // are not marked specifically with title "URL".
-                if (fieldName.toLowerCase() == "url") {
-                    if (entry.url.indexOf('//') === -1) {
-                        Qt.openUrlExternally('http://' + url);
-                        return;
-                    }
-
-                    Qt.openUrlExternally(url);
-                } else {
-                    Clipboard.push(fieldValue);
-                    toast.show(`${fieldName} copied to clipboard (30 secs)`);
-                    clearClipboardTimer.start();
-                }
-            }
-        }
 
         function onSingleEntryReceived(entry) {
             if (entry) {
@@ -104,7 +79,7 @@ ListItem {
     trailingActions: ListItemActions {
         actions: [
             Action {
-                visible: hasUsername
+                visible: theEntry.hasUsername
                 name: i18n.tr('Copy Username')
                 iconName: "account"
                 onTriggered: {
@@ -112,7 +87,7 @@ ListItem {
                 }
             },
             Action {
-                visible: hasPassword
+                visible: theEntry.hasPassword
                 name: i18n.tr('Copy Password')
                 iconName: "stock_key"
                 onTriggered: {
@@ -120,7 +95,7 @@ ListItem {
                 }
             },
             Action {
-                visible: hasURL
+                visible: theEntry.hasURL
                 iconName: "external-link"
                 name: i18n.tr('Open URL')
                 onTriggered: {
@@ -128,7 +103,7 @@ ListItem {
                 }
             },
             Action {
-                visible: hasTOTP && !hasFeature('DisplayTwoFactorAuth')
+                visible: theEntry.hasTOTP && !hasFeature('DisplayTwoFactorAuth')
                 name: i18n.tr('Copy 2FA Code')
                 iconSource: "../../assets/2fa.svg"
                 iconName: "totp-code"
@@ -169,7 +144,7 @@ ListItem {
             id: imgLoader
             width: units.gu(5)
             height: parent.height
-            sourceComponent: itemType == 'Group' || itemType == 'Tag' ? folderImg : entryImg
+            sourceComponent: theEntry.itemType == 'Group' || theEntry.itemType == 'Tag' ? folderImg : entryImg
 
             Component {
                 id: folderImg
@@ -183,13 +158,13 @@ ListItem {
                         width: units.gu(5)
                         height: parent.height
                         y: parent.height / 2 - height / 2
-                        name: resolveFolderIconName(itemType)
+                        name: resolveFolderIconName(theEntry.itemType)
                     }
 
                     // Icon of the group/folder, if it has one.
                     Image {
                         id: groupEntryImg
-                        visible: itemType !== 'Tag' // no tiny images for tags.
+                        visible: theEntry.itemType !== 'Tag' // no tiny images for tags.
                         fillMode: Image.PreserveAspectFit
                         source: resolveImagePath()
                         width: units.gu(2.75)
@@ -223,14 +198,14 @@ ListItem {
                 elide: Text.ElideRight
                 font.pointSize: units.gu(1.5)
                 color: theme.palette.normal.foregroundText
-                text: title
+                text: theEntry.title
             }
 
             Text {
                 width: parent.width
                 elide: Text.ElideRight
                 color: theme.palette.normal.backgroundTertiaryText
-                text: subtitle
+                text: theEntry.subtitle
             }
 
             Text {
@@ -238,7 +213,7 @@ ListItem {
                 color: theme.palette.normal.activity
                 text: hasFeature('DisplayTwoFactorAuth')
                     ? i18n.tr("Tap to copy 2FA code")
-                    : (description)
+                    : (theEntry.description)
             }
         }
 
@@ -286,6 +261,6 @@ ListItem {
     }
 
     function hasFeature(featureName) {
-        return feature !== undefined && feature == featureName
+        return theEntry.feature !== undefined && theEntry.feature == featureName
     }
 }

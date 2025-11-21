@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 08:36+0000\n"
+"POT-Creation-Date: 2025-11-21 14:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,27 +17,27 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: qml/components/EntryItem.qml:108
+#: qml/components/EntryItem.qml:83
 msgid "Copy Username"
 msgstr ""
 
-#: qml/components/EntryItem.qml:116
+#: qml/components/EntryItem.qml:91
 msgid "Copy Password"
 msgstr ""
 
-#: qml/components/EntryItem.qml:125
+#: qml/components/EntryItem.qml:100
 msgid "Open URL"
 msgstr ""
 
-#: qml/components/EntryItem.qml:132
+#: qml/components/EntryItem.qml:107
 msgid "Copy 2FA Code"
 msgstr ""
 
-#: qml/components/EntryItem.qml:144
+#: qml/components/EntryItem.qml:119
 msgid "View Entry"
 msgstr ""
 
-#: qml/components/EntryItem.qml:240
+#: qml/components/EntryItem.qml:215
 msgid "Tap to copy 2FA code"
 msgstr ""
 
@@ -254,29 +254,29 @@ msgid ""
 "using its action bar."
 msgstr ""
 
-#: src/rx/virtual_hierarchy.rs:35
+#: src/rx/virtual_hierarchy.rs:70
 msgid "Special Categories"
 msgstr ""
 
-#: src/rx/virtual_hierarchy.rs:43
+#: src/rx/virtual_hierarchy.rs:78
 msgid "All Templates"
 msgstr ""
 
-#: src/rx/virtual_hierarchy.rs:90
+#: src/rx/virtual_hierarchy.rs:125
 msgctxt "Default view of the password database (all entries)"
 msgid "Default View"
 msgstr ""
 
-#: src/rx/virtual_hierarchy.rs:116 src/rx/virtual_hierarchy.rs:129
+#: src/rx/virtual_hierarchy.rs:151 src/rx/virtual_hierarchy.rs:164
 msgctxt "Two-factor/OTP codes (keep phrase short as possible)"
 msgid "2FA Codes"
 msgstr ""
 
-#: src/rx/virtual_hierarchy.rs:166
+#: src/rx/virtual_hierarchy.rs:205
 msgctxt "List of entries with tags"
 msgid "Tags"
 msgstr ""
 
-#: src/rx/virtual_hierarchy.rs:174
+#: src/rx/virtual_hierarchy.rs:213
 msgid "Tags"
 msgstr ""

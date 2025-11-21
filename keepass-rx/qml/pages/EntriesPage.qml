@@ -372,7 +372,9 @@ Page {
             id: entriesListModel
         }
 
-        delegate: EntryItem {}
+        delegate: EntryItem {
+          uuid: entryUuid
+        }
     }
 
     // Welcome to async hell:
@@ -450,10 +452,11 @@ Page {
             getEntries(thisContainerId);
         }
 
-	// List of entries for this container. It's an array of
-	// RxListItem entities. It includes both immediate subgroups
-	// and immediate child entries in the container.
+	// List of entries for this container. It's an array of uuids.
+	// It includes both immediate subgroupings and immediate child
+	// entries in the container.
         function onEntriesReceived(entries) {
+          //Entries is a list of UUIDs
 	    entriesListModel.clear();
 
             for (const entry of entries) {
@@ -463,7 +466,7 @@ Page {
                 }
 
                 if (append) {
-                    entriesListModel.append(entry);
+                    entriesListModel.append({entryUuid: entry });
                 }
             }
         }

@@ -8,6 +8,31 @@ use uuid::Uuid;
 
 use super::{RxContainedRef, RxContainer, RxDatabase, RxRoot, RxTag};
 
+/// A setting that controls how an RxListItem is rendered in the UI.
+/// Note that the UI container of the list item must also have the
+/// feature enabled for the feature to be enabled. This prevents,
+/// e.g., rendering 2FA codes in the list outside of the 2FA codes
+/// view.
+#[cfg_attr(feature = "gui", derive(QEnum))]
+#[derive(Clone, Default, Copy, PartialEq)]
+#[repr(C)]
+pub enum RxViewFeature {
+    #[default]
+    None,
+    DisplayTwoFactorAuth,
+}
+
+impl std::fmt::Display for RxViewFeature {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let str_val = match self {
+            RxViewFeature::DisplayTwoFactorAuth => "DisplayTwoFactorAuth",
+            RxViewFeature::None => "None",
+        };
+
+        write!(f, "{}", str_val)
+    }
+}
+
 /// An arbitrary hierarchical view into the password database. A
 /// VirtualHierarchy manages two lifetimes when searching: the
 /// lifetime of the RxContainer ('cnt) and the lifetime of the
@@ -16,6 +41,16 @@ pub trait VirtualHierarchy {
     fn root(&self) -> &RxRoot;
 
     fn name(&self) -> String;
+
+    fn feature(&self) -> RxViewFeature {
+        RxViewFeature::None
+    }
+
+    fn get(&self, container_uuid: Uuid) -> Option<RxContainedRef> {
+        self.root()
+            .get_container(container_uuid)
+            .and_then(|c| c.get_ref())
+    }
 
     /// Search for child containers in the virtual hierarchy.
     fn search(&self, container_uuid: Uuid, search_term: Option<&str>) -> Vec<RxContainedRef>;
@@ -132,6 +167,10 @@ impl VirtualHierarchy for TotpEntries {
 
     fn root(&self) -> &RxRoot {
         &self.0
+    }
+
+    fn feature(&self) -> RxViewFeature {
+        RxViewFeature::DisplayTwoFactorAuth
     }
 
     fn search(&self, container_uuid: Uuid, search_term: Option<&str>) -> Vec<RxContainedRef> {

@@ -1,8 +1,12 @@
+use std::rc::Rc;
+
 use actix::prelude::*;
 use qmetaobject::QObject;
 use qmetaobject::QPointer;
 
 pub use actor_macro::observing_model;
+
+use crate::app::AppState;
 
 // TODO temporary
 #[derive(Message)]
@@ -16,6 +20,8 @@ where
     M: actix::Message,
 {
     type Context;
+
+    fn app_state(&self) -> &AppState;
 
     fn observe(&mut self, ctx: Self::Context, message: M)
     where

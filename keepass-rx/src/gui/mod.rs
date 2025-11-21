@@ -155,7 +155,7 @@ pub struct KeepassRx {
     // data signals
     metadataChanged: qt_signal!(),
     containerReceived: qt_signal!(this_container_uuid: QString, this_container_name: QString),
-    entriesReceived: qt_signal!(entries: QVariantList),
+    entriesReceived: qt_signal!(entries: QStringList),
     errorReceived: qt_signal!(error: String),
     totpReceived: qt_signal!(totp: QVariantMap),
     singleEntryReceived: qt_signal!(entry: QVariant),

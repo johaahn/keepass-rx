@@ -2,7 +2,7 @@ use std::{ops::Deref, sync::LazyLock};
 
 use gettextrs::gettext;
 
-use super::models::RxUiFeature;
+use crate::rx::virtual_hierarchy::RxViewFeature;
 
 pub static TWO_FACTOR_AUTH_VIEW_INSTRUCTIONS: LazyLock<String> = LazyLock::new(|| {
     gettext(
@@ -10,9 +10,9 @@ pub static TWO_FACTOR_AUTH_VIEW_INSTRUCTIONS: LazyLock<String> = LazyLock::new(|
     )
 });
 
-pub fn get_instructions(feature: &RxUiFeature) -> Option<String> {
+pub fn get_instructions(feature: &RxViewFeature) -> Option<String> {
     match feature {
-        RxUiFeature::DisplayTwoFactorAuth => {
+        RxViewFeature::DisplayTwoFactorAuth => {
             Some(TWO_FACTOR_AUTH_VIEW_INSTRUCTIONS.to_owned())
         }
         _ => None,

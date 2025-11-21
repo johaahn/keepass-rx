@@ -61,9 +61,30 @@ MainView {
             }
         }
 
-        function onMasterPasswordDecrypted() {
+      function onMasterPasswordDecrypted() {
             console.log('Re-opening database from locked state.');
             keepassrx.openDatabase(keepassrx.lastDB,  settings.lastKey);
+        }
+
+        // When the UI requests getting a single value from one of the
+        // button presses.
+        function onFieldValueReceived(entryUuid, fieldName, fieldValue, fieldExtra) {
+            if (fieldValue) {
+                // TODO Add some better URL handling, for fields that
+                // are not marked specifically with title "URL".
+                if (fieldName.toLowerCase() == "url") {
+                    if (fieldValue.indexOf('//') === -1) {
+                        Qt.openUrlExternally('http://' + fieldValue);
+                        return;
+                    }
+
+                    Qt.openUrlExternally(fieldValue);
+                } else {
+                    Clipboard.push(fieldValue);
+                    toast.show(`${fieldName} copied to clipboard (30 secs)`);
+                    clearClipboardTimer.start();
+                }
+            }
         }
 
         function onTotpReceived(totp) {

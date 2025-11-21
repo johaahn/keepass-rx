@@ -424,20 +424,24 @@ fn generate_methods(
 
             fn reinit(&mut self) {
                 use actix::prelude::*;
+                use std::convert::AsMut;
 
-                let actor = crate::actor::ObservingModelActor {
-                    model: qmetaobject::QPointer::from(&*self),
-                }
-                .start();
+                // let actor = crate::actor::ObservingModelActor {
+                //     model: qmetaobject::QPointer::from(&*self),
+                // }
+                // .start();
 
-                let ctx = crate::actor::ModelContext {
-                    addr: actor.clone(),
-                };
-                self.init(ctx);
+                // let ctx = crate::actor::ModelContext {
+                //     addr: actor.clone(),
+                // };
 
-                self._observing_model_registration = Some(crate::actor::ObservingModelRegistration {
-                    actor
-                });
+                let app_state = self._app.as_pinned().expect("No app state");
+                let app_state = app_state.borrow();
+                let view = app_state.curr_view().expect("No view");
+                self.init_from_view(view.as_ref().as_ref());
+                // self._observing_model_registration = Some(crate::actor::ObservingModelRegistration {
+                //     actor
+                // });
             }
         }
     }

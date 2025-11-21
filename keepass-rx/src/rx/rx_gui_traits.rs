@@ -1,9 +1,44 @@
-use qmetaobject::{QString, QVariant, QVariantMap};
+use qmetaobject::{QMetaType, QString, QVariant, QVariantMap};
 use std::collections::HashMap;
 
 use crate::rx::{RxCustomFields, RxEntry, RxFieldName, RxValue};
 
-use super::{RxMetadata, RxValueKeyRef};
+use super::{RxMetadata, RxValueKeyRef, virtual_hierarchy::RxViewFeature};
+
+fn ui_feature_from_string(qval: &QString) -> RxViewFeature {
+    match qval.to_string().as_str() {
+        "None" => RxViewFeature::None,
+        "DisplayTwoFactorAuth" => RxViewFeature::DisplayTwoFactorAuth,
+        _ => panic!("Not a UI feature: {}", qval),
+    }
+}
+
+fn ui_feature_to_string(ui_feature: &RxViewFeature) -> QString {
+    match ui_feature {
+        RxViewFeature::None => "None",
+        RxViewFeature::DisplayTwoFactorAuth => "DisplayTwoFactorAuth",
+    }
+    .into()
+}
+
+impl QMetaType for RxViewFeature {
+    const CONVERSION_FROM_STRING: Option<fn(&QString) -> Self> = Some(ui_feature_from_string);
+    const CONVERSION_TO_STRING: Option<fn(&Self) -> QString> = Some(ui_feature_to_string);
+
+    fn to_qvariant(&self) -> QVariant {
+        QVariant::from(ui_feature_to_string(self))
+    }
+
+    fn from_qvariant(variant: QVariant) -> Option<Self> {
+        let qstr = variant.to_qstring();
+
+        if !qstr.is_null() && !qstr.is_empty() {
+            Some(ui_feature_from_string(&qstr))
+        } else {
+            None
+        }
+    }
+}
 
 impl From<QString> for RxFieldName {
     fn from(value: QString) -> Self {

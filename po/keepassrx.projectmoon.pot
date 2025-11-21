@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 16:37+0100\n"
+"POT-Creation-Date: 2025-11-21 23:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,32 +17,32 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: qml/components/EntryItem.qml:83
+#: qml/components/EntryItem.qml:84
 msgid "Copy Username"
 msgstr ""
 
-#: qml/components/EntryItem.qml:91
+#: qml/components/EntryItem.qml:92
 msgid "Copy Password"
 msgstr ""
 
-#: qml/components/EntryItem.qml:100
+#: qml/components/EntryItem.qml:101
 msgid "Open URL"
 msgstr ""
 
-#: qml/components/EntryItem.qml:107
+#: qml/components/EntryItem.qml:108
 msgid "Copy 2FA Code"
 msgstr ""
 
-#: qml/components/EntryItem.qml:119
+#: qml/components/EntryItem.qml:120
 msgid "View Entry"
 msgstr ""
 
-#: qml/components/EntryItem.qml:215
+#: qml/components/EntryItem.qml:216
 msgid "Tap to copy 2FA code"
 msgstr ""
 
-#: qml/pages/AboutPage.qml:11 qml/pages/OpenDBPage.qml:53
-#: qml/pages/DBList.qml:81 qml/pages/EntriesPage.qml:211
+#: qml/pages/AboutPage.qml:11 qml/pages/DBList.qml:81
+#: qml/pages/EntriesPage.qml:209 qml/pages/OpenDBPage.qml:53
 #: qml/pages/UnlockPage.qml:41
 msgid "About"
 msgstr ""
@@ -65,15 +65,115 @@ msgid ""
 "git.agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:33 qml/pages/SingleEntry.qml:96
-#: qml/pages/EntriesPage.qml:166
+#: qml/pages/DBList.qml:67
+msgid "Add Database"
+msgstr ""
+
+#: qml/pages/DBList.qml:74 qml/pages/EntriesPage.qml:200
+#: qml/pages/OpenDBPage.qml:46 qml/pages/SettingsPage.qml:11
+#: qml/pages/UnlockPage.qml:34
+msgid "Settings"
+msgstr ""
+
+#: qml/pages/DBList.qml:101
+msgid "Loading last database."
+msgstr ""
+
+#: qml/pages/DBList.qml:111
+msgid "Select Database"
+msgstr ""
+
+#: qml/pages/DBList.qml:167
+msgid "Tap + to import a database."
+msgstr ""
+
+#: qml/pages/DBList.qml:265
+msgid "It will only be removed from the app, not your device."
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:95
+msgid "Cancel Search"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:115
+msgid "Search entries in this group"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:140
+msgid "Lock"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:152
+msgid "Close"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:164 qml/pages/OpenDBPage.qml:33
+#: qml/pages/SingleEntry.qml:96
 msgid "Back"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:46 qml/pages/SettingsPage.qml:11
-#: qml/pages/DBList.qml:74 qml/pages/EntriesPage.qml:202
-#: qml/pages/UnlockPage.qml:34
-msgid "Settings"
+#: qml/pages/EntriesPage.qml:177
+msgid "View Mode"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:187
+msgid "Search"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:221
+msgid "Lock Database"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:231
+msgid "Close Database"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:251
+msgid "Change View"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:257
+msgid "All Entries"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:259
+msgid "All groups and entries."
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:263 src/rx/virtual_hierarchy.rs:66
+msgid "Special Categories"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:265
+msgid "Entries grouped by template."
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:269
+msgid "2FA Codes"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:271
+msgid "Entries with 2FA codes."
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:275 src/rx/virtual_hierarchy.rs:209
+msgid "Tags"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:277
+msgid "Entries grouped by tag."
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:289
+msgid "Select View"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:308
+msgid "Select"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:318
+msgid "Cancel"
 msgstr ""
 
 #: qml/pages/OpenDBPage.qml:158
@@ -134,90 +234,6 @@ msgstr ""
 msgid "Tap to copy"
 msgstr ""
 
-#: qml/pages/DBList.qml:67
-msgid "Add Database"
-msgstr ""
-
-#: qml/pages/DBList.qml:101
-msgid "Loading last database."
-msgstr ""
-
-#: qml/pages/DBList.qml:111
-msgid "Select Database"
-msgstr ""
-
-#: qml/pages/DBList.qml:167
-msgid "Tap + to import a database."
-msgstr ""
-
-#: qml/pages/DBList.qml:265
-msgid "It will only be removed from the app, not your device."
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:97
-msgid "Cancel Search"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:117
-msgid "Search entries in this group"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:142
-msgid "Lock"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:154
-msgid "Close"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:179
-msgid "View Mode"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:189
-msgid "Search"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:223
-msgid "Lock Database"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:233
-msgid "Close Database"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:253
-msgid "Change View"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:261
-msgid "All groups and entries."
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:267
-msgid "Entries grouped by template."
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:273
-msgid "Entries with 2FA codes."
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:279
-msgid "Entries grouped by tag."
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:291
-msgid "Select View"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:310
-msgid "Select"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:320
-msgid "Cancel"
-msgstr ""
-
 #: qml/pages/UnlockPage.qml:146
 msgid "Manual path set."
 msgstr ""
@@ -254,10 +270,6 @@ msgid ""
 "using its action bar."
 msgstr ""
 
-#: src/rx/virtual_hierarchy.rs:66
-msgid "Special Categories"
-msgstr ""
-
 #: src/rx/virtual_hierarchy.rs:74
 msgid "All Templates"
 msgstr ""
@@ -274,9 +286,5 @@ msgstr ""
 
 #: src/rx/virtual_hierarchy.rs:201
 msgctxt "List of entries with tags"
-msgid "Tags"
-msgstr ""
-
-#: src/rx/virtual_hierarchy.rs:209
 msgid "Tags"
 msgstr ""

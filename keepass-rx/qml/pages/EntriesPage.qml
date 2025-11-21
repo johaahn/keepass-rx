@@ -5,6 +5,7 @@ import Lomiri.Components 1.3
 import Lomiri.Components.Popups 1.3
 import Lomiri.Content 1.3
 import Qt.labs.settings 1.0
+import keepassrx 1.0
 
 import "../components"
 
@@ -17,11 +18,6 @@ Page {
         property bool databaseLocking: true
     }
 
-    // The default values of these properties control what we should fetch first.
-    property string containerUuid
-    property string containerName
-    property string containerInstructions
-    property bool atRoot: true
     property bool searchMode: false
 
     // These are set by metadata fetching
@@ -30,32 +26,20 @@ Page {
 
     property var colorWashout
 
-    onContainerUuidChanged: {
-	populate();
-    }
-
     function lockDatabase() {
         keepassrx.closeDatabase();
-        containerUuid = null;
-        containerName = null;
         root.lockUI();
     }
 
     function closeDatabase() {
         keepassrx.invalidateMasterPassword();
         keepassrx.closeDatabase();
-        containerUuid = null;
-        containerName = null;
         root.closeUI();
     }
 
-    function isAtRoot() {
-        return atRoot;
-    }
-
     function headerTitle() {
-        if (containerName && !isAtRoot() || keepassrx.viewMode != 'All') {
-            return containerName;
+        if (containerStack.containerName && !containerStack.isAtRoot || keepassrx.viewMode != 'All') {
+            return containerStack.containerName;
         } else {
             return settings.showAccents && publicDatabaseName ? publicDatabaseName : "KeePassRX";
         }
@@ -77,6 +61,20 @@ Page {
                 : LomiriColors.jet;
         } else {
             return theme.palette.normal.foregroundText;
+        }
+    }
+
+    RxUiContainerStack {
+        id: containerStack
+        app: AppState
+        viewMode: keepassrx.viewMode
+
+        onContainerChanged: (newContainerId) => {
+            console.log('Container ID is now:', newContainerId);
+            searchMode = false;
+	    searchField.text = '';
+            entriesListModel.clear();
+            getEntries(newContainerId);
         }
     }
 
@@ -117,7 +115,7 @@ Page {
                 placeholderText: i18n.tr("Search entries in this group")
                 inputMethodHints: Qt.ImhNoPredictiveText
                 onTextChanged: {
-                    getEntries(containerUuid);
+                    getEntries(containerStack.containerUuid);
                 }
             }
         }
@@ -135,8 +133,8 @@ Page {
 
         leadingActionBar.actions: [
             Action {
-                enabled: settings.databaseLocking && isAtRoot()
-                visible: settings.databaseLocking && isAtRoot()
+                enabled: settings.databaseLocking && containerStack.isAtRoot
+                visible: settings.databaseLocking && containerStack.isAtRoot
                 name: "Lock"
                 //TRANSLATORS: Securely lock (NOT close) an open database.
                 text: i18n.tr("Lock")
@@ -147,8 +145,8 @@ Page {
             },
 
             Action {
-                enabled: !settings.databaseLocking && isAtRoot()
-                visible: !settings.databaseLocking && isAtRoot()
+                enabled: !settings.databaseLocking && containerStack.isAtRoot
+                visible: !settings.databaseLocking && containerStack.isAtRoot
                 name: "Close"
                 //TRANSLATORS: Securely close (NOT lock) an open database.
                 text: i18n.tr("Close")
@@ -159,14 +157,14 @@ Page {
             },
 
 	    Action {
-                enabled: !isAtRoot()
-                visible: !isAtRoot()
+                enabled: !containerStack.isAtRoot
+                visible: !containerStack.isAtRoot
                 name: "Go Back"
                 //TRANSLATORS: Move back up in the container folder structure.
                 text: i18n.tr("Back")
                 iconName: "back"
                 onTriggered: {
-                    keepassrx.popContainer();
+                    containerStack.popContainer();
                 }
             }
         ]
@@ -256,25 +254,25 @@ Page {
                     id: viewModes
                     ListElement {
                         name: "All"
-                        menuText: "All Entries"
+                        menuText: QT_TR_NOOP("All Entries")
                         // TRANSLATORS: Keep sentence as short as possible.
                         description: QT_TR_NOOP("All groups and entries.")
                     }
                     ListElement {
                         name: "Templates"
-                        menuText: "Special Categories"
+                        menuText: QT_TR_NOOP("Special Categories")
                         // TRANSLATORS: Keep sentence as short as possible.
                         description: QT_TR_NOOP("Entries grouped by template.")
                     }
                     ListElement {
                         name: "Totp";
-                        menuText: "2FA Codes"
+                        menuText: QT_TR_NOOP("2FA Codes")
                         // TRANSLATORS: Two-factor/OTP codes. Keep sentence as short as possible.
                         description: QT_TR_NOOP("Entries with 2FA codes.")
                     }
                     ListElement {
                         name: "Tags";
-                        menuText: "Tags"
+                        menuText: QT_TR_NOOP("Tags")
                         // TRANSLATORS: Lists of tagged entries. Keep sentence as short as possible.
                         description: QT_TR_NOOP("Entries grouped by tag.")
                     }
@@ -282,7 +280,7 @@ Page {
 
                 Component {
                     id: viewModeDelegate
-                    OptionSelectorDelegate { text: menuText; subText: i18n.tr(description) }
+                    OptionSelectorDelegate { text: i18n.tr(menuText); subText: i18n.tr(description) }
                 }
 
                 OptionSelector {
@@ -332,7 +330,7 @@ Page {
         height: containerInstructionsText.height + containerInstructionsBottom.height
         anchors.top: parent.header.bottom
         width: parent.width
-        visible: containerInstructions != null && containerInstructions.length > 0
+        visible: containerStack.instructions != null && containerStack.instructions.length > 0
 
         Column {
             width: parent.width
@@ -340,7 +338,7 @@ Page {
 
             Text {
                 id: containerInstructionsText
-                text: containerInstructions
+                text: containerStack.instructions
                 color: theme.palette.normal.backgroundSecondaryText
                 padding: units.gu(0.5)
                 width: parent.width
@@ -383,7 +381,7 @@ Page {
     // 3. getEntries
     // 4. onEntriesReceived
     function populate() {
-	if (isAtRoot()) {
+	if (containerStack.isAtRoot) {
             keepassrx.getRootContainer();
 	} else {
             keepassrx.getContainer(containerUuid);
@@ -420,36 +418,6 @@ Page {
 
         function onViewModeChanged(mode) {
             entriesListModel.clear();
-
-            // Forces virtual roots to change. They use
-            // Uuid::default(), which is always the same value.
-            containerUuid = null;
-        }
-
-        // newContainer is { containerUuid, isRoot, instructions, availableFeature }
-        function onCurrentContainerChanged(newContainer) {
-	    searchMode = false;
-	    searchField.text = '';
-            entriesListModel.clear();
-
-            // Type must be set before UUID due to uuid change signal
-            // triggering entry list update. The container UUID change
-            // signal will trigger changes.
-            atRoot = newContainer.isRoot;
-            containerInstructions = newContainer.instructions;
-            containerUuid = newContainer.containerUuid;
-        }
-
-        // Put as list of folders. When tapped, load template entries
-        // and onEntriesReceived takes care of the rest? BUT... we
-        // also have to take into account the container UUIDs.
-        function onContainerReceived(thisContainerId, thisContainerName) {
-            searchMode = false;
-	    searchField.text = '';
-            entriesListModel.clear();
-
-	    containerName = thisContainerName;
-            getEntries(thisContainerId);
         }
 
 	// List of entries for this container. It's an array of uuids.

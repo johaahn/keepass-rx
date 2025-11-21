@@ -21,10 +21,10 @@ ListItem {
         if (theEntry.itemType == 'Entry') {
             keepassrx.getSingleEntry(uuid);
         } else if (theEntry.itemType == 'GoBack') {
-            keepassrx.popContainer();
+            containerStack.popContainer();
         } else {
-          // We assume anything else is a grouping.
-          keepassrx.pushContainer(uuid);
+            // We assume anything else is a grouping.
+            containerStack.pushContainer(uuid);
         }
     }
 
@@ -39,14 +39,17 @@ ListItem {
     }
 
     function resolveImagePath() {
+        // There is a bug here where it fires twice: once with
+        // iconBuiltin = false and once while true. It should not even
+        // fire when false.
         if (theEntry.iconPath) {
             if (theEntry.iconBuiltin) {
-                return `../../assets/icons/${theEntry.iconPath}`;
+                return Qt.resolvedUrl(`../../assets/icons/${theEntry.iconPath}`);
             } else {
                 return theEntry.iconPath;
             }
         } else {
-            return '../../assets/placeholder.png';
+            return Qt.resolvedUrl('../../assets/placeholder.png');
         }
     }
 

@@ -66,6 +66,13 @@ impl RxRoot {
         self.root_container.uuid()
     }
 
+    pub fn root_name(&self) -> String {
+        self.root_container
+            .get_ref()
+            .map(|r| r.name())
+            .unwrap_or_else(|| "No Name".to_string())
+    }
+
     pub fn virtual_root(name: &str, children: Vec<RxContainer>) -> Self {
         let all_child_uuids: IndexSet<Uuid> = children
             .iter()

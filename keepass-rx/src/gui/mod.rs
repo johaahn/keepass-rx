@@ -1,7 +1,6 @@
 use actix::prelude::*;
 use anyhow::{Result, anyhow};
 use colors::wash_out_by_blending;
-use models::RxUiContainer;
 use qmeta_async::with_executor;
 use qmetaobject::*;
 use secstr::SecUtf8;
@@ -13,7 +12,6 @@ use uuid::Uuid;
 pub(crate) mod actor;
 pub(crate) mod colors;
 pub(crate) mod instructions;
-pub(crate) mod models;
 pub(crate) mod qml;
 pub(crate) mod utils;
 
@@ -52,7 +50,7 @@ impl QMetaType for RxGuiState {
     const CONVERSION_TO_STRING: Option<fn(&Self) -> QString> = Some(gui_state_to_string);
 }
 
-#[derive(Debug, Default, QEnum, Clone, Copy)]
+#[derive(Debug, Default, QEnum, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub enum RxViewMode {
     #[default]
@@ -93,7 +91,6 @@ pub struct KeepassRx {
     base: qt_base_class!(trait QObject),
     actor: Option<Addr<KeepassRxActor>>,
     last_db: Option<String>,
-    container_stack: Vec<RxUiContainer>,
 
     guiState: qt_property!(RxGuiState),
     viewMode: qt_property!(RxViewMode; READ getViewMode WRITE setViewMode NOTIFY viewModeChanged),
@@ -102,11 +99,6 @@ pub struct KeepassRx {
     isMasterPasswordEncrypted: qt_property!(bool; NOTIFY masterPasswordStateChanged),
     rootGroupUuid: qt_property!(QString; NOTIFY rootGroupUuidChanged),
     metadata: qt_property!(QVariant; NOTIFY metadataChanged),
-
-    // page management
-    currentContainer: qt_property!(QVariant; NOTIFY currentContainerChanged),
-    pushContainer: qt_method!(fn(&self, container_uuid: QString)),
-    popContainer: qt_method!(fn(&self)),
 
     // database management
     listImportedDatabases: qt_method!(fn(&self)),
@@ -133,9 +125,6 @@ pub struct KeepassRx {
 
     // misc utility functions
     washOutColor: qt_method!(fn(&self, hex_color: QString) -> QVariantMap),
-
-    // page signals
-    currentContainerChanged: qt_signal!(new_container: QVariant),
 
     // db management signals
     lastDbChanged: qt_signal!(value: QString),
@@ -418,25 +407,6 @@ impl KeepassRx {
             }
             Err(err) => self.errorReceived(format!("{}", err)),
         }
-    }
-
-    #[with_executor]
-    pub fn pushContainer(&self, container_uuid: QString) {
-        let maybe_uuid = Uuid::from_str(&container_uuid.to_string());
-        let actor = self.actor.clone().expect("Actor not initialized");
-
-        match maybe_uuid {
-            Ok(container_id) => {
-                actix::spawn(actor.send(PushContainer(container_id)));
-            }
-            Err(err) => self.errorReceived(format!("{}", err)),
-        }
-    }
-
-    #[with_executor]
-    pub fn popContainer(&self) {
-        let actor = self.actor.clone().expect("Actor not initialized");
-        actix::spawn(actor.send(PopContainer));
     }
 
     #[with_executor]

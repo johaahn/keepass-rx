@@ -2,6 +2,7 @@ use actix::Addr;
 use anyhow::{Result, anyhow};
 use qmeta_async::with_executor;
 use qmetaobject::{QObject, QObjectBox};
+use std::cell::RefCell;
 use std::rc::Rc;
 use std::sync::Arc;
 use zeroize::Zeroizing;
@@ -20,6 +21,9 @@ pub struct KeepassRxApp {
 #[allow(dead_code)]
 pub struct AppState {
     base: qt_base_class!(trait QObject),
+
+    deferred_views: RefCell<Vec<Box<dyn FnOnce(&dyn VirtualHierarchy)>>>,
+
     current_view: Option<Rc<Box<dyn VirtualHierarchy>>>,
     curr_db: Option<Rc<Zeroizing<RxDatabase>>>,
 }
@@ -33,13 +37,8 @@ impl AppState {
         }
     }
 
-    pub fn curr_view(&self) -> Result<Rc<Box<dyn VirtualHierarchy>>> {
-        let view = self
-            .current_view
-            .clone()
-            .ok_or(anyhow!("No current view"))?;
-
-        Ok(view)
+    pub fn curr_view(&self) -> Option<Rc<Box<dyn VirtualHierarchy>>> {
+        self.current_view.clone()
     }
 
     pub fn curr_db(&self) -> Result<Rc<Zeroizing<RxDatabase>>> {
@@ -63,6 +62,24 @@ impl AppState {
     }
 
     pub fn set_curr_view(&mut self, view: Box<dyn VirtualHierarchy>) {
-        self.current_view.replace(Rc::new(view));
+        let view = Rc::new(view);
+        for cb in self.deferred_views.take() {
+            let view_ref = view.clone();
+            // Reason for actix::spawn, see below
+            actix::spawn(async move { cb(view_ref.as_ref().as_ref()) });
+        }
+
+        self.current_view.replace(view);
+    }
+
+    pub fn deferred_with_view(&self, cb: impl FnOnce(&dyn VirtualHierarchy) + 'static) {
+        // Calling the callback from within AppState means we have the RefCells that AppState is
+        // encapsulated in potentially panic.
+        // Spawn the closure on actix, this ensures the borrow of self will have ended.
+        if let Some(view) = self.curr_view() {
+            actix::spawn(async move { cb(view.as_ref().as_ref()) });
+        } else {
+            self.deferred_views.borrow_mut().push(Box::new(cb));
+        }
     }
 }

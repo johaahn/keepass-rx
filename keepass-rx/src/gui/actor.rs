@@ -19,7 +19,7 @@ use crate::rx::virtual_hierarchy::{
     AllTags, AllTemplates, DefaultView, TotpEntries, VirtualHierarchy,
 };
 use crate::{
-    gui::{RxViewMode, models::RxUiContainer, utils::imported_databases_path},
+    gui::{RxViewMode, utils::imported_databases_path},
     rx::{RxDatabase, RxFieldName, ZeroableDatabase},
 };
 
@@ -87,14 +87,6 @@ pub struct DeleteDatabase {
 #[derive(Message)]
 #[rtype(result = "()")]
 pub struct CloseDatabase;
-
-#[derive(Message)]
-#[rtype(result = "()")]
-pub struct PushContainer(pub Uuid);
-
-#[derive(Message)]
-#[rtype(result = "()")]
-pub struct PopContainer;
 
 #[derive(Message)]
 #[rtype(result = "()")]
@@ -200,9 +192,6 @@ impl Handler<SetViewMode> for KeepassRxActor {
             Err(err) => return gui.errorReceived(format!("{}", err)),
         };
 
-        gui.viewMode = mode;
-        gui.container_stack.clear();
-
         let view: Box<dyn VirtualHierarchy> = match mode {
             RxViewMode::All => Box::new(DefaultView::new(&db)),
             RxViewMode::Templates => Box::new(AllTemplates::new(&db)),
@@ -211,25 +200,13 @@ impl Handler<SetViewMode> for KeepassRxActor {
         };
 
         app_state.set_curr_view(view);
-
-        let curr_view = app_state.curr_view();
-        let curr_view = curr_view.as_ref().unwrap();
-        let root_uuid = curr_view.root().uuid();
-
-        gui.container_stack.push(RxUiContainer {
-            uuid: root_uuid,
-            is_root: true,
-            instructions: get_instructions(&curr_view.feature()),
-        });
+        gui.viewMode = mode;
+        gui.viewModeChanged(mode);
 
         println!(
             "Set view to: {}",
             app_state.curr_view().as_ref().unwrap().name()
         );
-
-        let container = QVariantMap::from(&gui.container_stack[0]);
-        gui.viewModeChanged(mode);
-        gui.currentContainerChanged(container.into());
     }
 }
 
@@ -294,6 +271,9 @@ impl Handler<OpenDatabase> for KeepassRxActor {
 
                         gui.databaseOpen = true;
                         gui.databaseOpened();
+
+                        gui.viewMode = RxViewMode::All;
+                        gui.viewModeChanged(RxViewMode::All);
                     }
                     Err(err) => gui.databaseOpenFailed(format!("{}", err)),
                 }
@@ -355,77 +335,6 @@ impl Handler<DeleteDatabase> for KeepassRxActor {
         }
 
         Ok(())
-    }
-}
-
-impl Handler<PushContainer> for KeepassRxActor {
-    type Result = ();
-
-    fn handle(&mut self, msg: PushContainer, _: &mut Self::Context) -> Self::Result {
-        let app_state = self.app_state.pinned();
-        let app_state = app_state.borrow();
-
-        let binding = self.gui.clone();
-        let binding = binding.pinned();
-        let mut gui = binding.borrow_mut();
-
-        let view = app_state.curr_view().expect("No view?");
-        let view_root = view.root();
-
-        if let Some(container) = view_root.get_container(msg.0) {
-            let page = RxUiContainer {
-                uuid: container.uuid(),
-                is_root: container.is_root(),
-                instructions: get_instructions(&view.feature()),
-            };
-
-            let qvar = QVariantMap::from(&page);
-            let container: QVariant = qvar.into();
-
-            gui.container_stack.push(page);
-            gui.currentContainer = container.clone();
-            gui.currentContainerChanged(container);
-        }
-    }
-}
-
-impl Handler<PopContainer> for KeepassRxActor {
-    type Result = ();
-    fn handle(&mut self, _: PopContainer, _: &mut Self::Context) -> Self::Result {
-        let app_state = self.app_state.pinned();
-        let app_state = app_state.borrow();
-
-        let binding = self.gui.clone();
-        let binding = binding.pinned();
-        let mut gui = binding.borrow_mut();
-
-        let view = app_state.curr_view().expect("PopContainer: No view set");
-
-        if let Some(_) = gui.container_stack.pop() {
-            let parent_container = gui.container_stack.last();
-
-            let new_uuid = parent_container
-                .map(|page| page.uuid)
-                .unwrap_or_else(|| view.root().uuid());
-
-            let is_root = parent_container
-                .map(|container| container.is_root)
-                .unwrap_or(false);
-
-            let new_page = RxUiContainer {
-                uuid: new_uuid,
-                is_root: is_root,
-                instructions: get_instructions(&view.feature()),
-            };
-
-            let qvar = QVariantMap::from(&new_page);
-            let ui_container: QVariant = qvar.into();
-
-            gui.currentContainer = ui_container.clone();
-            gui.currentContainerChanged(ui_container);
-        } else {
-            println!("Cannot go above root!");
-        }
     }
 }
 

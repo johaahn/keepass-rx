@@ -428,38 +428,44 @@ fn generate_methods(
             fn set_app(&mut self, app: QPointer<crate::app::AppState>) {
                 self._app = app.clone();
                 let this = qmetaobject::QPointer::from(&*self);
-                // let app = app.as_pinned();
-                // let app = app.expect("Valid AppState initialization");
-                // let app = app.borrow();
+                let app = app.as_pinned();
+                let app = app.expect("Valid AppState initialization");
+                let app = app.borrow();
                 drop(self);
 
-                let Some(this) = this.as_pinned() else {
-                    println!("Object destroyed before being initialized");
-                    return;
-                };
-                this.borrow_mut().reinit();
+                app.deferred_with_view(move |view| {
+                    let Some(this) = this.as_pinned() else {
+                        println!("Object destroyed before being initialized");
+                        return;
+                    };
+
+                    this.borrow_mut().reinit_with(view);
+                });
+
+            }
+
+            fn reinit_with(&mut self, view: &dyn VirtualHierarchy) {
+                self.init_from_view(view);
             }
 
             fn reinit(&mut self) {
                 use actix::prelude::*;
-                use std::convert::AsMut;
-
-                // let actor = crate::actor::ObservingModelActor {
-                //     model: qmetaobject::QPointer::from(&*self),
-                // }
-                // .start();
-
-                // let ctx = crate::actor::ModelContext {
-                //     addr: actor.clone(),
-                // };
 
                 let app_state = self._app.as_pinned().expect("No app state");
                 let app_state = app_state.borrow();
-                let view = app_state.curr_view().expect("No view");
-                self.init_from_view(view.as_ref().as_ref());
-                // self._observing_model_registration = Some(crate::actor::ObservingModelRegistration {
-                //     actor
-                // });
+                let maybe_view = app_state.curr_view();
+
+                if let Some(view) = maybe_view {
+                    self.init_from_view(view.as_ref().as_ref());
+                }
+            }
+
+            fn view(&self) -> std::rc::Rc<Box<dyn crate::rx::virtual_hierarchy::VirtualHierarchy>> {
+                self._app.as_pinned()
+                    .expect("app set by QML")
+                    .borrow()
+                    .curr_view()
+                    .expect("view was not initialized")
             }
         }
     }

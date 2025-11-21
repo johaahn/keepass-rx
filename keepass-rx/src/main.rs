@@ -1,9 +1,9 @@
 /*
  * Copyright (C) 2025 projectmoon
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 3.
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License
+ * as published by the Free Software Foundation; version 3.
  *
  * keepassrx is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -62,6 +62,7 @@ fn load_gui() -> Result<()> {
     use crate::app::KeepassRxApp;
     use crate::gui::RxViewMode;
     use crate::gui::colors::RxColorType;
+    use crate::gui::qml::RxUiContainerStack;
     use crate::gui::qml::{RxItemType, RxListItem, RxUiEntry};
     use crate::rx::virtual_hierarchy::RxViewFeature;
 
@@ -82,6 +83,7 @@ fn load_gui() -> Result<()> {
     QQuickStyle::set_style("Suru");
     qrc::load();
     let uri = cstr!("keepassrx");
+    qml_register_type::<RxUiContainerStack>(uri, 1, 0, cstr!("RxUiContainerStack"));
     qml_register_type::<RxUiEntry>(uri, 1, 0, cstr!("RxUiEntry"));
     qml_register_type::<RxListItem>(uri, 1, 0, cstr!("RxListItem"));
     qml_register_enum::<RxItemType>(uri, 1, 0, cstr!("RxItemType"));

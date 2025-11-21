@@ -18,7 +18,7 @@ jobs:
         uses: https://github.com/Swatinem/rust-cache@v2
 
       - name: Test
-        run: clickable run cargo test --no-default-features
+        run: clickable run 'cargo test --no-default-features'
 
   license-check:
     needs: [test]

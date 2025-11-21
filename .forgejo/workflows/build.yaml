@@ -18,13 +18,13 @@ jobs:
         uses: https://github.com/Swatinem/rust-cache@v2
 
       - name: Install Cargo Deny
-        run: cargo install cargo-deny
+        run: clickable run cargo install cargo-deny
 
       - name: License Check
-        run: cargo deny check licenses
+        run: clickable run cargo deny check licenses
 
       - name: Test
-        run: cargo test --no-default-features
+        run: clickable run cargo test --no-default-features
 
   build-amd64:
     needs: [test]

@@ -14,6 +14,7 @@ pub(crate) mod actor;
 pub(crate) mod colors;
 pub(crate) mod instructions;
 pub(crate) mod models;
+pub(crate) mod qml;
 pub(crate) mod utils;
 
 use actor::*;
@@ -184,7 +185,7 @@ impl KeepassRx {
 
     #[with_executor]
     pub fn setViewMode(&mut self, mode: RxViewMode) {
-        let actor = app::current().app_actor();
+        let actor = self.actor.clone().expect("Actor not initialized");
         actix::spawn(actor.send(SetViewMode(mode)));
     }
 
@@ -193,10 +194,9 @@ impl KeepassRx {
     }
 
     pub fn setLastDB(&mut self, last_db: QString) {
-        let new_last_db = if !last_db.is_null() {
-            Some(last_db.to_string())
-        } else {
-            None
+        let new_last_db = match last_db {
+            db if !db.is_null() => Some(db.to_string()),
+            _ => None,
         };
 
         let change = self.last_db != new_last_db;
@@ -289,41 +289,42 @@ impl KeepassRx {
 
     #[with_executor]
     pub fn getMetadata(&self) {
-        actix::spawn(app::current().app_actor().send(GetMetadata));
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(GetMetadata));
     }
 
     #[with_executor]
     pub fn openDatabase(&mut self, db_name: String, key_path: QString) {
+        let actor = self.actor.clone().expect("Actor not initialized");
         let key_path = match key_path {
             kp if !kp.is_null() && !kp.is_empty() => Some(kp.to_string()),
             _ => None,
         };
 
-        actix::spawn(
-            app::current()
-                .app_actor()
-                .send(OpenDatabase { db_name, key_path }),
-        );
+        actix::spawn(actor.send(OpenDatabase { db_name, key_path }));
     }
 
     #[with_executor]
     pub fn closeDatabase(&mut self) {
-        actix::spawn(app::current().app_actor().send(CloseDatabase));
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(CloseDatabase));
     }
 
     #[with_executor]
     pub fn deleteDatabase(&self, db_name: String) {
-        actix::spawn(app::current().app_actor().send(DeleteDatabase { db_name }));
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(DeleteDatabase { db_name }));
     }
 
     #[with_executor]
     pub fn getRootContainer(&self) {
-        actix::spawn(app::current().app_actor().send(GetContainer::root()));
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(GetContainer::root()));
     }
 
     #[with_executor]
     pub fn getContainer(&self, group_uuid: QString) {
-        let actor = app::current().app_actor();
+        let actor = self.actor.clone().expect("Actor not initialized");
         let maybe_uuid = Uuid::from_str(&group_uuid.to_string());
 
         match maybe_uuid {
@@ -342,7 +343,7 @@ impl KeepassRx {
             _ => None,
         };
 
-        let actor = app::current().app_actor();
+        let actor = self.actor.clone().expect("Actor not initialized");
 
         match maybe_uuid {
             Ok(group_uuid) => {
@@ -354,7 +355,7 @@ impl KeepassRx {
 
     #[with_executor]
     pub fn getSingleEntry(&self, entry_uuid: QString) {
-        let actor = app::current().app_actor();
+        let actor = self.actor.clone().expect("Actor not initialized");
         let maybe_uuid = Uuid::from_str(&entry_uuid.to_string());
 
         match maybe_uuid {
@@ -368,43 +369,48 @@ impl KeepassRx {
     #[with_executor]
     pub fn getTotp(&self, entry_uuid: QString) {
         let entry_uuid = entry_uuid.to_string();
-        let actor = app::current().app_actor();
+        let actor = self.actor.clone().expect("Actor not initialized");
         actix::spawn(actor.send(GetTotp { entry_uuid }));
     }
 
     #[with_executor]
     pub fn storeMasterPassword(&self, master_password: QString) {
-        actix::spawn(app::current().app_actor().send(StoreMasterPassword {
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(StoreMasterPassword {
             master_password: SecUtf8::from(master_password.to_string()),
         }));
     }
 
     #[with_executor]
     pub fn encryptMasterPassword(&self) {
-        actix::spawn(app::current().app_actor().send(EncryptMasterPassword));
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(EncryptMasterPassword));
     }
 
     #[with_executor]
     pub fn decryptMasterPassword(&self, short_password: QString) {
-        actix::spawn(app::current().app_actor().send(DecryptMasterPassword {
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(DecryptMasterPassword {
             short_password: SecUtf8::from(short_password.to_string()),
         }));
     }
 
     #[with_executor]
     pub fn invalidateMasterPassword(&self) {
-        actix::spawn(app::current().app_actor().send(InvalidateMasterPassword));
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(InvalidateMasterPassword));
     }
 
     #[with_executor]
     pub fn checkLockingStatus(&self) {
-        actix::spawn(app::current().app_actor().send(CheckLockingStatus));
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(CheckLockingStatus));
     }
 
     #[with_executor]
     pub fn getFieldValue(&self, entry_uuid: QString, field_name: QString) {
         let maybe_uuid = Uuid::from_str(&entry_uuid.to_string());
-        let actor = app::current().app_actor();
+        let actor = self.actor.clone().expect("Actor not initialized");
 
         match maybe_uuid {
             Ok(entry_uuid) => {
@@ -420,7 +426,7 @@ impl KeepassRx {
     #[with_executor]
     pub fn pushContainer(&self, container_uuid: QString) {
         let maybe_uuid = Uuid::from_str(&container_uuid.to_string());
-        let actor = app::current().app_actor();
+        let actor = self.actor.clone().expect("Actor not initialized");
 
         match maybe_uuid {
             Ok(container_id) => {
@@ -432,7 +438,8 @@ impl KeepassRx {
 
     #[with_executor]
     pub fn popContainer(&self) {
-        actix::spawn(app::current().app_actor().send(PopContainer));
+        let actor = self.actor.clone().expect("Actor not initialized");
+        actix::spawn(actor.send(PopContainer));
     }
 
     #[with_executor]

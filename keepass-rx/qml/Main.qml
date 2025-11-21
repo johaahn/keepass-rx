@@ -20,7 +20,6 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.3
 import Qt.labs.settings 1.0
 import Lomiri.Components 1.3
-import KeepassRx 1.0
 
 import "./pages"
 

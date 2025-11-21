@@ -3,11 +3,18 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import Lomiri.Components 1.3
 import QtGraphicalEffects 1.0
+import keepassrx 1.0
 
 ListItem {
     property bool passwordVisible: false
     height: units.gu(10)
     id: entireItem
+
+    RxUiEntry {
+        id: theEntry
+        entryUuid: uuid
+        app: AppState
+    }
 
     function handleEntryClick() {
         if (itemType == 'Entry') {

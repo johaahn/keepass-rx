@@ -1,0 +1,305 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-21 08:25+0000\n"
+"PO-Revision-Date: 2025-11-18 09:39+0000\n"
+"Last-Translator: projectmoon <projectmoon@agnos.is>\n"
+"Language-Team: Icelandic <https://hosted.weblate.org/projects/ubports/"
+"keepassrx/is/>\n"
+"Language: is\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n % 10 != 1 || n % 100 == 11;\n"
+"X-Generator: Weblate 5.15-dev\n"
+
+#: qml/components/EntryItem.qml:108
+msgid "Copy Username"
+msgstr ""
+
+#: qml/components/EntryItem.qml:116
+msgid "Copy Password"
+msgstr ""
+
+#: qml/components/EntryItem.qml:125
+msgid "Open URL"
+msgstr ""
+
+#: qml/components/EntryItem.qml:132
+msgid "Copy 2FA Code"
+msgstr ""
+
+#: qml/components/EntryItem.qml:144
+msgid "View Entry"
+msgstr ""
+
+#: qml/components/EntryItem.qml:240
+msgid "Tap to copy 2FA code"
+msgstr ""
+
+#: qml/pages/AboutPage.qml:11 qml/pages/DBList.qml:81
+#: qml/pages/EntriesPage.qml:211 qml/pages/UnlockPage.qml:41
+#: qml/pages/OpenDBPage.qml:53
+msgid "About"
+msgstr "Um appið"
+
+#: qml/pages/AboutPage.qml:54
+msgid ""
+"KeePassRX is a work-in-progress password manager for KeePass password "
+"databases. It is licensed under the GNU GPL v3 license."
+msgstr ""
+"KeePassRX er app lykilorðs-app í vinnslu fyrir KeePass gagnagrunna. Appið "
+"hefur leyfi samkvæmt GNU GPL v3."
+
+#: qml/pages/AboutPage.qml:65
+msgid ""
+"The built-in KeePass icon images are licensed under a variety of licenses as "
+"detailed in assets/COPYING."
+msgstr ""
+
+#: qml/pages/AboutPage.qml:76
+msgid ""
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
+"agnos.is/projectmoon/keepass-rx</a>"
+msgstr ""
+"Uppruni: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
+"agnos.is/projectmoon/keepass-rx</a>"
+
+#: qml/pages/DBList.qml:67
+msgid "Add Database"
+msgstr "Bæta við Gangnagrunn"
+
+#: qml/pages/DBList.qml:74 qml/pages/EntriesPage.qml:202
+#: qml/pages/SettingsPage.qml:11 qml/pages/UnlockPage.qml:34
+#: qml/pages/OpenDBPage.qml:46
+msgid "Settings"
+msgstr "Stillingar"
+
+#: qml/pages/DBList.qml:101
+msgid "Loading last database."
+msgstr "Síðasti gagnagrunnurinn í vinnslu."
+
+#: qml/pages/DBList.qml:111
+msgid "Select Database"
+msgstr "Kjósa gagnagrunn"
+
+#: qml/pages/DBList.qml:167
+msgid "Tap + to import a database."
+msgstr "Ýtið á + til að flytja inn gagnagrunn."
+
+#: qml/pages/DBList.qml:265
+msgid "It will only be removed from the app, not your device."
+msgstr "Það mun eyða frá appinu en ekki síminn þinn."
+
+#: qml/pages/EntriesPage.qml:97
+msgid "Cancel Search"
+msgstr "Hætta leit"
+
+#: qml/pages/EntriesPage.qml:117
+msgid "Search entries in this group"
+msgstr "Leitaðu að hlut í þessum flokki"
+
+#: qml/pages/EntriesPage.qml:142
+msgid "Lock"
+msgstr "Læsa"
+
+#: qml/pages/EntriesPage.qml:154
+msgid "Close"
+msgstr "Loka"
+
+#: qml/pages/EntriesPage.qml:166 qml/pages/SingleEntry.qml:96
+#: qml/pages/OpenDBPage.qml:33
+msgid "Back"
+msgstr "Til baka"
+
+#: qml/pages/EntriesPage.qml:179
+msgid "View Mode"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:189
+msgid "Search"
+msgstr "Leita"
+
+#: qml/pages/EntriesPage.qml:223
+msgid "Lock Database"
+msgstr "Læsa Gangnagrunn"
+
+#: qml/pages/EntriesPage.qml:233
+msgid "Close Database"
+msgstr "Loka Gagnagrunn"
+
+#: qml/pages/EntriesPage.qml:253
+msgid "Change View"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:261
+msgid "All groups and entries."
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:267
+msgid "Entries grouped by template."
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:273
+msgid "Entries with 2FA codes."
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:279
+msgid "Entries grouped by tag."
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:291
+msgid "Select View"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:310
+msgid "Select"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:320
+msgid "Cancel"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:44
+msgid ""
+"Change settings based on your preferences. Any change to the settings "
+"requires a restart to take effect."
+msgstr ""
+"Breyttu stillingum. Appið þarf að endurræsa ef stillingar eru breyttar."
+
+#: qml/pages/SettingsPage.qml:54
+msgid "Enable database locking"
+msgstr "Virkja læsingu gagnagrunnsins"
+
+#: qml/pages/SettingsPage.qml:57
+msgid ""
+"Securely lock and unlock database with a short passcode. Requires restart to "
+"take effect."
+msgstr ""
+"Notaðu stutt lykilorð til að Loka og aflæsa gagnagrunnur með öryggi. Appið "
+"þarf að endurræsa."
+
+#: qml/pages/SettingsPage.qml:66
+msgid "Enable Accents"
+msgstr "Virkja Lit"
+
+#: qml/pages/SettingsPage.qml:68
+msgid ""
+"Set header color and name according to database settings. Compatible with "
+"KeePassXC."
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:79
+msgid "Show the \"Recycle bin\" group"
+msgstr "Sýna \"ruslið\" flokkur"
+
+#: qml/pages/SettingsPage.qml:81
+msgid "This group contains all the deleted entries"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:222
+msgid "Notes"
+msgstr "Athugasemdir"
+
+#: qml/pages/SingleEntry.qml:230
+msgid "Tap to copy"
+msgstr "Ýtið á til að afrita"
+
+#: qml/pages/UnlockPage.qml:146
+msgid "Manual path set."
+msgstr "Handvirk leið staðsett."
+
+#: qml/pages/UnlockPage.qml:163
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"Stutt lykilorðið er fyrstu fimm stafirnar af lykilorðinu gagnagrunnar (eða "
+"heilt lykilorð ef það er stuttara en fimm stafir)."
+
+#: qml/pages/UnlockPage.qml:181
+msgid "Passcode"
+msgstr "Stutt lykilorð"
+
+#: qml/pages/UnlockPage.qml:213
+msgid "Unlock"
+msgstr "Aflæsa"
+
+#: qml/pages/UnlockPage.qml:232
+msgid "Securely Unlocking"
+msgstr "Að aflæsa með öryggi"
+
+#: qml/pages/UnlockPage.qml:233
+msgid "Securely Locking"
+msgstr "Læsa með öryggi"
+
+#: qml/pages/UnlockPage.qml:244
+msgid "Database Not Opening?"
+msgstr "Er gagnagrunnur ekki að opna?"
+
+#: qml/pages/OpenDBPage.qml:158
+msgid "Enter the database master password"
+msgstr "Sláðu inn aðallykilorð gagnagrunnsins"
+
+#: qml/pages/OpenDBPage.qml:171
+msgid "Master Password"
+msgstr "Aðallykilorð"
+
+#: qml/pages/OpenDBPage.qml:201
+msgid "Open"
+msgstr "Opna"
+
+#: qml/pages/OpenDBPage.qml:218
+msgid "Opening"
+msgstr "Í vinnslu"
+
+#: src/gui/instructions.rs:9
+msgid ""
+"<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
+"using its action bar."
+msgstr ""
+
+#: src/rx/virtual_hierarchy.rs:35
+msgid "Special Categories"
+msgstr ""
+
+#: src/rx/virtual_hierarchy.rs:43
+msgid "All Templates"
+msgstr ""
+
+#: src/rx/virtual_hierarchy.rs:90
+msgctxt "Default view of the password database (all entries)"
+msgid "Default View"
+msgstr ""
+
+#: src/rx/virtual_hierarchy.rs:116 src/rx/virtual_hierarchy.rs:129
+msgctxt "Two-factor/OTP codes (keep phrase short as possible)"
+msgid "2FA Codes"
+msgstr ""
+
+#: src/rx/virtual_hierarchy.rs:166
+msgctxt "List of entries with tags"
+msgid "Tags"
+msgstr ""
+
+#: src/rx/virtual_hierarchy.rs:174
+msgid "Tags"
+msgstr ""
+
+#~ msgid "Untitled Entry"
+#~ msgstr "Ónefnd Færsla"
+
+#~ msgid "Enable database locking (ALPHA)"
+#~ msgstr "Virkja læsing gagnagrunnanna (ALPHA)"
+
+#~ msgid "Auto-close db after inactivity"
+#~ msgstr "Loka gagnagrunnurinn sjálfkrafa eftir smá tíma"
+
+#~ msgid "In minutes. 0 for disabled."
+#~ msgstr "í mínutur. Slökkva á stilling með 0."

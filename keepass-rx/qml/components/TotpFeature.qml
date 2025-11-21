@@ -3,7 +3,7 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import Lomiri.Components 1.3
 import QtGraphicalEffects 1.0
-
+import keepassrx 1.0
 
 Item {
     property string entryId
@@ -11,18 +11,10 @@ Item {
     width: parent.width
     height: parent.height
 
-    Connections {
-        target: keepassrx
-
-        function onFieldValueReceived(entryUuid, fieldName, totpCode, totpValidFor) {
-            // Because this is a global listener, we only want to update if this item is the
-            // target for this update. Otherwise, all the TOTP codes are the same value!
-            if (entryId == entryUuid && totpCode && totpValidFor) {
-                current2FACode.text = totpCode;
-                current2FAValidFor.text = totpValidFor;
-                return;
-            }
-        }
+    RxUiEntry {
+        id: theEntry
+        entryUuid: uuid
+        app: AppState
     }
 
     Timer {
@@ -33,7 +25,7 @@ Item {
         triggeredOnStart: true
         onTriggered: {
             if (entryId) {
-                keepassrx.getFieldValue(entryId, "CurrentTOTP");
+                theEntry.updateTotp();
             }
         }
     }
@@ -52,6 +44,7 @@ Item {
             width: parent.height
             height: parent.width
             onClicked: {
+                // TODO migrate to actorify?
                 keepassrx.getTotp(entryId);
             }
         }
@@ -63,7 +56,8 @@ Item {
             width: parent.width
             verticalAlignment: Text.AlignVCenter
             color: theme.palette.normal.backgroundTertiaryText
-            text: "------"
+            //text: "------"
+            text: theEntry.currentTotp
         }
 
         Text {
@@ -74,7 +68,7 @@ Item {
             width: parent.width
             verticalAlignment: Text.AlignVCenter
             color: theme.palette.normal.backgroundTertiaryText
-            text: "------"
+            text: theEntry.currentTotpValidFor
         }
 
         Icon {

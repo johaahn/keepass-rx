@@ -5,7 +5,6 @@ import Qt.labs.settings 1.0
 import Lomiri.Components 1.3
 import Lomiri.Components.Popups 1.3
 import Lomiri.Content 1.3
-import KeepassRx 1.0
 import "../components"
 
 Page {

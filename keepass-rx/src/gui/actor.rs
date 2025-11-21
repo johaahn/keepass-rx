@@ -1,6 +1,7 @@
 use actix::prelude::*;
 use anyhow::{Result, anyhow};
 use keepass::{Database, DatabaseKey};
+use qmeta_async::with_executor;
 use qmetaobject::*;
 use secstr::SecUtf8;
 use std::cell::RefCell;
@@ -15,6 +16,8 @@ use zeroize::{Zeroize, Zeroizing};
 use super::KeepassRx;
 use super::instructions::get_instructions;
 use super::models::RxListItem;
+use crate::actor::ActixEvent;
+use crate::app::AppState;
 use crate::crypto::EncryptedPassword;
 use crate::gui::models::{RxList, RxUiFeature};
 use crate::rx::virtual_hierarchy::{
@@ -27,8 +30,9 @@ use crate::{
 
 #[derive(Default)]
 pub struct KeepassRxActor {
+    app_state: Arc<QObjectBox<AppState>>,
     gui: Arc<QObjectBox<KeepassRx>>,
-    curr_db: RefCell<Option<Zeroizing<RxDatabase>>>,
+    //curr_db: RefCell<Option<Zeroizing<RxDatabase>>>,
     curr_master_pw: Arc<RefCell<Option<EncryptedPassword>>>,
     stored_master_password: Arc<RefCell<Option<SecUtf8>>>,
 
@@ -41,9 +45,13 @@ pub struct KeepassRxActor {
 }
 
 impl KeepassRxActor {
-    pub fn new(gui: &Arc<QObjectBox<KeepassRx>>) -> Self {
+    pub fn new(
+        gui: &Arc<QObjectBox<KeepassRx>>,
+        app_state: &Arc<QObjectBox<AppState>>,
+    ) -> Self {
         Self {
             gui: gui.clone(),
+            app_state: app_state.clone(),
             ..Default::default()
         }
     }
@@ -64,6 +72,38 @@ impl Actor for KeepassRxActor {
 
     fn started(&mut self, ctx: &mut Self::Context) {
         self.gui.pinned().borrow_mut().actor = Some(ctx.address());
+    }
+}
+
+#[derive(Message)]
+#[rtype(result = "()")]
+pub struct TestReply {
+    pub value: String,
+}
+
+#[derive(Message)]
+#[rtype(result = "()")]
+pub struct Test {
+    pub callback: Recipient<ActixEvent>,
+}
+
+impl Handler<Test> for KeepassRxActor {
+    type Result = AtomicResponse<Self, ()>;
+
+    fn handle(&mut self, msg: Test, ctx: &mut Self::Context) -> Self::Result {
+        AtomicResponse::new(Box::pin(
+            async move {
+                msg.callback
+                    .send(ActixEvent {
+                        event_name: "Hello this is a test".to_string(),
+                    })
+                    .await
+            }
+            .into_actor(self)
+            .map(|res, _, _| {
+                println!("send result: {:?}", res);
+            }),
+        ))
     }
 }
 
@@ -204,7 +244,11 @@ impl Handler<SetViewMode> for KeepassRxActor {
         let binding = binding.pinned();
         let mut gui = binding.borrow_mut();
 
-        let db_binding = self.curr_db.borrow();
+        let app_state = self.app_state.pinned();
+        let app_state = app_state.borrow();
+        let db_binding = app_state.curr_db();
+        let db_binding = db_binding.as_deref();
+
         let db = match db_binding
             .as_ref()
             .ok_or(anyhow!("PushContainer: Database not open"))
@@ -299,10 +343,13 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                         let rx_db = RxDatabase::new(wrapped_db);
                         let view = Box::new(DefaultView::new(&rx_db));
 
+                        let app_state = this.app_state.pinned();
+                        let app_state = app_state.borrow_mut();
+
                         gui.rootGroupUuid = QString::from(rx_db.root_group().uuid.to_string());
                         gui.metadata = rx_db.metadata().into();
 
-                        this.curr_db = RefCell::new(Some(Zeroizing::new(rx_db)));
+                        app_state.set_db(Some(Zeroizing::new(rx_db)));
                         this.current_view = Some(view);
 
                         gui.databaseOpen = true;
@@ -322,7 +369,9 @@ impl Handler<CloseDatabase> for KeepassRxActor {
 
     fn handle(&mut self, _: CloseDatabase, _: &mut Self::Context) -> Self::Result {
         // Remove from cell
-        let db = self.curr_db.take();
+        let app_state = self.app_state.pinned();
+        let app_state = app_state.borrow();
+        let db = app_state.take_db();
 
         AtomicResponse::new(Box::pin(
             async move {
@@ -456,7 +505,11 @@ impl Handler<GetMetadata> for KeepassRxActor {
         let binding = binding.pinned();
         let gui = binding.borrow();
 
-        let db_binding = self.curr_db.borrow();
+        let app_state = self.app_state.pinned();
+        let app_state = app_state.borrow();
+        let db_binding = app_state.curr_db();
+        let db_binding = db_binding.as_deref();
+
         let db = match db_binding
             .as_ref()
             .ok_or(anyhow!("GetMetadata: Database not open"))
@@ -561,7 +614,11 @@ impl Handler<GetSingleEntry> for KeepassRxActor {
         let binding = binding.pinned();
         let gui = binding.borrow();
 
-        let db_binding = self.curr_db.borrow();
+        let app_state = self.app_state.pinned();
+        let app_state = app_state.borrow();
+        let db_binding = app_state.curr_db();
+        let db_binding = db_binding.as_deref();
+
         let db = match db_binding
             .as_ref()
             .ok_or(anyhow!("GetSingleEntry: Database not open"))
@@ -626,7 +683,11 @@ impl Handler<GetFieldValue> for KeepassRxActor {
         let binding = binding.pinned();
         let gui = binding.borrow();
 
-        let db_binding = self.curr_db.borrow();
+        let app_state = self.app_state.pinned();
+        let app_state = app_state.borrow();
+        let db_binding = app_state.curr_db();
+        let db_binding = db_binding.as_deref();
+
         let db = match db_binding
             .as_ref()
             .ok_or(anyhow!("GetSingleEntry: Database not open"))
@@ -653,7 +714,11 @@ impl Handler<GetTotp> for KeepassRxActor {
         let binding = binding.pinned();
         let gui = binding.borrow();
 
-        let db_binding = self.curr_db.borrow();
+        let app_state = self.app_state.pinned();
+        let app_state = app_state.borrow();
+        let db_binding = app_state.curr_db();
+        let db_binding = db_binding.as_deref();
+
         let db = match db_binding
             .as_ref()
             .ok_or(anyhow!("GetTotp: Database not open"))

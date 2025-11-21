@@ -3,8 +3,9 @@ builder: rust
 framework: ubuntu-touch-24.04-1.x
 qt_version: "5.15"
 kill: keepassrx
+src_dir: keepass-rx
 install_root_data:
 - manifest.json
 - keepassrx.apparmor
 - keepassrx.desktop
-- assets
+- keepass-rx/assets

@@ -27,14 +27,17 @@ extern crate libsodium_rs;
 
 use actix::Actor;
 use anyhow::Result;
+use app::KeepassRxApp;
 use cpp::cpp;
 use gettextrs::{bindtextdomain, textdomain};
 use qmeta_async::with_executor;
 use qmetaobject::{QObjectBox, QQuickStyle, QQuickView, qml_register_enum, qml_register_type};
 use std::env;
 use std::path::PathBuf;
+use std::rc::Rc;
 use std::sync::Arc;
 
+mod actor;
 mod crypto;
 mod rx;
 
@@ -46,7 +49,7 @@ mod gui;
 mod qrc;
 
 #[cfg(feature = "gui")]
-use crate::app::KeepassRxApp;
+use crate::app::AppState;
 
 #[cfg(feature = "gui")]
 use crate::gui::{
@@ -58,7 +61,7 @@ use crate::gui::{
 
 #[cfg(feature = "gui")]
 fn load_gui() -> Result<()> {
-    use gui::{RxViewMode, colors::ColorType, models::RxUiFeature};
+    use gui::{RxViewMode, colors::RxColorType, models::RxUiFeature, qml::RxUiEntry};
 
     init_gettext();
 
@@ -76,13 +79,14 @@ fn load_gui() -> Result<()> {
 
     QQuickStyle::set_style("Suru");
     qrc::load();
-    qml_register_type::<KeepassRx>(cstr!("KeepassRx"), 1, 0, cstr!("KeepassRx"));
-    qml_register_type::<RxListItem>(cstr!("RxListItem"), 1, 0, cstr!("RxListItem"));
-    qml_register_enum::<RxItemType>(cstr!("RxItemType"), 1, 0, cstr!("RxItemType"));
-    qml_register_enum::<RxGuiState>(cstr!("RxGuiState"), 1, 0, cstr!("RxGuiState"));
-    qml_register_enum::<RxViewMode>(cstr!("RxViewMode"), 1, 0, cstr!("RxViewMode"));
-    qml_register_enum::<RxUiFeature>(cstr!("RxUiFeature"), 1, 0, cstr!("RxUiFeature"));
-    qml_register_enum::<ColorType>(cstr!("ColorType"), 1, 0, cstr!("ColorType"));
+    let uri = cstr!("keepassrx");
+    qml_register_type::<RxUiEntry>(uri, 1, 0, cstr!("RxUiEntry"));
+    qml_register_type::<RxListItem>(uri, 1, 0, cstr!("RxListItem"));
+    qml_register_enum::<RxItemType>(uri, 1, 0, cstr!("RxItemType"));
+    qml_register_enum::<RxGuiState>(uri, 1, 0, cstr!("RxGuiState"));
+    qml_register_enum::<RxViewMode>(uri, 1, 0, cstr!("RxViewMode"));
+    qml_register_enum::<RxUiFeature>(uri, 1, 0, cstr!("RxUiFeature"));
+    qml_register_enum::<RxColorType>(uri, 1, 0, cstr!("RxColorType"));
 
     // Load last db
     // TODO this is a hack and should be more properly done with QT
@@ -103,21 +107,28 @@ fn load_gui() -> Result<()> {
     move_old_db();
 
     qmeta_async::run(|| {
-        let mut view = with_executor(|| -> Result<QQuickView> {
-            // TODO store these in some global state?
-
+        // We must return app here because it keeps the value alive
+        // for the lifetime of qmeta_async::run. Without this, any
+        // pointers inside app would be dropped and become at runtime.
+        let (mut view, _app) = with_executor(|| -> Result<_> {
+            let app_state = Arc::new(QObjectBox::new(AppState::new()));
             let gui = Arc::new(QObjectBox::new(KeepassRx::new(last_db)));
-            let gui_actor = KeepassRxActor::new(&gui).start();
 
-            let app = KeepassRxApp::new(gui_actor);
+            let gui_actor = KeepassRxActor::new(&gui, &app_state).start();
 
-            crate::app::initialize(app)?;
+            let app = Rc::new(KeepassRxApp {
+                app_state: app_state.clone(),
+                gui_actor: gui_actor,
+            });
 
             let mut view = QQuickView::new();
             let engine = view.engine();
+
             engine.set_property("keepassrx".into(), gui.pinned().into());
+            engine.set_object_property("AppState".into(), app.app_state.pinned());
+
             view.set_source("qrc:/qml/Main.qml".into());
-            Ok(view)
+            Ok((view, app))
         })
         .expect("app initialization failed");
 

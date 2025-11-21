@@ -86,7 +86,7 @@ fn output_kpxc_icons() {
 
 /// Generate gettext translation files
 fn update_language_files() {
-    let pot_file = "po/keepassrx.projectmoon.pot";
+    let pot_file = "../po/keepassrx.projectmoon.pot";
     let source_files = source_files();
 
     let mut child = Command::new("xgettext")
@@ -154,7 +154,7 @@ fn source_files() -> Vec<PathBuf> {
 /// Obtains a list of all translation files
 fn po_files() -> Vec<PathBuf> {
     // Directory in which to search for translation files
-    walk_dir(PathBuf::from("po"), "po")
+    walk_dir(PathBuf::from("../po"), "po")
 }
 
 /// Recursively searches for files in a directory and
@@ -162,8 +162,11 @@ fn po_files() -> Vec<PathBuf> {
 fn walk_dir(dir: PathBuf, ext: &str) -> Vec<PathBuf> {
     let mut files: Vec<PathBuf> = Vec::new();
 
-    for entry in fs::read_dir(dir)
-        .expect("Failed to iterate over directory")
+    for entry in fs::read_dir(dir.clone())
+        .expect(&format!(
+            "Failed to iterate over directory: {:?}",
+            dir.file_name()
+        ))
         .filter_map(Result::ok)
     {
         if entry.file_type().unwrap().is_dir() {

@@ -1,5 +1,7 @@
 [package]
 name = "keepassrx"
+description = "KeePass password manager for Ubuntu Touch"
+license = "AGPL-3.0-or-later"
 version = "0.11.0"
 authors = ["projectmoon <projectmoon@agnos.is>"]
 edition = "2024"

@@ -9,7 +9,7 @@ use libsodium_rs::random;
 use libsodium_rs::utils::{SecureVec, vec_utils};
 use poison_guard::Poison;
 use secstr::SecUtf8;
-use std::cell::{Cell, RefCell};
+use std::cell::RefCell;
 use std::rc::Rc;
 use std::sync::Arc;
 use uuid::Uuid;

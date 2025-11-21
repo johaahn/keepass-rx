@@ -16,16 +16,13 @@
  * along with this program. If not, see
  * <https://www.gnu.org/licenses/>.
  */
-use std::rc::Rc;
-
 use actix::prelude::*;
 use qmetaobject::QObject;
 use qmetaobject::QPointer;
 
-pub use actor_macro::observing_model;
-
 use crate::app::AppState;
 
+#[allow(dead_code)]
 pub trait EventObserving<M>
 where
     M: actix::Message,
@@ -43,6 +40,7 @@ pub struct ModelContext<T: QObject + 'static> {
     pub(crate) addr: Addr<ObservingModelActor<T>>,
 }
 
+#[allow(dead_code)]
 impl<T: QObject + 'static> ModelContext<T> {
     pub fn addr(&self) -> Addr<ObservingModelActor<T>> {
         self.addr.clone()

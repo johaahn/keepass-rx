@@ -20,9 +20,6 @@ pub(crate) mod utils;
 use actor::*;
 use utils::*;
 
-use crate::app;
-use crate::rx::RxMetadata;
-
 #[derive(Default, QEnum, Clone, Copy)]
 #[repr(C)]
 pub enum RxGuiState {

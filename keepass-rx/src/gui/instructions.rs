@@ -1,4 +1,4 @@
-use std::{ops::Deref, sync::LazyLock};
+use std::sync::LazyLock;
 
 use gettextrs::gettext;
 

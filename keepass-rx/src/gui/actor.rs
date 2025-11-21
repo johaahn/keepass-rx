@@ -1,13 +1,11 @@
 use actix::prelude::*;
 use anyhow::{Result, anyhow};
 use keepass::{Database, DatabaseKey};
-use qmeta_async::with_executor;
 use qmetaobject::*;
 use secstr::SecUtf8;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::fs::File;
-use std::str::FromStr;
 use std::sync::Arc;
 use tokio::task::{JoinHandle, spawn_blocking};
 use uuid::Uuid;
@@ -15,7 +13,6 @@ use zeroize::{Zeroize, Zeroizing};
 
 use super::KeepassRx;
 use super::instructions::get_instructions;
-use crate::actor::ActixEvent;
 use crate::app::AppState;
 use crate::crypto::EncryptedPassword;
 use crate::rx::virtual_hierarchy::{
@@ -23,7 +20,7 @@ use crate::rx::virtual_hierarchy::{
 };
 use crate::{
     gui::{RxViewMode, models::RxUiContainer, utils::imported_databases_path},
-    rx::{RxDatabase, RxFieldName, RxRoot, ZeroableDatabase},
+    rx::{RxDatabase, RxFieldName, ZeroableDatabase},
 };
 
 #[derive(Default)]
@@ -125,13 +122,6 @@ pub struct GetFieldValue {
 }
 
 impl GetEntries {
-    pub fn root(search_term: Option<String>) -> Self {
-        Self {
-            container_uuid: None,
-            search_term,
-        }
-    }
-
     pub fn for_uuid(group_uuid: Uuid, search_term: Option<String>) -> Self {
         Self {
             container_uuid: Some(group_uuid),

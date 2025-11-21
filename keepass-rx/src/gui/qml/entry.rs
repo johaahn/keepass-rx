@@ -3,10 +3,7 @@ use actor_macro::observing_model;
 use qmeta_async::with_executor;
 use qmetaobject::prelude::*;
 
-use crate::{
-    actor::{ModelContext, ObservingModelActor},
-    rx::virtual_hierarchy::VirtualHierarchy,
-};
+use crate::{actor::ObservingModelActor, rx::virtual_hierarchy::VirtualHierarchy};
 
 /// A QObject that is wired to interact with a database entry via the
 /// app actor.

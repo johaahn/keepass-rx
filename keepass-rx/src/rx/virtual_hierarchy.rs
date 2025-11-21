@@ -1,9 +1,5 @@
 use gettextrs::{gettext, pgettext};
-use indexmap::IndexSet;
-use std::{
-    collections::{HashMap, HashSet},
-    rc::Rc,
-};
+use std::{collections::HashMap, rc::Rc};
 use uuid::Uuid;
 
 use super::{RxContainedRef, RxContainer, RxDatabase, RxRoot, RxTag};

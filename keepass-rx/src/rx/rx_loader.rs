@@ -1,25 +1,18 @@
 use crate::crypto::MasterKey;
 
-use super::icons::RxIcon;
-use super::{RxDatabase, RxEntry, RxGroup, RxMetadata, RxTemplate, RxTotp, ZeroableDatabase};
-use anyhow::{Result, anyhow};
+use super::{RxEntry, RxGroup, RxMetadata, RxTemplate, ZeroableDatabase};
+use anyhow::Result;
 use indexmap::IndexMap;
-use keepass::config::DatabaseConfig;
-use keepass::db::{Group, Icon, Meta, Node};
-use paste::paste;
-use regex::Regex;
+use keepass::db::{Group, Icon, Node};
+use std::collections::HashMap;
 use std::mem;
 use std::rc::Rc;
-use std::sync::LazyLock;
-use std::{collections::HashMap, str::FromStr};
-use unicase::UniCase;
 use uuid::Uuid;
 use zeroize::{Zeroize, Zeroizing};
 
 pub struct RxLoader {
     db: Zeroizing<ZeroableDatabase>,
     state: LoadState,
-    root: Option<RxGroup>,
     master_key: Option<Rc<MasterKey>>,
     icons: HashMap<Uuid, Icon>,
 }
@@ -36,7 +29,6 @@ impl RxLoader {
         Self {
             db: db,
             state: Default::default(),
-            root: Default::default(),
             master_key: Default::default(),
             icons: Default::default(),
         }
@@ -170,6 +162,7 @@ pub struct LoadState {
 mod tests {
     use keepass::Database;
     use keyring::set_default_credential_builder;
+    use std::str::FromStr;
 
     use crate::rx::TEMPLATE_FIELD_NAME;
 

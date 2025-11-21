@@ -2,13 +2,11 @@
 /// child entries. A container can have any number of child containers
 /// (of the same type) and any number of RxEntry objects.
 use indexmap::{IndexMap, IndexSet};
-use keepass::db::Group;
-use std::{collections::HashMap, mem, rc::Rc};
+use std::rc::Rc;
 use unicase::UniCase;
 use uuid::Uuid;
-use zeroize::Zeroize;
 
-use super::{RxDatabase, RxEntry, RxGroup, RxTag, RxTemplate, RxValue, icons::RxIcon};
+use super::{RxDatabase, RxEntry, RxGroup, RxTag, RxTemplate};
 
 fn search_contained_ref(contained_ref: &RxContainedRef, term: &str) -> bool {
     match contained_ref {
@@ -56,11 +54,13 @@ fn search_entry(entry: &RxEntry, term: &str) -> bool {
 }
 
 #[derive(Clone)]
+#[allow(dead_code)]
 pub struct RxRoot {
     pub(super) root_container: Rc<RxContainer>,
     pub(super) all_containers: IndexSet<Uuid>,
 }
 
+#[allow(dead_code)]
 impl RxRoot {
     pub fn uuid(&self) -> Uuid {
         self.root_container.uuid()
@@ -111,6 +111,7 @@ pub struct RxContainer {
     contained_type: RxContainedType,
 }
 
+#[allow(dead_code)]
 impl RxContainer {
     pub fn from<T>(item: T, db: &RxDatabase) -> Self
     where
@@ -437,6 +438,7 @@ pub enum RxContainedRef {
     VirtualRoot(String), // name
 }
 
+#[allow(dead_code)]
 impl RxContainedRef {
     pub fn uuid(&self) -> Uuid {
         match self {

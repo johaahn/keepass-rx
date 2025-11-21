@@ -1,17 +1,16 @@
 use actix::Addr;
 use anyhow::{Result, anyhow};
 use qmeta_async::with_executor;
-use qmetaobject::{QObject, QObjectBox, QPointer};
-use std::cell::{Ref, RefCell};
+use qmetaobject::{QObject, QObjectBox};
 use std::rc::Rc;
-use std::sync::{Arc, OnceLock};
+use std::sync::Arc;
 use zeroize::Zeroizing;
 
-use crate::gui::KeepassRx;
 use crate::gui::actor::KeepassRxActor;
 use crate::rx::RxDatabase;
 use crate::rx::virtual_hierarchy::VirtualHierarchy;
 
+#[allow(dead_code)]
 pub struct KeepassRxApp {
     pub(crate) app_state: Arc<QObjectBox<AppState>>,
     pub(crate) gui_actor: Addr<KeepassRxActor>,

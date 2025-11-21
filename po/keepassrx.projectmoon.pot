@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 16:04+0100\n"
+"POT-Creation-Date: 2025-11-21 16:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -254,29 +254,29 @@ msgid ""
 "using its action bar."
 msgstr ""
 
-#: src/rx/virtual_hierarchy.rs:70
+#: src/rx/virtual_hierarchy.rs:66
 msgid "Special Categories"
 msgstr ""
 
-#: src/rx/virtual_hierarchy.rs:78
+#: src/rx/virtual_hierarchy.rs:74
 msgid "All Templates"
 msgstr ""
 
-#: src/rx/virtual_hierarchy.rs:125
+#: src/rx/virtual_hierarchy.rs:121
 msgctxt "Default view of the password database (all entries)"
 msgid "Default View"
 msgstr ""
 
-#: src/rx/virtual_hierarchy.rs:151 src/rx/virtual_hierarchy.rs:164
+#: src/rx/virtual_hierarchy.rs:147 src/rx/virtual_hierarchy.rs:160
 msgctxt "Two-factor/OTP codes (keep phrase short as possible)"
 msgid "2FA Codes"
 msgstr ""
 
-#: src/rx/virtual_hierarchy.rs:205
+#: src/rx/virtual_hierarchy.rs:201
 msgctxt "List of entries with tags"
 msgid "Tags"
 msgstr ""
 
-#: src/rx/virtual_hierarchy.rs:213
+#: src/rx/virtual_hierarchy.rs:209
 msgid "Tags"
 msgstr ""

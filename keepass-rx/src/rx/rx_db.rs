@@ -1,19 +1,16 @@
 use crate::crypto::MasterKey;
 
-use super::icons::RxIcon;
 use super::rx_loader::RxLoader;
-use super::{RxContainer, RxEntry, RxGroup, RxRoot, RxTemplate, RxTotp, ZeroableDatabase};
+use super::{RxEntry, RxGroup, RxTemplate, RxTotp, ZeroableDatabase};
 use anyhow::{Result, anyhow};
 use indexmap::IndexMap;
 use keepass::config::DatabaseConfig;
-use keepass::db::{Group, Icon, Meta, Node};
+use keepass::db::Meta;
 use paste::paste;
 use regex::Regex;
-use std::mem;
 use std::rc::Rc;
 use std::sync::LazyLock;
 use std::{collections::HashMap, str::FromStr};
-use unicase::UniCase;
 use uuid::Uuid;
 use zeroize::{Zeroize, Zeroizing};
 
@@ -133,6 +130,7 @@ impl std::fmt::Debug for RxDatabase {
     }
 }
 
+#[allow(dead_code)]
 impl RxDatabase {
     pub fn new(db: Zeroizing<ZeroableDatabase>) -> Self {
         let loader = RxLoader::new(db);

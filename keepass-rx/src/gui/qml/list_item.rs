@@ -1,27 +1,13 @@
 use paste::paste;
-use std::cell::RefCell;
-use std::rc::Rc;
 use std::str::FromStr;
-use std::sync::Arc;
 
-use actix::{Actor, Addr};
 use actor_macro::observing_model;
-use anyhow::anyhow;
 use gettextrs::npgettext;
-use qmeta_async::with_executor;
-use qmetaobject::{
-    QMetaType, QObject, QObjectPinned, QObjectRefMut, QPointer, QString, QStringList,
-    QVariant, QVariantList, QVariantMap,
-};
+use qmetaobject::{QMetaType, QObject, QPointer, QString};
 use uuid::Uuid;
 
-use crate::actor::{EventObserving, ModelContext, ObservingModelActor};
-use crate::app::{self, AppState};
 use crate::rx::virtual_hierarchy::{RxViewFeature, VirtualHierarchy};
-use crate::rx::{
-    RxContainedRef, RxContainer, RxContainerGrouping, RxContainerItem, RxDatabase, RxEntry,
-    RxGroup, RxGrouping, RxMetadata, RxTag, RxTemplate,
-};
+use crate::rx::{RxContainedRef, RxEntry, RxGroup, RxTag, RxTemplate};
 
 #[derive(QEnum, Clone, Default, Copy, PartialEq, Eq)]
 #[repr(C)]

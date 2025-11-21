@@ -144,6 +144,7 @@ fn entry_count_len(len: usize) -> QString {
     .into()
 }
 
+#[observing_model]
 #[derive(QObject, Default)]
 #[allow(dead_code, non_snake_case)]
 pub struct RxListItem {
@@ -169,10 +170,31 @@ pub struct RxListItem {
     pub(super) hasTOTP: qt_property!(bool),
 }
 
+// Can we convert this into something where the init method is able to
+// automatically pull in all the data from the database?
 impl RxListItem {
+    fn init(&mut self, ctx: ModelContext<Self>) {
+        let mut loader = || -> anyhow::Result<()> {
+            let app_state = self._app.as_pinned().ok_or(anyhow!("No app state"))?;
+            let app_state = app_state.borrow();
+
+            let db_binding = app_state.curr_db();
+            let db = db_binding.as_deref().ok_or(anyhow!("No database"))?;
+
+            let entry = db
+                .get_entry(Uuid::from_str(&self.uuid.to_string())?)
+                .ok_or(anyhow!("No entry"))?;
+
+            self.parentUuid = QString::from(entry.parent_group.to_string());
+
+            Ok(())
+        };
+
+        loader().expect("boom");
+    }
+
     pub fn for_virtual_root(name: String) -> Self {
         RxListItem {
-            base: Default::default(),
             itemType: RxItemType::Group,
             uuid: QString::from(Uuid::default().to_string()),
             parentUuid: QString::default(),
@@ -188,6 +210,7 @@ impl RxListItem {
             iconBuiltin: false,
             title: QString::from(name.as_ref()),
             subtitle: QString::from(""),
+            ..Default::default()
         }
     }
 }
@@ -207,7 +230,6 @@ impl From<RxContainedRef> for RxListItem {
 impl From<&RxTag> for RxListItem {
     fn from(value: &RxTag) -> Self {
         RxListItem {
-            base: Default::default(),
             itemType: RxItemType::Tag,
             uuid: QString::from(value.uuid.to_string()),
             parentUuid: QString::default(),
@@ -223,6 +245,7 @@ impl From<&RxTag> for RxListItem {
             title: QString::from(value.name.as_ref()),
             subtitle: QString::from("Tag"),
             description: entry_count(&value.entry_uuids),
+            ..Default::default()
         }
     }
 }
@@ -230,7 +253,6 @@ impl From<&RxTag> for RxListItem {
 impl From<&RxTemplate> for RxListItem {
     fn from(value: &RxTemplate) -> Self {
         RxListItem {
-            base: Default::default(),
             itemType: RxItemType::Template,
             uuid: QString::from(value.uuid.to_string()),
             parentUuid: QString::default(),
@@ -251,6 +273,7 @@ impl From<&RxTemplate> for RxListItem {
             title: QString::from(value.name.as_ref()),
             subtitle: QString::from("Template"),
             description: entry_count(&value.entry_uuids),
+            ..Default::default()
         }
     }
 }
@@ -258,7 +281,6 @@ impl From<&RxTemplate> for RxListItem {
 impl From<&RxEntry> for RxListItem {
     fn from(value: &RxEntry) -> Self {
         RxListItem {
-            base: Default::default(),
             itemType: RxItemType::Entry,
             uuid: QString::from(value.uuid.to_string()),
             parentUuid: QString::from(value.parent_group.to_string()),
@@ -297,6 +319,7 @@ impl From<&RxEntry> for RxListItem {
                 Some(_) => "••••••",
                 _ => "",
             }),
+            ..Default::default()
         }
     }
 }
@@ -310,7 +333,6 @@ impl From<RxEntry> for RxListItem {
 impl From<&RxGroup> for RxListItem {
     fn from(value: &RxGroup) -> Self {
         RxListItem {
-            base: Default::default(),
             itemType: RxItemType::Group,
             uuid: QString::from(value.uuid.to_string()),
             feature: RxUiFeature::None,
@@ -336,6 +358,7 @@ impl From<&RxGroup> for RxListItem {
             hasPassword: false,
             hasURL: false,
             hasTOTP: false,
+            ..Default::default()
         }
     }
 }

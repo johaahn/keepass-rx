@@ -102,8 +102,11 @@ and projects.
 ## License
 
 _Copyright (C) 2025 projectmoon_
+
 _Portions copyright (C) 2025 Brenno Flávio de Almeida_
+
 _Portions copyright (C) 2021 David Ventura_
+
 _Portions copyright (C) 2019-2025 Ruben De Smet, Markus Törnqvist_
 
 This application is primarily licensed under the AGPLv3 license, but

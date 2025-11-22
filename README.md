@@ -89,9 +89,19 @@ Ventura.
 localization platform of this project is sponsored by Hosted Weblate
 via their free hosting plan for Libre and Open Source Projects.
 
+## Credits
+
+This app is built on the hard work of other people and projects.
+
+- The [keepass-rs][keepass-rs] library for Rust.
+- [Whisperfish][whisperfish]: QT + Actix integration code.
+- [Sealed][sealed]: Some UI components.
+- [KeePass (Ubuntu Touch)][original]: original app.
+
 ## License
 
 _Copyright (C) 2025 projectmoon_
+_Portions copyright (C) 2025 Brenno Flávio de Almeida_
 _Portions copyright (C) 2021 David Ventura_
 _Portions copyright (C) 2019-2025 Ruben De Smet, Markus Törnqvist_
 
@@ -116,3 +126,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 [translate]: https://hosted.weblate.org/projects/ubports/keepassrx/
 [matrix-room]: https://matrix.to/#/#keepass-rx:agnos.is
 [copying]: ./COPYING
+[sealed]: https://github.com/brennoflavio/sealed
+[whisperfish]: https://gitlab.com/whisperfish/whisperfish
+[keepass-rs]: https://github.com/sseemayer/keepass-rs

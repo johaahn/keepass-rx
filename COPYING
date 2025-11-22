@@ -1,4 +1,4 @@
-KeePassRX - Local password manager for Ubuntu Touch
+KeePassRX - KeePass password manager for Ubuntu Touch
 Copyright (C) 2025 projectmoon
 
 This program is free software: you can redistribute it and/or modify
@@ -16,10 +16,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 -----
 
-Portions of this program are licensed under different conditions:
+Portions of this program are licensed under different terms:
 
 1. The code of the original UI is Copyright (C) 2021 David Ventura
    under the GNU GPLv3 (no later versions).
+
+   1a. The ConfigurationGroup.qml and DetailField.qml files are taken
+       from the Sealed project[1], licensed under the GPLv3,
+       copyright (C) 2025 Brenno Flávio de Almeida.
 
 2. The assets for the built-in KeePass icons are licensed under a
    variety of licenses as detailed in assets/COPYING.
@@ -27,3 +31,5 @@ Portions of this program are licensed under different conditions:
 3. The program as a whole is a combined work under the AGPLv3 due to
    making use of code from the Whisperfish project. This includes code
    written specifically for this application.
+
+[1]: https://github.com/brennoflavio/sealed

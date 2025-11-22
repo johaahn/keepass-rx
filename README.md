@@ -1,7 +1,7 @@
 # KeepassRX
 
 <p align="center">
-	<img src="./assets/banner.svg" width="600">
+	<img src="./keepass-rx/assets/banner.svg" width="600">
 	<br/>
 	<i>Password manager for Ubuntu Touch compatible with KeePass databases.</i>
 </p>

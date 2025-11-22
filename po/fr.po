@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-22 10:15+0100\n"
+"POT-Creation-Date: 2025-11-22 10:33+0000\n"
 "PO-Revision-Date: 2025-11-18 18:53+0000\n"
 "Last-Translator: Vlad Nirky <nirky.vlad@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -162,6 +162,12 @@ msgstr "La base de données ne s'ouvre pas ?"
 
 msgid "Cancel Search"
 msgstr "Annuler la recherche"
+
+msgid "Search all entries"
+msgstr ""
+
+msgid "Search all entries under this group"
+msgstr ""
 
 msgid "Search entries in this group"
 msgstr "Rechercher les entrées dans ce groupe"

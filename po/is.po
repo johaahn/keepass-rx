@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-22 10:15+0100\n"
+"POT-Creation-Date: 2025-11-22 10:33+0000\n"
 "PO-Revision-Date: 2025-11-18 09:39+0000\n"
 "Last-Translator: projectmoon <projectmoon@agnos.is>\n"
 "Language-Team: Icelandic <https://hosted.weblate.org/projects/ubports/"
@@ -155,6 +155,12 @@ msgstr "Er gagnagrunnur ekki að opna?"
 
 msgid "Cancel Search"
 msgstr "Hætta leit"
+
+msgid "Search all entries"
+msgstr ""
+
+msgid "Search all entries under this group"
+msgstr ""
 
 msgid "Search entries in this group"
 msgstr "Leitaðu að hlut í þessum flokki"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-22 10:15+0100\n"
+"POT-Creation-Date: 2025-11-22 10:33+0000\n"
 "PO-Revision-Date: 2025-11-21 00:51+0000\n"
 "Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -161,6 +161,12 @@ msgstr "Datenbank öffnet sich nicht?"
 
 msgid "Cancel Search"
 msgstr "Suche abbrechen"
+
+msgid "Search all entries"
+msgstr ""
+
+msgid "Search all entries under this group"
+msgstr ""
 
 msgid "Search entries in this group"
 msgstr "Einträge in dieser Gruppe suchen"

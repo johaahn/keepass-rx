@@ -147,10 +147,10 @@ ListItem {
             id: imgLoader
             width: units.gu(5)
             height: parent.height
-            sourceComponent: theEntry.itemType == 'Group' || theEntry.itemType == 'Tag' ? folderImg : entryImg
+            sourceComponent: theEntry.itemType == 'Group' || theEntry.itemType == 'Tag' ? folderImgComponent : entryImgComponent
 
             Component {
-                id: folderImg
+                id: folderImgComponent
 
                 Item {
                     width: units.gu(5)
@@ -169,24 +169,41 @@ ListItem {
                         id: groupEntryImg
                         visible: theEntry.itemType !== 'Tag' // no tiny images for tags.
                         fillMode: Image.PreserveAspectFit
-                        source: resolveImagePath()
+                        source: '../../assets/placeholder.png'
                         width: units.gu(2.75)
                         height: units.gu(2.75)
                         y: parent.height - height * 1.5
                         x: parent.width - width / 1.25
                     }
+
+                    Binding {
+                        target: groupEntryImg
+                        property: "source"
+                        value: resolveImagePath()
+                        when: theEntry.ready
+                    }
                 }
             }
 
             Component {
-                id: entryImg
+                id: entryImgComponent
 
-                Image {
-                    fillMode: Image.PreserveAspectFit
-                    source: resolveImagePath()
-                    width: units.gu(5)
-                    height: parent.height
-                    y: parent.height / 2 - height / 2
+                Item {
+                    Image {
+                        id: entryImg
+                        fillMode: Image.PreserveAspectFit
+                        source: '../../assets/placeholder.png'
+                        width: units.gu(5)
+                        height: parent.height
+                        y: parent.height / 2 - height / 2
+                    }
+
+                    Binding {
+                        target: entryImg
+                        property: "source"
+                        value: resolveImagePath()
+                        when: theEntry.ready
+                    }
                 }
             }
         }

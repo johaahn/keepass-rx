@@ -343,6 +343,8 @@ fn inject_base_fields(fields: &mut syn::FieldsNamed) {
     fields
         .named
         .extend::<Vec<syn::Field>>(vec![
+            syn::parse_quote! { _ready: qt_property!(bool; ALIAS ready NOTIFY _readyChanged) },
+            syn::parse_quote! { _readyChanged: qt_signal!() },
             syn::parse_quote! { _app: qt_property!(QPointer<crate::app::AppState>; ALIAS app WRITE set_app) },
             syn::parse_quote! { _observing_model_registration: Option<crate::actor::ObservingModelRegistration<Self>> },
         ]);
@@ -446,6 +448,8 @@ fn generate_methods(
 
             fn reinit_with(&mut self, view: &dyn VirtualHierarchy) {
                 self.init_from_view(view);
+                self._ready = true;
+                self._readyChanged();
             }
 
             fn reinit(&mut self) {
@@ -457,6 +461,8 @@ fn generate_methods(
 
                 if let Some(view) = maybe_view {
                     self.init_from_view(view.as_ref().as_ref());
+                    self._ready = true;
+                    self._readyChanged();
                 }
             }
 

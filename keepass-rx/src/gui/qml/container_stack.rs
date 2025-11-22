@@ -47,7 +47,9 @@ pub struct RxUiContainerStack {
 #[allow(non_snake_case)]
 impl RxUiContainerStack {
     pub fn init_from_view(&mut self, view: &dyn VirtualHierarchy) {
-        println!("Init from view for container stack");
+        self.container_stack.clear();
+        self.container_stack.push(view.root().uuid());
+
         self.containerUuid = QString::from(view.root().uuid().to_string());
         self.containerName = QString::from(view.root().root_name());
         self.instructions = get_instructions(&view.feature())
@@ -74,12 +76,15 @@ impl RxUiContainerStack {
     }
 
     pub fn is_at_root(&self) -> bool {
+        // Bit more computational, so only check if the first check
+        // fails (short circuit).
         let at_root_single_check = || {
             let app_state = self._app.as_pinned().expect("No app state");
             let app_state = app_state.borrow();
             let view = app_state.curr_view().expect("No view?");
 
-            view.root().uuid() == *self.container_stack.first().unwrap()
+            self.container_stack.len() == 1
+                && view.root().uuid() == *self.container_stack.first().unwrap()
         };
 
         self.container_stack.len() == 0 || at_root_single_check()

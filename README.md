@@ -48,7 +48,7 @@ still only supporting read-only database access.
  - [X] Support Steam OTP codes.
  - [x] Clear clipboard after 30 seconds (partially implemented).
  - [x] "Easy lock" to re-open database without typing the whole password.
- - [ ] Improved password search UX (across groups).
+ - [x] Improved password search UX (across groups).
  - [ ] Support opening attachments on entries.
  - [x] New UI layout to support groups
    - [x] Main page becomes the root group + entries list.

@@ -2,7 +2,7 @@
 /// child entries. A container can have any number of child containers
 /// (of the same type) and any number of RxEntry objects.
 use indexmap::{IndexMap, IndexSet};
-use std::rc::Rc;
+use std::{cmp::Ordering, rc::Rc};
 use unicase::UniCase;
 use uuid::Uuid;
 
@@ -438,15 +438,45 @@ impl RxContainerGrouping {
 /// A reference to the actual thing in the database, as pointed to by the container.
 #[derive(Clone)]
 pub enum RxContainedRef {
-    Entry(Rc<RxEntry>),
+    VirtualRoot(String), // name
     Group(Rc<RxGroup>),
     Template(Rc<RxTemplate>),
     Tag(RxTag),
-    VirtualRoot(String), // name
+    Entry(Rc<RxEntry>),
+}
+
+impl PartialEq for RxContainedRef {
+    fn eq(&self, other: &Self) -> bool {
+        self.variant_rank() == other.variant_rank()
+    }
+}
+
+impl Eq for RxContainedRef {}
+
+impl PartialOrd for RxContainedRef {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.variant_rank().cmp(&other.variant_rank()))
+    }
+}
+
+impl Ord for RxContainedRef {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.variant_rank().cmp(&other.variant_rank())
+    }
 }
 
 #[allow(dead_code)]
 impl RxContainedRef {
+    fn variant_rank(&self) -> u8 {
+        match self {
+            RxContainedRef::VirtualRoot(_) => 0,
+            RxContainedRef::Group(_) => 1,
+            RxContainedRef::Template(_) => 2,
+            RxContainedRef::Tag(_) => 3,
+            RxContainedRef::Entry(_) => 4,
+        }
+    }
+
     pub fn uuid(&self) -> Uuid {
         match self {
             RxContainedRef::Entry(entry) => entry.uuid,

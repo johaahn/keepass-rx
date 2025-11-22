@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-22 09:40+0000\n"
+"POT-Creation-Date: 2025-11-22 10:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,7 +43,7 @@ msgstr ""
 
 #: qml/pages/AboutPage.qml:11 qml/pages/DBList.qml:81
 #: qml/pages/OpenDBPage.qml:53 qml/pages/UnlockPage.qml:41
-#: qml/pages/EntriesPage.qml:215
+#: qml/pages/EntriesPage.qml:216
 msgid "About"
 msgstr ""
 
@@ -71,7 +71,7 @@ msgstr ""
 
 #: qml/pages/DBList.qml:74 qml/pages/OpenDBPage.qml:46
 #: qml/pages/SettingsPage.qml:11 qml/pages/UnlockPage.qml:34
-#: qml/pages/EntriesPage.qml:206
+#: qml/pages/EntriesPage.qml:207
 msgid "Settings"
 msgstr ""
 
@@ -92,7 +92,7 @@ msgid "It will only be removed from the app, not your device."
 msgstr ""
 
 #: qml/pages/OpenDBPage.qml:33 qml/pages/SingleEntry.qml:96
-#: qml/pages/EntriesPage.qml:170
+#: qml/pages/EntriesPage.qml:171
 msgid "Back"
 msgstr ""
 
@@ -184,83 +184,91 @@ msgstr ""
 msgid "Database Not Opening?"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:101
+#: qml/pages/EntriesPage.qml:100
 msgid "Cancel Search"
 msgstr ""
 
 #: qml/pages/EntriesPage.qml:121
+msgid "Search all entries"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:121
+msgid "Search all entries under this group"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:122
 msgid "Search entries in this group"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:146
+#: qml/pages/EntriesPage.qml:147
 msgid "Lock"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:158
+#: qml/pages/EntriesPage.qml:159
 msgid "Close"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:183
+#: qml/pages/EntriesPage.qml:184
 msgid "View Mode"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:193
+#: qml/pages/EntriesPage.qml:194
 msgid "Search"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:227
+#: qml/pages/EntriesPage.qml:228
 msgid "Lock Database"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:237
+#: qml/pages/EntriesPage.qml:238
 msgid "Close Database"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:257
+#: qml/pages/EntriesPage.qml:258
 msgid "Change View"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:263
+#: qml/pages/EntriesPage.qml:264
 msgid "All Entries"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:265
+#: qml/pages/EntriesPage.qml:266
 msgid "All groups and entries."
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:269 src/rx/virtual_hierarchy.rs:66
+#: qml/pages/EntriesPage.qml:270 src/rx/virtual_hierarchy.rs:66
 msgid "Special Categories"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:271
+#: qml/pages/EntriesPage.qml:272
 msgid "Entries grouped by template."
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:275
+#: qml/pages/EntriesPage.qml:276
 msgid "2FA Codes"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:277
+#: qml/pages/EntriesPage.qml:278
 msgid "Entries with 2FA codes."
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:281 src/rx/virtual_hierarchy.rs:209
+#: qml/pages/EntriesPage.qml:282 src/rx/virtual_hierarchy.rs:218
 msgid "Tags"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:283
+#: qml/pages/EntriesPage.qml:284
 msgid "Entries grouped by tag."
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:295
+#: qml/pages/EntriesPage.qml:296
 msgid "Select View"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:314
+#: qml/pages/EntriesPage.qml:315
 msgid "Select"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:324
+#: qml/pages/EntriesPage.qml:325
 msgid "Cancel"
 msgstr ""
 
@@ -279,12 +287,12 @@ msgctxt "Default view of the password database (all entries)"
 msgid "Default View"
 msgstr ""
 
-#: src/rx/virtual_hierarchy.rs:147 src/rx/virtual_hierarchy.rs:160
+#: src/rx/virtual_hierarchy.rs:156 src/rx/virtual_hierarchy.rs:169
 msgctxt "Two-factor/OTP codes (keep phrase short as possible)"
 msgid "2FA Codes"
 msgstr ""
 
-#: src/rx/virtual_hierarchy.rs:201
+#: src/rx/virtual_hierarchy.rs:210
 msgctxt "List of entries with tags"
 msgid "Tags"
 msgstr ""

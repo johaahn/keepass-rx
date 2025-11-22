@@ -123,10 +123,19 @@ impl VirtualHierarchy for DefaultView {
     }
 
     fn search(&self, container_uuid: Uuid, search_term: Option<&str>) -> Vec<RxContainedRef> {
-        self.root()
+        let mut results = self
+            .root()
             .get_container(container_uuid)
-            .map(|container| container.search_children_immediate(search_term))
-            .unwrap_or_default()
+            .map(|container| match search_term {
+                Some(_) => container.search_children_recursive(container_uuid, search_term),
+                None => container.search_children_immediate(search_term),
+            })
+            .unwrap_or_default();
+
+        // Groupings before non-groupings
+        results.sort();
+
+        results
     }
 }
 

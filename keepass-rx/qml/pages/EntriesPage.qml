@@ -117,7 +117,9 @@ Page {
                 visible: searchMode
                 id: searchField
                 // TRANSLATORS: Placeholder text of the search box for searching for database entries. Container is a container/folder of password manager entries.
-                placeholderText: i18n.tr("Search entries in this group")
+                placeholderText: keepassrx.viewMode == 'All'
+                    ? (containerStack.isAtRoot ? i18n.tr("Search all entries") : i18n.tr("Search all entries under this group"))
+                    : i18n.tr("Search entries in this group")
                 inputMethodHints: Qt.ImhNoPredictiveText
                 onTextChanged: {
                     getEntries(containerStack.containerUuid);

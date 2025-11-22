@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 09:36+0100\n"
+"POT-Creation-Date: 2025-11-22 10:15+0100\n"
 "PO-Revision-Date: 2025-11-20 12:51+0000\n"
 "Last-Translator: Serhii Horichenko <serhii@horichenko.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/ubports/"
@@ -20,37 +20,27 @@ msgstr ""
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Weblate 5.15-dev\n"
 
-#: qml/components/EntryItem.qml:108
 msgid "Copy Username"
 msgstr "Копіювати Логін"
 
-#: qml/components/EntryItem.qml:116
 msgid "Copy Password"
 msgstr "Копіювати пароль"
 
-#: qml/components/EntryItem.qml:125
 msgid "Open URL"
 msgstr "Відкрити посилання"
 
-#: qml/components/EntryItem.qml:132
 msgid "Copy 2FA Code"
 msgstr "Копіювати код 2FA"
 
-#: qml/components/EntryItem.qml:144
 msgid "View Entry"
 msgstr "Переглянути запис"
 
-#: qml/components/EntryItem.qml:240
 msgid "Tap to copy 2FA code"
 msgstr "Тицніть для копіювання коду 2FA"
 
-#: qml/pages/AboutPage.qml:11 qml/pages/DBList.qml:81
-#: qml/pages/EntriesPage.qml:211 qml/pages/OpenDBPage.qml:53
-#: qml/pages/UnlockPage.qml:41
 msgid "About"
 msgstr "Інфо"
 
-#: qml/pages/AboutPage.qml:54
 msgid ""
 "KeePassRX is a work-in-progress password manager for KeePass password "
 "databases. It is licensed under the GNU GPL v3 license."
@@ -58,7 +48,6 @@ msgstr ""
 "KeePassRX — це парольний менеджер для баз даних з паролями у форматі "
 "KeePass. Ліцензовано за умовами GNU GPL v3."
 
-#: qml/pages/AboutPage.qml:65
 msgid ""
 "The built-in KeePass icon images are licensed under a variety of licenses as "
 "detailed in assets/COPYING."
@@ -66,7 +55,6 @@ msgstr ""
 "Вбудовані іконки KeePass ліцензовані за умовами різних ліцензій, як згадано "
 "в активах/КОПІЮВАННІ."
 
-#: qml/pages/AboutPage.qml:76
 msgid ""
 "Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
@@ -74,118 +62,39 @@ msgstr ""
 "Джерело: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
-#: qml/pages/DBList.qml:67
 msgid "Add Database"
 msgstr "Додати базу даних"
 
-#: qml/pages/DBList.qml:74 qml/pages/EntriesPage.qml:202
-#: qml/pages/OpenDBPage.qml:46 qml/pages/SettingsPage.qml:11
-#: qml/pages/UnlockPage.qml:34
 msgid "Settings"
 msgstr "Налаштування"
 
-#: qml/pages/DBList.qml:101
 msgid "Loading last database."
 msgstr "Завантаження останньої бази даних."
 
-#: qml/pages/DBList.qml:111
 msgid "Select Database"
 msgstr "Оберіть базу даних"
 
-#: qml/pages/DBList.qml:167
 msgid "Tap + to import a database."
 msgstr "Імпортуйте базу даних через +."
 
-#: qml/pages/DBList.qml:265
 msgid "It will only be removed from the app, not your device."
 msgstr "Це буде вилучене лише з програми, але залишиться на пристрої."
 
-#: qml/pages/EntriesPage.qml:97
-msgid "Cancel Search"
-msgstr "Скасувати пошук"
-
-#: qml/pages/EntriesPage.qml:117
-msgid "Search entries in this group"
-msgstr "Шукати записи у цій групі"
-
-#: qml/pages/EntriesPage.qml:142
-msgid "Lock"
-msgstr "Блокувати"
-
-#: qml/pages/EntriesPage.qml:154
-msgid "Close"
-msgstr "Закрити"
-
-#: qml/pages/EntriesPage.qml:166 qml/pages/OpenDBPage.qml:33
-#: qml/pages/SingleEntry.qml:96
 msgid "Back"
 msgstr "Назад"
 
-#: qml/pages/EntriesPage.qml:179
-msgid "View Mode"
-msgstr "Режим перегляду"
-
-#: qml/pages/EntriesPage.qml:189
-msgid "Search"
-msgstr "Пошук"
-
-#: qml/pages/EntriesPage.qml:223
-msgid "Lock Database"
-msgstr "Блокувати базу даних"
-
-#: qml/pages/EntriesPage.qml:233
-msgid "Close Database"
-msgstr "Закрити базу даних"
-
-#: qml/pages/EntriesPage.qml:253
-msgid "Change View"
-msgstr "Змінити вигляд"
-
-#: qml/pages/EntriesPage.qml:261
-msgid "All groups and entries."
-msgstr "Усі групи та записи."
-
-#: qml/pages/EntriesPage.qml:267
-msgid "Entries grouped by template."
-msgstr "Записи згруповані за шаблоном."
-
-#: qml/pages/EntriesPage.qml:273
-msgid "Entries with 2FA codes."
-msgstr "Записи з кодами 2FA."
-
-#: qml/pages/EntriesPage.qml:279
-msgid "Entries grouped by tag."
-msgstr "Записи згруповані за тегами."
-
-#: qml/pages/EntriesPage.qml:291
-msgid "Select View"
-msgstr "Оберіть вигляд"
-
-#: qml/pages/EntriesPage.qml:310
-msgid "Select"
-msgstr "Вибрати"
-
-#: qml/pages/EntriesPage.qml:320
-msgid "Cancel"
-msgstr "Скасувати"
-
-#: qml/pages/OpenDBPage.qml:158
 msgid "Enter the database master password"
 msgstr "Вкажіть майстер-пароль бази даних"
 
-#: qml/pages/OpenDBPage.qml:171
 msgid "Master Password"
 msgstr "Майстер-пароль"
 
-#: qml/pages/OpenDBPage.qml:201
 msgid "Open"
 msgstr "Відкрити"
 
-#: qml/pages/OpenDBPage.qml:218
 msgid "Opening"
 msgstr "Відкривається"
 
-#: qml/pages/SettingsPage.qml:44
 msgid ""
 "Change settings based on your preferences. Any change to the settings "
 "requires a restart to take effect."
@@ -193,11 +102,9 @@ msgstr ""
 "Змініть налаштування під свої потреби. Будь-які зміни налаштувань для їх "
 "активації вимагають перезапуску."
 
-#: qml/pages/SettingsPage.qml:54
 msgid "Enable database locking"
 msgstr "Активувати блокування бази даних"
 
-#: qml/pages/SettingsPage.qml:57
 msgid ""
 "Securely lock and unlock database with a short passcode. Requires restart to "
 "take effect."
@@ -205,11 +112,9 @@ msgstr ""
 "Безпечно блокуйте та розблоковуйте базу даних коротким кодом. Для активації "
 "потрібне перезавантаження."
 
-#: qml/pages/SettingsPage.qml:66
 msgid "Enable Accents"
 msgstr "Активувати акцентні кольори"
 
-#: qml/pages/SettingsPage.qml:68
 msgid ""
 "Set header color and name according to database settings. Compatible with "
 "KeePassXC."
@@ -217,27 +122,21 @@ msgstr ""
 "Встановіть колір заголовка та назву відповідно до налаштувань бази даних. "
 "Сумісний з KeePassXC."
 
-#: qml/pages/SettingsPage.qml:79
 msgid "Show the \"Recycle bin\" group"
 msgstr "Показати групу \"Кошик\""
 
-#: qml/pages/SettingsPage.qml:81
 msgid "This group contains all the deleted entries"
 msgstr "Ця група містить усі видаленні записи"
 
-#: qml/pages/SingleEntry.qml:222
 msgid "Notes"
 msgstr "Нотатки"
 
-#: qml/pages/SingleEntry.qml:230
 msgid "Tap to copy"
 msgstr "Торкніться для копіювання"
 
-#: qml/pages/UnlockPage.qml:146
 msgid "Manual path set."
 msgstr "Шлях встановлений вручну."
 
-#: qml/pages/UnlockPage.qml:163
 msgid ""
 "The passcode is the first five characters of the database password (or the "
 "whole password if less than five characters)."
@@ -245,27 +144,81 @@ msgstr ""
 "Код доступу — це перші п’ять символів пароля бази даних (або весь пароль, "
 "якщо він менш як п'ять символів)."
 
-#: qml/pages/UnlockPage.qml:181
 msgid "Passcode"
 msgstr "Код доступу"
 
-#: qml/pages/UnlockPage.qml:213
 msgid "Unlock"
 msgstr "Розблокувати"
 
-#: qml/pages/UnlockPage.qml:232
 msgid "Securely Unlocking"
 msgstr "Безпечне розблокування"
 
-#: qml/pages/UnlockPage.qml:233
 msgid "Securely Locking"
 msgstr "Безпечне блокування"
 
-#: qml/pages/UnlockPage.qml:244
 msgid "Database Not Opening?"
 msgstr "База даних не відкривається?"
 
-#: src/gui/instructions.rs:9
+msgid "Cancel Search"
+msgstr "Скасувати пошук"
+
+msgid "Search entries in this group"
+msgstr "Шукати записи у цій групі"
+
+msgid "Lock"
+msgstr "Блокувати"
+
+msgid "Close"
+msgstr "Закрити"
+
+msgid "View Mode"
+msgstr "Режим перегляду"
+
+msgid "Search"
+msgstr "Пошук"
+
+msgid "Lock Database"
+msgstr "Блокувати базу даних"
+
+msgid "Close Database"
+msgstr "Закрити базу даних"
+
+msgid "Change View"
+msgstr "Змінити вигляд"
+
+msgid "All Entries"
+msgstr ""
+
+msgid "All groups and entries."
+msgstr "Усі групи та записи."
+
+msgid "Special Categories"
+msgstr "Особливі категорії"
+
+msgid "Entries grouped by template."
+msgstr "Записи згруповані за шаблоном."
+
+msgid "2FA Codes"
+msgstr ""
+
+msgid "Entries with 2FA codes."
+msgstr "Записи з кодами 2FA."
+
+msgid "Tags"
+msgstr "Теги"
+
+msgid "Entries grouped by tag."
+msgstr "Записи згруповані за тегами."
+
+msgid "Select View"
+msgstr "Оберіть вигляд"
+
+msgid "Select"
+msgstr "Вибрати"
+
+msgid "Cancel"
+msgstr "Скасувати"
+
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
@@ -273,30 +226,18 @@ msgstr ""
 "<b>Зображення усіх кодів 2FA з бази даних.</b><br/>Переглянути деталі "
 "записів можна через цю панель."
 
-#: src/rx/virtual_hierarchy.rs:35
-msgid "Special Categories"
-msgstr "Особливі категорії"
-
-#: src/rx/virtual_hierarchy.rs:43
 msgid "All Templates"
 msgstr "Усі шаблони"
 
-#: src/rx/virtual_hierarchy.rs:90
 msgctxt "Default view of the password database (all entries)"
 msgid "Default View"
 msgstr "Стандартний вигляд"
 
-#: src/rx/virtual_hierarchy.rs:116 src/rx/virtual_hierarchy.rs:129
 msgctxt "Two-factor/OTP codes (keep phrase short as possible)"
 msgid "2FA Codes"
 msgstr "Коди 2FA"
 
-#: src/rx/virtual_hierarchy.rs:166
 msgctxt "List of entries with tags"
-msgid "Tags"
-msgstr "Теги"
-
-#: src/rx/virtual_hierarchy.rs:174
 msgid "Tags"
 msgstr "Теги"
 

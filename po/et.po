@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 09:36+0100\n"
+"POT-Creation-Date: 2025-11-22 10:15+0100\n"
 "PO-Revision-Date: 2025-11-19 16:51+0000\n"
 "Last-Translator: Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/ubports/"
@@ -19,37 +19,27 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.15-dev\n"
 
-#: qml/components/EntryItem.qml:108
 msgid "Copy Username"
 msgstr "Kopeeri kasutajanimi"
 
-#: qml/components/EntryItem.qml:116
 msgid "Copy Password"
 msgstr "Kopeeri salasõna"
 
-#: qml/components/EntryItem.qml:125
 msgid "Open URL"
 msgstr "Ava võrguaadress"
 
-#: qml/components/EntryItem.qml:132
 msgid "Copy 2FA Code"
 msgstr "Kopeeri 2FA-kood"
 
-#: qml/components/EntryItem.qml:144
 msgid "View Entry"
 msgstr "Vaata kirjet"
 
-#: qml/components/EntryItem.qml:240
 msgid "Tap to copy 2FA code"
 msgstr "2FA-koodi kopeerimiseks puuduta"
 
-#: qml/pages/AboutPage.qml:11 qml/pages/DBList.qml:81
-#: qml/pages/EntriesPage.qml:211 qml/pages/OpenDBPage.qml:53
-#: qml/pages/UnlockPage.qml:41
 msgid "About"
 msgstr "Rakenduse teave"
 
-#: qml/pages/AboutPage.qml:54
 msgid ""
 "KeePassRX is a work-in-progress password manager for KeePass password "
 "databases. It is licensed under the GNU GPL v3 license."
@@ -57,7 +47,6 @@ msgstr ""
 "KeePassRX on arendusjärgus salasõnahaldur, mis KeePass-vormingus salasõnade "
 "andmebaaside jaoks. Rakendus on litsentseeritud GNU GPL v3 alusel."
 
-#: qml/pages/AboutPage.qml:65
 msgid ""
 "The built-in KeePass icon images are licensed under a variety of licenses as "
 "detailed in assets/COPYING."
@@ -65,7 +54,6 @@ msgstr ""
 "Rakendusega kaasas olevad KeePassi ikoonifailid on litsentseeritud erinevate "
 "litsentside alusel, mis üksikasjalikult on kirjas failis „assets/COPYING“."
 
-#: qml/pages/AboutPage.qml:76
 msgid ""
 "Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
@@ -73,118 +61,39 @@ msgstr ""
 "Lähtekood: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
-#: qml/pages/DBList.qml:67
 msgid "Add Database"
 msgstr "Lisa andmebaas"
 
-#: qml/pages/DBList.qml:74 qml/pages/EntriesPage.qml:202
-#: qml/pages/OpenDBPage.qml:46 qml/pages/SettingsPage.qml:11
-#: qml/pages/UnlockPage.qml:34
 msgid "Settings"
 msgstr "Seadistused"
 
-#: qml/pages/DBList.qml:101
 msgid "Loading last database."
 msgstr "Laadin viimast andmebaasi."
 
-#: qml/pages/DBList.qml:111
 msgid "Select Database"
 msgstr "Vali andmebaas"
 
-#: qml/pages/DBList.qml:167
 msgid "Tap + to import a database."
 msgstr "Andmebaasi importimiseks klõpsa + ikooni."
 
-#: qml/pages/DBList.qml:265
 msgid "It will only be removed from the app, not your device."
 msgstr "Ta eemaldatakse rakendusest, mitte aga seadmest."
 
-#: qml/pages/EntriesPage.qml:97
-msgid "Cancel Search"
-msgstr "Katkesta otsing"
-
-#: qml/pages/EntriesPage.qml:117
-msgid "Search entries in this group"
-msgstr "Otsi sellest grupist kirjeid"
-
-#: qml/pages/EntriesPage.qml:142
-msgid "Lock"
-msgstr "Lukusta"
-
-#: qml/pages/EntriesPage.qml:154
-msgid "Close"
-msgstr "Sulge"
-
-#: qml/pages/EntriesPage.qml:166 qml/pages/OpenDBPage.qml:33
-#: qml/pages/SingleEntry.qml:96
 msgid "Back"
 msgstr "Tagasi"
 
-#: qml/pages/EntriesPage.qml:179
-msgid "View Mode"
-msgstr "Vaaterežiim"
-
-#: qml/pages/EntriesPage.qml:189
-msgid "Search"
-msgstr "Otsi"
-
-#: qml/pages/EntriesPage.qml:223
-msgid "Lock Database"
-msgstr "Lukusta andmebaas"
-
-#: qml/pages/EntriesPage.qml:233
-msgid "Close Database"
-msgstr "Sulge andmebaas"
-
-#: qml/pages/EntriesPage.qml:253
-msgid "Change View"
-msgstr "Muuda vaadet"
-
-#: qml/pages/EntriesPage.qml:261
-msgid "All groups and entries."
-msgstr "Kõik grupid ja kirjed."
-
-#: qml/pages/EntriesPage.qml:267
-msgid "Entries grouped by template."
-msgstr "Malli alusel rühmitatud kirjed."
-
-#: qml/pages/EntriesPage.qml:273
-msgid "Entries with 2FA codes."
-msgstr "2FA-koodidega kirjed."
-
-#: qml/pages/EntriesPage.qml:279
-msgid "Entries grouped by tag."
-msgstr "Sildi alusel rühmitatud kirjed."
-
-#: qml/pages/EntriesPage.qml:291
-msgid "Select View"
-msgstr "Vali vaade"
-
-#: qml/pages/EntriesPage.qml:310
-msgid "Select"
-msgstr "Vali"
-
-#: qml/pages/EntriesPage.qml:320
-msgid "Cancel"
-msgstr "Katkesta"
-
-#: qml/pages/OpenDBPage.qml:158
 msgid "Enter the database master password"
 msgstr "Sisesta andmebaasi üldsalasõna"
 
-#: qml/pages/OpenDBPage.qml:171
 msgid "Master Password"
 msgstr "Üldsalasõna"
 
-#: qml/pages/OpenDBPage.qml:201
 msgid "Open"
 msgstr "Ava"
 
-#: qml/pages/OpenDBPage.qml:218
 msgid "Opening"
 msgstr "Avamisel"
 
-#: qml/pages/SettingsPage.qml:44
 msgid ""
 "Change settings based on your preferences. Any change to the settings "
 "requires a restart to take effect."
@@ -192,11 +101,9 @@ msgstr ""
 "Muuda seadistusi vastavalt oma eelistustele. Iga seadistuste muutus eeldab "
 "jõustamiseks rakenduse uuesti käivitamist."
 
-#: qml/pages/SettingsPage.qml:54
 msgid "Enable database locking"
 msgstr "Lülita andmebaasi lukustamine sisse"
 
-#: qml/pages/SettingsPage.qml:57
 msgid ""
 "Securely lock and unlock database with a short passcode. Requires restart to "
 "take effect."
@@ -204,11 +111,9 @@ msgstr ""
 "Kasuta andmebaasi lukustamiseks ja avamiseks lühikest salakoodi. Jõustamine "
 "eeldab rakenduse uuesti käivitamist."
 
-#: qml/pages/SettingsPage.qml:66
 msgid "Enable Accents"
 msgstr "Kasuta aktsentvärve"
 
-#: qml/pages/SettingsPage.qml:68
 msgid ""
 "Set header color and name according to database settings. Compatible with "
 "KeePassXC."
@@ -216,27 +121,21 @@ msgstr ""
 "Seadista päise värv ja nimi vastavalt andmebaasi seadistustele. Ühildub "
 "KeePassXC-ga."
 
-#: qml/pages/SettingsPage.qml:79
 msgid "Show the \"Recycle bin\" group"
 msgstr "Näita gruppi „Prügikast“"
 
-#: qml/pages/SettingsPage.qml:81
 msgid "This group contains all the deleted entries"
 msgstr "Siin on näha kõik kustutatud kirjed"
 
-#: qml/pages/SingleEntry.qml:222
 msgid "Notes"
 msgstr "Märkmed"
 
-#: qml/pages/SingleEntry.qml:230
 msgid "Tap to copy"
 msgstr "Kopeerimiseks klõpsa"
 
-#: qml/pages/UnlockPage.qml:146
 msgid "Manual path set."
 msgstr "Käsitsi määratud asukoht on seadistatud."
 
-#: qml/pages/UnlockPage.qml:163
 msgid ""
 "The passcode is the first five characters of the database password (or the "
 "whole password if less than five characters)."
@@ -244,27 +143,81 @@ msgstr ""
 "Salakood on andmebaasi salasõna viis esimest tähemärki (või kogu salasõna, "
 "kui ta on alla viie tähemärgi pikk)."
 
-#: qml/pages/UnlockPage.qml:181
 msgid "Passcode"
 msgstr "Salakood"
 
-#: qml/pages/UnlockPage.qml:213
 msgid "Unlock"
 msgstr "Eemalda lukustus"
 
-#: qml/pages/UnlockPage.qml:232
 msgid "Securely Unlocking"
 msgstr "Turvaline lukustuse eemaldamine"
 
-#: qml/pages/UnlockPage.qml:233
 msgid "Securely Locking"
 msgstr "Turvaline lukustamine"
 
-#: qml/pages/UnlockPage.qml:244
 msgid "Database Not Opening?"
 msgstr "Kas andmebaas ei avane?"
 
-#: src/gui/instructions.rs:9
+msgid "Cancel Search"
+msgstr "Katkesta otsing"
+
+msgid "Search entries in this group"
+msgstr "Otsi sellest grupist kirjeid"
+
+msgid "Lock"
+msgstr "Lukusta"
+
+msgid "Close"
+msgstr "Sulge"
+
+msgid "View Mode"
+msgstr "Vaaterežiim"
+
+msgid "Search"
+msgstr "Otsi"
+
+msgid "Lock Database"
+msgstr "Lukusta andmebaas"
+
+msgid "Close Database"
+msgstr "Sulge andmebaas"
+
+msgid "Change View"
+msgstr "Muuda vaadet"
+
+msgid "All Entries"
+msgstr ""
+
+msgid "All groups and entries."
+msgstr "Kõik grupid ja kirjed."
+
+msgid "Special Categories"
+msgstr "Erikategooriad"
+
+msgid "Entries grouped by template."
+msgstr "Malli alusel rühmitatud kirjed."
+
+msgid "2FA Codes"
+msgstr ""
+
+msgid "Entries with 2FA codes."
+msgstr "2FA-koodidega kirjed."
+
+msgid "Tags"
+msgstr "Sildid"
+
+msgid "Entries grouped by tag."
+msgstr "Sildi alusel rühmitatud kirjed."
+
+msgid "Select View"
+msgstr "Vali vaade"
+
+msgid "Select"
+msgstr "Vali"
+
+msgid "Cancel"
+msgstr "Katkesta"
+
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
@@ -272,30 +225,18 @@ msgstr ""
 "<b>Näitan kõiki andmebaasi 2FA-koode.</b><br/>Kirje üksikasju näed tema "
 "tegevuste ribalt."
 
-#: src/rx/virtual_hierarchy.rs:35
-msgid "Special Categories"
-msgstr "Erikategooriad"
-
-#: src/rx/virtual_hierarchy.rs:43
 msgid "All Templates"
 msgstr "Kõik mallid"
 
-#: src/rx/virtual_hierarchy.rs:90
 msgctxt "Default view of the password database (all entries)"
 msgid "Default View"
 msgstr "Vaikimisi vaade"
 
-#: src/rx/virtual_hierarchy.rs:116 src/rx/virtual_hierarchy.rs:129
 msgctxt "Two-factor/OTP codes (keep phrase short as possible)"
 msgid "2FA Codes"
 msgstr "2FA-koodid"
 
-#: src/rx/virtual_hierarchy.rs:166
 msgctxt "List of entries with tags"
-msgid "Tags"
-msgstr "Sildid"
-
-#: src/rx/virtual_hierarchy.rs:174
 msgid "Tags"
 msgstr "Sildid"
 

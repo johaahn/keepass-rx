@@ -20,6 +20,16 @@ Page {
     property var entryCustomFields
     property var colorWashout
 
+    function valueIsDefined(value) {
+        return value !== undefined && value !== null && value !== ''
+    }
+
+    function copyToClipboard(fieldName, fieldValue) {
+        Clipboard.push(fieldValue);
+        toast.show(i18n.tr(`%1 copied to clipboard (30 secs)`).arg(fieldName));
+        clearClipboardTimer.start();
+    }
+
     Component.onCompleted: {
         const metadata = keepassrx.metadata;
 
@@ -27,33 +37,9 @@ Page {
             colorWashout = keepassrx.washOutColor(metadata.publicColor);
         }
 
-        if (entryUsername) {
-            entryModel.append({
-                fieldName: i18n.ctr("Field name on single entry page", "Username"),
-                fieldValue: entryUsername,
-                fieldShown: true
-            });
-        }
-
-        if (entryPassword) {
-            entryModel.append({
-                fieldName: i18n.ctr("Field name on single entry page", "Password"),
-                fieldValue: entryPassword,
-                fieldShown: false
-            });
-        }
-
-        if (entryUrl) {
-            entryModel.append({
-                fieldName: "URL",
-                fieldValue: entryUrl,
-                fieldShown: true
-            });
-        }
-
         // value is { value: string, isHiddenByDefault: bool }
         for (const [key, field] of Object.entries(entryCustomFields)) {
-            entryModel.append({
+            otherFieldsModel.append({
                 fieldName: key,
                 fieldValue: field.value,
                 fieldShown: !field.isHiddenByDefault
@@ -106,92 +92,7 @@ Page {
     }
 
     ListModel {
-        id: entryModel
-    }
-
-    Component {
-        id: entryDelegate
-        ListItem {
-            width: parent.width
-            color: "transparent"
-
-            onClicked: {
-                Clipboard.push(fieldValue);
-                toast.show(`${fieldName} copied to clipboard (30 secs)`);
-                clearClipboardTimer.start();
-            }
-
-            contentItem.anchors {
-                bottomMargin: units.gu(0.25)
-            }
-
-            trailingActions: ListItemActions {
-                actions: [
-                    Action {
-                        iconName: fieldShown ? "view-off" : "view-on"
-                        onTriggered: {
-                            fieldShown = !fieldShown;
-                            const status = fieldShown ? 'Showing' : 'Hiding';
-                            toast.show(`${status} field: ${fieldName}`)
-                        }
-                    }
-                ]
-            }
-
-            ColumnLayout {
-                width: parent.width
-                Layout.preferredWidth: parent.width
-                Layout.fillWidth: true
-
-                SlotsLayout {
-                    mainSlot: Item {
-                        Column {
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            y: units.gu(-2.5)
-
-                            Row {
-                                id: nameRow
-                                width: parent.width
-                                anchors.left: parent.left
-                                anchors.right: parent.right
-
-                                Label {
-                                    text: fieldName
-                                }
-                            }
-
-                            Row {
-                                width: parent.width
-                                anchors.left: parent.left
-                                anchors.right: parent.right
-                                anchors.leftMargin: units.gu(0.5)
-                                anchors.rightMargin: units.gu(0.5)
-
-                                Text {
-                                    width: parent.width
-                                    text: fieldShown ? fieldValue : "[Hidden]"
-                                    color: theme.palette.normal.backgroundTertiaryText
-                                }
-                            }
-                        }
-                    }
-
-                    Button {
-                        Layout.alignment: Qt.AlignRight
-                        iconName: "edit-copy"
-                        SlotsLayout.position: SlotsLayout.Trailing;
-                        color: "transparent"
-                        width: units.gu(2)
-                        onClicked: {
-                            Clipboard.push(fieldValue);
-                            toast.show(`${fieldName} copied to clipboard (30 secs)`);
-                            clearClipboardTimer.start();
-                        }
-                    }
-                }
-            }
-        }
+        id: otherFieldsModel
     }
 
     Rectangle {
@@ -284,20 +185,71 @@ Page {
         anchors.top: notesComponent.visible ? notesDivider.bottom : header.bottom
         anchors.left: parent.left
         anchors.right: parent.right
+
+        ConfigurationGroup {
+            title: i18n.tr("Main")
+            visible: valueIsDefined(entryUsername)
+                || valueIsDefined(entryPassword)
+                || valueIsDefined(entryUrl)
+
+            DetailField {
+                title: i18n.tr("Username")
+                visible: valueIsDefined(entryUsername)
+                subtitle: entryUsername
+                onCopyClicked: copyToClipboard(i18n.tr("Username"), entryUsername)
+                showDivider: valueIsDefined(entryPassword) || valueIsDefined(entryUrl)
+            }
+
+            DetailField {
+                title: i18n.tr("Password")
+                visible: valueIsDefined(entryPassword)
+                visibleContent: entryPassword
+                showVisibilityToggle: true
+                isContentVisible: false
+                onCopyClicked: copyToClipboard(i18n.tr("Password"), entryPassword)
+                showDivider: valueIsDefined(entryUrl)
+            }
+
+            DetailField {
+                visible: valueIsDefined(entryUrl)
+                title: i18n.tr("URL")
+                subtitle: entryUrl
+                onCopyClicked: copyToClipboard(i18n.tr('URL'), entryUrl)
+            }
+        }
+    }
+
+    Flickable {
+        id: customFieldsRow
+        anchors.top: standardFieldsRow.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
         anchors.bottom: parent.bottom
         width: parent.width
         Layout.fillWidth: true
+        contentHeight: otherFields.height
+        contentWidth: otherFields.width
+        boundsMovement: Flickable.StopAtBounds
         clip: true
 
-        LomiriListView {
-            width: parent.width
-            height: parent.height
+        ConfigurationGroup {
+            id: otherFields
+            visible: Object.entries(entryCustomFields).length > 0
+            title: i18n.tr("Other Fields")
 
-            id: lomiriListView
-            model: entryModel
-            delegate: entryDelegate
-            highlight: Rectangle {
-                color: "transparent"
+            Repeater {
+                id: otherFieldsRepeater
+                model: otherFieldsModel
+
+                DetailField {
+                    title: fieldName
+                    subtitle: fieldValue
+                    visibleContent: fieldValue
+                    showVisibilityToggle: !fieldShown
+                    isContentVisible: fieldShown
+                    showDivider: index < otherFieldsRepeater.count - 1
+                    onCopyClicked: copyToClipboard(fieldName, fieldValue)
+                }
             }
         }
     }

@@ -19,6 +19,7 @@ Page {
     }
 
     property bool searchMode: false
+    property bool resetListView: false
 
     // These are set by metadata fetching
     property string publicDatabaseName
@@ -69,8 +70,12 @@ Page {
         app: AppState
         viewMode: keepassrx.viewMode
 
+        onViewModeChanged: (mode) => {
+            entriesListModel.clear();
+            resetListView = true;
+        }
+
         onContainerChanged: (newContainerId) => {
-            console.log('Container ID is now:', newContainerId);
             searchMode = false;
 	    searchField.text = '';
             entriesListModel.clear();
@@ -416,10 +421,6 @@ Page {
             }
         }
 
-        function onViewModeChanged(mode) {
-            entriesListModel.clear();
-        }
-
 	// List of entries for this container. It's an array of uuids.
 	// It includes both immediate subgroupings and immediate child
 	// entries in the container.
@@ -436,6 +437,11 @@ Page {
                 if (append) {
                     entriesListModel.append({entryUuid: entry });
                 }
+            }
+
+            if (resetListView) {
+                entriesList.positionViewAtBeginning();
+                resetListView = false;
             }
         }
     }

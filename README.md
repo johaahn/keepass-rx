@@ -91,7 +91,8 @@ via their free hosting plan for Libre and Open Source Projects.
 
 ## Credits
 
-This app is built on the hard work of other people and projects.
+This app would not be possible without the hard work of other people
+and projects.
 
 - The [keepass-rs][keepass-rs] library for Rust.
 - [Whisperfish][whisperfish]: QT + Actix integration code.

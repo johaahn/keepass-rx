@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-22 10:33+0000\n"
+"POT-Creation-Date: 2025-11-22 20:16+0000\n"
 "PO-Revision-Date: 2025-11-20 12:51+0000\n"
 "Last-Translator: Serhii Horichenko <serhii@horichenko.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/ubports/"
@@ -128,11 +128,29 @@ msgstr "Показати групу \"Кошик\""
 msgid "This group contains all the deleted entries"
 msgstr "Ця група містить усі видаленні записи"
 
+msgid "%1 copied to clipboard (30 secs)"
+msgstr ""
+
 msgid "Notes"
 msgstr "Нотатки"
 
 msgid "Tap to copy"
 msgstr "Торкніться для копіювання"
+
+msgid "Main"
+msgstr ""
+
+msgid "Username"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "URL"
+msgstr ""
+
+msgid "Other Fields"
+msgstr ""
 
 msgid "Manual path set."
 msgstr "Шлях встановлений вручну."

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-22 10:33+0000\n"
+"POT-Creation-Date: 2025-11-22 20:16+0000\n"
 "PO-Revision-Date: 2025-11-18 18:53+0000\n"
 "Last-Translator: Vlad Nirky <nirky.vlad@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -128,11 +128,29 @@ msgstr "Afficher le groupe « Corbeille »"
 msgid "This group contains all the deleted entries"
 msgstr "Ce groupe contient toutes les entrées supprimées"
 
+msgid "%1 copied to clipboard (30 secs)"
+msgstr ""
+
 msgid "Notes"
 msgstr "Notes"
 
 msgid "Tap to copy"
 msgstr "Appuyez pour copier"
+
+msgid "Main"
+msgstr ""
+
+msgid "Username"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "URL"
+msgstr ""
+
+msgid "Other Fields"
+msgstr ""
 
 msgid "Manual path set."
 msgstr "Chemin défini manuellement."

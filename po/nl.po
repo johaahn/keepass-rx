@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-22 20:16+0000\n"
-"PO-Revision-Date: 2025-11-20 12:51+0000\n"
+"PO-Revision-Date: 2025-11-23 11:51+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/ubports/keepassrx/"
 "nl/>\n"
@@ -129,7 +129,7 @@ msgid "This group contains all the deleted entries"
 msgstr "Deze groep bevat alle verwijderde items."
 
 msgid "%1 copied to clipboard (30 secs)"
-msgstr ""
+msgstr "%1 is gekopieerd naar het klembord (30 sec.)"
 
 msgid "Notes"
 msgstr "Aantekeningen"
@@ -138,19 +138,19 @@ msgid "Tap to copy"
 msgstr "Druk om te kopiëren"
 
 msgid "Main"
-msgstr ""
+msgstr "Algemeen"
 
 msgid "Username"
-msgstr ""
+msgstr "Gebruikersnaam"
 
 msgid "Password"
-msgstr ""
+msgstr "Wachtwoord"
 
 msgid "URL"
-msgstr ""
+msgstr "Url"
 
 msgid "Other Fields"
-msgstr ""
+msgstr "Overige velden"
 
 msgid "Manual path set."
 msgstr "Stel de locatie handmatig in."
@@ -181,10 +181,10 @@ msgid "Cancel Search"
 msgstr "Zoekopdracht afbreken"
 
 msgid "Search all entries"
-msgstr ""
+msgstr "Alle items doorzoeken"
 
 msgid "Search all entries under this group"
-msgstr ""
+msgstr "Doorzoek alle items binnen deze groep"
 
 msgid "Search entries in this group"
 msgstr "Deze groep doorzoeken"
@@ -211,7 +211,7 @@ msgid "Change View"
 msgstr "Weergave aanpassen"
 
 msgid "All Entries"
-msgstr ""
+msgstr "Alle items"
 
 msgid "All groups and entries."
 msgstr "Alle groepen en items."
@@ -223,7 +223,7 @@ msgid "Entries grouped by template."
 msgstr "Items gegroepeerd op sjabloon."
 
 msgid "2FA Codes"
-msgstr ""
+msgstr "2FA-codes"
 
 msgid "Entries with 2FA codes."
 msgstr "Items met 2FA-codes."

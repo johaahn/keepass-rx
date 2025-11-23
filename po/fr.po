@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-22 20:16+0000\n"
-"PO-Revision-Date: 2025-11-18 18:53+0000\n"
+"PO-Revision-Date: 2025-11-23 20:15+0000\n"
 "Last-Translator: Vlad Nirky <nirky.vlad@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
 "fr/>\n"
@@ -20,22 +20,22 @@ msgstr ""
 "X-Generator: Weblate 5.15-dev\n"
 
 msgid "Copy Username"
-msgstr ""
+msgstr "Copier le nom d'utilisateur"
 
 msgid "Copy Password"
-msgstr ""
+msgstr "Copier le mot de passe"
 
 msgid "Open URL"
-msgstr ""
+msgstr "Ouvrir l'URL"
 
 msgid "Copy 2FA Code"
-msgstr ""
+msgstr "Copier le code 2FA"
 
 msgid "View Entry"
-msgstr ""
+msgstr "Afficher l'entrée"
 
 msgid "Tap to copy 2FA code"
-msgstr ""
+msgstr "Appuyez pour copier le code 2FA"
 
 msgid "About"
 msgstr "A propos de"
@@ -129,7 +129,7 @@ msgid "This group contains all the deleted entries"
 msgstr "Ce groupe contient toutes les entrées supprimées"
 
 msgid "%1 copied to clipboard (30 secs)"
-msgstr ""
+msgstr "%1 copié dans le presse-papiers (30 secondes)"
 
 msgid "Notes"
 msgstr "Notes"
@@ -138,19 +138,19 @@ msgid "Tap to copy"
 msgstr "Appuyez pour copier"
 
 msgid "Main"
-msgstr ""
+msgstr "Principal"
 
 msgid "Username"
-msgstr ""
+msgstr "Nom d'utilisateur"
 
 msgid "Password"
-msgstr ""
+msgstr "Mot de passe"
 
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 msgid "Other Fields"
-msgstr ""
+msgstr "Autres champs"
 
 msgid "Manual path set."
 msgstr "Chemin défini manuellement."
@@ -182,10 +182,10 @@ msgid "Cancel Search"
 msgstr "Annuler la recherche"
 
 msgid "Search all entries"
-msgstr ""
+msgstr "Rechercher toutes les entrées"
 
 msgid "Search all entries under this group"
-msgstr ""
+msgstr "Rechercher toutes les entrées sous ce groupe"
 
 msgid "Search entries in this group"
 msgstr "Rechercher les entrées dans ce groupe"
@@ -212,7 +212,7 @@ msgid "Change View"
 msgstr "Changer d'affichage"
 
 msgid "All Entries"
-msgstr ""
+msgstr "Toutes les entrées"
 
 msgid "All groups and entries."
 msgstr "Tous les groupes et toutes les entrées."
@@ -224,16 +224,16 @@ msgid "Entries grouped by template."
 msgstr "Entrées regroupées par modèle."
 
 msgid "2FA Codes"
-msgstr ""
+msgstr "Codes 2FA"
 
 msgid "Entries with 2FA codes."
 msgstr "Entrées avec codes 2FA."
 
 msgid "Tags"
-msgstr ""
+msgstr "Balises"
 
 msgid "Entries grouped by tag."
-msgstr ""
+msgstr "Entrées regroupées par balise."
 
 msgid "Select View"
 msgstr "Sélectionner Affichage"
@@ -242,12 +242,14 @@ msgid "Select"
 msgstr "Sélectionner"
 
 msgid "Cancel"
-msgstr ""
+msgstr "Annuler"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
 msgstr ""
+"<b>Affichage de tous les codes 2FA dans la base de données.</b><br/"
+">Affichage des détails d'une entrée à l'aide de sa barre d'actions."
 
 msgid "All Templates"
 msgstr "Tous les modèles"
@@ -262,7 +264,7 @@ msgstr "Codes 2FA"
 
 msgctxt "List of entries with tags"
 msgid "Tags"
-msgstr ""
+msgstr "Balises"
 
 #~ msgid "Untitled Entry"
 #~ msgstr "Entrée sans titre"

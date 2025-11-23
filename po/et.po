@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-22 20:16+0000\n"
-"PO-Revision-Date: 2025-11-22 22:51+0000\n"
+"PO-Revision-Date: 2025-11-23 20:15+0000\n"
 "Last-Translator: Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/ubports/"
 "keepassrx/et/>\n"
@@ -128,7 +128,7 @@ msgid "This group contains all the deleted entries"
 msgstr "Siin on näha kõik kustutatud kirjed"
 
 msgid "%1 copied to clipboard (30 secs)"
-msgstr ""
+msgstr "%1 on kopeeritud lõikelauale (30 sek)"
 
 msgid "Notes"
 msgstr "Märkmed"
@@ -137,19 +137,19 @@ msgid "Tap to copy"
 msgstr "Kopeerimiseks klõpsa"
 
 msgid "Main"
-msgstr ""
+msgstr "Peamine"
 
 msgid "Username"
-msgstr ""
+msgstr "Kasutajanimi"
 
 msgid "Password"
-msgstr ""
+msgstr "Salasõna"
 
 msgid "URL"
-msgstr ""
+msgstr "Võrguaadress"
 
 msgid "Other Fields"
-msgstr ""
+msgstr "Muud väljad"
 
 msgid "Manual path set."
 msgstr "Käsitsi määratud asukoht on seadistatud."

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-22 20:16+0000\n"
+"POT-Creation-Date: 2025-11-24 13:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,8 +41,8 @@ msgstr ""
 msgid "Tap to copy 2FA code"
 msgstr ""
 
-#: qml/pages/AboutPage.qml:11 qml/pages/DBList.qml:81
-#: qml/pages/OpenDBPage.qml:53 qml/pages/UnlockPage.qml:41
+#: qml/pages/AboutPage.qml:11 qml/pages/OpenDBPage.qml:53
+#: qml/pages/DBList.qml:81 qml/pages/UnlockPage.qml:41
 #: qml/pages/EntriesPage.qml:216
 msgid "About"
 msgstr ""
@@ -61,39 +61,19 @@ msgstr ""
 
 #: qml/pages/AboutPage.qml:76
 msgid ""
-"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
-"agnos.is/projectmoon/keepass-rx</a>"
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
+"git.agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
 
-#: qml/pages/DBList.qml:67
-msgid "Add Database"
+#: qml/pages/OpenDBPage.qml:33 qml/pages/EntriesPage.qml:171
+#: qml/pages/SingleEntry.qml:82
+msgid "Back"
 msgstr ""
 
-#: qml/pages/DBList.qml:74 qml/pages/OpenDBPage.qml:46
-#: qml/pages/SettingsPage.qml:11 qml/pages/UnlockPage.qml:34
+#: qml/pages/OpenDBPage.qml:46 qml/pages/SettingsPage.qml:11
+#: qml/pages/DBList.qml:74 qml/pages/UnlockPage.qml:34
 #: qml/pages/EntriesPage.qml:207
 msgid "Settings"
-msgstr ""
-
-#: qml/pages/DBList.qml:101
-msgid "Loading last database."
-msgstr ""
-
-#: qml/pages/DBList.qml:111
-msgid "Select Database"
-msgstr ""
-
-#: qml/pages/DBList.qml:167
-msgid "Tap + to import a database."
-msgstr ""
-
-#: qml/pages/DBList.qml:265
-msgid "It will only be removed from the app, not your device."
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:33 qml/pages/SingleEntry.qml:82
-#: qml/pages/EntriesPage.qml:171
-msgid "Back"
 msgstr ""
 
 #: qml/pages/OpenDBPage.qml:158
@@ -146,36 +126,28 @@ msgstr ""
 msgid "This group contains all the deleted entries"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:29
-msgid "%1 copied to clipboard (30 secs)"
+#: qml/pages/DBList.qml:67
+msgid "Add Database"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:123
-msgid "Notes"
+#: qml/pages/DBList.qml:101
+msgid "Loading last database."
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:131
-msgid "Tap to copy"
+#: qml/pages/DBList.qml:111
+msgid "Select Database"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:190
-msgid "Main"
+#: qml/pages/DBList.qml:167
+msgid "Tap + to import a database."
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:196 qml/pages/SingleEntry.qml:199
-msgid "Username"
+#: qml/pages/DBList.qml:210
+msgid "Imported"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:204 qml/pages/SingleEntry.qml:209
-msgid "Password"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:215 qml/pages/SingleEntry.qml:217
-msgid "URL"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:238
-msgid "Other Fields"
+#: qml/pages/DBList.qml:257
+msgid "It will only be removed from the app, not your device."
 msgstr ""
 
 #: qml/pages/UnlockPage.qml:146
@@ -294,6 +266,38 @@ msgstr ""
 
 #: qml/pages/EntriesPage.qml:325
 msgid "Cancel"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:29
+msgid "%1 copied to clipboard (30 secs)"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:123
+msgid "Notes"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:131
+msgid "Tap to copy"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:190
+msgid "Main"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:196 qml/pages/SingleEntry.qml:199
+msgid "Username"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:204 qml/pages/SingleEntry.qml:209
+msgid "Password"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:215 qml/pages/SingleEntry.qml:217
+msgid "URL"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:238
+msgid "Other Fields"
 msgstr ""
 
 #: src/gui/instructions.rs:9

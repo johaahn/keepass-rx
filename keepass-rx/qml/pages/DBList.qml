@@ -183,66 +183,58 @@ Page {
     }
 
     // DB list
-    ColumnLayout {
+    Item {
         visible: dbListModel.count > 0 && !keepassrx.lastDB
-        spacing: units.gu(2)
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: header.bottom
-        Layout.fillWidth: true
-        Layout.fillHeight: true
-        height: parent.height
-        width: parent.width
 
-        RowLayout {
+
+        LomiriListView {
             Layout.fillWidth: true
             Layout.fillHeight: true
             height: parent.height
             width: parent.width
 
-            LomiriListView {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                height: parent.height
-                width: parent.width
+            id: dbList
+            model: ListModel {
+                id: dbListModel
+            }
 
-                id: dbList
-                model: ListModel {
-                    id: dbListModel
+            delegate: ListItem {
+                height: layout.height + (divider.visible ? divider.height : 0)
+
+                ListItemLayout {
+                    id: layout
+                    title.text: databaseName
+                    subtitle.text: i18n.tr("Imported")
+
+                    Icon {
+                        name: "next"
+                        SlotsLayout.overrideVerticalPositioning: true
+                        SlotsLayout.position: SlotsLayout.Trailing
+                        width: units.gu(3)
+                        height: units.gu(3)
+                        y: layout.subtitle.y - baselineOffset
+                    }
                 }
 
-                delegate: ListItem {
-                    height: layout.height + (divider.visible ? divider.height : 0)
+                onClicked: {
+                    keepassrx.lastDB = databaseName;
+                    openDbPage.databaseName = databaseName;
+                    adaptiveLayout.primaryPage = openDbPage;
+                }
 
-                    ListItemLayout {
-                        id: layout
-                        title.text: databaseName
-                        // TODO get subtitle text and good vertical alignment.
-
-                        Icon {
-                            name: "next"
-                            SlotsLayout.position: SlotsLayout.Trailing;
-                            height: units.gu(2)
-                        }
-                    }
-
-                    onClicked: {
-                        keepassrx.lastDB = databaseName;
-                        openDbPage.databaseName = databaseName;
-                        adaptiveLayout.primaryPage = openDbPage;
-                    }
-
-                    leadingActions: ListItemActions {
-                        actions: [
-                            Action {
-                                iconName: "delete"
-                                onTriggered: {
-                                    deleteDatabase.databaseName = databaseName;
-                                    PopupUtils.open(dialog)
-                                }
+                leadingActions: ListItemActions {
+                    actions: [
+                        Action {
+                            iconName: "delete"
+                            onTriggered: {
+                                deleteDatabase.databaseName = databaseName;
+                                PopupUtils.open(dialog)
                             }
-                        ]
-                    }
+                        }
+                    ]
                 }
             }
         }

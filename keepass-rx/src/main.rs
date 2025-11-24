@@ -53,6 +53,8 @@ use crate::app::AppState;
 
 #[cfg(feature = "gui")]
 fn load_gui() -> Result<()> {
+    use gui::RxDbType;
+
     use crate::gui::{
         KeepassRx, RxGuiState,
         actor::KeepassRxActor,
@@ -89,6 +91,7 @@ fn load_gui() -> Result<()> {
     qml_register_enum::<RxItemType>(uri, 1, 0, cstr!("RxItemType"));
     qml_register_enum::<RxGuiState>(uri, 1, 0, cstr!("RxGuiState"));
     qml_register_enum::<RxViewMode>(uri, 1, 0, cstr!("RxViewMode"));
+    qml_register_enum::<RxDbType>(uri, 1, 0, cstr!("RxDbType"));
     qml_register_enum::<RxViewFeature>(uri, 1, 0, cstr!("RxViewFeature"));
     qml_register_enum::<RxColorType>(uri, 1, 0, cstr!("RxColorType"));
 

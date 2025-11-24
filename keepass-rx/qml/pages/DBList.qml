@@ -28,8 +28,8 @@ Page {
     Connections {
         target: keepassrx
 
-        onDatabaseImported: (databaseName) => {
-            dbListModel.append({ databaseName });
+        onDatabaseImported: (databaseName, databaseType) => {
+            dbListModel.append({ databaseName, databaseType: databaseType.toString() });
         }
 
         onDatabaseDeleted: (databaseName) => {
@@ -188,7 +188,8 @@ Page {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: header.bottom
-
+        height: parent.height
+        width: parent.width
 
         LomiriListView {
             Layout.fillWidth: true
@@ -207,7 +208,15 @@ Page {
                 ListItemLayout {
                     id: layout
                     title.text: databaseName
-                    subtitle.text: i18n.tr("Imported")
+                    subtitle.text: databaseType == 'Imported'
+                        ? i18n.ctr(
+                            "When an imported DB is loaded from the app's data folder",
+                            "Imported"
+                        )
+                        : i18n.ctr(
+                            "When DB is loaded via external managed folder (e.g. Syncthing)",
+                            "Synced"
+                        )
 
                     Icon {
                         name: "next"

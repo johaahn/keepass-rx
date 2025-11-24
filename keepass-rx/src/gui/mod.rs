@@ -7,6 +7,7 @@ use secstr::SecUtf8;
 use std::fs::{create_dir_all, remove_dir_all};
 use std::path::Path;
 use std::str::FromStr;
+use unicase::UniCase;
 use uuid::Uuid;
 
 pub(crate) mod actor;
@@ -48,6 +49,29 @@ fn gui_state_to_string(gui_state: &RxGuiState) -> QString {
 impl QMetaType for RxGuiState {
     const CONVERSION_FROM_STRING: Option<fn(&QString) -> Self> = Some(gui_state_from_string);
     const CONVERSION_TO_STRING: Option<fn(&Self) -> QString> = Some(gui_state_to_string);
+}
+
+#[derive(Debug, Default, QEnum, Clone, Copy, PartialEq, Eq, Ord, PartialOrd)]
+#[repr(C)]
+pub enum RxDbType {
+    #[default]
+    Imported,
+    Synced,
+}
+
+impl QMetaType for RxDbType {
+    const CONVERSION_FROM_STRING: Option<fn(&QString) -> Self> =
+        Some(|qval: &QString| match qval.to_string().as_str() {
+            "Imported" => RxDbType::Imported,
+            "Synced" => RxDbType::Synced,
+            _ => panic!("Invalid RxDbType: {}", qval),
+        });
+
+    const CONVERSION_TO_STRING: Option<fn(&Self) -> QString> =
+        Some(|db_type: &Self| match db_type {
+            RxDbType::Imported => "Imported".into(),
+            RxDbType::Synced => "Synced".into(),
+        });
 }
 
 #[derive(Debug, Default, QEnum, Clone, Copy, PartialEq, Eq)]
@@ -132,7 +156,7 @@ pub struct KeepassRx {
     fileListingCompleted: qt_signal!(),
     rootGroupUuidChanged: qt_signal!(),
     metadataReceived: qt_signal!(metadata: QVariantMap),
-    databaseImported: qt_signal!(db_name: QString),
+    databaseImported: qt_signal!(db_name: QString, db_type: RxDbType),
     databaseOpened: qt_signal!(),
     databaseClosed: qt_signal!(),
     databaseDeleted: qt_signal!(db_name: QString),
@@ -206,12 +230,31 @@ impl KeepassRx {
     #[with_executor]
     pub fn listImportedDatabases(&self) {
         let list_dbs = || -> Result<()> {
-            let dbs = std::fs::read_dir(imported_databases_path())?;
+            let imported_dbs = std::fs::read_dir(imported_databases_path())?;
+            let synced_dbs = std::fs::read_dir(synced_databases_path())?;
+            let mut dbs = vec![];
 
-            for db in dbs {
-                self.databaseImported(QString::from(
-                    db?.file_name().to_string_lossy().to_string(),
-                ));
+            struct DbListing(std::fs::DirEntry, RxDbType);
+
+            for db in imported_dbs {
+                dbs.push(DbListing(db?, RxDbType::Imported));
+            }
+
+            for db in synced_dbs {
+                dbs.push(DbListing(db?, RxDbType::Synced));
+            }
+
+            dbs.sort_by(|DbListing(this, _), DbListing(that, _)| {
+                let name1 = UniCase::new(this.file_name().to_string_lossy()).to_folded_case();
+                let name2 = UniCase::new(that.file_name().to_string_lossy()).to_folded_case();
+                name1.cmp(&name2)
+            });
+
+            for DbListing(db, db_type) in dbs {
+                self.databaseImported(
+                    QString::from(db.file_name().to_string_lossy().to_string()),
+                    db_type,
+                );
             }
 
             Ok(())
@@ -268,7 +311,7 @@ impl KeepassRx {
         };
 
         match copy_file() {
-            Ok(db_name) => self.databaseImported(QString::from(db_name)),
+            Ok(db_name) => self.databaseImported(QString::from(db_name), RxDbType::Imported),
             Err(err) => self.databaseOpenFailed(format!("{}", err)),
         }
     }

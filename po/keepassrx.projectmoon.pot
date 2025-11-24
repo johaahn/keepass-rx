@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-24 13:45+0100\n"
+"POT-Creation-Date: 2025-11-24 14:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,8 +61,8 @@ msgstr ""
 
 #: qml/pages/AboutPage.qml:76
 msgid ""
-"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
-"git.agnos.is/projectmoon/keepass-rx</a>"
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
+"agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
 
 #: qml/pages/OpenDBPage.qml:33 qml/pages/EntriesPage.qml:171
@@ -142,11 +142,7 @@ msgstr ""
 msgid "Tap + to import a database."
 msgstr ""
 
-#: qml/pages/DBList.qml:210
-msgid "Imported"
-msgstr ""
-
-#: qml/pages/DBList.qml:257
+#: qml/pages/DBList.qml:266
 msgid "It will only be removed from the app, not your device."
 msgstr ""
 

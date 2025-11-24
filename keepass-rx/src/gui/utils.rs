@@ -13,6 +13,10 @@ pub fn imported_databases_path() -> PathBuf {
     PathBuf::from(app_data_path()).join(APP_ID).join("imported")
 }
 
+pub fn synced_databases_path() -> PathBuf {
+    PathBuf::from(app_data_path()).join(APP_ID).join("synced")
+}
+
 pub fn move_old_db() {
     let db_path = app_data_path().join("db.kdbx");
 

@@ -120,23 +120,18 @@ fn load_gui() -> Result<()> {
         // pointers inside app would be dropped and become null at
         // runtime.
         let (mut view, _app) = with_executor(|| -> Result<_> {
+            use app::RxActors;
+
             let app_state = Rc::new(QObjectBox::new(AppState::new()));
             let gui = Arc::new(QObjectBox::new(KeepassRx::new(last_db)));
 
-            let gui_actor = KeepassRxActor::new(&gui, &app_state).start();
-
-            // actix::spawn(async {
-            //     let sys = actix::System::
-            //     println!("calling from le spawn");
-            //     actix::System::set_current(sys);
-            //     let sys = actix::System::current();
-            //     println!("sys is: {}", sys.id());
-            // });
+            let global_app_actor = KeepassRxActor::new(&gui, &app_state).start();
 
             let app = Rc::new(KeepassRxApp {
                 app_state: app_state.clone(),
-                gui_actor: gui_actor,
             });
+
+            RxActors::set_app_actor(global_app_actor);
 
             let mut view = QQuickView::new();
             let engine = view.engine();

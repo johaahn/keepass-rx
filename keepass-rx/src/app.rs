@@ -4,17 +4,40 @@ use qmeta_async::with_executor;
 use qmetaobject::{QObject, QObjectBox};
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::sync::Arc;
+use std::sync::{Arc, LazyLock, OnceLock};
 use zeroize::Zeroizing;
 
 use crate::gui::actor::KeepassRxActor;
 use crate::rx::RxDatabase;
 use crate::rx::virtual_hierarchy::VirtualHierarchy;
 
+/// Hackity hack hack hack. Instead of having a running actor system
+/// via qmeta_async and using Actix's registry, we'll just keep a
+/// public global. Yes very good design.
+#[derive(Debug)]
+pub struct RxActors {
+    pub(crate) gui_actor: Addr<KeepassRxActor>,
+}
+
+impl RxActors {
+    pub fn set_app_actor(actor: Addr<KeepassRxActor>) {
+        ACTORS
+            .set(RxActors {
+                gui_actor: actor.clone(),
+            })
+            .expect("Actor addresses already set");
+    }
+
+    pub fn app_actor() -> Option<Addr<KeepassRxActor>> {
+        ACTORS.get().map(|actors| actors.gui_actor.clone())
+    }
+}
+
+pub static ACTORS: OnceLock<RxActors> = OnceLock::new();
+
 #[allow(dead_code)]
 pub struct KeepassRxApp {
     pub(crate) app_state: Rc<QObjectBox<AppState>>,
-    pub(crate) gui_actor: Addr<KeepassRxActor>,
 }
 
 #[derive(QObject, Default)]
@@ -23,7 +46,6 @@ pub struct AppState {
     base: qt_base_class!(trait QObject),
     deferred_views: RefCell<Vec<Box<dyn FnOnce(&dyn VirtualHierarchy)>>>,
 
-    app_actor: Option<Addr<KeepassRxActor>>,
     current_view: Option<Rc<Box<dyn VirtualHierarchy>>>,
     curr_db: Option<Rc<Zeroizing<RxDatabase>>>,
 }
@@ -55,14 +77,6 @@ impl AppState {
         let db = Rc::try_unwrap(db)
             .map_err(|_| anyhow!("Database Rc still has lingering references"))?;
         Ok(db)
-    }
-
-    pub fn set_app_actor(&mut self, actor: Addr<KeepassRxActor>) {
-        self.app_actor = Some(actor);
-    }
-
-    pub fn app_actor(&self) -> Option<Addr<KeepassRxActor>> {
-        self.app_actor.clone()
     }
 
     pub fn set_db(&mut self, db: Zeroizing<RxDatabase>) {

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-25 13:01+0100\n"
+"POT-Creation-Date: 2025-11-25 20:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,8 +41,8 @@ msgstr ""
 msgid "Tap to copy 2FA code"
 msgstr ""
 
-#: qml/pages/AboutPage.qml:11 qml/pages/UnlockPage.qml:41
-#: qml/pages/EntriesPage.qml:216 qml/pages/OpenDBPage.qml:53
+#: qml/pages/AboutPage.qml:11 qml/pages/OpenDBPage.qml:53
+#: qml/pages/UnlockPage.qml:41 qml/pages/EntriesPage.qml:216
 #: qml/pages/DBList.qml:85
 msgid "About"
 msgstr ""
@@ -61,14 +61,35 @@ msgstr ""
 
 #: qml/pages/AboutPage.qml:76
 msgid ""
-"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
-"git.agnos.is/projectmoon/keepass-rx</a>"
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
+"agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
 
-#: qml/pages/SettingsPage.qml:11 qml/pages/UnlockPage.qml:34
-#: qml/pages/EntriesPage.qml:207 qml/pages/OpenDBPage.qml:46
+#: qml/pages/OpenDBPage.qml:33 qml/pages/SingleEntry.qml:82
+#: qml/pages/EntriesPage.qml:171
+msgid "Back"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:46 qml/pages/SettingsPage.qml:11
+#: qml/pages/UnlockPage.qml:34 qml/pages/EntriesPage.qml:207
 #: qml/pages/DBList.qml:78
 msgid "Settings"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:158
+msgid "Enter the database master password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:171
+msgid "Master Password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:201
+msgid "Open"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:218
+msgid "Opening"
 msgstr ""
 
 #: qml/pages/SettingsPage.qml:44
@@ -103,6 +124,38 @@ msgstr ""
 
 #: qml/pages/SettingsPage.qml:81
 msgid "This group contains all the deleted entries"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:29
+msgid "%1 copied to clipboard (30 secs)"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:123
+msgid "Notes"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:131
+msgid "Tap to copy"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:190
+msgid "Main"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:196 qml/pages/SingleEntry.qml:199
+msgid "Username"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:204 qml/pages/SingleEntry.qml:209
+msgid "Password"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:215 qml/pages/SingleEntry.qml:217
+msgid "URL"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:238
+msgid "Other Fields"
 msgstr ""
 
 #: qml/pages/UnlockPage.qml:146
@@ -157,11 +210,6 @@ msgstr ""
 
 #: qml/pages/EntriesPage.qml:159
 msgid "Close"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:171 qml/pages/SingleEntry.qml:82
-#: qml/pages/OpenDBPage.qml:33
-msgid "Back"
 msgstr ""
 
 #: qml/pages/EntriesPage.qml:184
@@ -226,54 +274,6 @@ msgstr ""
 
 #: qml/pages/EntriesPage.qml:325
 msgid "Cancel"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:29
-msgid "%1 copied to clipboard (30 secs)"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:123
-msgid "Notes"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:131
-msgid "Tap to copy"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:190
-msgid "Main"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:196 qml/pages/SingleEntry.qml:199
-msgid "Username"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:204 qml/pages/SingleEntry.qml:209
-msgid "Password"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:215 qml/pages/SingleEntry.qml:217
-msgid "URL"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:238
-msgid "Other Fields"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:158
-msgid "Enter the database master password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:171
-msgid "Master Password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:201
-msgid "Open"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:218
-msgid "Opening"
 msgstr ""
 
 #: qml/pages/DBList.qml:71

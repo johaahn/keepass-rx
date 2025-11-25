@@ -73,11 +73,6 @@ where
     fn handle(&mut self, event: M, ctx: &mut Self::Context) -> Self::Result {
         match self.model.as_pinned() {
             Some(model) => {
-                println!("from registry shit");
-                let stuff = KeepassRxActor::from_registry();
-                println!("stuff is: {:?}", stuff);
-                let jank = System::try_current();
-                println!("jank is: {:?}", jank);
                 let mut model = model.borrow_mut();
                 let ctx = ModelContext {
                     addr: ctx.address(),

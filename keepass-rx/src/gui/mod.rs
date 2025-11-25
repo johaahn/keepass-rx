@@ -248,6 +248,9 @@ impl KeepassRx {
     #[with_executor]
     pub fn listImportedDatabases(&self) {
         let list_dbs = || -> Result<()> {
+            create_dir_all(&imported_databases_path())?;
+            create_dir_all(&synced_databases_path())?;
+
             let imported_dbs = std::fs::read_dir(imported_databases_path())?;
             let synced_dbs = std::fs::read_dir(synced_databases_path())?;
             let mut dbs = vec![];

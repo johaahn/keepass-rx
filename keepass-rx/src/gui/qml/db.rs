@@ -5,6 +5,7 @@ use qmetaobject::prelude::*;
 
 use crate::{
     actor::{ActorConnected, ConnectedModelActor, ModelContext},
+    app::RxActors,
     gui::RxDbType,
     rx::virtual_hierarchy::VirtualHierarchy,
 };
@@ -35,10 +36,9 @@ impl ActorConnected<OpenDatabase> for RxUiDatabase {
     where
         Self: Sized + QObject,
     {
-        let system = System::try_current();
-        //let jank = System::
+        let app_actor = RxActors::app_actor();
 
-        println!("Hello from connected actor. The system is: {:?}", system);
+        println!("Hello from connected actor. app actor is: {:?}", app_actor);
     }
 }
 

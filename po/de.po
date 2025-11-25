@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-22 20:16+0000\n"
+"POT-Creation-Date: 2025-11-24 14:14+0000\n"
 "PO-Revision-Date: 2025-11-21 00:51+0000\n"
 "Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -62,26 +62,11 @@ msgstr ""
 "Quelle: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
-msgid "Add Database"
-msgstr "Datenbank hinzufügen"
+msgid "Back"
+msgstr "Zurück"
 
 msgid "Settings"
 msgstr "Einstellungen"
-
-msgid "Loading last database."
-msgstr "Letzte Datenbank wird geladen."
-
-msgid "Select Database"
-msgstr "Datenbank auswählen"
-
-msgid "Tap + to import a database."
-msgstr "Mit + eine Datenbank importieren."
-
-msgid "It will only be removed from the app, not your device."
-msgstr "Diese wird nur aus der App entfernt, aber nicht vom Gerät gelöscht."
-
-msgid "Back"
-msgstr "Zurück"
 
 msgid "Enter the database master password"
 msgstr "Datenbankpasswort eingeben"
@@ -128,29 +113,20 @@ msgstr "Gruppe „Papierkorb“ anzeigen"
 msgid "This group contains all the deleted entries"
 msgstr "Diese Gruppe enthält alle gelöschten Einträge"
 
-msgid "%1 copied to clipboard (30 secs)"
-msgstr ""
+msgid "Add Database"
+msgstr "Datenbank hinzufügen"
 
-msgid "Notes"
-msgstr "Notizen"
+msgid "Loading last database."
+msgstr "Letzte Datenbank wird geladen."
 
-msgid "Tap to copy"
-msgstr "Antippen zum Kopieren"
+msgid "Select Database"
+msgstr "Datenbank auswählen"
 
-msgid "Main"
-msgstr ""
+msgid "Tap + to import a database."
+msgstr "Mit + eine Datenbank importieren."
 
-msgid "Username"
-msgstr ""
-
-msgid "Password"
-msgstr ""
-
-msgid "URL"
-msgstr ""
-
-msgid "Other Fields"
-msgstr ""
+msgid "It will only be removed from the app, not your device."
+msgstr "Diese wird nur aus der App entfernt, aber nicht vom Gerät gelöscht."
 
 msgid "Manual path set."
 msgstr "Manueller Pfad gesetzt."
@@ -242,6 +218,30 @@ msgstr "Auswählen"
 
 msgid "Cancel"
 msgstr "Abbrechen"
+
+msgid "%1 copied to clipboard (30 secs)"
+msgstr ""
+
+msgid "Notes"
+msgstr "Notizen"
+
+msgid "Tap to copy"
+msgstr "Antippen zum Kopieren"
+
+msgid "Main"
+msgstr ""
+
+msgid "Username"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "URL"
+msgstr ""
+
+msgid "Other Fields"
+msgstr ""
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

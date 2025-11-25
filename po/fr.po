@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-22 20:16+0000\n"
+"POT-Creation-Date: 2025-11-24 14:14+0000\n"
 "PO-Revision-Date: 2025-11-23 20:15+0000\n"
 "Last-Translator: Vlad Nirky <nirky.vlad@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -61,26 +61,11 @@ msgstr ""
 "Source : <a href='https ://git.agnos.is/projectmoon/keepass-rx'>https ://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
-msgid "Add Database"
-msgstr "Ajouter une base de données"
+msgid "Back"
+msgstr "Retour"
 
 msgid "Settings"
 msgstr "Paramètres"
-
-msgid "Loading last database."
-msgstr "Chargement de la dernière base de données."
-
-msgid "Select Database"
-msgstr "Sélectionner la base de données"
-
-msgid "Tap + to import a database."
-msgstr "Appuyer + pour importer une base de données."
-
-msgid "It will only be removed from the app, not your device."
-msgstr "Elle sera simplement retirée de l’application, pas de votre appareil."
-
-msgid "Back"
-msgstr "Retour"
 
 msgid "Enter the database master password"
 msgstr "Entrez le mot de passe principal de la base de données"
@@ -128,29 +113,20 @@ msgstr "Afficher le groupe « Corbeille »"
 msgid "This group contains all the deleted entries"
 msgstr "Ce groupe contient toutes les entrées supprimées"
 
-msgid "%1 copied to clipboard (30 secs)"
-msgstr "%1 copié dans le presse-papiers (30 secondes)"
+msgid "Add Database"
+msgstr "Ajouter une base de données"
 
-msgid "Notes"
-msgstr "Notes"
+msgid "Loading last database."
+msgstr "Chargement de la dernière base de données."
 
-msgid "Tap to copy"
-msgstr "Appuyez pour copier"
+msgid "Select Database"
+msgstr "Sélectionner la base de données"
 
-msgid "Main"
-msgstr "Principal"
+msgid "Tap + to import a database."
+msgstr "Appuyer + pour importer une base de données."
 
-msgid "Username"
-msgstr "Nom d'utilisateur"
-
-msgid "Password"
-msgstr "Mot de passe"
-
-msgid "URL"
-msgstr "URL"
-
-msgid "Other Fields"
-msgstr "Autres champs"
+msgid "It will only be removed from the app, not your device."
+msgstr "Elle sera simplement retirée de l’application, pas de votre appareil."
 
 msgid "Manual path set."
 msgstr "Chemin défini manuellement."
@@ -243,6 +219,30 @@ msgstr "Sélectionner"
 
 msgid "Cancel"
 msgstr "Annuler"
+
+msgid "%1 copied to clipboard (30 secs)"
+msgstr "%1 copié dans le presse-papiers (30 secondes)"
+
+msgid "Notes"
+msgstr "Notes"
+
+msgid "Tap to copy"
+msgstr "Appuyez pour copier"
+
+msgid "Main"
+msgstr "Principal"
+
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+msgid "Password"
+msgstr "Mot de passe"
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Other Fields"
+msgstr "Autres champs"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

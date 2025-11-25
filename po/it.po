@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-22 20:16+0000\n"
+"POT-Creation-Date: 2025-11-24 14:14+0000\n"
 "PO-Revision-Date: 2025-11-04 22:51+0000\n"
 "Last-Translator: projectmoon <projectmoon@agnos.is>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/ubports/"
@@ -55,25 +55,10 @@ msgid ""
 "git.agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
 
-msgid "Add Database"
+msgid "Back"
 msgstr ""
 
 msgid "Settings"
-msgstr ""
-
-msgid "Loading last database."
-msgstr ""
-
-msgid "Select Database"
-msgstr ""
-
-msgid "Tap + to import a database."
-msgstr ""
-
-msgid "It will only be removed from the app, not your device."
-msgstr ""
-
-msgid "Back"
 msgstr ""
 
 msgid "Enter the database master password"
@@ -115,28 +100,19 @@ msgstr ""
 msgid "This group contains all the deleted entries"
 msgstr ""
 
-msgid "%1 copied to clipboard (30 secs)"
+msgid "Add Database"
 msgstr ""
 
-msgid "Notes"
+msgid "Loading last database."
 msgstr ""
 
-msgid "Tap to copy"
+msgid "Select Database"
 msgstr ""
 
-msgid "Main"
+msgid "Tap + to import a database."
 msgstr ""
 
-msgid "Username"
-msgstr ""
-
-msgid "Password"
-msgstr ""
-
-msgid "URL"
-msgstr ""
-
-msgid "Other Fields"
+msgid "It will only be removed from the app, not your device."
 msgstr ""
 
 msgid "Manual path set."
@@ -226,6 +202,30 @@ msgid "Select"
 msgstr ""
 
 msgid "Cancel"
+msgstr ""
+
+msgid "%1 copied to clipboard (30 secs)"
+msgstr ""
+
+msgid "Notes"
+msgstr ""
+
+msgid "Tap to copy"
+msgstr ""
+
+msgid "Main"
+msgstr ""
+
+msgid "Username"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "URL"
+msgstr ""
+
+msgid "Other Fields"
 msgstr ""
 
 msgid ""

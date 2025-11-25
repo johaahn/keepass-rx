@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-22 20:16+0000\n"
+"POT-Creation-Date: 2025-11-24 14:14+0000\n"
 "PO-Revision-Date: 2025-11-23 11:51+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -61,27 +61,11 @@ msgstr ""
 "Broncode: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
-msgid "Add Database"
-msgstr "Databank toevoegen"
+msgid "Back"
+msgstr "Terug"
 
 msgid "Settings"
 msgstr "Instellingen"
-
-msgid "Loading last database."
-msgstr "Bezig met openen van vorige databank…"
-
-msgid "Select Database"
-msgstr "Databank kiezen"
-
-msgid "Tap + to import a database."
-msgstr "Druk op ‘+’ om een databank toe te voegen."
-
-msgid "It will only be removed from the app, not your device."
-msgstr ""
-"Let op: de databank wordt alleen verwijderd uit de app, niet van je apparaat."
-
-msgid "Back"
-msgstr "Terug"
 
 msgid "Enter the database master password"
 msgstr "Voer het hoofdwachtwoord in"
@@ -128,29 +112,21 @@ msgstr "Prullenbakgroep tonen"
 msgid "This group contains all the deleted entries"
 msgstr "Deze groep bevat alle verwijderde items."
 
-msgid "%1 copied to clipboard (30 secs)"
-msgstr "%1 is gekopieerd naar het klembord (30 sec.)"
+msgid "Add Database"
+msgstr "Databank toevoegen"
 
-msgid "Notes"
-msgstr "Aantekeningen"
+msgid "Loading last database."
+msgstr "Bezig met openen van vorige databank…"
 
-msgid "Tap to copy"
-msgstr "Druk om te kopiëren"
+msgid "Select Database"
+msgstr "Databank kiezen"
 
-msgid "Main"
-msgstr "Algemeen"
+msgid "Tap + to import a database."
+msgstr "Druk op ‘+’ om een databank toe te voegen."
 
-msgid "Username"
-msgstr "Gebruikersnaam"
-
-msgid "Password"
-msgstr "Wachtwoord"
-
-msgid "URL"
-msgstr "Url"
-
-msgid "Other Fields"
-msgstr "Overige velden"
+msgid "It will only be removed from the app, not your device."
+msgstr ""
+"Let op: de databank wordt alleen verwijderd uit de app, niet van je apparaat."
 
 msgid "Manual path set."
 msgstr "Stel de locatie handmatig in."
@@ -242,6 +218,30 @@ msgstr "Kiezen"
 
 msgid "Cancel"
 msgstr "Annuleren"
+
+msgid "%1 copied to clipboard (30 secs)"
+msgstr "%1 is gekopieerd naar het klembord (30 sec.)"
+
+msgid "Notes"
+msgstr "Aantekeningen"
+
+msgid "Tap to copy"
+msgstr "Druk om te kopiëren"
+
+msgid "Main"
+msgstr "Algemeen"
+
+msgid "Username"
+msgstr "Gebruikersnaam"
+
+msgid "Password"
+msgstr "Wachtwoord"
+
+msgid "URL"
+msgstr "Url"
+
+msgid "Other Fields"
+msgstr "Overige velden"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

@@ -20,6 +20,7 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.3
 import Qt.labs.settings 1.0
 import Lomiri.Components 1.3
+import keepassrx 1.0
 
 import "./pages"
 
@@ -35,6 +36,14 @@ MainView {
     Settings {
         id: settings
         property string lastDB
+    }
+
+    // Default values.
+    RxUiDatabase {
+        id: uiDatabase
+        app: AppState
+        databaseName: ""
+        //databaseType: RxDbType.Imported
     }
 
     Connections {
@@ -61,7 +70,7 @@ MainView {
             }
         }
 
-      function onMasterPasswordDecrypted() {
+        function onMasterPasswordDecrypted() {
             console.log('Re-opening database from locked state.');
             keepassrx.openDatabase(keepassrx.lastDB,  settings.lastKey);
         }

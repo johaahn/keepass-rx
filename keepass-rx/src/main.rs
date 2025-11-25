@@ -53,7 +53,7 @@ use crate::app::AppState;
 
 #[cfg(feature = "gui")]
 fn load_gui() -> Result<()> {
-    use gui::RxDbType;
+    use gui::{RxDbType, qml::RxUiDatabase};
 
     use crate::gui::{
         KeepassRx, RxGuiState,
@@ -85,6 +85,7 @@ fn load_gui() -> Result<()> {
     QQuickStyle::set_style("Suru");
     qrc::load();
     let uri = cstr!("keepassrx");
+    qml_register_type::<RxUiDatabase>(uri, 1, 0, cstr!("RxUiDatabase"));
     qml_register_type::<RxUiContainerStack>(uri, 1, 0, cstr!("RxUiContainerStack"));
     qml_register_type::<RxUiEntry>(uri, 1, 0, cstr!("RxUiEntry"));
     qml_register_type::<RxListItem>(uri, 1, 0, cstr!("RxListItem"));
@@ -116,12 +117,21 @@ fn load_gui() -> Result<()> {
     qmeta_async::run(|| {
         // We must return app here because it keeps the value alive
         // for the lifetime of qmeta_async::run. Without this, any
-        // pointers inside app would be dropped and become at runtime.
+        // pointers inside app would be dropped and become null at
+        // runtime.
         let (mut view, _app) = with_executor(|| -> Result<_> {
-            let app_state = Arc::new(QObjectBox::new(AppState::new()));
+            let app_state = Rc::new(QObjectBox::new(AppState::new()));
             let gui = Arc::new(QObjectBox::new(KeepassRx::new(last_db)));
 
             let gui_actor = KeepassRxActor::new(&gui, &app_state).start();
+
+            // actix::spawn(async {
+            //     let sys = actix::System::
+            //     println!("calling from le spawn");
+            //     actix::System::set_current(sys);
+            //     let sys = actix::System::current();
+            //     println!("sys is: {}", sys.id());
+            // });
 
             let app = Rc::new(KeepassRxApp {
                 app_state: app_state.clone(),

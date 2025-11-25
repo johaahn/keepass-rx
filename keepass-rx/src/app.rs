@@ -13,7 +13,7 @@ use crate::rx::virtual_hierarchy::VirtualHierarchy;
 
 #[allow(dead_code)]
 pub struct KeepassRxApp {
-    pub(crate) app_state: Arc<QObjectBox<AppState>>,
+    pub(crate) app_state: Rc<QObjectBox<AppState>>,
     pub(crate) gui_actor: Addr<KeepassRxActor>,
 }
 
@@ -21,9 +21,9 @@ pub struct KeepassRxApp {
 #[allow(dead_code)]
 pub struct AppState {
     base: qt_base_class!(trait QObject),
-
     deferred_views: RefCell<Vec<Box<dyn FnOnce(&dyn VirtualHierarchy)>>>,
 
+    app_actor: Option<Addr<KeepassRxActor>>,
     current_view: Option<Rc<Box<dyn VirtualHierarchy>>>,
     curr_db: Option<Rc<Zeroizing<RxDatabase>>>,
 }
@@ -55,6 +55,14 @@ impl AppState {
         let db = Rc::try_unwrap(db)
             .map_err(|_| anyhow!("Database Rc still has lingering references"))?;
         Ok(db)
+    }
+
+    pub fn set_app_actor(&mut self, actor: Addr<KeepassRxActor>) {
+        self.app_actor = Some(actor);
+    }
+
+    pub fn app_actor(&self) -> Option<Addr<KeepassRxActor>> {
+        self.app_actor.clone()
     }
 
     pub fn set_db(&mut self, db: Zeroizing<RxDatabase>) {

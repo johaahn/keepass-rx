@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-24 14:14+0000\n"
+"POT-Creation-Date: 2025-11-25 13:01+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,9 +41,9 @@ msgstr ""
 msgid "Tap to copy 2FA code"
 msgstr ""
 
-#: qml/pages/AboutPage.qml:11 qml/pages/OpenDBPage.qml:53
-#: qml/pages/DBList.qml:81 qml/pages/UnlockPage.qml:41
-#: qml/pages/EntriesPage.qml:216
+#: qml/pages/AboutPage.qml:11 qml/pages/UnlockPage.qml:41
+#: qml/pages/EntriesPage.qml:216 qml/pages/OpenDBPage.qml:53
+#: qml/pages/DBList.qml:85
 msgid "About"
 msgstr ""
 
@@ -61,35 +61,14 @@ msgstr ""
 
 #: qml/pages/AboutPage.qml:76
 msgid ""
-"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
-"agnos.is/projectmoon/keepass-rx</a>"
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
+"git.agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:33 qml/pages/EntriesPage.qml:171
-#: qml/pages/SingleEntry.qml:82
-msgid "Back"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:46 qml/pages/SettingsPage.qml:11
-#: qml/pages/DBList.qml:74 qml/pages/UnlockPage.qml:34
-#: qml/pages/EntriesPage.qml:207
+#: qml/pages/SettingsPage.qml:11 qml/pages/UnlockPage.qml:34
+#: qml/pages/EntriesPage.qml:207 qml/pages/OpenDBPage.qml:46
+#: qml/pages/DBList.qml:78
 msgid "Settings"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:158
-msgid "Enter the database master password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:171
-msgid "Master Password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:201
-msgid "Open"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:218
-msgid "Opening"
 msgstr ""
 
 #: qml/pages/SettingsPage.qml:44
@@ -124,26 +103,6 @@ msgstr ""
 
 #: qml/pages/SettingsPage.qml:81
 msgid "This group contains all the deleted entries"
-msgstr ""
-
-#: qml/pages/DBList.qml:67
-msgid "Add Database"
-msgstr ""
-
-#: qml/pages/DBList.qml:101
-msgid "Loading last database."
-msgstr ""
-
-#: qml/pages/DBList.qml:111
-msgid "Select Database"
-msgstr ""
-
-#: qml/pages/DBList.qml:167
-msgid "Tap + to import a database."
-msgstr ""
-
-#: qml/pages/DBList.qml:266
-msgid "It will only be removed from the app, not your device."
 msgstr ""
 
 #: qml/pages/UnlockPage.qml:146
@@ -198,6 +157,11 @@ msgstr ""
 
 #: qml/pages/EntriesPage.qml:159
 msgid "Close"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:171 qml/pages/SingleEntry.qml:82
+#: qml/pages/OpenDBPage.qml:33
+msgid "Back"
 msgstr ""
 
 #: qml/pages/EntriesPage.qml:184
@@ -294,6 +258,42 @@ msgstr ""
 
 #: qml/pages/SingleEntry.qml:238
 msgid "Other Fields"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:158
+msgid "Enter the database master password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:171
+msgid "Master Password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:201
+msgid "Open"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:218
+msgid "Opening"
+msgstr ""
+
+#: qml/pages/DBList.qml:71
+msgid "Add Database"
+msgstr ""
+
+#: qml/pages/DBList.qml:105
+msgid "Loading last database."
+msgstr ""
+
+#: qml/pages/DBList.qml:115
+msgid "Select Database"
+msgstr ""
+
+#: qml/pages/DBList.qml:171
+msgid "Tap + to import a database."
+msgstr ""
+
+#: qml/pages/DBList.qml:280
+msgid "It will only be removed from the app, not your device."
 msgstr ""
 
 #: src/gui/instructions.rs:9

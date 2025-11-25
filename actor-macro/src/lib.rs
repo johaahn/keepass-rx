@@ -21,7 +21,7 @@ use proc_macro::TokenStream;
 use quote::quote;
 use syn::punctuated::Punctuated;
 
-struct ObservingModelAttribute {
+struct ConnectedModelAttribute {
     segments: Punctuated<syn::Meta, syn::Token!(,)>,
 }
 
@@ -95,7 +95,7 @@ impl syn::parse::Parse for RoleProperties {
     }
 }
 
-impl ObservingModelAttribute {
+impl ConnectedModelAttribute {
     fn get(&self, _attr_name: &str) -> Option<&proc_macro2::TokenStream> {
         self.segments
             .iter()
@@ -132,7 +132,7 @@ fn parse_until<E: syn::parse::Peek>(
     Ok(tokens)
 }
 
-impl syn::parse::Parse for ObservingModelAttribute {
+impl syn::parse::Parse for ConnectedModelAttribute {
     fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
         let mut segments = Punctuated::new();
 
@@ -154,7 +154,7 @@ impl syn::parse::Parse for ObservingModelAttribute {
 #[proc_macro_attribute]
 pub fn observing_model(attr: TokenStream, input: TokenStream) -> TokenStream {
     let mut strukt = syn::parse_macro_input!(input as syn::ItemStruct);
-    let attr = syn::parse_macro_input!(attr as ObservingModelAttribute);
+    let attr = syn::parse_macro_input!(attr as ConnectedModelAttribute);
 
     let syn::Fields::Named(fields) = &mut strukt.fields else {
         return TokenStream::from(quote! {
@@ -334,7 +334,7 @@ fn inject_literal_properties(strukt: &mut syn::ItemStruct) -> proc_macro2::Token
     }
 }
 
-fn inject_struct_fields(attr: &ObservingModelAttribute, strukt: &mut syn::FieldsNamed) {
+fn inject_struct_fields(attr: &ConnectedModelAttribute, strukt: &mut syn::FieldsNamed) {
     inject_base_fields(strukt);
     inject_role_fields(attr, strukt);
 }
@@ -346,11 +346,11 @@ fn inject_base_fields(fields: &mut syn::FieldsNamed) {
             syn::parse_quote! { _ready: qt_property!(bool; ALIAS ready NOTIFY _readyChanged) },
             syn::parse_quote! { _readyChanged: qt_signal!() },
             syn::parse_quote! { _app: qt_property!(QPointer<crate::app::AppState>; ALIAS app WRITE set_app) },
-            syn::parse_quote! { _observing_model_registration: Option<crate::actor::ObservingModelRegistration<Self>> },
+            syn::parse_quote! { _connected_model_registration: Option<crate::actor::ConnectedModelRegistration<Self>> },
         ]);
 }
 
-fn inject_role_fields(attr: &ObservingModelAttribute, fields: &mut syn::FieldsNamed) {
+fn inject_role_fields(attr: &ConnectedModelAttribute, fields: &mut syn::FieldsNamed) {
     let Some(role) = attr.properties_from_role() else {
         return;
     };
@@ -378,7 +378,7 @@ fn inject_role_fields(attr: &ObservingModelAttribute, fields: &mut syn::FieldsNa
 }
 
 fn generate_methods(
-    attr: &ObservingModelAttribute,
+    attr: &ConnectedModelAttribute,
     strukt: &syn::ItemStruct,
 ) -> proc_macro2::TokenStream {
     let name = &strukt.ident;
@@ -428,11 +428,24 @@ fn generate_methods(
 
             #[qmeta_async::with_executor]
             fn set_app(&mut self, app: QPointer<crate::app::AppState>) {
+                use actix::prelude::*;
+                use crate::actor::*;
+
                 self._app = app.clone();
                 let this = qmetaobject::QPointer::from(&*self);
                 let app = app.as_pinned();
                 let app = app.expect("Valid AppState initialization");
                 let app = app.borrow();
+
+                let actor = ConnectedModelActor {
+                    model: qmetaobject::QPointer::from(&*self),
+                }
+                .start();
+
+                self._connected_model_registration = Some(ConnectedModelRegistration {
+                    actor,
+                });
+
                 drop(self);
 
                 app.deferred_with_view(move |view| {
@@ -447,6 +460,9 @@ fn generate_methods(
             }
 
             fn reinit_with(&mut self, view: &dyn VirtualHierarchy) {
+                use actix::prelude::*;
+                use crate::actor::*;
+
                 self.init_from_view(view);
                 self._ready = true;
                 self._readyChanged();
@@ -454,6 +470,7 @@ fn generate_methods(
 
             fn reinit(&mut self) {
                 use actix::prelude::*;
+                use crate::actor::*;
 
                 let app_state = self._app.as_pinned().expect("No app state");
                 let app_state = app_state.borrow();

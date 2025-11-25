@@ -29,7 +29,11 @@ Page {
         target: keepassrx
 
         onDatabaseImported: (databaseName, databaseType) => {
-            dbListModel.append({ databaseName, databaseType: databaseType.toString() });
+            dbListModel.append({
+                databaseName,
+                databaseType,
+                databaseTypeString: databaseType.toString()
+            });
         }
 
         onDatabaseDeleted: (databaseName) => {
@@ -208,7 +212,7 @@ Page {
                 ListItemLayout {
                     id: layout
                     title.text: databaseName
-                    subtitle.text: databaseType == 'Imported'
+                    subtitle.text: databaseTypeString == 'Imported'
                         ? i18n.ctr(
                             "When an imported DB is loaded from the app's data folder",
                             "Imported"
@@ -229,6 +233,16 @@ Page {
                 }
 
                 onClicked: {
+                    // test ui db thingy
+                    const dbType = databaseTypeString == 'Imported'
+                          ? RxDbType.Imported
+                          : RxDbType.Synced;
+
+                    uiDatabase.databaseName = databaseName;
+                    //uiDatabase.databaseType = dbType;
+                    uiDatabase.open();
+
+                    // regular code
                     keepassrx.lastDB = databaseName;
                     openDbPage.databaseName = databaseName;
                     adaptiveLayout.primaryPage = openDbPage;

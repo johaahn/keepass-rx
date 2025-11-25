@@ -55,8 +55,8 @@ impl QMetaType for RxGuiState {
 #[repr(C)]
 pub enum RxDbType {
     #[default]
-    Imported,
-    Synced,
+    Imported = 0,
+    Synced = 1,
 }
 
 impl QMetaType for RxDbType {
@@ -72,6 +72,23 @@ impl QMetaType for RxDbType {
             RxDbType::Imported => "Imported".into(),
             RxDbType::Synced => "Synced".into(),
         });
+
+    fn from_qvariant(variant: QVariant) -> Option<Self> {
+        if variant.is_null() {
+            return None;
+        }
+
+        // Probably should check this here.
+        match variant.to_int() {
+            0 => Some(RxDbType::Imported),
+            1 => Some(RxDbType::Synced),
+            _ => None,
+        }
+    }
+
+    fn to_qvariant(&self) -> QVariant {
+        QVariant::from(*self as u32)
+    }
 }
 
 #[derive(Debug, Default, QEnum, Clone, Copy, PartialEq, Eq)]
@@ -128,7 +145,8 @@ pub struct KeepassRx {
     listImportedDatabases: qt_method!(fn(&self)),
     importDatabase: qt_method!(fn(&self, path: String)),
     getMetadata: qt_method!(fn(&self)),
-    openDatabase: qt_method!(fn(&mut self, db_name: String, key_path: QString)),
+    openDatabase:
+        qt_method!(fn(&mut self, db_name: String, db_type: RxDbType, key_path: QString)),
     closeDatabase: qt_method!(fn(&mut self)),
     deleteDatabase: qt_method!(fn(&self, db_name: String)),
 
@@ -323,14 +341,18 @@ impl KeepassRx {
     }
 
     #[with_executor]
-    pub fn openDatabase(&mut self, db_name: String, key_path: QString) {
+    pub fn openDatabase(&mut self, db_name: String, db_type: RxDbType, key_path: QString) {
         let actor = self.actor.clone().expect("Actor not initialized");
         let key_path = match key_path {
             kp if !kp.is_null() && !kp.is_empty() => Some(kp.to_string()),
             _ => None,
         };
 
-        actix::spawn(actor.send(OpenDatabase { db_name, key_path }));
+        actix::spawn(actor.send(OpenDatabase {
+            db_name,
+            db_type,
+            key_path,
+        }));
     }
 
     #[with_executor]

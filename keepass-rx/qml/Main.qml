@@ -20,6 +20,7 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.3
 import Qt.labs.settings 1.0
 import Lomiri.Components 1.3
+import keepassrx 1.0
 
 import "./pages"
 
@@ -32,9 +33,15 @@ MainView {
     width: units.gu(45)
     height: units.gu(75)
 
-    Settings {
-        id: settings
-        property string lastDB
+    // Default values.
+    RxUiDatabase {
+        id: uiDatabase
+        app: AppState
+
+        Component.onCompleted: {
+            uiDatabase.onDatabaseNameChanged.connect(uiDatabase.updateLastDbSet);
+            uiDatabase.onDatabaseTypeChanged.connect(uiDatabase.updateLastDbSet);
+        }
     }
 
     Connections {
@@ -57,13 +64,13 @@ MainView {
 
         function onMasterPasswordStored() {
             if (visible) {
-                keepassrx.openDatabase(keepassrx.lastDB, settings.lastKey);
+                uiDatabase.open();
             }
         }
 
-      function onMasterPasswordDecrypted() {
+        function onMasterPasswordDecrypted() {
             console.log('Re-opening database from locked state.');
-            keepassrx.openDatabase(keepassrx.lastDB,  settings.lastKey);
+            uiDatabase.open();
         }
 
         // When the UI requests getting a single value from one of the
@@ -125,7 +132,7 @@ MainView {
 
         if (keepassrx.guiState == 'Locked') {
             adaptiveLayout.primaryPageSource = Qt.resolvedUrl("pages/UnlockPage.qml");
-        } else if (keepassrx.guiState == 'NotOpen' && keepassrx.lastDB) {
+        } else if (keepassrx.guiState == 'NotOpen' && uiDatabase.databaseName) {
             adaptiveLayout.primaryPageSource = Qt.resolvedUrl("pages/OpenDBPage.qml");
         } else {
             adaptiveLayout.primaryPageSource = Qt.resolvedUrl("pages/DBList.qml");

@@ -9,32 +9,21 @@ import "../components"
 
 Page {
     id: openDbPage
-    property string databaseName
     property bool busy
     property string errorMsg
     property double lastHeartbeat: 0
 
-    Component.onCompleted: {
-        if (databaseName) {
-            keepassrx.lastDB = databaseName;
-        } else {
-            if (keepassrx.lastDB) {
-                databaseName = keepassrx.lastDB;
-            }
-        }
-    }
-
     header: PageHeader {
         id: header
-        title: databaseName || keepassrx.lastDB
+        title: uiDatabase.databaseName
         leadingActionBar.actions: [
             Action {
                 name: "Back"
                 text: i18n.tr("Back")
                 iconName: "previous"
                 onTriggered: {
-                    // When going back, remove the setting.
-                    keepassrx.lastDB = null;
+                    // When going back, remove last DB.
+                    uiDatabase.databaseName = null;
                     root.reload();
                 }
             }
@@ -60,7 +49,6 @@ Page {
     Settings {
         id: settings
         property string lastKey
-        property string lastDB
         property int autoCloseInterval: 5
         property bool showSlowDBWarning: true
         property bool easyOpen: true
@@ -70,8 +58,6 @@ Page {
         console.log('[OpenDB] QML - Storing password');
         busy = true;
         showPasswordAction.checked = false;
-
-        keepassrx.lastDB = databaseName;
 
         if (keepassrx.isMasterPasswordEncrypted) {
             // TODO should not be able to be in this state
@@ -140,9 +126,23 @@ Page {
                 Layout.fillWidth: true
                 Layout.preferredWidth: parent.width
                 horizontalAlignment: Qt.AlignHCenter
-                color: LomiriColors.ash
+                color: theme.palette.normal.backgroundSecondaryText
                 width: parent.width
-                text: databaseName || keepassrx.lastDB
+                text: uiDatabase.databaseName
+            }
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            width: parent.width
+
+            Text {
+                Layout.fillWidth: true
+                Layout.preferredWidth: parent.width
+                horizontalAlignment: Qt.AlignHCenter
+                color: theme.palette.normal.backgroundTertiaryText
+                width: parent.width
+                text: uiDatabase.databaseTypeTranslated
             }
         }
 

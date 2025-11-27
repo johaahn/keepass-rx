@@ -6,15 +6,17 @@ use secstr::SecUtf8;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::fs::File;
+use std::rc::Rc;
 use std::sync::Arc;
 use tokio::task::{JoinHandle, spawn_blocking};
 use uuid::Uuid;
 use zeroize::{Zeroize, Zeroizing};
 
-use super::KeepassRx;
 use super::instructions::get_instructions;
+use super::{KeepassRx, RxDbType};
 use crate::app::AppState;
 use crate::crypto::EncryptedPassword;
+use crate::gui::utils::synced_databases_path;
 use crate::rx::virtual_hierarchy::{
     AllTags, AllTemplates, DefaultView, TotpEntries, VirtualHierarchy,
 };
@@ -25,7 +27,7 @@ use crate::{
 
 #[derive(Default)]
 pub struct KeepassRxActor {
-    app_state: Arc<QObjectBox<AppState>>,
+    app_state: Rc<QObjectBox<AppState>>,
     gui: Arc<QObjectBox<KeepassRx>>,
     //curr_db: RefCell<Option<Zeroizing<RxDatabase>>>,
     curr_master_pw: Arc<RefCell<Option<EncryptedPassword>>>,
@@ -39,7 +41,7 @@ pub struct KeepassRxActor {
 impl KeepassRxActor {
     pub fn new(
         gui: &Arc<QObjectBox<KeepassRx>>,
-        app_state: &Arc<QObjectBox<AppState>>,
+        app_state: &Rc<QObjectBox<AppState>>,
     ) -> Self {
         Self {
             gui: gui.clone(),
@@ -59,6 +61,15 @@ impl KeepassRxActor {
     }
 }
 
+impl Supervised for KeepassRxActor {}
+
+impl SystemService for KeepassRxActor {
+    fn service_started(&mut self, ctx: &mut Context<Self>) {
+        println!("service started");
+        self.gui.pinned().borrow_mut().actor = Some(ctx.address());
+    }
+}
+
 impl Actor for KeepassRxActor {
     type Context = actix::Context<Self>;
 
@@ -75,6 +86,7 @@ pub struct SetViewMode(pub RxViewMode);
 #[rtype(result = "anyhow::Result<()>")]
 pub struct OpenDatabase {
     pub db_name: String,
+    pub db_type: RxDbType,
     pub key_path: Option<String>,
 }
 
@@ -215,12 +227,15 @@ impl Handler<OpenDatabase> for KeepassRxActor {
     fn handle(&mut self, msg: OpenDatabase, _: &mut Self::Context) -> Self::Result {
         // Opening the database is synchronous I/O, which means it
         // must be done on a separate thread.
-        let db_path = imported_databases_path().join(msg.db_name);
+        let db_path = match msg.db_type {
+            RxDbType::Imported => imported_databases_path().join(msg.db_name),
+            RxDbType::Synced => synced_databases_path().join(msg.db_name),
+        };
 
         // Clone here so we can encrypt later.
         let stored_pw = self.stored_master_password.clone();
 
-        println!("Opening DB: {}", db_path.display());
+        println!("Opening {} DB: {}", msg.db_type, db_path.display());
 
         AtomicResponse::new(Box::pin(
             async move {

@@ -19,7 +19,6 @@ Page {
     Settings {
         id: settings
         property string lastKey
-        property string lastDB
         property int autoCloseInterval: 5
         property bool showSlowDBWarning: true
         property bool easyOpen: true
@@ -28,11 +27,15 @@ Page {
     Connections {
         target: keepassrx
 
-        onDatabaseImported: (databaseName, databaseType) => {
-            dbListModel.append({ databaseName, databaseType: databaseType.toString() });
+        function onDatabaseImported(databaseName, databaseType) {
+            dbListModel.append({
+                databaseName,
+                databaseType,
+                databaseTypeString: databaseType.toString()
+            });
         }
 
-        onDatabaseDeleted: (databaseName) => {
+        function onDatabaseDeleted(databaseName) {
             let indexToDelete = undefined;
             for (let c = 0; c < dbListModel.count; c++) {
                 const entry = dbListModel.get(c);
@@ -87,7 +90,7 @@ Page {
 
     ColumnLayout {
         id: loadLastDbView
-        visible: keepassrx.lastDB && keepassrx.lastDB.trim().length > 0 // string
+        visible: uiDatabase.isLastDbSet
         spacing: units.gu(2)
         anchors.left: parent.left
         anchors.right: parent.right
@@ -124,7 +127,7 @@ Page {
 
     Connections {
         id: copyDatabase
-        onStateChanged: {
+        function onStateChanged() {
             var done = target.state === ContentTransfer.Charged;
 
             if (!done) {
@@ -144,7 +147,7 @@ Page {
 
     // Initial logo image.
     ColumnLayout {
-        visible: dbListModel.count == 0 && !keepassrx.lastDB
+        visible: dbListModel.count == 0 && !uiDatabase.isLastDbSet
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: header.bottom
@@ -184,7 +187,7 @@ Page {
 
     // DB list
     Item {
-        visible: dbListModel.count > 0 && !keepassrx.lastDB
+        visible: dbListModel.count > 0 && !uiDatabase.isLastDbSet
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: header.bottom
@@ -208,7 +211,7 @@ Page {
                 ListItemLayout {
                     id: layout
                     title.text: databaseName
-                    subtitle.text: databaseType == 'Imported'
+                    subtitle.text: databaseTypeString == 'Imported'
                         ? i18n.ctr(
                             "When an imported DB is loaded from the app's data folder",
                             "Imported"
@@ -229,8 +232,8 @@ Page {
                 }
 
                 onClicked: {
-                    keepassrx.lastDB = databaseName;
-                    openDbPage.databaseName = databaseName;
+                    uiDatabase.databaseName = databaseName;
+                    uiDatabase.databaseType = databaseTypeString;
                     adaptiveLayout.primaryPage = openDbPage;
                 }
 

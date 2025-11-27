@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-24 14:14+0000\n"
+"POT-Creation-Date: 2025-11-27 11:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,9 +41,9 @@ msgstr ""
 msgid "Tap to copy 2FA code"
 msgstr ""
 
-#: qml/pages/AboutPage.qml:11 qml/pages/OpenDBPage.qml:53
-#: qml/pages/DBList.qml:81 qml/pages/UnlockPage.qml:41
-#: qml/pages/EntriesPage.qml:216
+#: qml/pages/AboutPage.qml:11 qml/pages/UnlockPage.qml:41
+#: qml/pages/EntriesPage.qml:216 qml/pages/OpenDBPage.qml:42
+#: qml/pages/DBList.qml:84
 msgid "About"
 msgstr ""
 
@@ -65,31 +65,10 @@ msgid ""
 "agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:33 qml/pages/EntriesPage.qml:171
-#: qml/pages/SingleEntry.qml:82
-msgid "Back"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:46 qml/pages/SettingsPage.qml:11
-#: qml/pages/DBList.qml:74 qml/pages/UnlockPage.qml:34
-#: qml/pages/EntriesPage.qml:207
+#: qml/pages/SettingsPage.qml:11 qml/pages/UnlockPage.qml:34
+#: qml/pages/EntriesPage.qml:207 qml/pages/OpenDBPage.qml:35
+#: qml/pages/DBList.qml:77
 msgid "Settings"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:158
-msgid "Enter the database master password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:171
-msgid "Master Password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:201
-msgid "Open"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:218
-msgid "Opening"
 msgstr ""
 
 #: qml/pages/SettingsPage.qml:44
@@ -126,53 +105,33 @@ msgstr ""
 msgid "This group contains all the deleted entries"
 msgstr ""
 
-#: qml/pages/DBList.qml:67
-msgid "Add Database"
-msgstr ""
-
-#: qml/pages/DBList.qml:101
-msgid "Loading last database."
-msgstr ""
-
-#: qml/pages/DBList.qml:111
-msgid "Select Database"
-msgstr ""
-
-#: qml/pages/DBList.qml:167
-msgid "Tap + to import a database."
-msgstr ""
-
-#: qml/pages/DBList.qml:266
-msgid "It will only be removed from the app, not your device."
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:146
+#: qml/pages/UnlockPage.qml:145
 msgid "Manual path set."
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:163
+#: qml/pages/UnlockPage.qml:162
 msgid ""
 "The passcode is the first five characters of the database password (or the "
 "whole password if less than five characters)."
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:181
+#: qml/pages/UnlockPage.qml:178
 msgid "Passcode"
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:213
+#: qml/pages/UnlockPage.qml:210
 msgid "Unlock"
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:232
+#: qml/pages/UnlockPage.qml:229
 msgid "Securely Unlocking"
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:233
+#: qml/pages/UnlockPage.qml:230
 msgid "Securely Locking"
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:244
+#: qml/pages/UnlockPage.qml:241
 msgid "Database Not Opening?"
 msgstr ""
 
@@ -198,6 +157,11 @@ msgstr ""
 
 #: qml/pages/EntriesPage.qml:159
 msgid "Close"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:171 qml/pages/SingleEntry.qml:82
+#: qml/pages/OpenDBPage.qml:22
+msgid "Back"
 msgstr ""
 
 #: qml/pages/EntriesPage.qml:184
@@ -296,10 +260,56 @@ msgstr ""
 msgid "Other Fields"
 msgstr ""
 
+#: qml/pages/OpenDBPage.qml:158
+msgid "Enter the database master password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:171
+msgid "Master Password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:201
+msgid "Open"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:218
+msgid "Opening"
+msgstr ""
+
+#: qml/pages/DBList.qml:70
+msgid "Add Database"
+msgstr ""
+
+#: qml/pages/DBList.qml:104
+msgid "Loading last database."
+msgstr ""
+
+#: qml/pages/DBList.qml:114
+msgid "Select Database"
+msgstr ""
+
+#: qml/pages/DBList.qml:170
+msgid "Tap + to import a database."
+msgstr ""
+
+#: qml/pages/DBList.qml:269
+msgid "It will only be removed from the app, not your device."
+msgstr ""
+
 #: src/gui/instructions.rs:9
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
+msgstr ""
+
+#: src/gui/mod.rs:66
+msgctxt "A database imported via ContentHub"
+msgid "Imported"
+msgstr ""
+
+#: src/gui/mod.rs:67
+msgctxt "A database managed by external file sync"
+msgid "Synced"
 msgstr ""
 
 #: src/rx/virtual_hierarchy.rs:74

@@ -48,7 +48,6 @@ Page {
     Settings {
         id: settings
         property string lastKey
-        property string lastDB
         property int autoCloseInterval: 5
         property bool showSlowDBWarning: true
         property bool easyOpen: true
@@ -133,7 +132,7 @@ Page {
                 horizontalAlignment: Qt.AlignHCenter
                 width: parent.width
                 color: LomiriColors.ash
-                text: keepassrx.lastDB
+                text: uiDatabase.databaseName
             }
         }
 
@@ -173,9 +172,7 @@ Page {
                 id: shortPassword
                 visible: keepassrx.isMasterPasswordEncrypted
                 enabled: (keepassrx.isMasterPasswordEncrypted &&
-                          keepassrx.lastDB !== undefined &&
-                          keepassrx.lastDB != null &&
-                          keepassrx.lastDB.length > 0 && !busy)
+                          uiDatabase.isLastDbSet && !busy)
                 text: ''
                 // TRANSLATORS: The short password for unlocking the database.
                 placeholderText: i18n.tr("Passcode")
@@ -206,7 +203,7 @@ Page {
             Layout.fillWidth: true
             visible: !busy && keepassrx.isMasterPasswordEncrypted
             enabled: (keepassrx.isMasterPasswordEncrypted &&
-                      keepassrx.lastDB &&
+                      uiDatabase.isLastDbSet &&
                       (settings.lastKey || shortPassword.text))
             color: Theme.name == "Lomiri.Components.Themes.Ambiance" ? LomiriColors.green : LomiriColors.lightGreen
             // TRANSLATORS: Unlock a previously-opened password database.

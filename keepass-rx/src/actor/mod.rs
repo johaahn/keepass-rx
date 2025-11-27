@@ -16,14 +16,17 @@
  * along with this program. If not, see
  * <https://www.gnu.org/licenses/>.
  */
+use actix::SystemRegistry;
 use actix::prelude::*;
+use qmeta_async::with_executor;
 use qmetaobject::QObject;
 use qmetaobject::QPointer;
 
 use crate::app::AppState;
+use crate::gui::actor::KeepassRxActor;
 
 #[allow(dead_code)]
-pub trait EventObserving<M>
+pub trait ActorConnected<M>
 where
     M: actix::Message,
 {
@@ -31,18 +34,18 @@ where
 
     fn app_state(&self) -> &AppState;
 
-    fn observe(&mut self, ctx: Self::Context, message: M)
+    fn handle(&mut self, ctx: Self::Context, message: M)
     where
         Self: Sized + QObject;
 }
 
 pub struct ModelContext<T: QObject + 'static> {
-    pub(crate) addr: Addr<ObservingModelActor<T>>,
+    pub(crate) addr: Addr<ConnectedModelActor<T>>,
 }
 
 #[allow(dead_code)]
 impl<T: QObject + 'static> ModelContext<T> {
-    pub fn addr(&self) -> Addr<ObservingModelActor<T>> {
+    pub fn addr(&self) -> Addr<ConnectedModelActor<T>> {
         self.addr.clone()
     }
 }
@@ -51,21 +54,22 @@ impl<T: QObject + 'static> ModelContext<T> {
 /// dispatch events to the contained model. The contained model is a
 /// weak pointer, such that the actor will stop when the model goes
 /// out of scope.
-pub struct ObservingModelActor<T: QObject> {
+pub struct ConnectedModelActor<T: QObject> {
     pub(super) model: QPointer<T>,
 }
 
-impl<T: QObject + 'static> actix::Actor for ObservingModelActor<T> {
+impl<T: QObject + 'static> actix::Actor for ConnectedModelActor<T> {
     type Context = actix::Context<Self>;
 }
 
-impl<M, T: QObject + 'static> actix::Handler<M> for ObservingModelActor<T>
+impl<M, T: QObject + 'static> actix::Handler<M> for ConnectedModelActor<T>
 where
-    T: EventObserving<M, Context = ModelContext<T>>,
+    T: ActorConnected<M, Context = ModelContext<T>>,
     M: Sized + actix::Message<Result = ()>,
 {
     type Result = ();
 
+    #[with_executor]
     fn handle(&mut self, event: M, ctx: &mut Self::Context) -> Self::Result {
         match self.model.as_pinned() {
             Some(model) => {
@@ -73,7 +77,7 @@ where
                 let ctx = ModelContext {
                     addr: ctx.address(),
                 };
-                model.observe(ctx, event);
+                model.handle(ctx, event);
             }
             None => {
                 // In principle, the actor should have gotten stopped
@@ -88,6 +92,6 @@ where
     }
 }
 
-pub struct ObservingModelRegistration<T: QObject + 'static> {
-    pub(crate) actor: actix::Addr<ObservingModelActor<T>>,
+pub struct ConnectedModelRegistration<T: QObject + 'static> {
+    pub(crate) actor: actix::Addr<ConnectedModelActor<T>>,
 }

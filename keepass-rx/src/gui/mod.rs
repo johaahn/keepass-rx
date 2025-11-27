@@ -1,6 +1,7 @@
 use actix::prelude::*;
 use anyhow::{Result, anyhow};
 use colors::wash_out_by_blending;
+use gettextrs::pgettext;
 use qmeta_async::with_executor;
 use qmetaobject::*;
 use secstr::SecUtf8;
@@ -55,23 +56,64 @@ impl QMetaType for RxGuiState {
 #[repr(C)]
 pub enum RxDbType {
     #[default]
-    Imported,
-    Synced,
+    Imported = 0,
+    Synced = 1,
+}
+
+impl RxDbType {
+    fn translate(&self) -> String {
+        match self {
+            RxDbType::Imported => pgettext("A database imported via ContentHub", "Imported"),
+            RxDbType::Synced => pgettext("A database managed by external file sync", "Synced"),
+        }
+    }
+}
+
+impl std::fmt::Display for RxDbType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            RxDbType::Imported => write!(f, "Imported"),
+            RxDbType::Synced => write!(f, "Synced"),
+        }
+    }
+}
+
+impl From<String> for RxDbType {
+    fn from(value: String) -> Self {
+        match value.as_str() {
+            "Imported" => RxDbType::Imported,
+            "Synced" => RxDbType::Synced,
+            _ => panic!("Invalid RxDbType: {}", value),
+        }
+    }
 }
 
 impl QMetaType for RxDbType {
     const CONVERSION_FROM_STRING: Option<fn(&QString) -> Self> =
-        Some(|qval: &QString| match qval.to_string().as_str() {
-            "Imported" => RxDbType::Imported,
-            "Synced" => RxDbType::Synced,
-            _ => panic!("Invalid RxDbType: {}", qval),
-        });
+        Some(|qval: &QString| RxDbType::from(qval.to_string()));
 
     const CONVERSION_TO_STRING: Option<fn(&Self) -> QString> =
         Some(|db_type: &Self| match db_type {
             RxDbType::Imported => "Imported".into(),
             RxDbType::Synced => "Synced".into(),
         });
+
+    fn from_qvariant(variant: QVariant) -> Option<Self> {
+        if variant.is_null() {
+            return None;
+        }
+
+        // Probably should check this here.
+        match variant.to_int() {
+            0 => Some(RxDbType::Imported),
+            1 => Some(RxDbType::Synced),
+            _ => None,
+        }
+    }
+
+    fn to_qvariant(&self) -> QVariant {
+        QVariant::from(*self as u32)
+    }
 }
 
 #[derive(Debug, Default, QEnum, Clone, Copy, PartialEq, Eq)]
@@ -114,11 +156,9 @@ impl QMetaType for RxViewMode {
 pub struct KeepassRx {
     base: qt_base_class!(trait QObject),
     actor: Option<Addr<KeepassRxActor>>,
-    last_db: Option<String>,
 
     guiState: qt_property!(RxGuiState),
     viewMode: qt_property!(RxViewMode; READ getViewMode WRITE setViewMode NOTIFY viewModeChanged),
-    lastDB: qt_property!(QString; READ getLastDB WRITE setLastDB NOTIFY lastDbChanged),
     databaseOpen: qt_property!(bool),
     isMasterPasswordEncrypted: qt_property!(bool; NOTIFY masterPasswordStateChanged),
     rootGroupUuid: qt_property!(QString; NOTIFY rootGroupUuidChanged),
@@ -128,7 +168,8 @@ pub struct KeepassRx {
     listImportedDatabases: qt_method!(fn(&self)),
     importDatabase: qt_method!(fn(&self, path: String)),
     getMetadata: qt_method!(fn(&self)),
-    openDatabase: qt_method!(fn(&mut self, db_name: String, key_path: QString)),
+    openDatabase:
+        qt_method!(fn(&mut self, db_name: String, db_type: RxDbType, key_path: QString)),
     closeDatabase: qt_method!(fn(&mut self)),
     deleteDatabase: qt_method!(fn(&self, db_name: String)),
 
@@ -151,7 +192,6 @@ pub struct KeepassRx {
     washOutColor: qt_method!(fn(&self, hex_color: QString) -> QVariantMap),
 
     // db management signals
-    lastDbChanged: qt_signal!(value: QString),
     viewModeChanged: qt_signal!(value: RxViewMode),
     fileListingCompleted: qt_signal!(),
     rootGroupUuidChanged: qt_signal!(),
@@ -182,9 +222,8 @@ pub struct KeepassRx {
 
 #[allow(non_snake_case)]
 impl KeepassRx {
-    pub fn new(last_db: Option<String>) -> Self {
+    pub fn new() -> Self {
         KeepassRx {
-            last_db: last_db,
             ..Default::default()
         }
     }
@@ -199,37 +238,12 @@ impl KeepassRx {
         actix::spawn(actor.send(SetViewMode(mode)));
     }
 
-    pub fn getLastDB(&self) -> QString {
-        self.last_db.clone().map(QString::from).unwrap_or_default()
-    }
-
-    pub fn setLastDB(&mut self, last_db: QString) {
-        let new_last_db = match last_db {
-            db if !db.is_null() => Some(db.to_string()),
-            _ => None,
-        };
-
-        let change = self.last_db != new_last_db;
-
-        if change {
-            let last_db_file = app_data_path().join("last-db");
-            let result = match new_last_db {
-                Some(ref db) => std::fs::write(last_db_file, db),
-                None => std::fs::write(last_db_file, "".to_string()),
-            };
-
-            if let Err(err) = result {
-                println!("Unable to write last-db file: {}", err);
-            }
-
-            self.last_db = new_last_db.clone();
-            self.lastDbChanged(new_last_db.map(QString::from).unwrap_or_default());
-        }
-    }
-
     #[with_executor]
     pub fn listImportedDatabases(&self) {
         let list_dbs = || -> Result<()> {
+            create_dir_all(&imported_databases_path())?;
+            create_dir_all(&synced_databases_path())?;
+
             let imported_dbs = std::fs::read_dir(imported_databases_path())?;
             let synced_dbs = std::fs::read_dir(synced_databases_path())?;
             let mut dbs = vec![];
@@ -323,14 +337,18 @@ impl KeepassRx {
     }
 
     #[with_executor]
-    pub fn openDatabase(&mut self, db_name: String, key_path: QString) {
+    pub fn openDatabase(&mut self, db_name: String, db_type: RxDbType, key_path: QString) {
         let actor = self.actor.clone().expect("Actor not initialized");
         let key_path = match key_path {
             kp if !kp.is_null() && !kp.is_empty() => Some(kp.to_string()),
             _ => None,
         };
 
-        actix::spawn(actor.send(OpenDatabase { db_name, key_path }));
+        actix::spawn(actor.send(OpenDatabase {
+            db_name,
+            db_type,
+            key_path,
+        }));
     }
 
     #[with_executor]

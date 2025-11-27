@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-24 14:14+0000\n"
+"POT-Creation-Date: 2025-11-27 11:34+0000\n"
 "PO-Revision-Date: 2025-11-23 20:15+0000\n"
 "Last-Translator: Vlad Nirky <nirky.vlad@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -61,23 +61,8 @@ msgstr ""
 "Source : <a href='https ://git.agnos.is/projectmoon/keepass-rx'>https ://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
-msgid "Back"
-msgstr "Retour"
-
 msgid "Settings"
 msgstr "Paramètres"
-
-msgid "Enter the database master password"
-msgstr "Entrez le mot de passe principal de la base de données"
-
-msgid "Master Password"
-msgstr "Mot de passe principal"
-
-msgid "Open"
-msgstr "Ouvrir"
-
-msgid "Opening"
-msgstr "Ouverture"
 
 msgid ""
 "Change settings based on your preferences. Any change to the settings "
@@ -112,21 +97,6 @@ msgstr "Afficher le groupe « Corbeille »"
 
 msgid "This group contains all the deleted entries"
 msgstr "Ce groupe contient toutes les entrées supprimées"
-
-msgid "Add Database"
-msgstr "Ajouter une base de données"
-
-msgid "Loading last database."
-msgstr "Chargement de la dernière base de données."
-
-msgid "Select Database"
-msgstr "Sélectionner la base de données"
-
-msgid "Tap + to import a database."
-msgstr "Appuyer + pour importer une base de données."
-
-msgid "It will only be removed from the app, not your device."
-msgstr "Elle sera simplement retirée de l’application, pas de votre appareil."
 
 msgid "Manual path set."
 msgstr "Chemin défini manuellement."
@@ -171,6 +141,9 @@ msgstr "Verrouiller"
 
 msgid "Close"
 msgstr "Fermer"
+
+msgid "Back"
+msgstr "Retour"
 
 msgid "View Mode"
 msgstr "Mode d'affichage"
@@ -244,12 +217,47 @@ msgstr "URL"
 msgid "Other Fields"
 msgstr "Autres champs"
 
+msgid "Enter the database master password"
+msgstr "Entrez le mot de passe principal de la base de données"
+
+msgid "Master Password"
+msgstr "Mot de passe principal"
+
+msgid "Open"
+msgstr "Ouvrir"
+
+msgid "Opening"
+msgstr "Ouverture"
+
+msgid "Add Database"
+msgstr "Ajouter une base de données"
+
+msgid "Loading last database."
+msgstr "Chargement de la dernière base de données."
+
+msgid "Select Database"
+msgstr "Sélectionner la base de données"
+
+msgid "Tap + to import a database."
+msgstr "Appuyer + pour importer une base de données."
+
+msgid "It will only be removed from the app, not your device."
+msgstr "Elle sera simplement retirée de l’application, pas de votre appareil."
+
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
 msgstr ""
 "<b>Affichage de tous les codes 2FA dans la base de données.</b><br/"
 ">Affichage des détails d'une entrée à l'aide de sa barre d'actions."
+
+msgctxt "A database imported via ContentHub"
+msgid "Imported"
+msgstr ""
+
+msgctxt "A database managed by external file sync"
+msgid "Synced"
+msgstr ""
 
 msgid "All Templates"
 msgstr "Tous les modèles"

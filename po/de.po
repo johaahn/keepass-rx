@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-24 14:14+0000\n"
+"POT-Creation-Date: 2025-11-27 11:34+0000\n"
 "PO-Revision-Date: 2025-11-21 00:51+0000\n"
 "Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -62,23 +62,8 @@ msgstr ""
 "Quelle: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
-msgid "Back"
-msgstr "Zurück"
-
 msgid "Settings"
 msgstr "Einstellungen"
-
-msgid "Enter the database master password"
-msgstr "Datenbankpasswort eingeben"
-
-msgid "Master Password"
-msgstr "Datenbankpasswort"
-
-msgid "Open"
-msgstr "Öffnen"
-
-msgid "Opening"
-msgstr "Öffne"
 
 msgid ""
 "Change settings based on your preferences. Any change to the settings "
@@ -112,21 +97,6 @@ msgstr "Gruppe „Papierkorb“ anzeigen"
 
 msgid "This group contains all the deleted entries"
 msgstr "Diese Gruppe enthält alle gelöschten Einträge"
-
-msgid "Add Database"
-msgstr "Datenbank hinzufügen"
-
-msgid "Loading last database."
-msgstr "Letzte Datenbank wird geladen."
-
-msgid "Select Database"
-msgstr "Datenbank auswählen"
-
-msgid "Tap + to import a database."
-msgstr "Mit + eine Datenbank importieren."
-
-msgid "It will only be removed from the app, not your device."
-msgstr "Diese wird nur aus der App entfernt, aber nicht vom Gerät gelöscht."
 
 msgid "Manual path set."
 msgstr "Manueller Pfad gesetzt."
@@ -170,6 +140,9 @@ msgstr "Sperren"
 
 msgid "Close"
 msgstr "Schließen"
+
+msgid "Back"
+msgstr "Zurück"
 
 msgid "View Mode"
 msgstr "Ansichtsmodus"
@@ -243,12 +216,47 @@ msgstr ""
 msgid "Other Fields"
 msgstr ""
 
+msgid "Enter the database master password"
+msgstr "Datenbankpasswort eingeben"
+
+msgid "Master Password"
+msgstr "Datenbankpasswort"
+
+msgid "Open"
+msgstr "Öffnen"
+
+msgid "Opening"
+msgstr "Öffne"
+
+msgid "Add Database"
+msgstr "Datenbank hinzufügen"
+
+msgid "Loading last database."
+msgstr "Letzte Datenbank wird geladen."
+
+msgid "Select Database"
+msgstr "Datenbank auswählen"
+
+msgid "Tap + to import a database."
+msgstr "Mit + eine Datenbank importieren."
+
+msgid "It will only be removed from the app, not your device."
+msgstr "Diese wird nur aus der App entfernt, aber nicht vom Gerät gelöscht."
+
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
 msgstr ""
 "<b>Zeige alle 2FA Codes in der Datenbank.</b><br/>Eintragdetails anzeigen "
 "mit der Aktivitätsleiste."
+
+msgctxt "A database imported via ContentHub"
+msgid "Imported"
+msgstr ""
+
+msgctxt "A database managed by external file sync"
+msgid "Synced"
+msgstr ""
 
 msgid "All Templates"
 msgstr "Alle Vorlagen"

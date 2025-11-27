@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-24 14:14+0000\n"
+"POT-Creation-Date: 2025-11-27 11:34+0000\n"
 "PO-Revision-Date: 2025-11-23 11:51+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -61,23 +61,8 @@ msgstr ""
 "Broncode: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
-msgid "Back"
-msgstr "Terug"
-
 msgid "Settings"
 msgstr "Instellingen"
-
-msgid "Enter the database master password"
-msgstr "Voer het hoofdwachtwoord in"
-
-msgid "Master Password"
-msgstr "Hoofdwachtwoord"
-
-msgid "Open"
-msgstr "Openen"
-
-msgid "Opening"
-msgstr "Bezig met openen…"
 
 msgid ""
 "Change settings based on your preferences. Any change to the settings "
@@ -111,22 +96,6 @@ msgstr "Prullenbakgroep tonen"
 
 msgid "This group contains all the deleted entries"
 msgstr "Deze groep bevat alle verwijderde items."
-
-msgid "Add Database"
-msgstr "Databank toevoegen"
-
-msgid "Loading last database."
-msgstr "Bezig met openen van vorige databank…"
-
-msgid "Select Database"
-msgstr "Databank kiezen"
-
-msgid "Tap + to import a database."
-msgstr "Druk op ‘+’ om een databank toe te voegen."
-
-msgid "It will only be removed from the app, not your device."
-msgstr ""
-"Let op: de databank wordt alleen verwijderd uit de app, niet van je apparaat."
 
 msgid "Manual path set."
 msgstr "Stel de locatie handmatig in."
@@ -170,6 +139,9 @@ msgstr "Vergrendelen"
 
 msgid "Close"
 msgstr "Sluiten"
+
+msgid "Back"
+msgstr "Terug"
 
 msgid "View Mode"
 msgstr "Weergavemodus"
@@ -243,12 +215,48 @@ msgstr "Url"
 msgid "Other Fields"
 msgstr "Overige velden"
 
+msgid "Enter the database master password"
+msgstr "Voer het hoofdwachtwoord in"
+
+msgid "Master Password"
+msgstr "Hoofdwachtwoord"
+
+msgid "Open"
+msgstr "Openen"
+
+msgid "Opening"
+msgstr "Bezig met openen…"
+
+msgid "Add Database"
+msgstr "Databank toevoegen"
+
+msgid "Loading last database."
+msgstr "Bezig met openen van vorige databank…"
+
+msgid "Select Database"
+msgstr "Databank kiezen"
+
+msgid "Tap + to import a database."
+msgstr "Druk op ‘+’ om een databank toe te voegen."
+
+msgid "It will only be removed from the app, not your device."
+msgstr ""
+"Let op: de databank wordt alleen verwijderd uit de app, niet van je apparaat."
+
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
 msgstr ""
 "<b>Alle 2FA-codes in de databank worden getoond.</b><br/>Gebruik het "
 "actiemenu om details van een item te bekijken."
+
+msgctxt "A database imported via ContentHub"
+msgid "Imported"
+msgstr ""
+
+msgctxt "A database managed by external file sync"
+msgid "Synced"
+msgstr ""
 
 msgid "All Templates"
 msgstr "Alle sjablonen"

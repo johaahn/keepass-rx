@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-24 14:14+0000\n"
+"POT-Creation-Date: 2025-11-27 11:34+0000\n"
 "PO-Revision-Date: 2025-11-04 22:51+0000\n"
 "Last-Translator: projectmoon <projectmoon@agnos.is>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/ubports/"
@@ -55,22 +55,7 @@ msgid ""
 "git.agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
 
-msgid "Back"
-msgstr ""
-
 msgid "Settings"
-msgstr ""
-
-msgid "Enter the database master password"
-msgstr ""
-
-msgid "Master Password"
-msgstr ""
-
-msgid "Open"
-msgstr ""
-
-msgid "Opening"
 msgstr ""
 
 msgid ""
@@ -98,21 +83,6 @@ msgid "Show the \"Recycle bin\" group"
 msgstr ""
 
 msgid "This group contains all the deleted entries"
-msgstr ""
-
-msgid "Add Database"
-msgstr ""
-
-msgid "Loading last database."
-msgstr ""
-
-msgid "Select Database"
-msgstr ""
-
-msgid "Tap + to import a database."
-msgstr ""
-
-msgid "It will only be removed from the app, not your device."
 msgstr ""
 
 msgid "Manual path set."
@@ -154,6 +124,9 @@ msgid "Lock"
 msgstr ""
 
 msgid "Close"
+msgstr ""
+
+msgid "Back"
 msgstr ""
 
 msgid "View Mode"
@@ -228,9 +201,44 @@ msgstr ""
 msgid "Other Fields"
 msgstr ""
 
+msgid "Enter the database master password"
+msgstr ""
+
+msgid "Master Password"
+msgstr ""
+
+msgid "Open"
+msgstr ""
+
+msgid "Opening"
+msgstr ""
+
+msgid "Add Database"
+msgstr ""
+
+msgid "Loading last database."
+msgstr ""
+
+msgid "Select Database"
+msgstr ""
+
+msgid "Tap + to import a database."
+msgstr ""
+
+msgid "It will only be removed from the app, not your device."
+msgstr ""
+
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
+msgstr ""
+
+msgctxt "A database imported via ContentHub"
+msgid "Imported"
+msgstr ""
+
+msgctxt "A database managed by external file sync"
+msgid "Synced"
 msgstr ""
 
 msgid "All Templates"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-24 14:14+0000\n"
+"POT-Creation-Date: 2025-11-27 11:34+0000\n"
 "PO-Revision-Date: 2025-11-18 09:39+0000\n"
 "Last-Translator: projectmoon <projectmoon@agnos.is>\n"
 "Language-Team: Icelandic <https://hosted.weblate.org/projects/ubports/"
@@ -59,23 +59,8 @@ msgstr ""
 "Uppruni: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
 "git.agnos.is/projectmoon/keepass-rx</a>"
 
-msgid "Back"
-msgstr "Til baka"
-
 msgid "Settings"
 msgstr "Stillingar"
-
-msgid "Enter the database master password"
-msgstr "Sláðu inn aðallykilorð gagnagrunnsins"
-
-msgid "Master Password"
-msgstr "Aðallykilorð"
-
-msgid "Open"
-msgstr "Opna"
-
-msgid "Opening"
-msgstr "Í vinnslu"
 
 msgid ""
 "Change settings based on your preferences. Any change to the settings "
@@ -106,21 +91,6 @@ msgstr "Sýna \"ruslið\" flokkur"
 
 msgid "This group contains all the deleted entries"
 msgstr ""
-
-msgid "Add Database"
-msgstr "Bæta við Gangnagrunn"
-
-msgid "Loading last database."
-msgstr "Síðasti gagnagrunnurinn í vinnslu."
-
-msgid "Select Database"
-msgstr "Kjósa gagnagrunn"
-
-msgid "Tap + to import a database."
-msgstr "Ýtið á + til að flytja inn gagnagrunn."
-
-msgid "It will only be removed from the app, not your device."
-msgstr "Það mun eyða frá appinu en ekki síminn þinn."
 
 msgid "Manual path set."
 msgstr "Handvirk leið staðsett."
@@ -164,6 +134,9 @@ msgstr "Læsa"
 
 msgid "Close"
 msgstr "Loka"
+
+msgid "Back"
+msgstr "Til baka"
 
 msgid "View Mode"
 msgstr ""
@@ -237,9 +210,44 @@ msgstr ""
 msgid "Other Fields"
 msgstr ""
 
+msgid "Enter the database master password"
+msgstr "Sláðu inn aðallykilorð gagnagrunnsins"
+
+msgid "Master Password"
+msgstr "Aðallykilorð"
+
+msgid "Open"
+msgstr "Opna"
+
+msgid "Opening"
+msgstr "Í vinnslu"
+
+msgid "Add Database"
+msgstr "Bæta við Gangnagrunn"
+
+msgid "Loading last database."
+msgstr "Síðasti gagnagrunnurinn í vinnslu."
+
+msgid "Select Database"
+msgstr "Kjósa gagnagrunn"
+
+msgid "Tap + to import a database."
+msgstr "Ýtið á + til að flytja inn gagnagrunn."
+
+msgid "It will only be removed from the app, not your device."
+msgstr "Það mun eyða frá appinu en ekki síminn þinn."
+
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
+msgstr ""
+
+msgctxt "A database imported via ContentHub"
+msgid "Imported"
+msgstr ""
+
+msgctxt "A database managed by external file sync"
+msgid "Synced"
 msgstr ""
 
 msgid "All Templates"

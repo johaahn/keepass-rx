@@ -8,325 +8,338 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-27 11:34+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2025-11-27 16:00+0000\n"
+"Last-Translator: BoneNI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://hosted.weblate.org/projects/ubports/keepassrx/lo/"
+">\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.15-dev\n"
 
 #: qml/components/EntryItem.qml:86
 msgid "Copy Username"
-msgstr ""
+msgstr "ຄັດລອກຊື່ຜູ້ໃຊ້"
 
 #: qml/components/EntryItem.qml:94
 msgid "Copy Password"
-msgstr ""
+msgstr "ຄັດລອກລະຫັດຜ່ານ"
 
 #: qml/components/EntryItem.qml:103
 msgid "Open URL"
-msgstr ""
+msgstr "ເປີດ URL"
 
 #: qml/components/EntryItem.qml:110
 msgid "Copy 2FA Code"
-msgstr ""
+msgstr "ຄັດລອກລະຫັດ 2FA"
 
 #: qml/components/EntryItem.qml:122
 msgid "View Entry"
-msgstr ""
+msgstr "ເບິ່ງຂໍ້ມູນ"
 
 #: qml/components/EntryItem.qml:235
 msgid "Tap to copy 2FA code"
-msgstr ""
+msgstr "ແຕະເພື່ອຄັດລອກລະຫັດ 2FA"
 
 #: qml/pages/AboutPage.qml:11 qml/pages/UnlockPage.qml:41
 #: qml/pages/EntriesPage.qml:216 qml/pages/OpenDBPage.qml:42
 #: qml/pages/DBList.qml:84
 msgid "About"
-msgstr ""
+msgstr "ກ່ຽວກັບ"
 
 #: qml/pages/AboutPage.qml:54
 msgid ""
 "KeePassRX is a work-in-progress password manager for KeePass password "
 "databases. It is licensed under the GNU GPL v3 license."
 msgstr ""
+"KeePassRX ແມ່ນໂປຣແກຣມຈັດການລະຫັດຜ່ານທີ່ກຳລັງພັດທະນາ ສຳລັບຖານຂໍ້ມູນລະຫັດຜ່ານ KeePass. "
+"ມັນຢູ່ພາຍໃຕ້ໃບອະນຸຍາດ GNU GPL v3."
 
 #: qml/pages/AboutPage.qml:65
 msgid ""
 "The built-in KeePass icon images are licensed under a variety of licenses as "
 "detailed in assets/COPYING."
 msgstr ""
+"ຮູບໄອຄອນ KeePass ທີ່ມີມາໃຫ້ນັ້ນຢູ່ພາຍໃຕ້ໃບອະນຸຍາດທີ່ຫຼາກຫຼາຍ ດັ່ງທີ່ລະບຸໄວ້ໃນ assets/COPYING."
 
 #: qml/pages/AboutPage.qml:76
 msgid ""
 "Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
 "agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
+"ທີ່ມາ: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://"
+"git.agnos.is/projectmoon/keepass-rx</a>"
 
 #: qml/pages/SettingsPage.qml:11 qml/pages/UnlockPage.qml:34
 #: qml/pages/EntriesPage.qml:207 qml/pages/OpenDBPage.qml:35
 #: qml/pages/DBList.qml:77
 msgid "Settings"
-msgstr ""
+msgstr "ການຕັ້ງຄ່າ"
 
 #: qml/pages/SettingsPage.qml:44
 msgid ""
 "Change settings based on your preferences. Any change to the settings "
 "requires a restart to take effect."
 msgstr ""
+"ປ່ຽນການຕັ້ງຄ່າຕາມຄວາມຕ້ອງການຂອງທ່ານ. ການປ່ຽນແປງໃດໆ ຈະມີຜົນຫຼັງຈາກເລີ່ມຕົ້ນໂປຣແກຣມໃໝ່."
 
 #: qml/pages/SettingsPage.qml:54
 msgid "Enable database locking"
-msgstr ""
+msgstr "ເປີດໃຊ້ການລັອກຖານຂໍ້ມູນ"
 
 #: qml/pages/SettingsPage.qml:57
 msgid ""
 "Securely lock and unlock database with a short passcode. Requires restart to "
 "take effect."
 msgstr ""
+"ລັອກ ແລະ ປົດລັອກຖານຂໍ້ມູນຢ່າງປອດໄພດ້ວຍລະຫັດຜ່ານສັ້ນ. ຕ້ອງເລີ່ມຕົ້ນໂປຣແກຣມໃໝ່ເພື່ອໃຫ້ມີຜົນ."
 
 #: qml/pages/SettingsPage.qml:66
 msgid "Enable Accents"
-msgstr ""
+msgstr "ເປີດໃຊ້ສີເນັ້ນ"
 
 #: qml/pages/SettingsPage.qml:68
 msgid ""
 "Set header color and name according to database settings. Compatible with "
 "KeePassXC."
 msgstr ""
+"ຕັ້ງຄ່າສີຫົວຂໍ້ ແລະ ຊື່ຕາມການຕັ້ງຄ່າຖານຂໍ້ມູນ. ເຂົ້າກັນໄດ້ກັບ KeePassXC."
 
 #: qml/pages/SettingsPage.qml:79
 msgid "Show the \"Recycle bin\" group"
-msgstr ""
+msgstr "ສະແດງກຸ່ມ \"ຖັງຂີ້ເຫຍື້ອ\""
 
 #: qml/pages/SettingsPage.qml:81
 msgid "This group contains all the deleted entries"
-msgstr ""
+msgstr "ກຸ່ມນີ້ບັນຈຸຂໍ້ມູນທັງໝົດທີ່ຖືກລຶບ"
 
 #: qml/pages/UnlockPage.qml:145
 msgid "Manual path set."
-msgstr ""
+msgstr "ກຳນົດເສັ້ນທາງເອງແລ້ວ."
 
 #: qml/pages/UnlockPage.qml:162
 msgid ""
 "The passcode is the first five characters of the database password (or the "
 "whole password if less than five characters)."
 msgstr ""
+"ລະຫັດຜ່ານສັ້ນແມ່ນ 5 ຕົວອັກສອນທຳອິດຂອງລະຫັດຜ່ານຖານຂໍ້ມູນ (ຫຼື ລະຫັດຜ່ານທັງໝົດ ຖ້າໜ້ອຍກວ່າ 5 ຕົວອັກສອນ)"
+"."
 
 #: qml/pages/UnlockPage.qml:178
 msgid "Passcode"
-msgstr ""
+msgstr "ລະຫັດຜ່ານສັ້ນ"
 
 #: qml/pages/UnlockPage.qml:210
 msgid "Unlock"
-msgstr ""
+msgstr "ປົດລັອກ"
 
 #: qml/pages/UnlockPage.qml:229
 msgid "Securely Unlocking"
-msgstr ""
+msgstr "ກຳລັງປົດລັອກຢ່າງປອດໄພ"
 
 #: qml/pages/UnlockPage.qml:230
 msgid "Securely Locking"
-msgstr ""
+msgstr "ກຳລັງລັອກຢ່າງປອດໄພ"
 
 #: qml/pages/UnlockPage.qml:241
 msgid "Database Not Opening?"
-msgstr ""
+msgstr "ຖານຂໍ້ມູນເປີດບໍ່ໄດ້ບໍ?"
 
 #: qml/pages/EntriesPage.qml:100
 msgid "Cancel Search"
-msgstr ""
+msgstr "ຍົກເລີກການຄົ້ນຫາ"
 
 #: qml/pages/EntriesPage.qml:121
 msgid "Search all entries"
-msgstr ""
+msgstr "ຄົ້ນຫາຂໍ້ມູນທັງໝົດ"
 
 #: qml/pages/EntriesPage.qml:121
 msgid "Search all entries under this group"
-msgstr ""
+msgstr "ຄົ້ນຫາຂໍ້ມູນທັງໝົດໃນກຸ່ມນີ້"
 
 #: qml/pages/EntriesPage.qml:122
 msgid "Search entries in this group"
-msgstr ""
+msgstr "ຄົ້ນຫາຂໍ້ມູນໃນກຸ່ມນີ້"
 
 #: qml/pages/EntriesPage.qml:147
 msgid "Lock"
-msgstr ""
+msgstr "ລັອກ"
 
 #: qml/pages/EntriesPage.qml:159
 msgid "Close"
-msgstr ""
+msgstr "ປິດ"
 
 #: qml/pages/EntriesPage.qml:171 qml/pages/SingleEntry.qml:82
 #: qml/pages/OpenDBPage.qml:22
 msgid "Back"
-msgstr ""
+msgstr "ກັບຄືນ"
 
 #: qml/pages/EntriesPage.qml:184
 msgid "View Mode"
-msgstr ""
+msgstr "ຮູບແບບການເບິ່ງ"
 
 #: qml/pages/EntriesPage.qml:194
 msgid "Search"
-msgstr ""
+msgstr "ຄົ້ນຫາ"
 
 #: qml/pages/EntriesPage.qml:228
 msgid "Lock Database"
-msgstr ""
+msgstr "ລັອກຖານຂໍ້ມູນ"
 
 #: qml/pages/EntriesPage.qml:238
 msgid "Close Database"
-msgstr ""
+msgstr "ປິດຖານຂໍ້ມູນ"
 
 #: qml/pages/EntriesPage.qml:258
 msgid "Change View"
-msgstr ""
+msgstr "ປ່ຽນມຸມມອງ"
 
 #: qml/pages/EntriesPage.qml:264
 msgid "All Entries"
-msgstr ""
+msgstr "ຂໍ້ມູນທັງໝົດ"
 
 #: qml/pages/EntriesPage.qml:266
 msgid "All groups and entries."
-msgstr ""
+msgstr "ກຸ່ມ ແລະ ຂໍ້ມູນທັງໝົດ."
 
 #: qml/pages/EntriesPage.qml:270 src/rx/virtual_hierarchy.rs:66
 msgid "Special Categories"
-msgstr ""
+msgstr "ໝວດພິເສດ"
 
 #: qml/pages/EntriesPage.qml:272
 msgid "Entries grouped by template."
-msgstr ""
+msgstr "ຂໍ້ມູນຖືກຈັດກຸ່ມຕາມແມ່ແບບ."
 
 #: qml/pages/EntriesPage.qml:276
 msgid "2FA Codes"
-msgstr ""
+msgstr "ລະຫັດ 2FA"
 
 #: qml/pages/EntriesPage.qml:278
 msgid "Entries with 2FA codes."
-msgstr ""
+msgstr "ຂໍ້ມູນທີ່ມີລະຫັດ 2FA."
 
 #: qml/pages/EntriesPage.qml:282 src/rx/virtual_hierarchy.rs:218
 msgid "Tags"
-msgstr ""
+msgstr "ແທັກ"
 
 #: qml/pages/EntriesPage.qml:284
 msgid "Entries grouped by tag."
-msgstr ""
+msgstr "ຂໍ້ມູນຖືກຈັດກຸ່ມຕາມແທັກ."
 
 #: qml/pages/EntriesPage.qml:296
 msgid "Select View"
-msgstr ""
+msgstr "ເລືອກມຸມມອງ"
 
 #: qml/pages/EntriesPage.qml:315
 msgid "Select"
-msgstr ""
+msgstr "ເລືອກ"
 
 #: qml/pages/EntriesPage.qml:325
 msgid "Cancel"
-msgstr ""
+msgstr "ຍົກເລີກ"
 
 #: qml/pages/SingleEntry.qml:29
 msgid "%1 copied to clipboard (30 secs)"
-msgstr ""
+msgstr "ຄັດລອກ %1 ໃສ່ຄລິບບອດແລ້ວ (30 ວິນາທີ)"
 
 #: qml/pages/SingleEntry.qml:123
 msgid "Notes"
-msgstr ""
+msgstr "ບັນທຶກ"
 
 #: qml/pages/SingleEntry.qml:131
 msgid "Tap to copy"
-msgstr ""
+msgstr "ແຕະເພື່ອຄັດລອກ"
 
 #: qml/pages/SingleEntry.qml:190
 msgid "Main"
-msgstr ""
+msgstr "ຫຼັກ"
 
 #: qml/pages/SingleEntry.qml:196 qml/pages/SingleEntry.qml:199
 msgid "Username"
-msgstr ""
+msgstr "ຊື່ຜູ້ໃຊ້"
 
 #: qml/pages/SingleEntry.qml:204 qml/pages/SingleEntry.qml:209
 msgid "Password"
-msgstr ""
+msgstr "ລະຫັດຜ່ານ"
 
 #: qml/pages/SingleEntry.qml:215 qml/pages/SingleEntry.qml:217
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: qml/pages/SingleEntry.qml:238
 msgid "Other Fields"
-msgstr ""
+msgstr "ຊ່ອງຂໍ້ມູນອື່ນໆ"
 
 #: qml/pages/OpenDBPage.qml:158
 msgid "Enter the database master password"
-msgstr ""
+msgstr "ປ້ອນລະຫັດຜ່ານຫຼັກຂອງຖານຂໍ້ມູນ"
 
 #: qml/pages/OpenDBPage.qml:171
 msgid "Master Password"
-msgstr ""
+msgstr "ລະຫັດຜ່ານຫຼັກ"
 
 #: qml/pages/OpenDBPage.qml:201
 msgid "Open"
-msgstr ""
+msgstr "ເປີດ"
 
 #: qml/pages/OpenDBPage.qml:218
 msgid "Opening"
-msgstr ""
+msgstr "ກຳລັງເປີດ"
 
 #: qml/pages/DBList.qml:70
 msgid "Add Database"
-msgstr ""
+msgstr "ເພີ່ມຖານຂໍ້ມູນ"
 
 #: qml/pages/DBList.qml:104
 msgid "Loading last database."
-msgstr ""
+msgstr "ກຳລັງໂຫຼດຖານຂໍ້ມູນຫຼ້າສຸດ."
 
 #: qml/pages/DBList.qml:114
 msgid "Select Database"
-msgstr ""
+msgstr "ເລືອກຖານຂໍ້ມູນ"
 
 #: qml/pages/DBList.qml:170
 msgid "Tap + to import a database."
-msgstr ""
+msgstr "ແຕະ + ເພື່ອນຳເຂົ້າຖານຂໍ້ມູນ."
 
 #: qml/pages/DBList.qml:269
 msgid "It will only be removed from the app, not your device."
-msgstr ""
+msgstr "ມັນຈະຖືກລຶບອອກຈາກແອັບເທົ່ານັ້ນ, ບໍ່ແມ່ນຈາກອຸປະກອນຂອງທ່ານ."
 
 #: src/gui/instructions.rs:9
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
 msgstr ""
+"<b>ສະແດງລະຫັດ 2FA ທັງໝົດໃນຖານຂໍ້ມູນ.</b><br/>ເບິ່ງລາຍລະອຽດຂໍ້ມູນໂດຍໃຊ້ແຖບຄຳສັ່ງ."
 
 #: src/gui/mod.rs:66
 msgctxt "A database imported via ContentHub"
 msgid "Imported"
-msgstr ""
+msgstr "ນຳເຂົ້າແລ້ວ"
 
 #: src/gui/mod.rs:67
 msgctxt "A database managed by external file sync"
 msgid "Synced"
-msgstr ""
+msgstr "ຊິງຄ໌ແລ້ວ"
 
 #: src/rx/virtual_hierarchy.rs:74
 msgid "All Templates"
-msgstr ""
+msgstr "ແມ່ແບບທັງໝົດ"
 
 #: src/rx/virtual_hierarchy.rs:121
 msgctxt "Default view of the password database (all entries)"
 msgid "Default View"
-msgstr ""
+msgstr "ມຸມມອງເລີ່ມຕົ້ນ"
 
 #: src/rx/virtual_hierarchy.rs:156 src/rx/virtual_hierarchy.rs:169
 msgctxt "Two-factor/OTP codes (keep phrase short as possible)"
 msgid "2FA Codes"
-msgstr ""
+msgstr "ລະຫັດ 2FA"
 
 #: src/rx/virtual_hierarchy.rs:210
 msgctxt "List of entries with tags"
 msgid "Tags"
-msgstr ""
+msgstr "ແທັກ"

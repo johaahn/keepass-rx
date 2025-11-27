@@ -1,0 +1,332 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-27 11:34+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: lo\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: qml/components/EntryItem.qml:86
+msgid "Copy Username"
+msgstr ""
+
+#: qml/components/EntryItem.qml:94
+msgid "Copy Password"
+msgstr ""
+
+#: qml/components/EntryItem.qml:103
+msgid "Open URL"
+msgstr ""
+
+#: qml/components/EntryItem.qml:110
+msgid "Copy 2FA Code"
+msgstr ""
+
+#: qml/components/EntryItem.qml:122
+msgid "View Entry"
+msgstr ""
+
+#: qml/components/EntryItem.qml:235
+msgid "Tap to copy 2FA code"
+msgstr ""
+
+#: qml/pages/AboutPage.qml:11 qml/pages/UnlockPage.qml:41
+#: qml/pages/EntriesPage.qml:216 qml/pages/OpenDBPage.qml:42
+#: qml/pages/DBList.qml:84
+msgid "About"
+msgstr ""
+
+#: qml/pages/AboutPage.qml:54
+msgid ""
+"KeePassRX is a work-in-progress password manager for KeePass password "
+"databases. It is licensed under the GNU GPL v3 license."
+msgstr ""
+
+#: qml/pages/AboutPage.qml:65
+msgid ""
+"The built-in KeePass icon images are licensed under a variety of licenses as "
+"detailed in assets/COPYING."
+msgstr ""
+
+#: qml/pages/AboutPage.qml:76
+msgid ""
+"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
+"agnos.is/projectmoon/keepass-rx</a>"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:11 qml/pages/UnlockPage.qml:34
+#: qml/pages/EntriesPage.qml:207 qml/pages/OpenDBPage.qml:35
+#: qml/pages/DBList.qml:77
+msgid "Settings"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:44
+msgid ""
+"Change settings based on your preferences. Any change to the settings "
+"requires a restart to take effect."
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:54
+msgid "Enable database locking"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:57
+msgid ""
+"Securely lock and unlock database with a short passcode. Requires restart to "
+"take effect."
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:66
+msgid "Enable Accents"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:68
+msgid ""
+"Set header color and name according to database settings. Compatible with "
+"KeePassXC."
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:79
+msgid "Show the \"Recycle bin\" group"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:81
+msgid "This group contains all the deleted entries"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:145
+msgid "Manual path set."
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:162
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:178
+msgid "Passcode"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:210
+msgid "Unlock"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:229
+msgid "Securely Unlocking"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:230
+msgid "Securely Locking"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:241
+msgid "Database Not Opening?"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:100
+msgid "Cancel Search"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:121
+msgid "Search all entries"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:121
+msgid "Search all entries under this group"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:122
+msgid "Search entries in this group"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:147
+msgid "Lock"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:159
+msgid "Close"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:171 qml/pages/SingleEntry.qml:82
+#: qml/pages/OpenDBPage.qml:22
+msgid "Back"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:184
+msgid "View Mode"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:194
+msgid "Search"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:228
+msgid "Lock Database"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:238
+msgid "Close Database"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:258
+msgid "Change View"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:264
+msgid "All Entries"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:266
+msgid "All groups and entries."
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:270 src/rx/virtual_hierarchy.rs:66
+msgid "Special Categories"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:272
+msgid "Entries grouped by template."
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:276
+msgid "2FA Codes"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:278
+msgid "Entries with 2FA codes."
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:282 src/rx/virtual_hierarchy.rs:218
+msgid "Tags"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:284
+msgid "Entries grouped by tag."
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:296
+msgid "Select View"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:315
+msgid "Select"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:325
+msgid "Cancel"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:29
+msgid "%1 copied to clipboard (30 secs)"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:123
+msgid "Notes"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:131
+msgid "Tap to copy"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:190
+msgid "Main"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:196 qml/pages/SingleEntry.qml:199
+msgid "Username"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:204 qml/pages/SingleEntry.qml:209
+msgid "Password"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:215 qml/pages/SingleEntry.qml:217
+msgid "URL"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:238
+msgid "Other Fields"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:158
+msgid "Enter the database master password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:171
+msgid "Master Password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:201
+msgid "Open"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:218
+msgid "Opening"
+msgstr ""
+
+#: qml/pages/DBList.qml:70
+msgid "Add Database"
+msgstr ""
+
+#: qml/pages/DBList.qml:104
+msgid "Loading last database."
+msgstr ""
+
+#: qml/pages/DBList.qml:114
+msgid "Select Database"
+msgstr ""
+
+#: qml/pages/DBList.qml:170
+msgid "Tap + to import a database."
+msgstr ""
+
+#: qml/pages/DBList.qml:269
+msgid "It will only be removed from the app, not your device."
+msgstr ""
+
+#: src/gui/instructions.rs:9
+msgid ""
+"<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
+"using its action bar."
+msgstr ""
+
+#: src/gui/mod.rs:66
+msgctxt "A database imported via ContentHub"
+msgid "Imported"
+msgstr ""
+
+#: src/gui/mod.rs:67
+msgctxt "A database managed by external file sync"
+msgid "Synced"
+msgstr ""
+
+#: src/rx/virtual_hierarchy.rs:74
+msgid "All Templates"
+msgstr ""
+
+#: src/rx/virtual_hierarchy.rs:121
+msgctxt "Default view of the password database (all entries)"
+msgid "Default View"
+msgstr ""
+
+#: src/rx/virtual_hierarchy.rs:156 src/rx/virtual_hierarchy.rs:169
+msgctxt "Two-factor/OTP codes (keep phrase short as possible)"
+msgid "2FA Codes"
+msgstr ""
+
+#: src/rx/virtual_hierarchy.rs:210
+msgctxt "List of entries with tags"
+msgid "Tags"
+msgstr ""

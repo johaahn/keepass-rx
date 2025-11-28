@@ -10,7 +10,7 @@ steps:
       - cargo test --no-default-features
 
   - name: amd64
-    image: clickable/ci-20.04-amd64
+    image: clickable/ci-ut24.04-1.x-amd64
     depends_on:
       - test
     commands:
@@ -19,7 +19,7 @@ steps:
       - clickable build --clean
 
   - name: arm64
-    image: clickable/ci-20.04-arm64
+    image: clickable/ci-ut24.04-1.x-arm64
     depends_on:
       - test
     commands:
@@ -28,7 +28,7 @@ steps:
       - clickable build --clean
 
   - name: armhf
-    image: clickable/ci-20.04-armhf
+    image: clickable/ci-ut24.04-1.x-armhf
     depends_on:
       - test
     commands:

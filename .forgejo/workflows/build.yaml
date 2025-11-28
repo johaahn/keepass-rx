@@ -20,13 +20,16 @@ jobs:
       - name: Install Cargo Deny
         run: cargo install cargo-deny
 
+      - name: Install Cargo About
+        run: cargo install cargo-about
+
       - name: License Check
         run: cargo deny check licenses
 
   test:
     runs-on: docker
     container:
-      image: clickable/ci-20.04-amd64
+      image: clickable/ci-ut24.04-1.x-amd64
     steps:
       - name: Add NodeJS deb repo
         run: curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
@@ -47,7 +50,7 @@ jobs:
     needs: [test, license-check]
     runs-on: docker
     container:
-      image: clickable/ci-20.04-amd64
+      image: clickable/ci-ut24.04-1.x-amd64
     steps:
       - name: Add NodeJS deb repo
         run: curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
@@ -60,9 +63,6 @@ jobs:
 
       - name: Setup Cache
         uses: https://github.com/Swatinem/rust-cache@v2
-
-      - name: Install Cargo About
-        run: cargo install cargo-about
 
       - name: Generate licenses.html
         run: cargo about generate about.hbs > keepass-rx/assets/licenses.html
@@ -80,7 +80,7 @@ jobs:
     needs: [test, license-check]
     runs-on: docker
     container:
-      image: clickable/ci-20.04-arm64
+      image: clickable/ci-ut24.04-1.x-arm64
     steps:
       - name: Add NodeJS deb repo
         run: curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
@@ -93,9 +93,6 @@ jobs:
 
       - name: Setup Cache
         uses: https://github.com/Swatinem/rust-cache@v2
-
-      - name: Install Cargo About
-        run: cargo install cargo-about
 
       - name: Generate licenses.html
         run: cargo about generate about.hbs > keepass-rx/assets/licenses.html
@@ -113,7 +110,7 @@ jobs:
     needs: [test, license-check]
     runs-on: docker
     container:
-      image: clickable/ci-20.04-armhf
+      image: clickable/ci-ut24.04-1.x-armhf
     steps:
       - name: Add NodeJS deb repo
         run: curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
@@ -126,9 +123,6 @@ jobs:
 
       - name: Setup Cache
         uses: https://github.com/Swatinem/rust-cache@v2
-
-      - name: Install Cargo About
-        run: cargo install cargo-about
 
       - name: Generate licenses.html
         run: cargo about generate about.hbs > keepass-rx/assets/licenses.html

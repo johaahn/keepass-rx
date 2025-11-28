@@ -8,7 +8,11 @@ use std::{fs::read_to_string, fs::remove_file, path::Path};
 use crate::{
     actor::{ActorConnected, ConnectedModelActor, ModelContext},
     app::RxActors,
-    gui::{RxDbType, actor::OpenDatabase, utils::app_data_path},
+    gui::{
+        RxDbType,
+        actor::OpenDatabase,
+        utils::{app_data_path, db_path_for_type},
+    },
     rx::virtual_hierarchy::VirtualHierarchy,
 };
 
@@ -85,22 +89,42 @@ fn load_last_db() -> Result<(Option<String>, Option<String>)> {
     let last_db_file = app_data_path().join("last-db");
     let last_db_type = app_data_path().join("last-db-type");
 
+    // Load the last DB and its recorded type from file. Supports a
+    // few scenarios: both defined, only the db file defined (from old
+    // app versions), or neither defined.
     let files = match (last_db_file, last_db_type) {
         (db, db_type) if db.exists() && db_type.exists() => {
-            // load both from file
+            // both recorded
             (Some(read_to_string(db)?), Some(read_to_string(db_type)?))
         }
         (db, db_type) if db.exists() && !db_type.exists() => {
-            // load db only, assume imported.
+            // only db file recorded (from old app versions)
+            println!("No last DB type. Assuming last DB is Imported");
             (Some(read_to_string(db)?), None)
         }
         _ => {
-            // assume nothing!
+            // nothing recorded
             (None, None)
         }
     };
 
-    Ok(files)
+    if let (Some(ref db_file), ref maybe_db_type) = files {
+        // File must actually exist to be valid.
+        let db_type = maybe_db_type
+            .as_ref()
+            .map(|db_type| RxDbType::try_from(db_type))
+            .transpose()?
+            .unwrap_or_default();
+
+        let data_dir = db_path_for_type(db_type);
+
+        match data_dir.join(db_file) {
+            path if path.exists() => Ok(files),
+            _ => Ok((None, None)),
+        }
+    } else {
+        Ok(files)
+    }
 }
 
 impl Default for RxUiDatabase {
@@ -115,7 +139,9 @@ impl Default for RxUiDatabase {
             _readyChanged: Default::default(),
             base: Default::default(),
             databaseName: last_db.map(QString::from).unwrap_or_default(),
-            databaseType: last_db_type.map(RxDbType::from).unwrap_or_default(),
+            databaseType: last_db_type
+                .and_then(|db_type| RxDbType::try_from(db_type).ok())
+                .unwrap_or_default(),
             databaseNameChanged: Default::default(),
             databaseTypeChanged: Default::default(),
             last_db_set: have_last_db,

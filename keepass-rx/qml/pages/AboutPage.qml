@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import Lomiri.Components 1.3
 import "../components"
@@ -26,75 +26,123 @@ Page {
         ]
     }
 
-    ColumnLayout {
-        spacing: units.gu(2)
+    ScrollView {
+        anchors.top: header.bottom
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        width: aboutPage.width
+        anchors.leftMargin: units.gu(1.0)
+        anchors.rightMargin: units.gu(1.0)
 
-        RowLayout {
-            Layout.fillWidth: true
+        ColumnLayout {
+            width: aboutPage.width - units.gu(2.0) // handle scrollview margins
+            spacing: units.gu(1.5)
 
-            Rectangle {
-                height: units.gu(35)
+            Label {
+                id: appTitle
                 Layout.fillWidth: true
-                Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
-                color: "transparent"
+                text: "KeePassRx"
+                textSize: Label.XLarge
+                horizontalAlignment: Text.AlignHCenter
+            }
 
-                Image {
-                    width: units.gu(35)
-                    height: units.gu(35)
-                    fillMode: Image.PreserveAspectFit
-                    source: '../../assets/keepass-rx.svg'
-                    x: parent.width / 2 - width / 2
-                    y: parent.height / 2 - height / 2
+            RowLayout {
+                Layout.fillWidth: true
+
+                Rectangle {
+                    height: units.gu(30)
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
+                    color: "transparent"
+
+                    Image {
+                        width: units.gu(30)
+                        height: units.gu(30)
+                        fillMode: Image.PreserveAspectFit
+                        source: '../../assets/keepass-rx.svg'
+                        x: parent.width / 2 - width / 2
+                        y: parent.height / 2 - height / 2
+                    }
                 }
             }
-        }
 
-        anchors {
-            margins: units.gu(2)
-            top: header.bottom
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-        }
+            Item {
+                Layout.fillHeight: false
+                Layout.fillWidth: true
+            }
 
-        Item {
-            Layout.fillHeight: false
-        }
+            Label {
+                Layout.fillWidth: true
+                wrapMode: Text.Wrap
+                text: i18n.tr(
+                    "" +
+                        "KeePassRX is password manager for KeePass databases, " +
+                        "designed for Ubuntu Touch. It is licensed under the " +
+                        "GNU AGPL v3 license."
+                )
+            }
 
-        Label {
-            width: parent.width
-            Layout.preferredWidth: width
-            wrapMode: Text.Wrap
-            text: i18n.tr(
-                "" +
-                    "KeePassRX is a work-in-progress password manager for KeePass " +
-                    "password databases. It is licensed under the GNU GPL v3 license."
-            )
-        }
+            Label {
+                Layout.fillWidth: true
+                wrapMode: Text.Wrap
+                text: i18n.tr(
+                    "" +
+                        "The built-in KeePass icon images are licensed under a variety of " +
+                        "licenses as detailed in assets/COPYING."
+                )
+            }
 
-        Label {
-            width: parent.width
-            Layout.preferredWidth: width
-            wrapMode: Text.Wrap
-            text: i18n.tr(
-                "" +
-                    "The built-in KeePass icon images are licensed under a variety of " +
-                    "licenses as detailed in assets/COPYING."
-            )
-        }
+            Label {
+                Layout.fillWidth: true
+                text: i18n.tr("Manual")
+                textSize: Label.Large
+                lineHeight: 0.5
+            }
 
-        Label {
-            width: parent.width
-            Layout.preferredWidth: width
-            wrapMode: Text.Wrap
-            text: i18n.tr(
-                "Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>" +
-                    "https://git.agnos.is/projectmoon/keepass-rx</a>"
-            )
-            onLinkActivated: Qt.openUrlExternally(link)
-        }
-        Item {
-            Layout.fillHeight: true
+            Text {
+                Layout.fillWidth: true
+                color: theme.palette.normal.backgroundSecondaryText
+                wrapMode: Text.Wrap
+                lineHeight: 0.5
+                leftPadding: units.gu(1.5)
+                text: i18n.tr(
+                    "• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>" +
+                        "gemini://agnos.is/projects/keepassrx/</a>"
+                )
+                onLinkActivated: Qt.openUrlExternally(link)
+            }
+
+            Text {
+                Layout.fillWidth: true
+                color: theme.palette.normal.foregroundText
+                wrapMode: Text.Wrap
+                lineHeight: 0.5
+                leftPadding: units.gu(1.5)
+                text: i18n.tr(
+                    "• Web: <a href='https://agnos.is/projects/keepassrx/'>" +
+                        "https://agnos.is/projects/keepassrx/</a>"
+                )
+                onLinkActivated: Qt.openUrlExternally(link)
+            }
+
+            Label {
+                Layout.fillWidth: true
+                wrapMode: Text.Wrap
+                text: i18n.tr("Source Code")
+                textSize: Label.Large
+            }
+
+            Label {
+                Layout.fillWidth: true
+                wrapMode: Text.Wrap
+                color: theme.palette.normal.backgroundSecondaryText
+                text: i18n.tr(
+                    "<a href='https://git.agnos.is/projectmoon/keepass-rx'>" +
+                        "https://git.agnos.is/projectmoon/keepass-rx</a>"
+                )
+                onLinkActivated: Qt.openUrlExternally(link)
+            }
         }
     }
 }

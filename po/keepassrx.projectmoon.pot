@@ -8,13 +8,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 10:06+0000\n"
+"POT-Creation-Date: 2025-11-28 12:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: qml/components/EntryItem.qml:86
@@ -47,22 +47,42 @@ msgstr ""
 msgid "About"
 msgstr ""
 
-#: qml/pages/AboutPage.qml:69
+#: qml/pages/AboutPage.qml:80
 msgid ""
-"KeePassRX is a work-in-progress password manager for KeePass password "
-"databases. It is licensed under the GNU GPL v3 license."
+"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
+"Touch. It is licensed under the GNU AGPL v3 license."
 msgstr ""
 
-#: qml/pages/AboutPage.qml:80
+#: qml/pages/AboutPage.qml:91
 msgid ""
 "The built-in KeePass icon images are licensed under a variety of licenses as "
 "detailed in assets/COPYING."
 msgstr ""
 
-#: qml/pages/AboutPage.qml:91
+#: qml/pages/AboutPage.qml:99
+msgid "Manual"
+msgstr ""
+
+#: qml/pages/AboutPage.qml:111
 msgid ""
-"Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
-"agnos.is/projectmoon/keepass-rx</a>"
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+
+#: qml/pages/AboutPage.qml:124
+msgid ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+
+#: qml/pages/AboutPage.qml:133
+msgid "Source Code"
+msgstr ""
+
+#: qml/pages/AboutPage.qml:142
+msgid ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
 msgstr ""
 
 #: qml/pages/SettingsPage.qml:11 qml/pages/EntriesPage.qml:207
@@ -210,11 +230,11 @@ msgstr ""
 msgid "Select Database"
 msgstr ""
 
-#: qml/pages/DBList.qml:170
+#: qml/pages/DBList.qml:186
 msgid "Tap + to import a database."
 msgstr ""
 
-#: qml/pages/DBList.qml:269
+#: qml/pages/DBList.qml:290
 msgid "It will only be removed from the app, not your device."
 msgstr ""
 
@@ -304,7 +324,7 @@ msgstr ""
 msgid "Other Fields"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:264 qml/Main.qml:216
+#: qml/pages/SingleEntry.qml:264 qml/Main.qml:219
 msgid "KeePassRX: Clipboard cleared."
 msgstr ""
 

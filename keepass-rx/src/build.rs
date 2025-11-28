@@ -216,6 +216,7 @@ fn main() {
     println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}Quick");
     println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}Qml");
     println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}QuickControls2");
+    println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}WebEngine");
 }
 
 #[cfg(not(feature = "gui"))]

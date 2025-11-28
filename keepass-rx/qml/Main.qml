@@ -136,10 +136,13 @@ MainView {
         }
 
         if (keepassrx.guiState == 'Locked') {
+            // User locked database
             adaptiveLayout.primaryPageSource = Qt.resolvedUrl("pages/UnlockPage.qml");
         } else if (keepassrx.guiState == 'NotOpen' && uiDatabase.databaseName) {
+            // Last DB opened
             adaptiveLayout.primaryPageSource = Qt.resolvedUrl("pages/OpenDBPage.qml");
         } else {
+            // No last DB
             adaptiveLayout.primaryPageSource = Qt.resolvedUrl("pages/DBList.qml");
         }
     }

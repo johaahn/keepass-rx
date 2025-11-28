@@ -30,7 +30,6 @@ use anyhow::Result;
 use cpp::cpp;
 use gettextrs::{bindtextdomain, textdomain};
 use qmeta_async::with_executor;
-use qmetaobject::webengine;
 use qmetaobject::{QObjectBox, QQuickStyle, QQuickView, qml_register_enum, qml_register_type};
 use std::env;
 use std::path::PathBuf;
@@ -55,6 +54,8 @@ use crate::app::AppState;
 #[cfg(feature = "gui")]
 fn load_gui() -> Result<()> {
     use gui::{RxDbType, qml::RxUiDatabase};
+    #[cfg(feature = "webengine")]
+    use qmetaobject::webengine;
 
     use crate::gui::{
         KeepassRx, RxGuiState,
@@ -101,6 +102,7 @@ fn load_gui() -> Result<()> {
     // "Data migration": Move any db.kdbx from the data directory to imported.
     move_old_db();
 
+    #[cfg(feature = "webengine")]
     webengine::initialize();
 
     qmeta_async::run(|| {

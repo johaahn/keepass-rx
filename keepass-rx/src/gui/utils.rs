@@ -2,6 +2,8 @@ use std::path::PathBuf;
 
 use dirs::data_dir;
 
+use super::RxDbType;
+
 const APP_ID: &'static str = "keepassrx.projectmoon";
 
 pub fn app_data_path() -> PathBuf {
@@ -15,6 +17,13 @@ pub fn imported_databases_path() -> PathBuf {
 
 pub fn synced_databases_path() -> PathBuf {
     PathBuf::from(app_data_path()).join(APP_ID).join("synced")
+}
+
+pub fn db_path_for_type(db_type: RxDbType) -> PathBuf {
+    match db_type {
+        RxDbType::Imported => imported_databases_path(),
+        RxDbType::Synced => synced_databases_path(),
+    }
 }
 
 pub fn move_old_db() {

@@ -9,7 +9,7 @@ build = "src/build.rs"
 
 [dependencies]
 actor-macro = { path = "../actor-macro" }
-qmetaobject = { version = "0.2.9", features = ["webengine"] }
+qmetaobject = { version = "0.2.9" }
 gettext-rs = "0.7"
 cstr = "0.2.11"
 cpp = "0.5"
@@ -48,4 +48,5 @@ walkdir = "2.5.0"
 [features]
 # Compile the GUI portion of the application (link QT etc).
 gui = []
+webengine = ["qmetaobject/webengine"]
 default = ["gui"]

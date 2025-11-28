@@ -78,19 +78,34 @@ impl std::fmt::Display for RxDbType {
     }
 }
 
-impl From<String> for RxDbType {
-    fn from(value: String) -> Self {
-        match value.as_str() {
-            "Imported" => RxDbType::Imported,
-            "Synced" => RxDbType::Synced,
-            _ => panic!("Invalid RxDbType: {}", value),
+impl TryFrom<String> for RxDbType {
+    type Error = anyhow::Error;
+    fn try_from(value: String) -> std::result::Result<Self, Self::Error> {
+        RxDbType::from_str(&value)
+    }
+}
+
+impl TryFrom<&String> for RxDbType {
+    type Error = anyhow::Error;
+    fn try_from(value: &String) -> std::result::Result<Self, Self::Error> {
+        RxDbType::from_str(value)
+    }
+}
+
+impl FromStr for RxDbType {
+    type Err = anyhow::Error;
+    fn from_str(value: &str) -> std::result::Result<Self, Self::Err> {
+        match value {
+            "Imported" => Ok(RxDbType::Imported),
+            "Synced" => Ok(RxDbType::Synced),
+            _ => Err(anyhow!("Invalid RxDbType: {}", value)),
         }
     }
 }
 
 impl QMetaType for RxDbType {
     const CONVERSION_FROM_STRING: Option<fn(&QString) -> Self> =
-        Some(|qval: &QString| RxDbType::from(qval.to_string()));
+        Some(|qval: &QString| RxDbType::try_from(qval.to_string()).unwrap());
 
     const CONVERSION_TO_STRING: Option<fn(&Self) -> QString> =
         Some(|db_type: &Self| match db_type {

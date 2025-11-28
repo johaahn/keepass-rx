@@ -90,7 +90,7 @@ Page {
 
     ColumnLayout {
         id: loadLastDbView
-        visible: uiDatabase.isLastDbSet
+        visible: dbListModel.count > 0 && uiDatabase.isLastDbSet
         spacing: units.gu(2)
         anchors.left: parent.left
         anchors.right: parent.right
@@ -145,7 +145,7 @@ Page {
         }
     }
 
-    // Initial logo image.
+    // Initial logo image and text.
     ColumnLayout {
         visible: dbListModel.count == 0 && !uiDatabase.isLastDbSet
         anchors.left: parent.left
@@ -153,34 +153,55 @@ Page {
         anchors.top: header.bottom
         anchors.leftMargin: units.gu(7)
         anchors.rightMargin: units.gu(7)
-        anchors.verticalCenter: parent.verticalCenter
         spacing: units.gu(2)
 
         RowLayout {
             Layout.fillWidth: true
 
             Rectangle {
-                height: units.gu(35)
+                Layout.preferredHeight: units.gu(35)
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
                 color: "transparent"
-
-                Text {
-                    color: LomiriColors.slate
-                    text: i18n.tr("Tap + to import a database.")
-                    horizontalAlignment: Qt.AlignHCenter
-                    x: parent.width / 2 - width / 2
-                }
 
                 Image {
                     id: logo
                     width: units.gu(20)
                     height: units.gu(20)
+                    anchors.fill: parent
                     fillMode: Image.PreserveAspectFit
                     source: '../../assets/keepass-rx.svg'
-                    x: parent.width / 2 - width / 2
-                    y: parent.height / 2 - height / 2
+                    x: -width
                 }
+            }
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            Layout.preferredWidth: parent.width
+
+            Text {
+                id: tapPlusToImport
+                color: LomiriColors.slate
+                text: i18n.tr("Tap + to import a database.")
+                horizontalAlignment: Qt.AlignHCenter
+                Layout.preferredWidth: parent.width
+                wrapMode: Text.WordWrap
+            }
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            Layout.preferredWidth: parent.width
+            Text {
+                color: LomiriColors.slate
+                text: i18n.ctr(
+                    'The sync directory is the directory that holds "externally managed" kdb/kdbx files.',
+                    'Databases in <a href="file://~/.local/share/keepassrx.projectmoon/synced">%1</a> will automatically show up in the list.'
+                ).arg('the sync directory')
+                horizontalAlignment: Qt.AlignHCenter
+                Layout.preferredWidth: parent.width
+                wrapMode: Text.WordWrap
             }
         }
     }

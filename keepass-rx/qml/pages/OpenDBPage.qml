@@ -208,6 +208,7 @@ Page {
                         iconName: "stock_key"
                         text: i18n.tr('Key File')
                         description: i18n.tr('Provide a key file for opening the database.')
+                        onTriggered: { keyFilePicker.visible = true; }
                     },
                     Action {
                         id: showPasswordAction
@@ -217,6 +218,46 @@ Page {
                         description: i18n.tr('Toggle password field visibility')
                     }
                 ]
+            }
+        }
+
+        ContentPeerPicker {
+            id: keyFilePicker
+            visible: false
+            showTitle: true
+            //TRANSLATORS: The user is selecting a key file to open database.
+            headerText: i18n.tr("Select Key File")
+            z: 10 // make sure to show above everything else.
+            handler: ContentHandler.Source
+            contentType: ContentType.All
+
+            // Picker is closed by signalConnections after key file chosen.
+            onPeerSelected: {
+                peer.selectionType = ContentTransfer.Single;
+                storeKeyFileConnection.target = peer.request();
+            }
+
+            onCancelPressed: keyFilePicker.visible = false;
+        }
+
+        Connections {
+            id: storeKeyFileConnection
+
+            function onStateChanged() {
+                var done = target.state === ContentTransfer.Charged;
+
+                if (!done) {
+                    return;
+                }
+
+                if (target.items.length === 0) {
+                    return;
+                }
+
+                const filePath = String(target.items[0].url).replace('file://', '');
+                keepassrx.storeKeyFile(filePath);
+                target.finalize();
+                keyFilePicker.visible = false;
             }
         }
 

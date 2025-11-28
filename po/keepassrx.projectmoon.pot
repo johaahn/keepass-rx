@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 08:36+0000\n"
+"POT-Creation-Date: 2025-11-28 10:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -129,8 +129,8 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:171 qml/pages/SingleEntry.qml:82
-#: qml/pages/OpenDBPage.qml:22
+#: qml/pages/EntriesPage.qml:171 qml/pages/OpenDBPage.qml:22
+#: qml/pages/SingleEntry.qml:82
 msgid "Back"
 msgstr ""
 
@@ -196,46 +196,6 @@ msgstr ""
 
 #: qml/pages/EntriesPage.qml:325
 msgid "Cancel"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:29 qml/Main.qml:91
-msgid "%1 copied to clipboard (30 secs)"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:123
-msgid "Notes"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:131
-msgid "Tap to copy"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:141
-msgid "Notes copied to clipboard (30 secs)"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:190
-msgid "Main"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:196 qml/pages/SingleEntry.qml:199
-msgid "Username"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:204 qml/pages/SingleEntry.qml:209
-msgid "Password"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:215 qml/pages/SingleEntry.qml:217
-msgid "URL"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:238
-msgid "Other Fields"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:264 qml/Main.qml:216
-msgid "KeePassRX: Clipboard cleared."
 msgstr ""
 
 #: qml/pages/DBList.qml:70
@@ -306,6 +266,46 @@ msgstr ""
 
 #: qml/pages/LicensesPage.qml:11
 msgid "Open Source Licenses"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:29 qml/Main.qml:91
+msgid "%1 copied to clipboard (30 secs)"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:123
+msgid "Notes"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:131
+msgid "Tap to copy"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:141
+msgid "Notes copied to clipboard (30 secs)"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:190
+msgid "Main"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:196 qml/pages/SingleEntry.qml:199
+msgid "Username"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:204 qml/pages/SingleEntry.qml:209
+msgid "Password"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:215 qml/pages/SingleEntry.qml:217
+msgid "URL"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:238
+msgid "Other Fields"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:264 qml/Main.qml:216
+msgid "KeePassRX: Clipboard cleared."
 msgstr ""
 
 #: src/gui/instructions.rs:9

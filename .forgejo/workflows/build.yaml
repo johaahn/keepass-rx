@@ -33,7 +33,7 @@ jobs:
         uses: https://data.forgejo.org/forgejo/upload-artifact@v4
         with:
           name: licenses.html
-          path: keepass-rx/keepass-rx/assets/licenses.html
+          path: keepass-rx/assets/licenses.html
 
   test:
     runs-on: docker

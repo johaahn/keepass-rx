@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-27 11:34+0000\n"
+"POT-Creation-Date: 2025-11-28 10:06+0000\n"
 "PO-Revision-Date: 2025-11-21 00:51+0000\n"
 "Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -98,31 +98,6 @@ msgstr "Gruppe „Papierkorb“ anzeigen"
 msgid "This group contains all the deleted entries"
 msgstr "Diese Gruppe enthält alle gelöschten Einträge"
 
-msgid "Manual path set."
-msgstr "Manueller Pfad gesetzt."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"Das Passwort sind die ersten fünf Zeichen des Datenbankpassworts (oder das "
-"gesamte Passwort, falls es weniger als 5 Zeichen hat)."
-
-msgid "Passcode"
-msgstr "Passwort"
-
-msgid "Unlock"
-msgstr "Entsperren"
-
-msgid "Securely Unlocking"
-msgstr "Sicheres entsperren"
-
-msgid "Securely Locking"
-msgstr "Sicheres Sperren"
-
-msgid "Database Not Opening?"
-msgstr "Datenbank öffnet sich nicht?"
-
 msgid "Cancel Search"
 msgstr "Suche abbrechen"
 
@@ -192,6 +167,61 @@ msgstr "Auswählen"
 msgid "Cancel"
 msgstr "Abbrechen"
 
+msgid "Add Database"
+msgstr "Datenbank hinzufügen"
+
+msgid "Loading last database."
+msgstr "Letzte Datenbank wird geladen."
+
+msgid "Select Database"
+msgstr "Datenbank auswählen"
+
+msgid "Tap + to import a database."
+msgstr "Mit + eine Datenbank importieren."
+
+msgid "It will only be removed from the app, not your device."
+msgstr "Diese wird nur aus der App entfernt, aber nicht vom Gerät gelöscht."
+
+msgid "Enter the database master password"
+msgstr "Datenbankpasswort eingeben"
+
+msgid "Master Password"
+msgstr "Datenbankpasswort"
+
+msgid "Open"
+msgstr "Öffnen"
+
+msgid "Opening"
+msgstr "Öffne"
+
+msgid "Manual path set."
+msgstr "Manueller Pfad gesetzt."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"Das Passwort sind die ersten fünf Zeichen des Datenbankpassworts (oder das "
+"gesamte Passwort, falls es weniger als 5 Zeichen hat)."
+
+msgid "Passcode"
+msgstr "Passwort"
+
+msgid "Unlock"
+msgstr "Entsperren"
+
+msgid "Securely Unlocking"
+msgstr "Sicheres entsperren"
+
+msgid "Securely Locking"
+msgstr "Sicheres Sperren"
+
+msgid "Database Not Opening?"
+msgstr "Datenbank öffnet sich nicht?"
+
+msgid "Open Source Licenses"
+msgstr ""
+
 msgid "%1 copied to clipboard (30 secs)"
 msgstr ""
 
@@ -200,6 +230,9 @@ msgstr "Notizen"
 
 msgid "Tap to copy"
 msgstr "Antippen zum Kopieren"
+
+msgid "Notes copied to clipboard (30 secs)"
+msgstr ""
 
 msgid "Main"
 msgstr ""
@@ -216,32 +249,8 @@ msgstr ""
 msgid "Other Fields"
 msgstr ""
 
-msgid "Enter the database master password"
-msgstr "Datenbankpasswort eingeben"
-
-msgid "Master Password"
-msgstr "Datenbankpasswort"
-
-msgid "Open"
-msgstr "Öffnen"
-
-msgid "Opening"
-msgstr "Öffne"
-
-msgid "Add Database"
-msgstr "Datenbank hinzufügen"
-
-msgid "Loading last database."
-msgstr "Letzte Datenbank wird geladen."
-
-msgid "Select Database"
-msgstr "Datenbank auswählen"
-
-msgid "Tap + to import a database."
-msgstr "Mit + eine Datenbank importieren."
-
-msgid "It will only be removed from the app, not your device."
-msgstr "Diese wird nur aus der App entfernt, aber nicht vom Gerät gelöscht."
+msgid "KeePassRX: Clipboard cleared."
+msgstr ""
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

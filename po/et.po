@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-27 11:34+0000\n"
+"POT-Creation-Date: 2025-11-28 10:06+0000\n"
 "PO-Revision-Date: 2025-11-28 05:00+0000\n"
 "Last-Translator: Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/ubports/"
@@ -97,31 +97,6 @@ msgstr "Näita gruppi „Prügikast“"
 msgid "This group contains all the deleted entries"
 msgstr "Siin on näha kõik kustutatud kirjed"
 
-msgid "Manual path set."
-msgstr "Käsitsi määratud asukoht on seadistatud."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"Salakood on andmebaasi salasõna viis esimest tähemärki (või kogu salasõna, "
-"kui ta on alla viie tähemärgi pikk)."
-
-msgid "Passcode"
-msgstr "Salakood"
-
-msgid "Unlock"
-msgstr "Eemalda lukustus"
-
-msgid "Securely Unlocking"
-msgstr "Turvaline lukustuse eemaldamine"
-
-msgid "Securely Locking"
-msgstr "Turvaline lukustamine"
-
-msgid "Database Not Opening?"
-msgstr "Kas andmebaas ei avane?"
-
 msgid "Cancel Search"
 msgstr "Katkesta otsing"
 
@@ -191,6 +166,61 @@ msgstr "Vali"
 msgid "Cancel"
 msgstr "Katkesta"
 
+msgid "Add Database"
+msgstr "Lisa andmebaas"
+
+msgid "Loading last database."
+msgstr "Laadin viimast andmebaasi."
+
+msgid "Select Database"
+msgstr "Vali andmebaas"
+
+msgid "Tap + to import a database."
+msgstr "Andmebaasi importimiseks klõpsa + ikooni."
+
+msgid "It will only be removed from the app, not your device."
+msgstr "Ta eemaldatakse rakendusest, mitte aga seadmest."
+
+msgid "Enter the database master password"
+msgstr "Sisesta andmebaasi üldsalasõna"
+
+msgid "Master Password"
+msgstr "Üldsalasõna"
+
+msgid "Open"
+msgstr "Ava"
+
+msgid "Opening"
+msgstr "Avamisel"
+
+msgid "Manual path set."
+msgstr "Käsitsi määratud asukoht on seadistatud."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"Salakood on andmebaasi salasõna viis esimest tähemärki (või kogu salasõna, "
+"kui ta on alla viie tähemärgi pikk)."
+
+msgid "Passcode"
+msgstr "Salakood"
+
+msgid "Unlock"
+msgstr "Eemalda lukustus"
+
+msgid "Securely Unlocking"
+msgstr "Turvaline lukustuse eemaldamine"
+
+msgid "Securely Locking"
+msgstr "Turvaline lukustamine"
+
+msgid "Database Not Opening?"
+msgstr "Kas andmebaas ei avane?"
+
+msgid "Open Source Licenses"
+msgstr ""
+
 msgid "%1 copied to clipboard (30 secs)"
 msgstr "%1 on kopeeritud lõikelauale (30 sek)"
 
@@ -199,6 +229,9 @@ msgstr "Märkmed"
 
 msgid "Tap to copy"
 msgstr "Kopeerimiseks klõpsa"
+
+msgid "Notes copied to clipboard (30 secs)"
+msgstr ""
 
 msgid "Main"
 msgstr "Peamine"
@@ -215,32 +248,8 @@ msgstr "Võrguaadress"
 msgid "Other Fields"
 msgstr "Muud väljad"
 
-msgid "Enter the database master password"
-msgstr "Sisesta andmebaasi üldsalasõna"
-
-msgid "Master Password"
-msgstr "Üldsalasõna"
-
-msgid "Open"
-msgstr "Ava"
-
-msgid "Opening"
-msgstr "Avamisel"
-
-msgid "Add Database"
-msgstr "Lisa andmebaas"
-
-msgid "Loading last database."
-msgstr "Laadin viimast andmebaasi."
-
-msgid "Select Database"
-msgstr "Vali andmebaas"
-
-msgid "Tap + to import a database."
-msgstr "Andmebaasi importimiseks klõpsa + ikooni."
-
-msgid "It will only be removed from the app, not your device."
-msgstr "Ta eemaldatakse rakendusest, mitte aga seadmest."
+msgid "KeePassRX: Clipboard cleared."
+msgstr ""
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

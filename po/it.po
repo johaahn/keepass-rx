@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-27 11:34+0000\n"
+"POT-Creation-Date: 2025-11-28 10:06+0000\n"
 "PO-Revision-Date: 2025-11-04 22:51+0000\n"
 "Last-Translator: projectmoon <projectmoon@agnos.is>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/ubports/"
@@ -85,29 +85,6 @@ msgstr ""
 msgid "This group contains all the deleted entries"
 msgstr ""
 
-msgid "Manual path set."
-msgstr ""
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-
-msgid "Passcode"
-msgstr ""
-
-msgid "Unlock"
-msgstr ""
-
-msgid "Securely Unlocking"
-msgstr ""
-
-msgid "Securely Locking"
-msgstr ""
-
-msgid "Database Not Opening?"
-msgstr ""
-
 msgid "Cancel Search"
 msgstr ""
 
@@ -177,6 +154,59 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+msgid "Add Database"
+msgstr ""
+
+msgid "Loading last database."
+msgstr ""
+
+msgid "Select Database"
+msgstr ""
+
+msgid "Tap + to import a database."
+msgstr ""
+
+msgid "It will only be removed from the app, not your device."
+msgstr ""
+
+msgid "Enter the database master password"
+msgstr ""
+
+msgid "Master Password"
+msgstr ""
+
+msgid "Open"
+msgstr ""
+
+msgid "Opening"
+msgstr ""
+
+msgid "Manual path set."
+msgstr ""
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+
+msgid "Passcode"
+msgstr ""
+
+msgid "Unlock"
+msgstr ""
+
+msgid "Securely Unlocking"
+msgstr ""
+
+msgid "Securely Locking"
+msgstr ""
+
+msgid "Database Not Opening?"
+msgstr ""
+
+msgid "Open Source Licenses"
+msgstr ""
+
 msgid "%1 copied to clipboard (30 secs)"
 msgstr ""
 
@@ -184,6 +214,9 @@ msgid "Notes"
 msgstr ""
 
 msgid "Tap to copy"
+msgstr ""
+
+msgid "Notes copied to clipboard (30 secs)"
 msgstr ""
 
 msgid "Main"
@@ -201,31 +234,7 @@ msgstr ""
 msgid "Other Fields"
 msgstr ""
 
-msgid "Enter the database master password"
-msgstr ""
-
-msgid "Master Password"
-msgstr ""
-
-msgid "Open"
-msgstr ""
-
-msgid "Opening"
-msgstr ""
-
-msgid "Add Database"
-msgstr ""
-
-msgid "Loading last database."
-msgstr ""
-
-msgid "Select Database"
-msgstr ""
-
-msgid "Tap + to import a database."
-msgstr ""
-
-msgid "It will only be removed from the app, not your device."
+msgid "KeePassRX: Clipboard cleared."
 msgstr ""
 
 msgid ""

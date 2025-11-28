@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-27 11:34+0000\n"
+"POT-Creation-Date: 2025-11-28 10:06+0000\n"
 "PO-Revision-Date: 2025-11-18 09:39+0000\n"
 "Last-Translator: projectmoon <projectmoon@agnos.is>\n"
 "Language-Team: Icelandic <https://hosted.weblate.org/projects/ubports/"
@@ -92,31 +92,6 @@ msgstr "Sýna \"ruslið\" flokkur"
 msgid "This group contains all the deleted entries"
 msgstr ""
 
-msgid "Manual path set."
-msgstr "Handvirk leið staðsett."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"Stutt lykilorðið er fyrstu fimm stafirnar af lykilorðinu gagnagrunnar (eða "
-"heilt lykilorð ef það er stuttara en fimm stafir)."
-
-msgid "Passcode"
-msgstr "Stutt lykilorð"
-
-msgid "Unlock"
-msgstr "Aflæsa"
-
-msgid "Securely Unlocking"
-msgstr "Að aflæsa með öryggi"
-
-msgid "Securely Locking"
-msgstr "Læsa með öryggi"
-
-msgid "Database Not Opening?"
-msgstr "Er gagnagrunnur ekki að opna?"
-
 msgid "Cancel Search"
 msgstr "Hætta leit"
 
@@ -186,6 +161,61 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+msgid "Add Database"
+msgstr "Bæta við Gangnagrunn"
+
+msgid "Loading last database."
+msgstr "Síðasti gagnagrunnurinn í vinnslu."
+
+msgid "Select Database"
+msgstr "Kjósa gagnagrunn"
+
+msgid "Tap + to import a database."
+msgstr "Ýtið á + til að flytja inn gagnagrunn."
+
+msgid "It will only be removed from the app, not your device."
+msgstr "Það mun eyða frá appinu en ekki síminn þinn."
+
+msgid "Enter the database master password"
+msgstr "Sláðu inn aðallykilorð gagnagrunnsins"
+
+msgid "Master Password"
+msgstr "Aðallykilorð"
+
+msgid "Open"
+msgstr "Opna"
+
+msgid "Opening"
+msgstr "Í vinnslu"
+
+msgid "Manual path set."
+msgstr "Handvirk leið staðsett."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"Stutt lykilorðið er fyrstu fimm stafirnar af lykilorðinu gagnagrunnar (eða "
+"heilt lykilorð ef það er stuttara en fimm stafir)."
+
+msgid "Passcode"
+msgstr "Stutt lykilorð"
+
+msgid "Unlock"
+msgstr "Aflæsa"
+
+msgid "Securely Unlocking"
+msgstr "Að aflæsa með öryggi"
+
+msgid "Securely Locking"
+msgstr "Læsa með öryggi"
+
+msgid "Database Not Opening?"
+msgstr "Er gagnagrunnur ekki að opna?"
+
+msgid "Open Source Licenses"
+msgstr ""
+
 msgid "%1 copied to clipboard (30 secs)"
 msgstr ""
 
@@ -194,6 +224,9 @@ msgstr "Athugasemdir"
 
 msgid "Tap to copy"
 msgstr "Ýtið á til að afrita"
+
+msgid "Notes copied to clipboard (30 secs)"
+msgstr ""
 
 msgid "Main"
 msgstr ""
@@ -210,32 +243,8 @@ msgstr ""
 msgid "Other Fields"
 msgstr ""
 
-msgid "Enter the database master password"
-msgstr "Sláðu inn aðallykilorð gagnagrunnsins"
-
-msgid "Master Password"
-msgstr "Aðallykilorð"
-
-msgid "Open"
-msgstr "Opna"
-
-msgid "Opening"
-msgstr "Í vinnslu"
-
-msgid "Add Database"
-msgstr "Bæta við Gangnagrunn"
-
-msgid "Loading last database."
-msgstr "Síðasti gagnagrunnurinn í vinnslu."
-
-msgid "Select Database"
-msgstr "Kjósa gagnagrunn"
-
-msgid "Tap + to import a database."
-msgstr "Ýtið á + til að flytja inn gagnagrunn."
-
-msgid "It will only be removed from the app, not your device."
-msgstr "Það mun eyða frá appinu en ekki síminn þinn."
+msgid "KeePassRX: Clipboard cleared."
+msgstr ""
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

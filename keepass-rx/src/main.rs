@@ -30,6 +30,7 @@ use anyhow::Result;
 use cpp::cpp;
 use gettextrs::{bindtextdomain, textdomain};
 use qmeta_async::with_executor;
+use qmetaobject::webengine;
 use qmetaobject::{QObjectBox, QQuickStyle, QQuickView, qml_register_enum, qml_register_type};
 use std::env;
 use std::path::PathBuf;
@@ -85,6 +86,7 @@ fn load_gui() -> Result<()> {
     QQuickStyle::set_style("Suru");
     qrc::load();
     let uri = cstr!("keepassrx");
+
     qml_register_type::<RxUiDatabase>(uri, 1, 0, cstr!("RxUiDatabase"));
     qml_register_type::<RxUiContainerStack>(uri, 1, 0, cstr!("RxUiContainerStack"));
     qml_register_type::<RxUiEntry>(uri, 1, 0, cstr!("RxUiEntry"));
@@ -98,6 +100,8 @@ fn load_gui() -> Result<()> {
 
     // "Data migration": Move any db.kdbx from the data directory to imported.
     move_old_db();
+
+    webengine::initialize();
 
     qmeta_async::run(|| {
         // We must return app here because it keeps the value alive

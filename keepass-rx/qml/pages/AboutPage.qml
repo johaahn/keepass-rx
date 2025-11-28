@@ -5,10 +5,25 @@ import "../components"
 import Qt.labs.settings 1.0
 
 Page {
+    id: aboutPage
     header: PageHeader {
         id: header
         // TRANSLATORS: Header for the "About" page.
         title: i18n.tr("About")
+
+        trailingActionBar.numberOfSlots: 1
+        trailingActionBar.actions: [
+            Action {
+                name: "Open Source Licenses"
+                iconName: "stock_document"
+                onTriggered: {
+                    pageStack.addPageToNextColumn(
+                        aboutPage,
+                        Qt.resolvedUrl("qrc:/webengine/qml/pages/LicensesPage.qml")
+                    );
+                }
+            }
+        ]
     }
 
     ColumnLayout {

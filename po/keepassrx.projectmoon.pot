@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-27 11:34+0000\n"
+"POT-Creation-Date: 2025-11-28 08:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,33 +41,33 @@ msgstr ""
 msgid "Tap to copy 2FA code"
 msgstr ""
 
-#: qml/pages/AboutPage.qml:11 qml/pages/UnlockPage.qml:41
-#: qml/pages/EntriesPage.qml:216 qml/pages/OpenDBPage.qml:42
-#: qml/pages/DBList.qml:84
+#: qml/pages/AboutPage.qml:12 qml/pages/EntriesPage.qml:216
+#: qml/pages/DBList.qml:84 qml/pages/OpenDBPage.qml:42
+#: qml/pages/UnlockPage.qml:41
 msgid "About"
 msgstr ""
 
-#: qml/pages/AboutPage.qml:54
+#: qml/pages/AboutPage.qml:69
 msgid ""
 "KeePassRX is a work-in-progress password manager for KeePass password "
 "databases. It is licensed under the GNU GPL v3 license."
 msgstr ""
 
-#: qml/pages/AboutPage.qml:65
+#: qml/pages/AboutPage.qml:80
 msgid ""
 "The built-in KeePass icon images are licensed under a variety of licenses as "
 "detailed in assets/COPYING."
 msgstr ""
 
-#: qml/pages/AboutPage.qml:76
+#: qml/pages/AboutPage.qml:91
 msgid ""
 "Source: <a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git."
 "agnos.is/projectmoon/keepass-rx</a>"
 msgstr ""
 
-#: qml/pages/SettingsPage.qml:11 qml/pages/UnlockPage.qml:34
-#: qml/pages/EntriesPage.qml:207 qml/pages/OpenDBPage.qml:35
-#: qml/pages/DBList.qml:77
+#: qml/pages/SettingsPage.qml:11 qml/pages/EntriesPage.qml:207
+#: qml/pages/DBList.qml:77 qml/pages/OpenDBPage.qml:35
+#: qml/pages/UnlockPage.qml:34
 msgid "Settings"
 msgstr ""
 
@@ -103,36 +103,6 @@ msgstr ""
 
 #: qml/pages/SettingsPage.qml:81
 msgid "This group contains all the deleted entries"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:145
-msgid "Manual path set."
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:162
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:178
-msgid "Passcode"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:210
-msgid "Unlock"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:229
-msgid "Securely Unlocking"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:230
-msgid "Securely Locking"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:241
-msgid "Database Not Opening?"
 msgstr ""
 
 #: qml/pages/EntriesPage.qml:100
@@ -260,22 +230,6 @@ msgstr ""
 msgid "Other Fields"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:158
-msgid "Enter the database master password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:171
-msgid "Master Password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:201
-msgid "Open"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:218
-msgid "Opening"
-msgstr ""
-
 #: qml/pages/DBList.qml:70
 msgid "Add Database"
 msgstr ""
@@ -294,6 +248,56 @@ msgstr ""
 
 #: qml/pages/DBList.qml:269
 msgid "It will only be removed from the app, not your device."
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:158
+msgid "Enter the database master password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:171
+msgid "Master Password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:201
+msgid "Open"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:218
+msgid "Opening"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:145
+msgid "Manual path set."
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:162
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:178
+msgid "Passcode"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:210
+msgid "Unlock"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:229
+msgid "Securely Unlocking"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:230
+msgid "Securely Locking"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:241
+msgid "Database Not Opening?"
+msgstr ""
+
+#: qml/pages/LicensesPage.qml:11
+msgid "Open Source Licenses"
 msgstr ""
 
 #: src/gui/instructions.rs:9

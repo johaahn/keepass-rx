@@ -14,6 +14,8 @@ steps:
     depends_on:
       - test
     commands:
+      - cargo install cargo-about
+      - cargo about generate about.hbs > keepass-rx/assets/licenses.html
       - clickable build --clean
 
   - name: arm64
@@ -21,6 +23,8 @@ steps:
     depends_on:
       - test
     commands:
+      - cargo install cargo-about
+      - cargo about generate about.hbs > keepass-rx/assets/licenses.html
       - clickable build --clean
 
   - name: armhf
@@ -28,6 +32,8 @@ steps:
     depends_on:
       - test
     commands:
+      - cargo install cargo-about
+      - cargo about generate about.hbs > keepass-rx/assets/licenses.html
       - clickable build --clean
 
   - name: pre-release

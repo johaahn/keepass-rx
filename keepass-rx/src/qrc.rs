@@ -1,4 +1,8 @@
 qrc!(qml_resources,
+     "webengine" {
+         "assets/licenses.html",
+         "qml/pages/LicensesPage.qml",
+     },
      "/" {
          "assets/icons/C00_Password.svg",
          "assets/icons/C01_Package_Network.svg",

@@ -61,6 +61,12 @@ jobs:
       - name: Setup Cache
         uses: https://github.com/Swatinem/rust-cache@v2
 
+      - name: Install Cargo About
+        run: cargo install cargo-about
+
+      - name: Generate licenses.html
+        run: cargo about generate about.hbs > keepass-rx/assets/licenses.html
+
       - name: Build
         run: clickable build --clean
 
@@ -88,6 +94,12 @@ jobs:
       - name: Setup Cache
         uses: https://github.com/Swatinem/rust-cache@v2
 
+      - name: Install Cargo About
+        run: cargo install cargo-about
+
+      - name: Generate licenses.html
+        run: cargo about generate about.hbs > keepass-rx/assets/licenses.html
+
       - name: Build
         run: clickable build --clean
 
@@ -114,6 +126,12 @@ jobs:
 
       - name: Setup Cache
         uses: https://github.com/Swatinem/rust-cache@v2
+
+      - name: Install Cargo About
+        run: cargo install cargo-about
+
+      - name: Generate licenses.html
+        run: cargo about generate about.hbs > keepass-rx/assets/licenses.html
 
       - name: Build
         run: clickable build --clean

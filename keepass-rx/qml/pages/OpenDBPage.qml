@@ -178,28 +178,46 @@ Page {
                     errorMsg = ''
                 }
             }
+        }
+
+        RowLayout {
+            Button {
+                id: openDatabaseButton
+                Layout.fillWidth: true
+                visible: !busy
+                enabled: !busy && password.text
+                color: Theme.name == "Lomiri.Components.Themes.Ambiance" ? LomiriColors.green : LomiriColors.lightGreen
+                // TRANSLATORS: Open the database after password entered.
+                text: i18n.tr("Open")
+                onClicked: openDatabase()
+            }
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
 
             ActionBar {
+                id: actionBar
                 visible: !busy
-                numberOfSlots: 1
+                numberOfSlots: 2
+
                 actions: [
+                    Action {
+                        id: keyFileAction
+                        iconName: "stock_key"
+                        text: i18n.tr('Key File')
+                        description: i18n.tr('Provide a key file for opening the database.')
+                    },
                     Action {
                         id: showPasswordAction
                         checkable: true
                         iconName: checked ? "view-off" : "view-on"
+                        text: i18n.tr('Show Password')
+                        description: i18n.tr('Toggle password field visibility')
                     }
                 ]
             }
-        }
-
-        Button {
-            Layout.fillWidth: true
-            visible: !busy
-            enabled: !busy && password.text
-            color: Theme.name == "Lomiri.Components.Themes.Ambiance" ? LomiriColors.green : LomiriColors.lightGreen
-            // TRANSLATORS: Open the database after password entered.
-            text: i18n.tr("Open")
-            onClicked: openDatabase()
         }
 
         ActivityIndicator {

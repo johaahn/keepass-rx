@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 12:39+0000\n"
+"POT-Creation-Date: 2025-11-28 21:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,50 +39,6 @@ msgstr ""
 
 #: qml/components/EntryItem.qml:235
 msgid "Tap to copy 2FA code"
-msgstr ""
-
-#: qml/pages/AboutPage.qml:12 qml/pages/EntriesPage.qml:216
-#: qml/pages/DBList.qml:84 qml/pages/OpenDBPage.qml:42
-#: qml/pages/UnlockPage.qml:41
-msgid "About"
-msgstr ""
-
-#: qml/pages/AboutPage.qml:80
-msgid ""
-"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
-"Touch. It is licensed under the GNU AGPL v3 license."
-msgstr ""
-
-#: qml/pages/AboutPage.qml:91
-msgid ""
-"The built-in KeePass icon images are licensed under a variety of licenses as "
-"detailed in assets/COPYING."
-msgstr ""
-
-#: qml/pages/AboutPage.qml:99
-msgid "Manual"
-msgstr ""
-
-#: qml/pages/AboutPage.qml:111
-msgid ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-
-#: qml/pages/AboutPage.qml:124
-msgid ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-
-#: qml/pages/AboutPage.qml:133
-msgid "Source Code"
-msgstr ""
-
-#: qml/pages/AboutPage.qml:142
-msgid ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
 msgstr ""
 
 #: qml/pages/SettingsPage.qml:11 qml/pages/EntriesPage.qml:207
@@ -162,6 +118,12 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
+#: qml/pages/EntriesPage.qml:216 qml/pages/AboutPage.qml:12
+#: qml/pages/DBList.qml:84 qml/pages/OpenDBPage.qml:42
+#: qml/pages/UnlockPage.qml:41
+msgid "About"
+msgstr ""
+
 #: qml/pages/EntriesPage.qml:228
 msgid "Lock Database"
 msgstr ""
@@ -218,6 +180,44 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+#: qml/pages/AboutPage.qml:79
+msgid ""
+"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
+"Touch. It is licensed under the GNU AGPL v3 license."
+msgstr ""
+
+#: qml/pages/AboutPage.qml:90
+msgid ""
+"The built-in KeePass icon images are licensed under a variety of licenses as "
+"detailed in assets/COPYING."
+msgstr ""
+
+#: qml/pages/AboutPage.qml:98
+msgid "Manual"
+msgstr ""
+
+#: qml/pages/AboutPage.qml:110
+msgid ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+
+#: qml/pages/AboutPage.qml:123
+msgid ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+
+#: qml/pages/AboutPage.qml:132
+msgid "Source Code"
+msgstr ""
+
+#: qml/pages/AboutPage.qml:141
+msgid ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
+msgstr ""
+
 #: qml/pages/DBList.qml:70
 msgid "Add Database"
 msgstr ""
@@ -238,6 +238,10 @@ msgstr ""
 msgid "It will only be removed from the app, not your device."
 msgstr ""
 
+#: qml/pages/LicensesPage.qml:11
+msgid "Open Source Licenses"
+msgstr ""
+
 #: qml/pages/OpenDBPage.qml:158
 msgid "Enter the database master password"
 msgstr ""
@@ -246,46 +250,28 @@ msgstr ""
 msgid "Master Password"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:201
+#: qml/pages/OpenDBPage.qml:191
 msgid "Open"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:218
+#: qml/pages/OpenDBPage.qml:209
+msgid "Key File"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:210
+msgid "Provide a key file for opening the database."
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:216
+msgid "Show Password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:217
+msgid "Toggle password field visibility"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:236
 msgid "Opening"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:145
-msgid "Manual path set."
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:162
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:178
-msgid "Passcode"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:210
-msgid "Unlock"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:229
-msgid "Securely Unlocking"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:230
-msgid "Securely Locking"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:241
-msgid "Database Not Opening?"
-msgstr ""
-
-#: qml/pages/LicensesPage.qml:11
-msgid "Open Source Licenses"
 msgstr ""
 
 #: qml/pages/SingleEntry.qml:29 qml/Main.qml:91
@@ -326,6 +312,36 @@ msgstr ""
 
 #: qml/pages/SingleEntry.qml:264 qml/Main.qml:219
 msgid "KeePassRX: Clipboard cleared."
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:145
+msgid "Manual path set."
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:162
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:178
+msgid "Passcode"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:210
+msgid "Unlock"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:229
+msgid "Securely Unlocking"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:230
+msgid "Securely Locking"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:241
+msgid "Database Not Opening?"
 msgstr ""
 
 #: src/gui/instructions.rs:9

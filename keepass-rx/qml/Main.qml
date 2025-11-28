@@ -88,7 +88,7 @@ MainView {
                     Qt.openUrlExternally(fieldValue);
                 } else {
                     Clipboard.push(fieldValue);
-                    toast.show(`${fieldName} copied to clipboard (30 secs)`);
+                    toast.show(i18n.tr('%1 copied to clipboard (30 secs)').arg(fieldName));
                     clearClipboardTimer.start();
                 }
             }
@@ -97,7 +97,12 @@ MainView {
         function onTotpReceived(totp) {
             if (!totp.error) {
                 Clipboard.push(totp.digits);
-                toast.show("Token '" + totp.digits + "' copied. Valid for " + totp.validFor);
+                toast.show(
+                    i18n.ctr(
+                        "The totp.validFor field has an s after it. e.g. 30s (seconds)",
+                        "Token '%1' copied. Valid for %2"
+                    ).arg(totp.digits).arg(totp.validFor)
+                );
                 clearClipboardTimer.start();
             } else {
                 toast.show(totp.error);
@@ -208,7 +213,7 @@ MainView {
         interval: 30000
         onTriggered: {
             Clipboard.clear();
-            toast.show('KeePassRX: Clipboard cleared.');
+            toast.show(i18n.tr('KeePassRX: Clipboard cleared.'));
         }
     }
 }

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 08:28+0000\n"
+"POT-Creation-Date: 2025-11-28 08:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -198,7 +198,7 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:29
+#: qml/pages/SingleEntry.qml:29 qml/Main.qml:91
 msgid "%1 copied to clipboard (30 secs)"
 msgstr ""
 
@@ -208,6 +208,10 @@ msgstr ""
 
 #: qml/pages/SingleEntry.qml:131
 msgid "Tap to copy"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:141
+msgid "Notes copied to clipboard (30 secs)"
 msgstr ""
 
 #: qml/pages/SingleEntry.qml:190
@@ -228,6 +232,10 @@ msgstr ""
 
 #: qml/pages/SingleEntry.qml:238
 msgid "Other Fields"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:264 qml/Main.qml:216
+msgid "KeePassRX: Clipboard cleared."
 msgstr ""
 
 #: qml/pages/DBList.qml:70

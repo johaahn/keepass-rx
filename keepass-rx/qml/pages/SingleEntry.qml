@@ -138,7 +138,7 @@ Page {
                     anchors.fill: parent
                     onClicked: {
                         Clipboard.push(entryNotes);
-                        toast.show(`Notes copied to clipboard (30 secs)`);
+                        toast.show(i18n.tr('Notes copied to clipboard (30 secs)'));
                         clearClipboardTimer.start();
                     }
                 }
@@ -261,7 +261,7 @@ Page {
         interval: 30000
         onTriggered: {
             Clipboard.clear();
-            toast.show('KeePassRX: Clipboard cleared.');
+            toast.show(i18n.tr('KeePassRX: Clipboard cleared.'));
         }
     }
 

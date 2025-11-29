@@ -6,6 +6,7 @@ use secstr::SecUtf8;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::fs::File;
+use std::path::Path;
 use std::rc::Rc;
 use std::sync::Arc;
 use tokio::task::{JoinHandle, spawn_blocking};
@@ -87,7 +88,6 @@ pub struct SetViewMode(pub RxViewMode);
 pub struct OpenDatabase {
     pub db_name: String,
     pub db_type: RxDbType,
-    pub key_path: Option<String>,
 }
 
 #[derive(Message)]
@@ -225,8 +225,11 @@ impl Handler<SetViewMode> for KeepassRxActor {
 impl Handler<OpenDatabase> for KeepassRxActor {
     type Result = AtomicResponse<Self, anyhow::Result<()>>;
     fn handle(&mut self, msg: OpenDatabase, _: &mut Self::Context) -> Self::Result {
-        // Opening the database is synchronous I/O, which means it
-        // must be done on a separate thread.
+        // Extract key file if needed.
+        let app_state = self.app_state.pinned();
+        let app_state = app_state.borrow();
+        let maybe_key = app_state.db_key();
+
         let db_path = match msg.db_type {
             RxDbType::Imported => imported_databases_path().join(msg.db_name),
             RxDbType::Synced => synced_databases_path().join(msg.db_name),
@@ -246,20 +249,29 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                     .ok_or(anyhow!("[OpenDB] No master password stored"))?;
 
                 let mut db_file = File::open(db_path)?;
-                let key_file = msg.key_path.map(|p| File::open(p));
 
                 let db_key = DatabaseKey::new().with_password(pw_binding.unsecure());
-                let db_key = match key_file {
+                let db_key = match maybe_key.as_ref() {
                     // the double ? coerces File::open result and with_keyfile result.
-                    Some(file) => db_key.with_keyfile(&mut file?)?,
+                    Some(file) => {
+                        println!("Opening database with a key file");
+                        db_key.with_keyfile(&mut file.as_slice())?
+                    }
                     None => db_key,
                 };
 
+                // Opening the database is synchronous I/O, which means it
+                // must be done on a separate thread.
                 let open_result = spawn_blocking(move || -> Result<Database> {
                     let db = Database::open(&mut db_file, db_key)?;
                     Ok(db)
                 })
                 .await??;
+
+                // Remove imported key file if necessary.
+                if let Some(mut key) = maybe_key {
+                    key.zeroize();
+                }
 
                 Ok(open_result)
             }

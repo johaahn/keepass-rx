@@ -183,8 +183,6 @@ pub struct KeepassRx {
     listImportedDatabases: qt_method!(fn(&self)),
     importDatabase: qt_method!(fn(&self, path: String)),
     getMetadata: qt_method!(fn(&self)),
-    openDatabase:
-        qt_method!(fn(&mut self, db_name: String, db_type: RxDbType, key_path: QString)),
     closeDatabase: qt_method!(fn(&mut self)),
     deleteDatabase: qt_method!(fn(&self, db_name: String)),
 
@@ -216,6 +214,7 @@ pub struct KeepassRx {
     databaseClosed: qt_signal!(),
     databaseDeleted: qt_signal!(db_name: QString),
     databaseOpenFailed: qt_signal!(message: String),
+    keyFileSet: qt_signal!(),
 
     // data signals
     metadataChanged: qt_signal!(),
@@ -255,6 +254,16 @@ impl KeepassRx {
 
     #[with_executor]
     pub fn listImportedDatabases(&self) {
+        let want_file = |db: &std::fs::DirEntry| -> bool {
+            match db.file_name().into_string() {
+                Ok(file_str) => file_str.ends_with(".kdbx") || file_str.ends_with(".kdb"),
+                Err(os_str) => {
+                    let file_str = os_str.to_string_lossy();
+                    file_str.ends_with(".kdbx") || file_str.ends_with(".kdb")
+                }
+            }
+        };
+
         let list_dbs = || -> Result<()> {
             create_dir_all(&imported_databases_path())?;
             create_dir_all(&synced_databases_path())?;
@@ -266,11 +275,17 @@ impl KeepassRx {
             struct DbListing(std::fs::DirEntry, RxDbType);
 
             for db in imported_dbs {
-                dbs.push(DbListing(db?, RxDbType::Imported));
+                let db = db?;
+                if want_file(&db) {
+                    dbs.push(DbListing(db, RxDbType::Imported));
+                }
             }
 
             for db in synced_dbs {
-                dbs.push(DbListing(db?, RxDbType::Synced));
+                let db = db?;
+                if want_file(&db) {
+                    dbs.push(DbListing(db, RxDbType::Synced));
+                }
             }
 
             dbs.sort_by(|DbListing(this, _), DbListing(that, _)| {
@@ -349,21 +364,6 @@ impl KeepassRx {
     pub fn getMetadata(&self) {
         let actor = self.actor.clone().expect("Actor not initialized");
         actix::spawn(actor.send(GetMetadata));
-    }
-
-    #[with_executor]
-    pub fn openDatabase(&mut self, db_name: String, db_type: RxDbType, key_path: QString) {
-        let actor = self.actor.clone().expect("Actor not initialized");
-        let key_path = match key_path {
-            kp if !kp.is_null() && !kp.is_empty() => Some(kp.to_string()),
-            _ => None,
-        };
-
-        actix::spawn(actor.send(OpenDatabase {
-            db_name,
-            db_type,
-            key_path,
-        }));
     }
 
     #[with_executor]

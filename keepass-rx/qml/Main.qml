@@ -41,6 +41,8 @@ MainView {
         Component.onCompleted: {
             uiDatabase.onDatabaseNameChanged.connect(uiDatabase.updateLastDbSet);
             uiDatabase.onDatabaseTypeChanged.connect(uiDatabase.updateLastDbSet);
+            uiDatabase.onDatabaseNameChanged.connect(uiDatabase.detectKeyFile);
+            uiDatabase.onDatabaseTypeChanged.connect(uiDatabase.detectKeyFile);
         }
     }
 
@@ -48,6 +50,10 @@ MainView {
 	target: keepassrx
         function onErrorReceived(error) {
             console.error('Uncaught error (put me in a popup):', error);
+        }
+
+        function onKeyFileSet() {
+            console.log('Using a key file');
         }
 
         function onDatabaseOpened() {

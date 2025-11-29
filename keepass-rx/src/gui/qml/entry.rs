@@ -3,7 +3,9 @@ use actor_macro::observing_model;
 use qmeta_async::with_executor;
 use qmetaobject::prelude::*;
 
-use crate::{actor::ConnectedModelActor, rx::virtual_hierarchy::VirtualHierarchy};
+use crate::{
+    actor::ConnectedModelActor, app::AppState, rx::virtual_hierarchy::VirtualHierarchy,
+};
 
 /// A QObject that is wired to interact with a database entry via the
 /// app actor.
@@ -25,6 +27,7 @@ pub struct RxUiEntry {
 
 #[allow(dead_code, non_snake_case)]
 impl RxUiEntry {
+    fn init_from_state(&mut self, _: &AppState) {}
     fn init_from_view(&mut self, _: &dyn VirtualHierarchy) {}
 
     fn self_actor(&self) -> Option<Addr<ConnectedModelActor<Self>>> {

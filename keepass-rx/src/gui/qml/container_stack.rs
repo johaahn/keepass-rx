@@ -4,6 +4,7 @@ use actor_macro::observing_model;
 use qmetaobject::prelude::*;
 use uuid::Uuid;
 
+use crate::app::AppState;
 use crate::gui::RxViewMode;
 use crate::rx::virtual_hierarchy::VirtualHierarchy;
 
@@ -46,6 +47,8 @@ pub struct RxUiContainerStack {
 /// tree and so on.
 #[allow(non_snake_case)]
 impl RxUiContainerStack {
+    pub fn init_from_state(&mut self, _: &AppState) {}
+
     pub fn init_from_view(&mut self, view: &dyn VirtualHierarchy) {
         self.container_stack.clear();
         self.container_stack.push(view.root().uuid());

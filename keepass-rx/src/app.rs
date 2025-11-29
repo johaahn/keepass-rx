@@ -48,15 +48,21 @@ pub struct AppState {
 
     current_view: Option<Rc<Box<dyn VirtualHierarchy>>>,
     curr_db: Option<Rc<Zeroizing<RxDatabase>>>,
+    db_key: Option<Vec<u8>>,
 }
 
 impl AppState {
     #[with_executor]
     pub fn new() -> Self {
-        Self {
-            //app_actor: Some(app_actor),
-            ..Default::default()
-        }
+        Self::default()
+    }
+
+    pub fn db_key(&self) -> Option<Vec<u8>> {
+        self.db_key.clone()
+    }
+
+    pub fn set_db_key(&mut self, key: Vec<u8>) {
+        self.db_key = Some(key);
     }
 
     pub fn curr_view(&self) -> Option<Rc<Box<dyn VirtualHierarchy>>> {
@@ -95,9 +101,10 @@ impl AppState {
     }
 
     pub fn deferred_with_view(&self, cb: impl FnOnce(&dyn VirtualHierarchy) + 'static) {
-        // Calling the callback from within AppState means we have the RefCells that AppState is
-        // encapsulated in potentially panic.
-        // Spawn the closure on actix, this ensures the borrow of self will have ended.
+        // Calling the callback from within AppState means we have the
+        // RefCells that AppState is encapsulated in potentially
+        // panic. Spawn the closure on actix, this ensures the borrow
+        // of self will have ended.
         if let Some(view) = self.curr_view() {
             actix::spawn(async move { cb(view.as_ref().as_ref()) });
         } else {

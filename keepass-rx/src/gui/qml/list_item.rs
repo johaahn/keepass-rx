@@ -6,6 +6,7 @@ use gettextrs::npgettext;
 use qmetaobject::{QMetaType, QObject, QPointer, QString};
 use uuid::Uuid;
 
+use crate::app::AppState;
 use crate::rx::virtual_hierarchy::{RxViewFeature, VirtualHierarchy};
 use crate::rx::{RxContainedRef, RxEntry, RxGroup, RxTag, RxTemplate};
 
@@ -134,6 +135,7 @@ macro_rules! set_value {
 }
 
 impl RxListItem {
+    fn init_from_state(&mut self, _: &AppState) {}
     fn init_from_view(&mut self, view: &dyn VirtualHierarchy) {
         let mut loader = || -> anyhow::Result<()> {
             let uuid = Uuid::from_str(&self.entryUuid.to_string())?;

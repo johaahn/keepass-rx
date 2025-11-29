@@ -2,11 +2,12 @@ use actix::prelude::*;
 use actor_macro::observing_model;
 use anyhow::{Result, anyhow};
 use qmeta_async::with_executor;
-use qmetaobject::prelude::*;
+use qmetaobject::{QObjectPinned, QObjectRefMut, prelude::*};
 use std::{fs::read_to_string, fs::remove_file, path::Path};
 
 use crate::{
     actor::{ActorConnected, ConnectedModelActor, ModelContext},
+    app::AppState,
     app::RxActors,
     gui::{
         RxDbType,
@@ -20,24 +21,71 @@ use crate::{
 #[rtype(result = "()")]
 struct OpenCommand;
 
+/// Detect if a key file exists alongside the currently set database.
+/// Mostly for testing purposes.
+#[derive(Message)]
+#[rtype(result = "()")]
+struct DetectKeyFileCommand;
+
+#[derive(Message)]
+#[rtype(result = "()")]
+struct UseKeyFileCommand {
+    path: String,
+    delete_key: bool,
+}
+
 #[observing_model]
 #[derive(QObject)]
 #[allow(dead_code, non_snake_case)]
 pub struct RxUiDatabase {
     last_db_set: bool,
+    key_file_set: bool,
+    key_file_detected: bool,
 
     pub(super) base: qt_base_class!(trait QObject),
     pub(super) isLastDbSet: qt_property!(bool; READ get_last_db_set WRITE set_last_db_set NOTIFY isLastDbSetChanged),
+    pub(super) isKeyFileSet: qt_property!(bool; READ get_key_file_set NOTIFY isKeyFileSetChanged),
+    pub(super) isKeyFileDetected: qt_property!(bool; READ get_key_file_detected NOTIFY isKeyFileDetectedChanged),
     pub(super) databaseName: qt_property!(QString; NOTIFY databaseNameChanged),
     pub(super) databaseType: qt_property!(RxDbType; NOTIFY databaseTypeChanged),
 
     pub(super) databaseNameChanged: qt_signal!(),
     pub(super) databaseTypeChanged: qt_signal!(),
     pub(super) isLastDbSetChanged: qt_signal!(),
+    pub(super) isKeyFileSetChanged: qt_signal!(),
+    pub(super) isKeyFileDetectedChanged: qt_signal!(),
 
+    pub(super) useKeyFile: qt_method!(fn(&self, key_file_path: QString)),
     pub(super) open: qt_method!(fn(&self)),
     pub(super) updateLastDbSet: qt_method!(fn(&mut self)),
+    pub(super) detectKeyFile: qt_method!(fn(&self)),
     pub(super) databaseTypeTranslated: qt_property!(QString; READ translate_db_type NOTIFY databaseTypeChanged),
+}
+
+impl ActorConnected<UseKeyFileCommand> for RxUiDatabase {
+    type Context = ModelContext<Self>;
+
+    fn app_state(&self) -> &crate::app::AppState {
+        self._app.as_ref().expect("No app state available")
+    }
+
+    fn handle(&mut self, _: Self::Context, message: UseKeyFileCommand)
+    where
+        Self: Sized + QObject,
+    {
+        println!("Handling key file");
+        let key_file_path = message.path;
+        self.set_key_file(&key_file_path);
+
+        // Remove the file, if it exists. Only do this when importing
+        // from ContentHub; we don't want to keep the key file on disk
+        // in data dir.
+        if message.delete_key {
+            if let Err(err) = std::fs::remove_file(&key_file_path) {
+                println!("Could not remove imported key file: {}", err);
+            }
+        }
+    }
 }
 
 impl ActorConnected<OpenCommand> for RxUiDatabase {
@@ -56,7 +104,6 @@ impl ActorConnected<OpenCommand> for RxUiDatabase {
         actix::spawn(app_actor.send(OpenDatabase {
             db_name: self.databaseName.to_string(),
             db_type: self.databaseType,
-            key_path: None,
         }));
     }
 }
@@ -133,6 +180,10 @@ impl Default for RxUiDatabase {
         let have_last_db = last_db.is_some();
 
         Self {
+            isKeyFileSet: Default::default(),
+            isKeyFileDetected: Default::default(),
+            isKeyFileDetectedChanged: Default::default(),
+            key_file_detected: Default::default(),
             _app: Default::default(),
             _connected_model_registration: Default::default(),
             _ready: Default::default(),
@@ -145,8 +196,12 @@ impl Default for RxUiDatabase {
             databaseNameChanged: Default::default(),
             databaseTypeChanged: Default::default(),
             last_db_set: have_last_db,
+            key_file_set: Default::default(),
             isLastDbSet: Default::default(),
             isLastDbSetChanged: Default::default(),
+            isKeyFileSetChanged: Default::default(),
+            useKeyFile: Default::default(),
+            detectKeyFile: Default::default(),
             open: Default::default(),
             updateLastDbSet: Default::default(),
             databaseTypeTranslated: Default::default(),
@@ -156,7 +211,15 @@ impl Default for RxUiDatabase {
 
 #[allow(non_snake_case)]
 impl RxUiDatabase {
+    fn init_from_state(&mut self, _: &AppState) {
+        self.detectKeyFile();
+    }
+
     fn init_from_view(&mut self, _: &dyn VirtualHierarchy) {}
+
+    fn app_state_cell(&self) -> QObjectPinned<'_, crate::app::AppState> {
+        self._app.as_pinned().expect("No app state")
+    }
 
     fn connected_actor(&self) -> Option<Addr<ConnectedModelActor<Self>>> {
         self._connected_model_registration
@@ -164,8 +227,44 @@ impl RxUiDatabase {
             .map(|reg| reg.actor.clone())
     }
 
+    fn set_key_file(&mut self, key_file_path: impl AsRef<Path>) {
+        let read_key = move || -> Result<Vec<u8>> {
+            let source = key_file_path.as_ref();
+            let key_bytes = std::fs::read(source)?;
+            Ok(key_bytes)
+        };
+
+        let is_key_currently_set = self.key_file_set;
+
+        match read_key() {
+            Ok(key_bytes) => {
+                let app_state = self.app_state_cell();
+                let mut app_state = app_state.borrow_mut();
+                app_state.set_db_key(key_bytes);
+                drop(app_state);
+                self.key_file_set = true;
+            }
+            Err(err) => {
+                println!("Error setting key file: {}", err);
+                self.key_file_set = false;
+            }
+        }
+
+        if self.key_file_set != is_key_currently_set {
+            self.isKeyFileSetChanged();
+        }
+    }
+
     fn get_last_db_set(&self) -> bool {
         self.last_db_set
+    }
+
+    fn get_key_file_set(&self) -> bool {
+        self.key_file_set
+    }
+
+    fn get_key_file_detected(&self) -> bool {
+        self.key_file_detected
     }
 
     fn updateLastDbSet(&mut self) {
@@ -205,6 +304,91 @@ impl RxUiDatabase {
             if let Err(err) = clear_last_db() {
                 println!("{}", err);
             }
+        }
+    }
+
+    #[with_executor]
+    pub fn detectKeyFile(&mut self) {
+        // Only do auto-detection for synced DBs.
+        if self.databaseType != RxDbType::Synced {
+            let is_key_currently_set = self.key_file_set;
+            let is_key_currently_detected = self.key_file_detected;
+            self.key_file_set = false;
+            self.key_file_detected = false;
+
+            if is_key_currently_set != self.key_file_set {
+                self.isKeyFileSetChanged();
+            }
+
+            if is_key_currently_detected != self.key_file_detected {
+                self.isKeyFileDetectedChanged();
+            }
+            return;
+        }
+
+        let data_dir = db_path_for_type(self.databaseType);
+        let binding = self.databaseName.to_string();
+        let db_raw_name = binding.split(".kdbx").next();
+
+        let key_file_name = db_raw_name.and_then(|name| {
+            if name.len() > 0 {
+                let mut name = name.to_string();
+                name.push_str(".key");
+                Some(name)
+            } else {
+                None
+            }
+        });
+
+        let maybe_key_path = key_file_name.map(|filename| data_dir.join(filename));
+
+        if let Some(key_file) = maybe_key_path.as_ref()
+            && key_file.exists()
+        {
+            println!(
+                "Found a companion key file for: {}",
+                self.databaseName.to_string()
+            );
+
+            let is_key_currently_detected = self.key_file_detected;
+            self.key_file_detected = true;
+            if is_key_currently_detected != self.key_file_detected {
+                self.isKeyFileDetectedChanged();
+            }
+
+            if let Some(actor) = self.connected_actor() {
+                actix::spawn(actor.send(UseKeyFileCommand {
+                    path: key_file.to_string_lossy().to_string(),
+                    delete_key: false,
+                }));
+            } else {
+                self.set_key_file(&key_file);
+            }
+        } else {
+            let is_key_currently_set = self.key_file_set;
+            let is_key_currently_detected = self.key_file_detected;
+            self.key_file_set = false;
+            self.key_file_detected = false;
+
+            if is_key_currently_set != self.key_file_set {
+                self.isKeyFileSetChanged();
+            }
+
+            if is_key_currently_detected != self.key_file_detected {
+                self.isKeyFileDetectedChanged();
+            }
+        }
+    }
+
+    #[with_executor]
+    pub fn useKeyFile(&self, key_file_path: QString) {
+        if let Some(actor) = self.connected_actor() {
+            actix::spawn(actor.send(UseKeyFileCommand {
+                path: key_file_path.to_string(),
+                delete_key: true,
+            }));
+        } else {
+            println!("No actor connection active?");
         }
     }
 

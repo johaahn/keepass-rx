@@ -20,6 +20,7 @@ use actix::SystemRegistry;
 use actix::prelude::*;
 use qmeta_async::with_executor;
 use qmetaobject::QObject;
+use qmetaobject::QObjectPinned;
 use qmetaobject::QPointer;
 
 use crate::app::AppState;

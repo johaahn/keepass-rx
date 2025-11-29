@@ -13,6 +13,65 @@ Page {
     property string errorMsg
     property double lastHeartbeat: 0
 
+    function keyFileColor() {
+        return uiDatabase.isKeyFileSet
+            ? LomiriColors.orange
+            : theme.palette.normal.backgroundSecondaryText
+    }
+
+    function keyFileText() {
+        if (uiDatabase.isKeyFileSet) {
+            if (uiDatabase.isKeyFileDetected) {
+                return i18n.tr("Auto-detected key file for database.")
+            } else {
+                return i18n.tr("A key file will be used to open this database.")
+            }
+        } else {
+            return i18n.tr("Tap the key icon to use a key file.")
+        }
+    }
+
+    ContentPeerPicker {
+        id: keyFilePicker
+        visible: false
+        showTitle: true
+        //TRANSLATORS: The user is selecting a key file to open database.
+        headerText: i18n.tr("Select Key File")
+        z: 10 // make sure to show above everything else.
+        handler: ContentHandler.Source
+        contentType: ContentType.All
+
+        // Picker is closed by signalConnections after key file chosen.
+        onPeerSelected: {
+            peer.selectionType = ContentTransfer.Single;
+            storeKeyFileConnection.target = peer.request();
+        }
+
+        onCancelPressed: keyFilePicker.visible = false;
+    }
+
+    Connections {
+        id: storeKeyFileConnection
+
+        function onStateChanged() {
+            var done = target.state === ContentTransfer.Charged;
+
+            if (!done) {
+                return;
+            }
+
+            if (target.items.length === 0) {
+                return;
+            }
+
+            const filePath = String(target.items[0].url).replace('file://', '');
+            uiDatabase.useKeyFile(filePath);
+            target.finalize();
+            keyFilePicker.visible = false;
+        }
+    }
+
+
     header: PageHeader {
         id: header
         title: uiDatabase.databaseName
@@ -178,28 +237,71 @@ Page {
                     errorMsg = ''
                 }
             }
+        }
+
+        RowLayout {
+            Button {
+                id: openDatabaseButton
+                Layout.fillWidth: true
+                visible: !busy
+                enabled: !busy && password.text
+                color: Theme.name == "Lomiri.Components.Themes.Ambiance" ? LomiriColors.green : LomiriColors.lightGreen
+                // TRANSLATORS: Open the database after password entered.
+                text: i18n.tr("Open")
+                onClicked: openDatabase()
+            }
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
 
             ActionBar {
+                id: actionBar
                 visible: !busy
-                numberOfSlots: 1
+                numberOfSlots: 2
+
                 actions: [
+                    Action {
+                        id: keyFileAction
+                        iconName: uiDatabase.isKeyFileSet ? "lock" : "stock_key"
+                        text: i18n.tr('Key File')
+                        description: i18n.tr('Provide a key file for opening the database.')
+                        onTriggered: { keyFilePicker.visible = true; }
+                    },
                     Action {
                         id: showPasswordAction
                         checkable: true
                         iconName: checked ? "view-off" : "view-on"
+                        text: i18n.tr('Show Password')
+                        description: i18n.tr('Toggle password field visibility')
                     }
                 ]
             }
         }
 
-        Button {
+        RowLayout {
             Layout.fillWidth: true
-            visible: !busy
-            enabled: !busy && password.text
-            color: Theme.name == "Lomiri.Components.Themes.Ambiance" ? LomiriColors.green : LomiriColors.lightGreen
-            // TRANSLATORS: Open the database after password entered.
-            text: i18n.tr("Open")
-            onClicked: openDatabase()
+            Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
+            spacing: units.gu(1)
+
+            Label {
+                wrapMode: Text.WordWrap
+                color: keyFileColor()
+                text: keyFileText()
+            }
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
+            spacing: units.gu(1)
+
+            Label {
+                wrapMode: Text.WordWrap
+                color: theme.palette.normal.backgroundSecondaryText
+                text: i18n.tr("Tap the eye icon to show the password.")
+            }
         }
 
         ActivityIndicator {

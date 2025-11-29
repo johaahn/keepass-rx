@@ -446,8 +446,12 @@ fn generate_methods(
                     actor,
                 });
 
+                // Deferred state init
+                self.init_from_state(app);
+
                 drop(self);
 
+                // Deferred view init
                 app.deferred_with_view(move |view| {
                     let Some(this) = this.as_pinned() else {
                         println!("Object destroyed before being initialized");

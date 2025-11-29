@@ -10,6 +10,7 @@ import "../components"
 Page {
     id: openDbPage
     property bool busy
+    property bool showPassword
     property string errorMsg
     property double lastHeartbeat: 0
 
@@ -19,15 +20,25 @@ Page {
             : theme.palette.normal.backgroundSecondaryText
     }
 
+    function keyFileActionText() {
+        if (uiDatabase.isKeyFileSet) {
+            return uiDatabase.isKeyFileDetected
+                ? i18n.tr('Key Loaded')
+                : i18n.tr('Remove Key');
+        } else {
+            return i18n.tr('Use Key');
+        }
+    }
+
     function keyFileText() {
         if (uiDatabase.isKeyFileSet) {
             if (uiDatabase.isKeyFileDetected) {
-                return i18n.tr("Auto-detected key file for database.")
+                return i18n.tr("Automatically detected a key file for this database.")
             } else {
-                return i18n.tr("A key file will be used to open this database. Tap lock to clear.")
+                return i18n.tr("A key file will be used to open this database.")
             }
         } else {
-            return i18n.tr("Tap the key icon to use a key file.")
+            return '';
         }
     }
 
@@ -116,7 +127,7 @@ Page {
     function openDatabase() {
         console.log('[OpenDB] QML - Storing password');
         busy = true;
-        showPasswordAction.checked = false;
+        showPassword = false;
 
         if (keepassrx.isMasterPasswordEncrypted) {
             // TODO should not be able to be in this state
@@ -151,8 +162,8 @@ Page {
         anchors.left: parent.left
         anchors.right: parent.right
 
-        anchors.leftMargin: units.gu(7)
-        anchors.rightMargin: units.gu(7)
+        anchors.leftMargin: units.gu(3)
+        anchors.rightMargin: units.gu(3)
         anchors.verticalCenter: parent.verticalCenter
         spacing: units.gu(1)
 
@@ -228,7 +239,7 @@ Page {
                 text: ''
                 // TRANSLATORS: The master password for opening the database.
                 placeholderText: i18n.tr("Master Password")
-                echoMode: showPasswordAction.checked ? TextInput.Normal : TextInput.Password
+                echoMode: showPassword ? TextInput.Normal : TextInput.Password
                 inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
                 Layout.fillWidth: true
                 Keys.onReturnPressed: openDatabase()
@@ -254,42 +265,41 @@ Page {
 
         RowLayout {
             Layout.fillWidth: true
-            Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
+            visible: !busy
 
-            ActionBar {
-                id: actionBar
-                visible: !busy
-                numberOfSlots: 2
+            Button {
+                id: showPasswordAction
+                Layout.fillWidth: true
+                Layout.preferredWidth: 1
+                iconName: showPassword ? "view-off" : "view-on"
+                color: LomiriColors.silk
+                text: showPassword ? i18n.tr('Hide Password') : i18n.tr('Show Password')
+                onTriggered: {
+                    showPassword = !showPassword;
+                }
+            }
 
-                actions: [
-                    Action {
-                        id: keyFileAction
-                        iconName: uiDatabase.isKeyFileSet ? "lock" : "stock_key"
-                        enabled: !uiDatabase.isKeyFileDetected
-                        text: i18n.tr('Key File')
-                        description: i18n.tr('Provide a key file for opening the database.')
-                        onTriggered: {
-                            if (uiDatabase.isKeyFileSet) {
-                                uiDatabase.clearKeyFile();
-                            }
-                            else {
-                                keyFilePicker.visible = true;
-                            }
-                        }
-                    },
-                    Action {
-                        id: showPasswordAction
-                        checkable: true
-                        iconName: checked ? "view-off" : "view-on"
-                        text: i18n.tr('Show Password')
-                        description: i18n.tr('Toggle password field visibility')
+            Button {
+                id: keyFileAction
+                Layout.fillWidth: true
+                Layout.preferredWidth: 1
+                enabled: !uiDatabase.isKeyFileDetected
+                iconName: uiDatabase.isKeyFileSet ? "lock-broken" : "lock"
+                color: uiDatabase.isKeyFileDetected ? LomiriColors.orange : LomiriColors.silk
+                text: keyFileActionText()
+                onTriggered: {
+                    if (uiDatabase.isKeyFileSet) {
+                        uiDatabase.clearKeyFile();
                     }
-                ]
+                    else {
+                        keyFilePicker.visible = true;
+                    }
+                }
             }
         }
 
         RowLayout {
-            visible: !busy
+            visible: !busy && uiDatabase.isKeyFileSet
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
             spacing: units.gu(1)
@@ -298,21 +308,6 @@ Page {
                 wrapMode: Text.WordWrap
                 color: keyFileColor()
                 text: keyFileText()
-            }
-        }
-
-        RowLayout {
-            visible: !busy
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
-            spacing: units.gu(1)
-
-            Label {
-                wrapMode: Text.WordWrap
-                color: theme.palette.normal.backgroundSecondaryText
-                text: showPasswordAction.checked
-                    ? i18n.tr("Tap the eye icon to hide the password.")
-                    : i18n.tr("Tap the eye icon to show the password.")
             }
         }
 

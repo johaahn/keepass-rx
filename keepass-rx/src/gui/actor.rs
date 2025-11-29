@@ -271,7 +271,10 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                         let key_bytes = maybe_key_file_bytes?;
                         match key_bytes {
                             Some(bytes) => {
-                                println!("Opening database with a key file.");
+                                println!(
+                                    "Opening database with a key file of {} bytes.",
+                                    bytes.len()
+                                );
                                 db_key.with_keyfile(&mut bytes.as_ref())?
                             }
                             _ => db_key,

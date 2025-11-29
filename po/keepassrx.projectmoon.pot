@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-29 18:44+0000\n"
+"POT-Creation-Date: 2025-11-29 20:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,7 +43,7 @@ msgstr ""
 
 #: qml/pages/SettingsPage.qml:11 qml/pages/EntriesPage.qml:208
 #: qml/pages/DBList.qml:78 qml/pages/UnlockPage.qml:35
-#: qml/pages/OpenDBPage.qml:94
+#: qml/pages/OpenDBPage.qml:105
 msgid "Settings"
 msgstr ""
 
@@ -106,7 +106,7 @@ msgid "Close"
 msgstr ""
 
 #: qml/pages/EntriesPage.qml:172 qml/pages/SingleEntry.qml:82
-#: qml/pages/OpenDBPage.qml:81
+#: qml/pages/OpenDBPage.qml:92
 msgid "Back"
 msgstr ""
 
@@ -120,7 +120,7 @@ msgstr ""
 
 #: qml/pages/EntriesPage.qml:217 qml/pages/AboutPage.qml:12
 #: qml/pages/DBList.qml:85 qml/pages/UnlockPage.qml:42
-#: qml/pages/OpenDBPage.qml:101
+#: qml/pages/OpenDBPage.qml:112
 msgid "About"
 msgstr ""
 
@@ -312,59 +312,51 @@ msgstr ""
 msgid "Database Not Opening?"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:25
-msgid "Auto-detected key file for database."
+#: qml/pages/OpenDBPage.qml:26
+msgid "Key Loaded"
 msgstr ""
 
 #: qml/pages/OpenDBPage.qml:27
-msgid "A key file will be used to open this database. Tap lock to clear."
+msgid "Remove Key"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:30
-msgid "Tap the key icon to use a key file."
+#: qml/pages/OpenDBPage.qml:29
+msgid "Use Key"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:39
+#: qml/pages/OpenDBPage.qml:36
+msgid "Automatically detected a key file for this database."
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:38
+msgid "A key file will be used to open this database."
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:50
 msgid "Select Key File"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:217
+#: qml/pages/OpenDBPage.qml:228
 msgid "Enter the database master password"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:230
+#: qml/pages/OpenDBPage.qml:241
 msgid "Master Password"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:250
+#: qml/pages/OpenDBPage.qml:261
 msgid "Open"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:269
-msgid "Key File"
+#: qml/pages/OpenDBPage.qml:276
+msgid "Hide Password"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:270
-msgid "Provide a key file for opening the database."
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:284
+#: qml/pages/OpenDBPage.qml:276
 msgid "Show Password"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:285
-msgid "Toggle password field visibility"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:314
-msgid "Tap the eye icon to hide the password."
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:315
-msgid "Tap the eye icon to show the password."
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:332
+#: qml/pages/OpenDBPage.qml:327
 msgid "Opening"
 msgstr ""
 

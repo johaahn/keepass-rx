@@ -305,18 +305,7 @@ impl RxUiDatabase {
     pub fn detectKeyFile(&mut self) {
         // Only do auto-detection for synced DBs.
         if self.databaseType != RxDbType::Synced {
-            let is_key_currently_set = self.key_file_set;
-            let is_key_currently_detected = self.key_file_detected;
-            self.key_file_set = false;
-            self.key_file_detected = false;
-
-            if is_key_currently_set != self.key_file_set {
-                self.isKeyFileSetChanged();
-            }
-
-            if is_key_currently_detected != self.key_file_detected {
-                self.isKeyFileDetectedChanged();
-            }
+            self.clearKeyFile();
             return;
         }
 
@@ -359,18 +348,7 @@ impl RxUiDatabase {
                 self.set_key_file(&key_file);
             }
         } else {
-            let is_key_currently_set = self.key_file_set;
-            let is_key_currently_detected = self.key_file_detected;
-            self.key_file_set = false;
-            self.key_file_detected = false;
-
-            if is_key_currently_set != self.key_file_set {
-                self.isKeyFileSetChanged();
-            }
-
-            if is_key_currently_detected != self.key_file_detected {
-                self.isKeyFileDetectedChanged();
-            }
+            self.clearKeyFile();
         }
     }
 

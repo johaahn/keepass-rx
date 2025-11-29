@@ -254,7 +254,7 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                 let db_key = match maybe_key.as_ref() {
                     // the double ? coerces File::open result and with_keyfile result.
                     Some(file) => {
-                        println!("Opening database with a key file");
+                        println!("Opening database with a key file.");
                         db_key.with_keyfile(&mut file.as_slice())?
                     }
                     None => db_key,

@@ -24,7 +24,7 @@ Page {
             if (uiDatabase.isKeyFileDetected) {
                 return i18n.tr("Auto-detected key file for database.")
             } else {
-                return i18n.tr("A key file will be used to open this database.")
+                return i18n.tr("A key file will be used to open this database. Tap lock to clear.")
             }
         } else {
             return i18n.tr("Tap the key icon to use a key file.")
@@ -265,9 +265,17 @@ Page {
                     Action {
                         id: keyFileAction
                         iconName: uiDatabase.isKeyFileSet ? "lock" : "stock_key"
+                        enabled: !uiDatabase.isKeyFileDetected
                         text: i18n.tr('Key File')
                         description: i18n.tr('Provide a key file for opening the database.')
-                        onTriggered: { keyFilePicker.visible = true; }
+                        onTriggered: {
+                            if (uiDatabase.isKeyFileSet) {
+                                uiDatabase.clearKeyFile();
+                            }
+                            else {
+                                keyFilePicker.visible = true;
+                            }
+                        }
                     },
                     Action {
                         id: showPasswordAction

@@ -7,8 +7,7 @@ use std::{fs::read_to_string, fs::remove_file, path::Path};
 
 use crate::{
     actor::{ActorConnected, ConnectedModelActor, ModelContext},
-    app::AppState,
-    app::RxActors,
+    app::{AppState, KeyFile, RxActors},
     gui::{
         RxDbType,
         actor::OpenDatabase,
@@ -69,7 +68,6 @@ impl ActorConnected<UseKeyFileCommand> for RxUiDatabase {
         Self: Sized + QObject,
     {
         let key_file_path = message.path;
-        println!("Attempting to use key file: {:?}", key_file_path);
         self.set_key_file(&key_file_path);
 
         // Remove the file, if it exists. Only do this when importing
@@ -236,7 +234,7 @@ impl RxUiDatabase {
             Ok(key_bytes) => {
                 let app_state = self.app_state_cell();
                 let mut app_state = app_state.borrow_mut();
-                app_state.set_db_key(Some(key_bytes));
+                app_state.set_db_key(Some(KeyFile::Unencrypted(key_bytes)));
                 drop(app_state);
                 self.key_file_set = true;
             }
@@ -400,6 +398,7 @@ impl RxUiDatabase {
         let app_state = self.app_state_cell();
         let mut app_state = app_state.borrow_mut();
         app_state.set_db_key(None);
+        app_state.set_master_key(None);
         drop(app_state);
 
         self.key_file_detected = false;

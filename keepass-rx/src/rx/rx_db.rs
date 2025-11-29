@@ -174,6 +174,10 @@ impl RxDatabase {
         db
     }
 
+    pub fn master_key(&self) -> &MasterKey {
+        &self.master_key
+    }
+
     pub fn close(&mut self) {
         println!("Closing database.");
         self.zeroize();

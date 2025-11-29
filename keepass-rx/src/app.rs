@@ -1,12 +1,15 @@
 use actix::Addr;
 use anyhow::{Result, anyhow};
+use libsodium_rs::utils::{SecureVec, vec_utils};
 use qmeta_async::with_executor;
 use qmetaobject::{QObject, QObjectBox};
 use std::cell::RefCell;
 use std::rc::Rc;
+use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Arc, LazyLock, OnceLock};
-use zeroize::Zeroizing;
+use zeroize::{Zeroize, Zeroizing};
 
+use crate::crypto::{EncryptedValue, MasterKey};
 use crate::gui::actor::KeepassRxActor;
 use crate::rx::RxDatabase;
 use crate::rx::virtual_hierarchy::VirtualHierarchy;
@@ -40,6 +43,78 @@ pub struct KeepassRxApp {
     pub(crate) app_state: Rc<QObjectBox<AppState>>,
 }
 
+#[derive(Clone)]
+pub enum KeyFile {
+    Unencrypted(Vec<u8>),
+    Encrypted(EncryptedValue),
+}
+
+impl KeyFile {
+    pub fn is_unencrypted(&self) -> bool {
+        match self {
+            KeyFile::Unencrypted(_) => true,
+            _ => false,
+        }
+    }
+
+    pub fn encrypt(self, master_key: &MasterKey) -> Result<KeyFile> {
+        match self {
+            KeyFile::Encrypted(_) => Ok(self),
+            KeyFile::Unencrypted(bytes) => {
+                let id = KEY_FILE_COUNTER.fetch_add(1, Ordering::SeqCst);
+                let mut bytes_buf = vec_utils::secure_vec::<u8>(bytes.len())?;
+                bytes_buf.copy_from_slice(bytes.as_slice());
+                Ok(KeyFile::Encrypted(EncryptedValue::new(
+                    master_key, id, bytes_buf,
+                )?))
+            }
+        }
+    }
+
+    pub fn bytes_unencrypted(&self) -> Option<SecureVec<u8>> {
+        match self {
+            KeyFile::Unencrypted(bytes) => {
+                let bytes = bytes.clone();
+                let mut bytes_buf = vec_utils::secure_vec::<u8>(bytes.len()).ok()?;
+                bytes_buf.copy_from_slice(bytes.as_slice());
+                Some(bytes_buf)
+            }
+            _ => None,
+        }
+    }
+
+    pub fn bytes(&self, master_key: &MasterKey) -> Result<SecureVec<u8>> {
+        let value = match self {
+            KeyFile::Unencrypted(bytes) => {
+                let bytes = bytes.clone();
+                let mut bytes_buf = vec_utils::secure_vec::<u8>(bytes.len())?;
+                bytes_buf.copy_from_slice(bytes.as_slice());
+                bytes_buf
+            }
+            KeyFile::Encrypted(value) => value.expose(master_key)?,
+        };
+
+        Ok(value)
+    }
+}
+
+impl Zeroize for KeyFile {
+    fn zeroize(&mut self) {
+        match self {
+            KeyFile::Unencrypted(bytes) => bytes.zeroize(),
+            KeyFile::Encrypted(value) => value.zeroize(),
+        }
+    }
+}
+
+impl Default for KeyFile {
+    fn default() -> Self {
+        KeyFile::Unencrypted(vec![])
+    }
+}
+
+static KEY_FILE_COUNTER: AtomicU64 = AtomicU64::new(1);
+
 #[derive(QObject, Default)]
 #[allow(dead_code)]
 pub struct AppState {
@@ -48,7 +123,9 @@ pub struct AppState {
 
     current_view: Option<Rc<Box<dyn VirtualHierarchy>>>,
     curr_db: Option<Rc<Zeroizing<RxDatabase>>>,
-    db_key: Option<Vec<u8>>,
+
+    master_key: Option<MasterKey>,
+    db_key: Option<KeyFile>,
 }
 
 impl AppState {
@@ -57,11 +134,19 @@ impl AppState {
         Self::default()
     }
 
-    pub fn db_key(&self) -> Option<Vec<u8>> {
+    pub fn master_key(&self) -> Option<&MasterKey> {
+        self.master_key.as_ref()
+    }
+
+    pub fn set_master_key(&mut self, master_key: Option<MasterKey>) {
+        self.master_key = master_key;
+    }
+
+    pub fn db_key(&self) -> Option<KeyFile> {
         self.db_key.clone()
     }
 
-    pub fn set_db_key(&mut self, key: Option<Vec<u8>>) {
+    pub fn set_db_key(&mut self, key: Option<KeyFile>) {
         self.db_key = key;
     }
 

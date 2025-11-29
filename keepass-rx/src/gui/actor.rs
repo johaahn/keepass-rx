@@ -1,6 +1,7 @@
 use actix::prelude::*;
 use anyhow::{Result, anyhow};
 use keepass::{Database, DatabaseKey};
+use libsodium_rs::utils::{SecureVec, vec_utils};
 use qmetaobject::*;
 use secstr::SecUtf8;
 use std::cell::RefCell;
@@ -15,8 +16,8 @@ use zeroize::{Zeroize, Zeroizing};
 
 use super::instructions::get_instructions;
 use super::{KeepassRx, RxDbType};
-use crate::app::AppState;
-use crate::crypto::EncryptedPassword;
+use crate::app::{AppState, KeyFile};
+use crate::crypto::{EncryptedPassword, EncryptedValue, MasterKey};
 use crate::gui::utils::synced_databases_path;
 use crate::rx::virtual_hierarchy::{
     AllTags, AllTemplates, DefaultView, TotpEntries, VirtualHierarchy,
@@ -58,6 +59,19 @@ impl KeepassRxActor {
                 in_progress.abort();
                 println!("Aborting ongoing encryption/decryption operation.");
             }
+        }
+    }
+
+    /// Extract key file bytes, if they exist.
+    pub fn key_file_bytes(&self) -> Result<Option<SecureVec<u8>>> {
+        let app_state = self.app_state.pinned();
+        let app_state = app_state.borrow();
+        let key_file = app_state.db_key();
+        let master_key = app_state.master_key();
+
+        match master_key {
+            Some(mk) => key_file.map(|kf| kf.bytes(mk)).transpose(),
+            _ => Ok(key_file.and_then(|kf| kf.bytes_unencrypted())),
         }
     }
 }
@@ -228,7 +242,7 @@ impl Handler<OpenDatabase> for KeepassRxActor {
         // Extract key file if needed.
         let app_state = self.app_state.pinned();
         let app_state = app_state.borrow();
-        let maybe_key = app_state.db_key();
+        let maybe_key_file = app_state.db_key();
 
         let db_path = match msg.db_type {
             RxDbType::Imported => imported_databases_path().join(msg.db_name),
@@ -237,6 +251,7 @@ impl Handler<OpenDatabase> for KeepassRxActor {
 
         // Clone here so we can encrypt later.
         let stored_pw = self.stored_master_password.clone();
+        let maybe_key_file_bytes = self.key_file_bytes();
 
         println!("Opening {} DB: {}", msg.db_type, db_path.display());
 
@@ -251,11 +266,16 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                 let mut db_file = File::open(db_path)?;
 
                 let db_key = DatabaseKey::new().with_password(pw_binding.unsecure());
-                let db_key = match maybe_key.as_ref() {
-                    // the double ? coerces File::open result and with_keyfile result.
-                    Some(file) => {
-                        println!("Opening database with a key file.");
-                        db_key.with_keyfile(&mut file.as_slice())?
+                let db_key = match maybe_key_file.as_ref() {
+                    Some(_) => {
+                        let key_bytes = maybe_key_file_bytes?;
+                        match key_bytes {
+                            Some(bytes) => {
+                                println!("Opening database with a key file.");
+                                db_key.with_keyfile(&mut bytes.as_ref())?
+                            }
+                            _ => db_key,
+                        }
                     }
                     None => db_key,
                 };
@@ -269,7 +289,7 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                 .await??;
 
                 // Remove imported key file if necessary.
-                if let Some(mut key) = maybe_key {
+                if let Some(mut key) = maybe_key_file {
                     key.zeroize();
                 }
 
@@ -289,6 +309,18 @@ impl Handler<OpenDatabase> for KeepassRxActor {
 
                         let app_state = this.app_state.pinned();
                         let mut app_state = app_state.borrow_mut();
+
+                        // Encrypt key file
+                        if let Some(kf) = app_state.db_key()
+                            && kf.is_unencrypted()
+                        {
+                            let mk = MasterKey::new()
+                                .expect("Could not create key file master key");
+                            let kf = kf.encrypt(&mk).expect("Could not encrypt key file");
+
+                            app_state.set_master_key(Some(mk));
+                            app_state.set_db_key(Some(kf));
+                        }
 
                         gui.rootGroupUuid = QString::from(rx_db.root_group().uuid.to_string());
                         gui.metadata = rx_db.metadata().into();

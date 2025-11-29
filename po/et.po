@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 12:39+0000\n"
+"POT-Creation-Date: 2025-11-29 13:02+0000\n"
 "PO-Revision-Date: 2025-11-28 18:00+0000\n"
 "Last-Translator: Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/ubports/"
@@ -36,50 +36,6 @@ msgstr "Vaata kirjet"
 
 msgid "Tap to copy 2FA code"
 msgstr "2FA-koodi kopeerimiseks puuduta"
-
-msgid "About"
-msgstr "Rakenduse teave"
-
-msgid ""
-"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
-"Touch. It is licensed under the GNU AGPL v3 license."
-msgstr ""
-"KeePassRX on Ubuntu Touchi jaoks mõeldud salasõnahaldur, mis kasutab KeePass-"
-"vormingus andmebaasi. Rakendus on litsentseeritud GNU AGPL v3 alusel."
-
-msgid ""
-"The built-in KeePass icon images are licensed under a variety of licenses as "
-"detailed in assets/COPYING."
-msgstr ""
-"Rakendusega kaasas olevad KeePassi ikoonifailid on litsentseeritud erinevate "
-"litsentside alusel, mis üksikasjalikult on kirjas failis „assets/COPYING“."
-
-msgid "Manual"
-msgstr "Juhend"
-
-msgid ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
-
-msgid ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-"• Veeb: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
-
-msgid "Source Code"
-msgstr "Lähtekood"
-
-msgid ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
-msgstr ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
 
 msgid "Settings"
 msgstr "Seadistused"
@@ -144,6 +100,9 @@ msgstr "Vaaterežiim"
 msgid "Search"
 msgstr "Otsi"
 
+msgid "About"
+msgstr "Rakenduse teave"
+
 msgid "Lock Database"
 msgstr "Lukusta andmebaas"
 
@@ -186,6 +145,47 @@ msgstr "Vali"
 msgid "Cancel"
 msgstr "Katkesta"
 
+msgid ""
+"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
+"Touch. It is licensed under the GNU AGPL v3 license."
+msgstr ""
+"KeePassRX on Ubuntu Touchi jaoks mõeldud salasõnahaldur, mis kasutab KeePass-"
+"vormingus andmebaasi. Rakendus on litsentseeritud GNU AGPL v3 alusel."
+
+msgid ""
+"The built-in KeePass icon images are licensed under a variety of licenses as "
+"detailed in assets/COPYING."
+msgstr ""
+"Rakendusega kaasas olevad KeePassi ikoonifailid on litsentseeritud erinevate "
+"litsentside alusel, mis üksikasjalikult on kirjas failis „assets/COPYING“."
+
+msgid "Manual"
+msgstr "Juhend"
+
+msgid ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+
+msgid ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+"• Veeb: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+
+msgid "Source Code"
+msgstr "Lähtekood"
+
+msgid ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
+msgstr ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
+
 msgid "Add Database"
 msgstr "Lisa andmebaas"
 
@@ -201,6 +201,21 @@ msgstr "Andmebaasi importimiseks klõpsa + ikooni."
 msgid "It will only be removed from the app, not your device."
 msgstr "Ta eemaldatakse rakendusest, mitte aga seadmest."
 
+msgid "Open Source Licenses"
+msgstr "Avatud lähtekoodiga tarkvara litsentsid"
+
+msgid "Auto-detected key file for database."
+msgstr ""
+
+msgid "A key file will be used to open this database."
+msgstr ""
+
+msgid "Tap the key icon to use a key file."
+msgstr ""
+
+msgid "Select Key File"
+msgstr ""
+
 msgid "Enter the database master password"
 msgstr "Sisesta andmebaasi üldsalasõna"
 
@@ -210,36 +225,23 @@ msgstr "Üldsalasõna"
 msgid "Open"
 msgstr "Ava"
 
+msgid "Key File"
+msgstr ""
+
+msgid "Provide a key file for opening the database."
+msgstr ""
+
+msgid "Show Password"
+msgstr ""
+
+msgid "Toggle password field visibility"
+msgstr ""
+
+msgid "Tap the eye icon to show the password."
+msgstr ""
+
 msgid "Opening"
 msgstr "Avamisel"
-
-msgid "Manual path set."
-msgstr "Käsitsi määratud asukoht on seadistatud."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"Salakood on andmebaasi salasõna viis esimest tähemärki (või kogu salasõna, "
-"kui ta on alla viie tähemärgi pikk)."
-
-msgid "Passcode"
-msgstr "Salakood"
-
-msgid "Unlock"
-msgstr "Eemalda lukustus"
-
-msgid "Securely Unlocking"
-msgstr "Turvaline lukustuse eemaldamine"
-
-msgid "Securely Locking"
-msgstr "Turvaline lukustamine"
-
-msgid "Database Not Opening?"
-msgstr "Kas andmebaas ei avane?"
-
-msgid "Open Source Licenses"
-msgstr "Avatud lähtekoodiga tarkvara litsentsid"
 
 msgid "%1 copied to clipboard (30 secs)"
 msgstr "%1 on kopeeritud lõikelauale (30 sek)"
@@ -270,6 +272,31 @@ msgstr "Muud väljad"
 
 msgid "KeePassRX: Clipboard cleared."
 msgstr "KeePassRX: lõikelaud on tühjendatud."
+
+msgid "Manual path set."
+msgstr "Käsitsi määratud asukoht on seadistatud."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"Salakood on andmebaasi salasõna viis esimest tähemärki (või kogu salasõna, "
+"kui ta on alla viie tähemärgi pikk)."
+
+msgid "Passcode"
+msgstr "Salakood"
+
+msgid "Unlock"
+msgstr "Eemalda lukustus"
+
+msgid "Securely Unlocking"
+msgstr "Turvaline lukustuse eemaldamine"
+
+msgid "Securely Locking"
+msgstr "Turvaline lukustamine"
+
+msgid "Database Not Opening?"
+msgstr "Kas andmebaas ei avane?"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

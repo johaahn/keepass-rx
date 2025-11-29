@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 12:39+0000\n"
+"POT-Creation-Date: 2025-11-29 13:02+0000\n"
 "PO-Revision-Date: 2025-11-27 16:00+0000\n"
 "Last-Translator: BoneNI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://hosted.weblate.org/projects/ubports/keepassrx/lo/"
@@ -36,41 +36,6 @@ msgstr "ເບິ່ງຂໍ້ມູນ"
 
 msgid "Tap to copy 2FA code"
 msgstr "ແຕະເພື່ອຄັດລອກລະຫັດ 2FA"
-
-msgid "About"
-msgstr "ກ່ຽວກັບ"
-
-msgid ""
-"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
-"Touch. It is licensed under the GNU AGPL v3 license."
-msgstr ""
-
-msgid ""
-"The built-in KeePass icon images are licensed under a variety of licenses as "
-"detailed in assets/COPYING."
-msgstr ""
-"ຮູບໄອຄອນ KeePass ທີ່ມີມາໃຫ້ນັ້ນຢູ່ພາຍໃຕ້ໃບອະນຸຍາດທີ່ຫຼາກຫຼາຍ ດັ່ງທີ່ລະບຸໄວ້ໃນ assets/COPYING."
-
-msgid "Manual"
-msgstr ""
-
-msgid ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-
-msgid ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-
-msgid "Source Code"
-msgstr ""
-
-msgid ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
-msgstr ""
 
 msgid "Settings"
 msgstr "ການຕັ້ງຄ່າ"
@@ -129,6 +94,9 @@ msgstr "ຮູບແບບການເບິ່ງ"
 msgid "Search"
 msgstr "ຄົ້ນຫາ"
 
+msgid "About"
+msgstr "ກ່ຽວກັບ"
+
 msgid "Lock Database"
 msgstr "ລັອກຖານຂໍ້ມູນ"
 
@@ -171,6 +139,38 @@ msgstr "ເລືອກ"
 msgid "Cancel"
 msgstr "ຍົກເລີກ"
 
+msgid ""
+"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
+"Touch. It is licensed under the GNU AGPL v3 license."
+msgstr ""
+
+msgid ""
+"The built-in KeePass icon images are licensed under a variety of licenses as "
+"detailed in assets/COPYING."
+msgstr ""
+"ຮູບໄອຄອນ KeePass ທີ່ມີມາໃຫ້ນັ້ນຢູ່ພາຍໃຕ້ໃບອະນຸຍາດທີ່ຫຼາກຫຼາຍ ດັ່ງທີ່ລະບຸໄວ້ໃນ assets/COPYING."
+
+msgid "Manual"
+msgstr ""
+
+msgid ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+
+msgid ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+
+msgid "Source Code"
+msgstr ""
+
+msgid ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
+msgstr ""
+
 msgid "Add Database"
 msgstr "ເພີ່ມຖານຂໍ້ມູນ"
 
@@ -186,6 +186,21 @@ msgstr "ແຕະ + ເພື່ອນຳເຂົ້າຖານຂໍ້ມູ
 msgid "It will only be removed from the app, not your device."
 msgstr "ມັນຈະຖືກລຶບອອກຈາກແອັບເທົ່ານັ້ນ, ບໍ່ແມ່ນຈາກອຸປະກອນຂອງທ່ານ."
 
+msgid "Open Source Licenses"
+msgstr ""
+
+msgid "Auto-detected key file for database."
+msgstr ""
+
+msgid "A key file will be used to open this database."
+msgstr ""
+
+msgid "Tap the key icon to use a key file."
+msgstr ""
+
+msgid "Select Key File"
+msgstr ""
+
 msgid "Enter the database master password"
 msgstr "ປ້ອນລະຫັດຜ່ານຫຼັກຂອງຖານຂໍ້ມູນ"
 
@@ -195,36 +210,23 @@ msgstr "ລະຫັດຜ່ານຫຼັກ"
 msgid "Open"
 msgstr "ເປີດ"
 
+msgid "Key File"
+msgstr ""
+
+msgid "Provide a key file for opening the database."
+msgstr ""
+
+msgid "Show Password"
+msgstr ""
+
+msgid "Toggle password field visibility"
+msgstr ""
+
+msgid "Tap the eye icon to show the password."
+msgstr ""
+
 msgid "Opening"
 msgstr "ກຳລັງເປີດ"
-
-msgid "Manual path set."
-msgstr "ກຳນົດເສັ້ນທາງເອງແລ້ວ."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"ລະຫັດຜ່ານສັ້ນແມ່ນ 5 ຕົວອັກສອນທຳອິດຂອງລະຫັດຜ່ານຖານຂໍ້ມູນ (ຫຼື ລະຫັດຜ່ານທັງໝົດ ຖ້າໜ້ອຍກວ່າ 5 "
-"ຕົວອັກສອນ)."
-
-msgid "Passcode"
-msgstr "ລະຫັດຜ່ານສັ້ນ"
-
-msgid "Unlock"
-msgstr "ປົດລັອກ"
-
-msgid "Securely Unlocking"
-msgstr "ກຳລັງປົດລັອກຢ່າງປອດໄພ"
-
-msgid "Securely Locking"
-msgstr "ກຳລັງລັອກຢ່າງປອດໄພ"
-
-msgid "Database Not Opening?"
-msgstr "ຖານຂໍ້ມູນເປີດບໍ່ໄດ້ບໍ?"
-
-msgid "Open Source Licenses"
-msgstr ""
 
 msgid "%1 copied to clipboard (30 secs)"
 msgstr "ຄັດລອກ %1 ໃສ່ຄລິບບອດແລ້ວ (30 ວິນາທີ)"
@@ -255,6 +257,31 @@ msgstr "ຊ່ອງຂໍ້ມູນອື່ນໆ"
 
 msgid "KeePassRX: Clipboard cleared."
 msgstr ""
+
+msgid "Manual path set."
+msgstr "ກຳນົດເສັ້ນທາງເອງແລ້ວ."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"ລະຫັດຜ່ານສັ້ນແມ່ນ 5 ຕົວອັກສອນທຳອິດຂອງລະຫັດຜ່ານຖານຂໍ້ມູນ (ຫຼື ລະຫັດຜ່ານທັງໝົດ ຖ້າໜ້ອຍກວ່າ 5 "
+"ຕົວອັກສອນ)."
+
+msgid "Passcode"
+msgstr "ລະຫັດຜ່ານສັ້ນ"
+
+msgid "Unlock"
+msgstr "ປົດລັອກ"
+
+msgid "Securely Unlocking"
+msgstr "ກຳລັງປົດລັອກຢ່າງປອດໄພ"
+
+msgid "Securely Locking"
+msgstr "ກຳລັງລັອກຢ່າງປອດໄພ"
+
+msgid "Database Not Opening?"
+msgstr "ຖານຂໍ້ມູນເປີດບໍ່ໄດ້ບໍ?"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

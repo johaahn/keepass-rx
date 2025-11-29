@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 12:39+0000\n"
+"POT-Creation-Date: 2025-11-29 13:02+0000\n"
 "PO-Revision-Date: 2025-11-18 09:39+0000\n"
 "Last-Translator: projectmoon <projectmoon@agnos.is>\n"
 "Language-Team: Icelandic <https://hosted.weblate.org/projects/ubports/"
@@ -35,40 +35,6 @@ msgid "View Entry"
 msgstr ""
 
 msgid "Tap to copy 2FA code"
-msgstr ""
-
-msgid "About"
-msgstr "Um appið"
-
-msgid ""
-"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
-"Touch. It is licensed under the GNU AGPL v3 license."
-msgstr ""
-
-msgid ""
-"The built-in KeePass icon images are licensed under a variety of licenses as "
-"detailed in assets/COPYING."
-msgstr ""
-
-msgid "Manual"
-msgstr ""
-
-msgid ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-
-msgid ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-
-msgid "Source Code"
-msgstr ""
-
-msgid ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
 msgstr ""
 
 msgid "Settings"
@@ -131,6 +97,9 @@ msgstr ""
 msgid "Search"
 msgstr "Leita"
 
+msgid "About"
+msgstr "Um appið"
+
 msgid "Lock Database"
 msgstr "Læsa Gangnagrunn"
 
@@ -173,6 +142,37 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+msgid ""
+"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
+"Touch. It is licensed under the GNU AGPL v3 license."
+msgstr ""
+
+msgid ""
+"The built-in KeePass icon images are licensed under a variety of licenses as "
+"detailed in assets/COPYING."
+msgstr ""
+
+msgid "Manual"
+msgstr ""
+
+msgid ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+
+msgid ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+
+msgid "Source Code"
+msgstr ""
+
+msgid ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
+msgstr ""
+
 msgid "Add Database"
 msgstr "Bæta við Gangnagrunn"
 
@@ -188,6 +188,21 @@ msgstr "Ýtið á + til að flytja inn gagnagrunn."
 msgid "It will only be removed from the app, not your device."
 msgstr "Það mun eyða frá appinu en ekki síminn þinn."
 
+msgid "Open Source Licenses"
+msgstr ""
+
+msgid "Auto-detected key file for database."
+msgstr ""
+
+msgid "A key file will be used to open this database."
+msgstr ""
+
+msgid "Tap the key icon to use a key file."
+msgstr ""
+
+msgid "Select Key File"
+msgstr ""
+
 msgid "Enter the database master password"
 msgstr "Sláðu inn aðallykilorð gagnagrunnsins"
 
@@ -197,36 +212,23 @@ msgstr "Aðallykilorð"
 msgid "Open"
 msgstr "Opna"
 
+msgid "Key File"
+msgstr ""
+
+msgid "Provide a key file for opening the database."
+msgstr ""
+
+msgid "Show Password"
+msgstr ""
+
+msgid "Toggle password field visibility"
+msgstr ""
+
+msgid "Tap the eye icon to show the password."
+msgstr ""
+
 msgid "Opening"
 msgstr "Í vinnslu"
-
-msgid "Manual path set."
-msgstr "Handvirk leið staðsett."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"Stutt lykilorðið er fyrstu fimm stafirnar af lykilorðinu gagnagrunnar (eða "
-"heilt lykilorð ef það er stuttara en fimm stafir)."
-
-msgid "Passcode"
-msgstr "Stutt lykilorð"
-
-msgid "Unlock"
-msgstr "Aflæsa"
-
-msgid "Securely Unlocking"
-msgstr "Að aflæsa með öryggi"
-
-msgid "Securely Locking"
-msgstr "Læsa með öryggi"
-
-msgid "Database Not Opening?"
-msgstr "Er gagnagrunnur ekki að opna?"
-
-msgid "Open Source Licenses"
-msgstr ""
 
 msgid "%1 copied to clipboard (30 secs)"
 msgstr ""
@@ -257,6 +259,31 @@ msgstr ""
 
 msgid "KeePassRX: Clipboard cleared."
 msgstr ""
+
+msgid "Manual path set."
+msgstr "Handvirk leið staðsett."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"Stutt lykilorðið er fyrstu fimm stafirnar af lykilorðinu gagnagrunnar (eða "
+"heilt lykilorð ef það er stuttara en fimm stafir)."
+
+msgid "Passcode"
+msgstr "Stutt lykilorð"
+
+msgid "Unlock"
+msgstr "Aflæsa"
+
+msgid "Securely Unlocking"
+msgstr "Að aflæsa með öryggi"
+
+msgid "Securely Locking"
+msgstr "Læsa með öryggi"
+
+msgid "Database Not Opening?"
+msgstr "Er gagnagrunnur ekki að opna?"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

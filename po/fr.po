@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 12:39+0000\n"
+"POT-Creation-Date: 2025-11-29 13:02+0000\n"
 "PO-Revision-Date: 2025-11-28 21:20+0000\n"
 "Last-Translator: Vlad Nirky <nirky.vlad@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -36,50 +36,6 @@ msgstr "Afficher l'entrée"
 
 msgid "Tap to copy 2FA code"
 msgstr "Appuyez pour copier le code 2FA"
-
-msgid "About"
-msgstr "A propos de"
-
-msgid ""
-"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
-"Touch. It is licensed under the GNU AGPL v3 license."
-msgstr ""
-"KeePassRX est un gestionnaire de mots de passe pour les bases de données "
-"KeePass, conçu pour Ubuntu Touch. Il est distribué sous licence GNU AGPL v3."
-
-msgid ""
-"The built-in KeePass icon images are licensed under a variety of licenses as "
-"detailed in assets/COPYING."
-msgstr ""
-"Les images des icônes KeePass intégrées sont soumises à diverses licences, "
-"comme indiqué dans actifs/copie."
-
-msgid "Manual"
-msgstr "Manuel"
-
-msgid ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
-
-msgid ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
-
-msgid "Source Code"
-msgstr "Code source"
-
-msgid ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
-msgstr ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
 
 msgid "Settings"
 msgstr "Paramètres"
@@ -145,6 +101,9 @@ msgstr "Mode d'affichage"
 msgid "Search"
 msgstr "Chercher"
 
+msgid "About"
+msgstr "A propos de"
+
 msgid "Lock Database"
 msgstr "Verrouiller la base de données"
 
@@ -187,6 +146,47 @@ msgstr "Sélectionner"
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid ""
+"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
+"Touch. It is licensed under the GNU AGPL v3 license."
+msgstr ""
+"KeePassRX est un gestionnaire de mots de passe pour les bases de données "
+"KeePass, conçu pour Ubuntu Touch. Il est distribué sous licence GNU AGPL v3."
+
+msgid ""
+"The built-in KeePass icon images are licensed under a variety of licenses as "
+"detailed in assets/COPYING."
+msgstr ""
+"Les images des icônes KeePass intégrées sont soumises à diverses licences, "
+"comme indiqué dans actifs/copie."
+
+msgid "Manual"
+msgstr "Manuel"
+
+msgid ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+
+msgid ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+
+msgid "Source Code"
+msgstr "Code source"
+
+msgid ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
+msgstr ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
+
 msgid "Add Database"
 msgstr "Ajouter une base de données"
 
@@ -202,6 +202,21 @@ msgstr "Appuyer + pour importer une base de données."
 msgid "It will only be removed from the app, not your device."
 msgstr "Elle sera simplement retirée de l’application, pas de votre appareil."
 
+msgid "Open Source Licenses"
+msgstr "Licences Open Source"
+
+msgid "Auto-detected key file for database."
+msgstr ""
+
+msgid "A key file will be used to open this database."
+msgstr ""
+
+msgid "Tap the key icon to use a key file."
+msgstr ""
+
+msgid "Select Key File"
+msgstr ""
+
 msgid "Enter the database master password"
 msgstr "Entrez le mot de passe principal de la base de données"
 
@@ -211,37 +226,23 @@ msgstr "Mot de passe principal"
 msgid "Open"
 msgstr "Ouvrir"
 
+msgid "Key File"
+msgstr ""
+
+msgid "Provide a key file for opening the database."
+msgstr ""
+
+msgid "Show Password"
+msgstr ""
+
+msgid "Toggle password field visibility"
+msgstr ""
+
+msgid "Tap the eye icon to show the password."
+msgstr ""
+
 msgid "Opening"
 msgstr "Ouverture"
-
-msgid "Manual path set."
-msgstr "Chemin défini manuellement."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"Le code d’accès correspond aux cinq premiers caractères du mot de passe de "
-"la base de données (ou au mot de passe complet s’il comporte moins de cinq "
-"caractères)."
-
-msgid "Passcode"
-msgstr "Code d'accès"
-
-msgid "Unlock"
-msgstr "Déverrouiller"
-
-msgid "Securely Unlocking"
-msgstr "Déverrouillage sécurisé"
-
-msgid "Securely Locking"
-msgstr "Verrouillage sécurisé"
-
-msgid "Database Not Opening?"
-msgstr "La base de données ne s'ouvre pas ?"
-
-msgid "Open Source Licenses"
-msgstr "Licences Open Source"
 
 msgid "%1 copied to clipboard (30 secs)"
 msgstr "%1 copié dans le presse-papiers (30 secondes)"
@@ -272,6 +273,32 @@ msgstr "Autres champs"
 
 msgid "KeePassRX: Clipboard cleared."
 msgstr "KeePassRX : Presse-papiers effacé."
+
+msgid "Manual path set."
+msgstr "Chemin défini manuellement."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"Le code d’accès correspond aux cinq premiers caractères du mot de passe de "
+"la base de données (ou au mot de passe complet s’il comporte moins de cinq "
+"caractères)."
+
+msgid "Passcode"
+msgstr "Code d'accès"
+
+msgid "Unlock"
+msgstr "Déverrouiller"
+
+msgid "Securely Unlocking"
+msgstr "Déverrouillage sécurisé"
+
+msgid "Securely Locking"
+msgstr "Verrouillage sécurisé"
+
+msgid "Database Not Opening?"
+msgstr "La base de données ne s'ouvre pas ?"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

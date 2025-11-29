@@ -54,6 +54,7 @@ Page {
     Component.onCompleted: {
         if (keepassrx.databaseOpen) {
             console.log('OpenDBPage: Closing an already open database. This is an anomaly.');
+            uiDatabase.clearKeyFile();
             keepassrx.closeDatabase();
         }
 

@@ -61,8 +61,8 @@ impl AppState {
         self.db_key.clone()
     }
 
-    pub fn set_db_key(&mut self, key: Vec<u8>) {
-        self.db_key = Some(key);
+    pub fn set_db_key(&mut self, key: Option<Vec<u8>>) {
+        self.db_key = key;
     }
 
     pub fn curr_view(&self) -> Option<Rc<Box<dyn VirtualHierarchy>>> {

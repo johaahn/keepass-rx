@@ -34,6 +34,7 @@ Page {
 
     function closeDatabase() {
         keepassrx.invalidateMasterPassword();
+        uiDatabase.clearKeyFile();
         keepassrx.closeDatabase();
         root.closeUI();
     }

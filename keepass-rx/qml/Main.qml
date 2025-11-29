@@ -127,6 +127,7 @@ MainView {
 
     function closeUI() {
         keepassrx.guiState = 'NotOpen';
+        uiDatabase.databaseName = null;
         reload();
     }
 

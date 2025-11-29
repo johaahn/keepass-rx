@@ -281,6 +281,7 @@ Page {
         }
 
         RowLayout {
+            visible: !busy
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
             spacing: units.gu(1)
@@ -293,6 +294,7 @@ Page {
         }
 
         RowLayout {
+            visible: !busy
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
             spacing: units.gu(1)

@@ -50,6 +50,7 @@ pub struct RxUiDatabase {
     pub(super) isKeyFileDetectedChanged: qt_signal!(),
 
     pub(super) useKeyFile: qt_method!(fn(&mut self, key_file_path: QString)),
+    pub(super) clearKeyFile: qt_method!(fn(&mut self)),
     pub(super) open: qt_method!(fn(&self)),
     pub(super) updateLastDbSet: qt_method!(fn(&mut self)),
     pub(super) detectKeyFile: qt_method!(fn(&self)),
@@ -174,6 +175,7 @@ impl Default for RxUiDatabase {
         let have_last_db = last_db.is_some();
 
         Self {
+            clearKeyFile: Default::default(),
             isKeyFileSet: Default::default(),
             isKeyFileDetected: Default::default(),
             isKeyFileDetectedChanged: Default::default(),
@@ -234,7 +236,7 @@ impl RxUiDatabase {
             Ok(key_bytes) => {
                 let app_state = self.app_state_cell();
                 let mut app_state = app_state.borrow_mut();
-                app_state.set_db_key(key_bytes);
+                app_state.set_db_key(Some(key_bytes));
                 drop(app_state);
                 self.key_file_set = true;
             }
@@ -387,6 +389,28 @@ impl RxUiDatabase {
         // in data dir.
         if let Err(err) = std::fs::remove_file(&key_file_path) {
             println!("Could not remove imported key file: {}", err);
+        }
+    }
+
+    #[with_executor]
+    pub fn clearKeyFile(&mut self) {
+        let is_key_file_currently_set = self.key_file_set;
+        let is_key_file_currently_detected = self.key_file_detected;
+
+        let app_state = self.app_state_cell();
+        let mut app_state = app_state.borrow_mut();
+        app_state.set_db_key(None);
+        drop(app_state);
+
+        self.key_file_detected = false;
+        self.key_file_set = false;
+
+        if is_key_file_currently_detected != self.key_file_detected {
+            self.isKeyFileDetectedChanged();
+        }
+
+        if is_key_file_currently_set != self.key_file_set {
+            self.isKeyFileSetChanged();
         }
     }
 

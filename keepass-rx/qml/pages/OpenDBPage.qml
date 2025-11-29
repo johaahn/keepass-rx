@@ -310,7 +310,9 @@ Page {
             Label {
                 wrapMode: Text.WordWrap
                 color: theme.palette.normal.backgroundSecondaryText
-                text: i18n.tr("Tap the eye icon to show the password.")
+                text: showPasswordAction.checked
+                    ? i18n.tr("Tap the eye icon to hide the password.")
+                    : i18n.tr("Tap the eye icon to show the password.")
             }
         }
 

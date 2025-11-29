@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-29 18:43+0000\n"
+"POT-Creation-Date: 2025-11-29 18:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -356,11 +356,15 @@ msgstr ""
 msgid "Toggle password field visibility"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:313
+#: qml/pages/OpenDBPage.qml:314
+msgid "Tap the eye icon to hide the password."
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:315
 msgid "Tap the eye icon to show the password."
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:330
+#: qml/pages/OpenDBPage.qml:332
 msgid "Opening"
 msgstr ""
 

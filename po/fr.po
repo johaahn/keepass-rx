@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-29 13:02+0000\n"
-"PO-Revision-Date: 2025-11-28 21:20+0000\n"
+"PO-Revision-Date: 2025-11-29 19:50+0000\n"
 "Last-Translator: Vlad Nirky <nirky.vlad@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
 "fr/>\n"
@@ -206,16 +206,16 @@ msgid "Open Source Licenses"
 msgstr "Licences Open Source"
 
 msgid "Auto-detected key file for database."
-msgstr ""
+msgstr "Fichier clé détecté automatiquement pour la base de données."
 
 msgid "A key file will be used to open this database."
-msgstr ""
+msgstr "Un fichier clé sera utilisé pour ouvrir cette base de données."
 
 msgid "Tap the key icon to use a key file."
-msgstr ""
+msgstr "Appuyez sur l'icône en forme de clé pour utiliser un fichier clé."
 
 msgid "Select Key File"
-msgstr ""
+msgstr "Sélectionner le fichier clé"
 
 msgid "Enter the database master password"
 msgstr "Entrez le mot de passe principal de la base de données"
@@ -227,19 +227,19 @@ msgid "Open"
 msgstr "Ouvrir"
 
 msgid "Key File"
-msgstr ""
+msgstr "Fichier clé"
 
 msgid "Provide a key file for opening the database."
-msgstr ""
+msgstr "Fournissez un fichier clé pour ouvrir la base de données."
 
 msgid "Show Password"
-msgstr ""
+msgstr "Afficher le mot de passe"
 
 msgid "Toggle password field visibility"
-msgstr ""
+msgstr "Activer/désactiver l'affichage du champ mot de passe"
 
 msgid "Tap the eye icon to show the password."
-msgstr ""
+msgstr "Appuyez sur l'icône en forme d'œil pour afficher le mot de passe."
 
 msgid "Opening"
 msgstr "Ouverture"

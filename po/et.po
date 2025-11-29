@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-29 13:02+0000\n"
+"POT-Creation-Date: 2025-11-29 17:14+0100\n"
 "PO-Revision-Date: 2025-11-28 18:00+0000\n"
 "Last-Translator: Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/ubports/"
@@ -204,45 +204,6 @@ msgstr "Ta eemaldatakse rakendusest, mitte aga seadmest."
 msgid "Open Source Licenses"
 msgstr "Avatud lähtekoodiga tarkvara litsentsid"
 
-msgid "Auto-detected key file for database."
-msgstr ""
-
-msgid "A key file will be used to open this database."
-msgstr ""
-
-msgid "Tap the key icon to use a key file."
-msgstr ""
-
-msgid "Select Key File"
-msgstr ""
-
-msgid "Enter the database master password"
-msgstr "Sisesta andmebaasi üldsalasõna"
-
-msgid "Master Password"
-msgstr "Üldsalasõna"
-
-msgid "Open"
-msgstr "Ava"
-
-msgid "Key File"
-msgstr ""
-
-msgid "Provide a key file for opening the database."
-msgstr ""
-
-msgid "Show Password"
-msgstr ""
-
-msgid "Toggle password field visibility"
-msgstr ""
-
-msgid "Tap the eye icon to show the password."
-msgstr ""
-
-msgid "Opening"
-msgstr "Avamisel"
-
 msgid "%1 copied to clipboard (30 secs)"
 msgstr "%1 on kopeeritud lõikelauale (30 sek)"
 
@@ -297,6 +258,45 @@ msgstr "Turvaline lukustamine"
 
 msgid "Database Not Opening?"
 msgstr "Kas andmebaas ei avane?"
+
+msgid "Auto-detected key file for database."
+msgstr ""
+
+msgid "A key file will be used to open this database."
+msgstr ""
+
+msgid "Tap the key icon to use a key file."
+msgstr ""
+
+msgid "Select Key File"
+msgstr ""
+
+msgid "Enter the database master password"
+msgstr "Sisesta andmebaasi üldsalasõna"
+
+msgid "Master Password"
+msgstr "Üldsalasõna"
+
+msgid "Open"
+msgstr "Ava"
+
+msgid "Key File"
+msgstr ""
+
+msgid "Provide a key file for opening the database."
+msgstr ""
+
+msgid "Show Password"
+msgstr ""
+
+msgid "Toggle password field visibility"
+msgstr ""
+
+msgid "Tap the eye icon to show the password."
+msgstr ""
+
+msgid "Opening"
+msgstr "Avamisel"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

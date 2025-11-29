@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-29 13:02+0000\n"
+"POT-Creation-Date: 2025-11-29 17:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -187,45 +187,6 @@ msgstr ""
 msgid "Open Source Licenses"
 msgstr ""
 
-msgid "Auto-detected key file for database."
-msgstr ""
-
-msgid "A key file will be used to open this database."
-msgstr ""
-
-msgid "Tap the key icon to use a key file."
-msgstr ""
-
-msgid "Select Key File"
-msgstr ""
-
-msgid "Enter the database master password"
-msgstr ""
-
-msgid "Master Password"
-msgstr ""
-
-msgid "Open"
-msgstr ""
-
-msgid "Key File"
-msgstr ""
-
-msgid "Provide a key file for opening the database."
-msgstr ""
-
-msgid "Show Password"
-msgstr ""
-
-msgid "Toggle password field visibility"
-msgstr ""
-
-msgid "Tap the eye icon to show the password."
-msgstr ""
-
-msgid "Opening"
-msgstr ""
-
 msgid "%1 copied to clipboard (30 secs)"
 msgstr ""
 
@@ -277,6 +238,45 @@ msgid "Securely Locking"
 msgstr ""
 
 msgid "Database Not Opening?"
+msgstr ""
+
+msgid "Auto-detected key file for database."
+msgstr ""
+
+msgid "A key file will be used to open this database."
+msgstr ""
+
+msgid "Tap the key icon to use a key file."
+msgstr ""
+
+msgid "Select Key File"
+msgstr ""
+
+msgid "Enter the database master password"
+msgstr ""
+
+msgid "Master Password"
+msgstr ""
+
+msgid "Open"
+msgstr ""
+
+msgid "Key File"
+msgstr ""
+
+msgid "Provide a key file for opening the database."
+msgstr ""
+
+msgid "Show Password"
+msgstr ""
+
+msgid "Toggle password field visibility"
+msgstr ""
+
+msgid "Tap the eye icon to show the password."
+msgstr ""
+
+msgid "Opening"
 msgstr ""
 
 msgid ""

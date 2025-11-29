@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-29 13:02+0000\n"
+"POT-Creation-Date: 2025-11-29 17:14+0100\n"
 "PO-Revision-Date: 2025-11-18 09:39+0000\n"
 "Last-Translator: projectmoon <projectmoon@agnos.is>\n"
 "Language-Team: Icelandic <https://hosted.weblate.org/projects/ubports/"
@@ -191,45 +191,6 @@ msgstr "Það mun eyða frá appinu en ekki síminn þinn."
 msgid "Open Source Licenses"
 msgstr ""
 
-msgid "Auto-detected key file for database."
-msgstr ""
-
-msgid "A key file will be used to open this database."
-msgstr ""
-
-msgid "Tap the key icon to use a key file."
-msgstr ""
-
-msgid "Select Key File"
-msgstr ""
-
-msgid "Enter the database master password"
-msgstr "Sláðu inn aðallykilorð gagnagrunnsins"
-
-msgid "Master Password"
-msgstr "Aðallykilorð"
-
-msgid "Open"
-msgstr "Opna"
-
-msgid "Key File"
-msgstr ""
-
-msgid "Provide a key file for opening the database."
-msgstr ""
-
-msgid "Show Password"
-msgstr ""
-
-msgid "Toggle password field visibility"
-msgstr ""
-
-msgid "Tap the eye icon to show the password."
-msgstr ""
-
-msgid "Opening"
-msgstr "Í vinnslu"
-
 msgid "%1 copied to clipboard (30 secs)"
 msgstr ""
 
@@ -284,6 +245,45 @@ msgstr "Læsa með öryggi"
 
 msgid "Database Not Opening?"
 msgstr "Er gagnagrunnur ekki að opna?"
+
+msgid "Auto-detected key file for database."
+msgstr ""
+
+msgid "A key file will be used to open this database."
+msgstr ""
+
+msgid "Tap the key icon to use a key file."
+msgstr ""
+
+msgid "Select Key File"
+msgstr ""
+
+msgid "Enter the database master password"
+msgstr "Sláðu inn aðallykilorð gagnagrunnsins"
+
+msgid "Master Password"
+msgstr "Aðallykilorð"
+
+msgid "Open"
+msgstr "Opna"
+
+msgid "Key File"
+msgstr ""
+
+msgid "Provide a key file for opening the database."
+msgstr ""
+
+msgid "Show Password"
+msgstr ""
+
+msgid "Toggle password field visibility"
+msgstr ""
+
+msgid "Tap the eye icon to show the password."
+msgstr ""
+
+msgid "Opening"
+msgstr "Í vinnslu"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

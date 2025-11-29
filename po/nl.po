@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-29 13:02+0000\n"
+"POT-Creation-Date: 2025-11-29 17:14+0100\n"
 "PO-Revision-Date: 2025-11-29 13:00+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -205,45 +205,6 @@ msgstr ""
 msgid "Open Source Licenses"
 msgstr "Opensourcelicenties"
 
-msgid "Auto-detected key file for database."
-msgstr ""
-
-msgid "A key file will be used to open this database."
-msgstr ""
-
-msgid "Tap the key icon to use a key file."
-msgstr ""
-
-msgid "Select Key File"
-msgstr ""
-
-msgid "Enter the database master password"
-msgstr "Voer het hoofdwachtwoord in"
-
-msgid "Master Password"
-msgstr "Hoofdwachtwoord"
-
-msgid "Open"
-msgstr "Openen"
-
-msgid "Key File"
-msgstr ""
-
-msgid "Provide a key file for opening the database."
-msgstr ""
-
-msgid "Show Password"
-msgstr ""
-
-msgid "Toggle password field visibility"
-msgstr ""
-
-msgid "Tap the eye icon to show the password."
-msgstr ""
-
-msgid "Opening"
-msgstr "Bezig met openen…"
-
 msgid "%1 copied to clipboard (30 secs)"
 msgstr "%1 is gekopieerd naar het klembord (30 sec.)"
 
@@ -298,6 +259,45 @@ msgstr "Veilig vergrendelen"
 
 msgid "Database Not Opening?"
 msgstr "Wordt de databank niet geopend?"
+
+msgid "Auto-detected key file for database."
+msgstr ""
+
+msgid "A key file will be used to open this database."
+msgstr ""
+
+msgid "Tap the key icon to use a key file."
+msgstr ""
+
+msgid "Select Key File"
+msgstr ""
+
+msgid "Enter the database master password"
+msgstr "Voer het hoofdwachtwoord in"
+
+msgid "Master Password"
+msgstr "Hoofdwachtwoord"
+
+msgid "Open"
+msgstr "Openen"
+
+msgid "Key File"
+msgstr ""
+
+msgid "Provide a key file for opening the database."
+msgstr ""
+
+msgid "Show Password"
+msgstr ""
+
+msgid "Toggle password field visibility"
+msgstr ""
+
+msgid "Tap the eye icon to show the password."
+msgstr ""
+
+msgid "Opening"
+msgstr "Bezig met openen…"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

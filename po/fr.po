@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-29 13:02+0000\n"
+"POT-Creation-Date: 2025-11-29 17:14+0100\n"
 "PO-Revision-Date: 2025-11-29 19:50+0000\n"
 "Last-Translator: Vlad Nirky <nirky.vlad@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -205,45 +205,6 @@ msgstr "Elle sera simplement retirée de l’application, pas de votre appareil.
 msgid "Open Source Licenses"
 msgstr "Licences Open Source"
 
-msgid "Auto-detected key file for database."
-msgstr "Fichier clé détecté automatiquement pour la base de données."
-
-msgid "A key file will be used to open this database."
-msgstr "Un fichier clé sera utilisé pour ouvrir cette base de données."
-
-msgid "Tap the key icon to use a key file."
-msgstr "Appuyez sur l'icône en forme de clé pour utiliser un fichier clé."
-
-msgid "Select Key File"
-msgstr "Sélectionner le fichier clé"
-
-msgid "Enter the database master password"
-msgstr "Entrez le mot de passe principal de la base de données"
-
-msgid "Master Password"
-msgstr "Mot de passe principal"
-
-msgid "Open"
-msgstr "Ouvrir"
-
-msgid "Key File"
-msgstr "Fichier clé"
-
-msgid "Provide a key file for opening the database."
-msgstr "Fournissez un fichier clé pour ouvrir la base de données."
-
-msgid "Show Password"
-msgstr "Afficher le mot de passe"
-
-msgid "Toggle password field visibility"
-msgstr "Activer/désactiver l'affichage du champ mot de passe"
-
-msgid "Tap the eye icon to show the password."
-msgstr "Appuyez sur l'icône en forme d'œil pour afficher le mot de passe."
-
-msgid "Opening"
-msgstr "Ouverture"
-
 msgid "%1 copied to clipboard (30 secs)"
 msgstr "%1 copié dans le presse-papiers (30 secondes)"
 
@@ -299,6 +260,45 @@ msgstr "Verrouillage sécurisé"
 
 msgid "Database Not Opening?"
 msgstr "La base de données ne s'ouvre pas ?"
+
+msgid "Auto-detected key file for database."
+msgstr "Fichier clé détecté automatiquement pour la base de données."
+
+msgid "A key file will be used to open this database."
+msgstr "Un fichier clé sera utilisé pour ouvrir cette base de données."
+
+msgid "Tap the key icon to use a key file."
+msgstr "Appuyez sur l'icône en forme de clé pour utiliser un fichier clé."
+
+msgid "Select Key File"
+msgstr "Sélectionner le fichier clé"
+
+msgid "Enter the database master password"
+msgstr "Entrez le mot de passe principal de la base de données"
+
+msgid "Master Password"
+msgstr "Mot de passe principal"
+
+msgid "Open"
+msgstr "Ouvrir"
+
+msgid "Key File"
+msgstr "Fichier clé"
+
+msgid "Provide a key file for opening the database."
+msgstr "Fournissez un fichier clé pour ouvrir la base de données."
+
+msgid "Show Password"
+msgstr "Afficher le mot de passe"
+
+msgid "Toggle password field visibility"
+msgstr "Activer/désactiver l'affichage du champ mot de passe"
+
+msgid "Tap the eye icon to show the password."
+msgstr "Appuyez sur l'icône en forme d'œil pour afficher le mot de passe."
+
+msgid "Opening"
+msgstr "Ouverture"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

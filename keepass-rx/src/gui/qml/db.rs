@@ -1,8 +1,8 @@
 use actix::prelude::*;
 use actor_macro::observing_model;
-use anyhow::{Result, anyhow};
+use anyhow::Result;
 use qmeta_async::with_executor;
-use qmetaobject::{QObjectPinned, QObjectRefMut, prelude::*};
+use qmetaobject::{QObjectPinned, prelude::*};
 use std::{fs::read_to_string, fs::remove_file, path::Path};
 
 use crate::{
@@ -20,12 +20,6 @@ use crate::{
 #[derive(Message)]
 #[rtype(result = "()")]
 struct OpenCommand;
-
-/// Detect if a key file exists alongside the currently set database.
-/// Mostly for testing purposes.
-#[derive(Message)]
-#[rtype(result = "()")]
-struct DetectKeyFileCommand;
 
 #[derive(Message)]
 #[rtype(result = "()")]
@@ -55,7 +49,7 @@ pub struct RxUiDatabase {
     pub(super) isKeyFileSetChanged: qt_signal!(),
     pub(super) isKeyFileDetectedChanged: qt_signal!(),
 
-    pub(super) useKeyFile: qt_method!(fn(&self, key_file_path: QString)),
+    pub(super) useKeyFile: qt_method!(fn(&mut self, key_file_path: QString)),
     pub(super) open: qt_method!(fn(&self)),
     pub(super) updateLastDbSet: qt_method!(fn(&mut self)),
     pub(super) detectKeyFile: qt_method!(fn(&self)),
@@ -73,8 +67,8 @@ impl ActorConnected<UseKeyFileCommand> for RxUiDatabase {
     where
         Self: Sized + QObject,
     {
-        println!("Handling key file");
         let key_file_path = message.path;
+        println!("Attempting to use key file: {:?}", key_file_path);
         self.set_key_file(&key_file_path);
 
         // Remove the file, if it exists. Only do this when importing
@@ -380,15 +374,19 @@ impl RxUiDatabase {
         }
     }
 
+    /// This method must be fully synchronous to prevent the content
+    /// hub from deleting the file on finalize() before we copy it.
     #[with_executor]
-    pub fn useKeyFile(&self, key_file_path: QString) {
-        if let Some(actor) = self.connected_actor() {
-            actix::spawn(actor.send(UseKeyFileCommand {
-                path: key_file_path.to_string(),
-                delete_key: true,
-            }));
-        } else {
-            println!("No actor connection active?");
+    pub fn useKeyFile(&mut self, key_file_path: QString) {
+        println!("Attempting to use key file: {:?}", key_file_path);
+        let key_file_path = key_file_path.to_string();
+        self.set_key_file(&key_file_path);
+
+        // Remove the file, if it exists. Only do this when importing
+        // from ContentHub; we don't want to keep the key file on disk
+        // in data dir.
+        if let Err(err) = std::fs::remove_file(&key_file_path) {
+            println!("Could not remove imported key file: {}", err);
         }
     }
 

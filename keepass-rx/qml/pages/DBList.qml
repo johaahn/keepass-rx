@@ -263,6 +263,7 @@ Page {
                     actions: [
                         Action {
                             iconName: "delete"
+                            enabled: databaseTypeString == 'Imported'
                             onTriggered: {
                                 deleteDatabase.databaseName = databaseName;
                                 PopupUtils.open(dialog)

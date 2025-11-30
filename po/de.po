@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-29 20:25+0000\n"
+"POT-Creation-Date: 2025-11-30 19:57+0000\n"
 "PO-Revision-Date: 2025-11-21 00:51+0000\n"
 "Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -145,39 +145,6 @@ msgstr "Auswählen"
 msgid "Cancel"
 msgstr "Abbrechen"
 
-msgid ""
-"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
-"Touch. It is licensed under the GNU AGPL v3 license."
-msgstr ""
-
-msgid ""
-"The built-in KeePass icon images are licensed under a variety of licenses as "
-"detailed in assets/COPYING."
-msgstr ""
-"Die integrierten KeePass Symbole sind nach verschiedenen Lizenzen lizensiert "
-"wie angegeben unter assets/COPYING."
-
-msgid "Manual"
-msgstr ""
-
-msgid ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-
-msgid ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-
-msgid "Source Code"
-msgstr ""
-
-msgid ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
-msgstr ""
-
 msgid "Add Database"
 msgstr "Datenbank hinzufügen"
 
@@ -192,9 +159,6 @@ msgstr "Mit + eine Datenbank importieren."
 
 msgid "It will only be removed from the app, not your device."
 msgstr "Diese wird nur aus der App entfernt, aber nicht vom Gerät gelöscht."
-
-msgid "Open Source Licenses"
-msgstr ""
 
 msgid "%1 copied to clipboard (30 secs)"
 msgstr ""
@@ -286,6 +250,45 @@ msgstr ""
 
 msgid "Opening"
 msgstr "Öffne"
+
+msgid ""
+"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
+"Touch. It is licensed under the GNU AGPL v3 license."
+msgstr ""
+
+msgid ""
+"The built-in KeePass icon images are licensed under a variety of licenses as "
+"detailed in assets/COPYING."
+msgstr ""
+"Die integrierten KeePass Symbole sind nach verschiedenen Lizenzen lizensiert "
+"wie angegeben unter assets/COPYING."
+
+msgid "Manual"
+msgstr ""
+
+msgid ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+
+msgid ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+
+msgid "Source Code"
+msgstr ""
+
+msgid ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
+msgstr ""
+
+msgid "Open Source Licenses"
+msgstr ""
+
+msgid "Website"
+msgstr ""
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

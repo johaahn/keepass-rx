@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-29 20:25+0000\n"
+"POT-Creation-Date: 2025-11-30 19:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -138,37 +138,6 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-msgid ""
-"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
-"Touch. It is licensed under the GNU AGPL v3 license."
-msgstr ""
-
-msgid ""
-"The built-in KeePass icon images are licensed under a variety of licenses as "
-"detailed in assets/COPYING."
-msgstr ""
-
-msgid "Manual"
-msgstr ""
-
-msgid ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-
-msgid ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-
-msgid "Source Code"
-msgstr ""
-
-msgid ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
-msgstr ""
-
 msgid "Add Database"
 msgstr ""
 
@@ -182,9 +151,6 @@ msgid "Tap + to import a database."
 msgstr ""
 
 msgid "It will only be removed from the app, not your device."
-msgstr ""
-
-msgid "Open Source Licenses"
 msgstr ""
 
 msgid "%1 copied to clipboard (30 secs)"
@@ -274,6 +240,43 @@ msgid "Show Password"
 msgstr ""
 
 msgid "Opening"
+msgstr ""
+
+msgid ""
+"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
+"Touch. It is licensed under the GNU AGPL v3 license."
+msgstr ""
+
+msgid ""
+"The built-in KeePass icon images are licensed under a variety of licenses as "
+"detailed in assets/COPYING."
+msgstr ""
+
+msgid "Manual"
+msgstr ""
+
+msgid ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+
+msgid ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+
+msgid "Source Code"
+msgstr ""
+
+msgid ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
+msgstr ""
+
+msgid "Open Source Licenses"
+msgstr ""
+
+msgid "Website"
 msgstr ""
 
 msgid ""

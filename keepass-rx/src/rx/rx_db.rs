@@ -231,10 +231,7 @@ mod tests {
     use keyring::set_default_credential_builder;
 
     use super::*;
-    use crate::{
-        crypto::DefaultWithKey,
-        rx::{RxCustomFields, RxValue, TEMPLATE_FIELD_NAME},
-    };
+    use crate::rx::{RxCustomFields, RxValue, TEMPLATE_FIELD_NAME};
 
     #[test]
     fn test_extract_string() {

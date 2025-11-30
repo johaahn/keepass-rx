@@ -95,7 +95,7 @@ pub fn move_old_dirs_and_files() -> Result<()> {
         }
 
         // Now finally remove the bad data dir.
-        std::fs::remove_file(&incorrect_data_dir)?;
+        std::fs::remove_dir_all(&incorrect_data_dir)?;
     }
 
     Ok(())

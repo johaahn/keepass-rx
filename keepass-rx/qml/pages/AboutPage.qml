@@ -19,7 +19,7 @@ Page {
                 onTriggered: {
                     pageStack.addPageToNextColumn(
                         aboutPage,
-                        Qt.resolvedUrl("qrc:/webengine/qml/pages/LicensesPage.qml")
+                        Qt.resolvedUrl("qrc:/qml/pages/LicensesPage.qml")
                     );
                 }
             }

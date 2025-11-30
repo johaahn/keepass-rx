@@ -79,8 +79,7 @@ MainView {
             uiDatabase.open();
         }
 
-        // When the UI requests getting a single value from one of the
-        // button presses.
+        // When the UI requests getting a single value from an entry.
         function onFieldValueReceived(entryUuid, fieldName, fieldValue, fieldExtra) {
             if (fieldValue) {
                 // TODO Add some better URL handling, for fields that
@@ -89,7 +88,7 @@ MainView {
                     if (fieldValue.indexOf('//') === -1) {
                         Qt.openUrlExternally('http://' + fieldValue);
                         return;
-                    }
+                    }ng
 
                     Qt.openUrlExternally(fieldValue);
                 } else {

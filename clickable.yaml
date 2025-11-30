@@ -1,11 +1,14 @@
 clickable_minimum_required: 8.6.0
 builder: rust
-build_args: "--features=webengine,gui"
+build_args: "--features=gui"
 framework: ubuntu-touch-24.04-1.x
 qt_version: "5.15"
 rust_channel: 1.91.0
 kill: keepassrx
 src_dir: keepass-rx
+image_setup:
+  run:
+    - cargo install --locked cargo-about
 install_root_data:
 - manifest.json
 - keepassrx.apparmor

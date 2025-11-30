@@ -16,10 +16,55 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 use std::env;
 use std::fs;
+use std::fs::File;
+use std::io::{self, Write};
 use std::path::Path;
 use std::path::PathBuf;
-use std::process::Command;
+use std::process::{Command, Stdio};
 use walkdir::WalkDir;
+
+fn generate_licenses_rs() -> io::Result<()> {
+    let out_dir = PathBuf::from(env::var("OUT_DIR").expect("OUT_DIR not set"));
+    let out_file = out_dir.join("licenses.rs");
+
+    // Check if `cargo about` is installed
+    let about_available = Command::new("cargo")
+        .arg("about")
+        .arg("--version")
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .status()
+        .map(|status| status.success())
+        .unwrap_or(false);
+
+    if about_available {
+        let manifest_dir =
+            PathBuf::from(env::var("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR not set"));
+        let about_template = manifest_dir.parent().unwrap().join("about.hbs");
+
+        let out = File::create(&out_file)?;
+        let status = Command::new("cargo")
+            .arg("about")
+            .arg("generate")
+            .arg(&about_template)
+            .stdout(out)
+            .status()?;
+
+        match status.success() {
+            true => return Ok(()),
+            false => panic!("Failed to generate licenses.rs"),
+        }
+    } else {
+        // Fallback: write an empty License array
+        let mut file = File::create(&out_file)?;
+        writeln!(
+            file,
+            "// Auto-generated fallback: cargo about not found\n\
+         pub static LICENSES: &[License] = &[];"
+        )?;
+        Ok(())
+    }
+}
 
 /// Perform qmake query
 #[cfg(feature = "gui")]
@@ -183,6 +228,7 @@ fn walk_dir(dir: PathBuf, ext: &str) -> Vec<PathBuf> {
 
 #[cfg(feature = "gui")]
 fn main() {
+    generate_licenses_rs().expect("Unable to generate licenses");
     output_kpxc_icons();
     update_language_files();
 
@@ -207,7 +253,8 @@ fn main() {
     println!("cargo:rerun-if-changed=src/main.rs");
     println!("cargo:rerun-if-changed=src/rx/icons.rs");
     println!("cargo:rerun-if-changed=src/rx/virtual_hierarchy.rs");
-    println!("cargo:rerun-if-changed=../po/*");
+    println!("cargo:rerun-if-changed=../about.hbs");
+    println!("cargo:rerun-if-changed=qml/");
 
     println!("cargo:rustc-link-search{macos_lib_search}={qt_library_path}");
     println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}Widgets");
@@ -222,4 +269,6 @@ fn main() {
 #[cfg(not(feature = "gui"))]
 fn main() {
     output_kpxc_icons();
+    generate_licenses_rs().expect("Unable to generate licenses");
+    println!("cargo:rerun-if-changed=../about.hbs");
 }

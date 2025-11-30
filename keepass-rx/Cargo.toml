@@ -48,5 +48,4 @@ walkdir = "2.5.0"
 [features]
 # Compile the GUI portion of the application (link QT etc).
 gui = []
-webengine = ["qmetaobject/webengine"]
 default = ["gui"]

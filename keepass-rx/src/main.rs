@@ -37,6 +37,7 @@ use std::rc::Rc;
 use std::sync::Arc;
 
 mod crypto;
+mod license;
 mod rx;
 
 #[cfg(feature = "gui")]
@@ -53,9 +54,10 @@ use crate::app::AppState;
 
 #[cfg(feature = "gui")]
 fn load_gui() -> Result<()> {
-    use gui::{RxDbType, qml::RxUiDatabase};
-    #[cfg(feature = "webengine")]
-    use qmetaobject::webengine;
+    use gui::{
+        RxDbType,
+        qml::{RxUiDatabase, RxUiLicenses},
+    };
 
     use crate::gui::{
         KeepassRx, RxGuiState,
@@ -91,6 +93,7 @@ fn load_gui() -> Result<()> {
     qml_register_type::<RxUiDatabase>(uri, 1, 0, cstr!("RxUiDatabase"));
     qml_register_type::<RxUiContainerStack>(uri, 1, 0, cstr!("RxUiContainerStack"));
     qml_register_type::<RxUiEntry>(uri, 1, 0, cstr!("RxUiEntry"));
+    qml_register_type::<RxUiLicenses>(uri, 1, 0, cstr!("RxUiLicenses"));
     qml_register_type::<RxListItem>(uri, 1, 0, cstr!("RxListItem"));
     qml_register_enum::<RxItemType>(uri, 1, 0, cstr!("RxItemType"));
     qml_register_enum::<RxGuiState>(uri, 1, 0, cstr!("RxGuiState"));
@@ -101,9 +104,6 @@ fn load_gui() -> Result<()> {
 
     // "Data migration": Move any db.kdbx from the data directory to imported.
     move_old_db();
-
-    #[cfg(feature = "webengine")]
-    webengine::initialize();
 
     qmeta_async::run(|| {
         // We must return app here because it keeps the value alive

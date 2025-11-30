@@ -299,12 +299,12 @@ Page {
         }
 
         RowLayout {
-            visible: !busy && uiDatabase.isKeyFileSet
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
             spacing: units.gu(1)
 
             Label {
+                visible: !busy && uiDatabase.isKeyFileSet
                 wrapMode: Text.WordWrap
                 color: keyFileColor()
                 text: keyFileText()

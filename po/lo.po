@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-29 17:14+0100\n"
+"POT-Creation-Date: 2025-11-29 20:25+0000\n"
 "PO-Revision-Date: 2025-11-27 16:00+0000\n"
 "Last-Translator: BoneNI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://hosted.weblate.org/projects/ubports/keepassrx/lo/"
@@ -244,13 +244,19 @@ msgstr "ກຳລັງລັອກຢ່າງປອດໄພ"
 msgid "Database Not Opening?"
 msgstr "ຖານຂໍ້ມູນເປີດບໍ່ໄດ້ບໍ?"
 
-msgid "Auto-detected key file for database."
+msgid "Key Loaded"
+msgstr ""
+
+msgid "Remove Key"
+msgstr ""
+
+msgid "Use Key"
+msgstr ""
+
+msgid "Automatically detected a key file for this database."
 msgstr ""
 
 msgid "A key file will be used to open this database."
-msgstr ""
-
-msgid "Tap the key icon to use a key file."
 msgstr ""
 
 msgid "Select Key File"
@@ -265,19 +271,10 @@ msgstr "ລະຫັດຜ່ານຫຼັກ"
 msgid "Open"
 msgstr "ເປີດ"
 
-msgid "Key File"
-msgstr ""
-
-msgid "Provide a key file for opening the database."
+msgid "Hide Password"
 msgstr ""
 
 msgid "Show Password"
-msgstr ""
-
-msgid "Toggle password field visibility"
-msgstr ""
-
-msgid "Tap the eye icon to show the password."
 msgstr ""
 
 msgid "Opening"

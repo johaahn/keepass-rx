@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-29 17:14+0100\n"
+"POT-Creation-Date: 2025-11-29 20:25+0000\n"
 "PO-Revision-Date: 2025-11-30 10:00+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -260,14 +260,20 @@ msgstr "Veilig vergrendelen"
 msgid "Database Not Opening?"
 msgstr "Wordt de databank niet geopend?"
 
-msgid "Auto-detected key file for database."
-msgstr "Er is automatisch een sleutelbestand vastgesteld."
+msgid "Key Loaded"
+msgstr ""
+
+msgid "Remove Key"
+msgstr ""
+
+msgid "Use Key"
+msgstr ""
+
+msgid "Automatically detected a key file for this database."
+msgstr ""
 
 msgid "A key file will be used to open this database."
 msgstr "Er wordt een sleutelbestand gebruikt om deze databank te openen."
-
-msgid "Tap the key icon to use a key file."
-msgstr "Druk op het slotje om een sleutelbestand te kiezen."
 
 msgid "Select Key File"
 msgstr "Sleutelbestand kiezen"
@@ -281,20 +287,11 @@ msgstr "Hoofdwachtwoord"
 msgid "Open"
 msgstr "Openen"
 
-msgid "Key File"
-msgstr "Sleutelbestand"
-
-msgid "Provide a key file for opening the database."
-msgstr "Kies het sleutelbestand waarmee de databank moet worden geopend."
+msgid "Hide Password"
+msgstr ""
 
 msgid "Show Password"
 msgstr "Wachtwoord tonen"
-
-msgid "Toggle password field visibility"
-msgstr "Wachtwoord tonen/verbergen"
-
-msgid "Tap the eye icon to show the password."
-msgstr "Druk op het oogje om het wachtwoord te tonen."
 
 msgid "Opening"
 msgstr "Bezig met openen…"
@@ -328,6 +325,24 @@ msgstr "2FA-codes"
 msgctxt "List of entries with tags"
 msgid "Tags"
 msgstr "Labels"
+
+#~ msgid "Auto-detected key file for database."
+#~ msgstr "Er is automatisch een sleutelbestand vastgesteld."
+
+#~ msgid "Tap the key icon to use a key file."
+#~ msgstr "Druk op het slotje om een sleutelbestand te kiezen."
+
+#~ msgid "Key File"
+#~ msgstr "Sleutelbestand"
+
+#~ msgid "Provide a key file for opening the database."
+#~ msgstr "Kies het sleutelbestand waarmee de databank moet worden geopend."
+
+#~ msgid "Toggle password field visibility"
+#~ msgstr "Wachtwoord tonen/verbergen"
+
+#~ msgid "Tap the eye icon to show the password."
+#~ msgstr "Druk op het oogje om het wachtwoord te tonen."
 
 #~ msgid ""
 #~ "KeePassRX is a work-in-progress password manager for KeePass password "

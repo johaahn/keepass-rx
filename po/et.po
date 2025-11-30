@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-29 17:14+0100\n"
+"POT-Creation-Date: 2025-11-29 20:25+0000\n"
 "PO-Revision-Date: 2025-11-30 10:00+0000\n"
 "Last-Translator: Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/ubports/"
@@ -259,14 +259,20 @@ msgstr "Turvaline lukustamine"
 msgid "Database Not Opening?"
 msgstr "Kas andmebaas ei avane?"
 
-msgid "Auto-detected key file for database."
-msgstr "Andmebaasi automaatselt tuvastatud võtmefail."
+msgid "Key Loaded"
+msgstr ""
+
+msgid "Remove Key"
+msgstr ""
+
+msgid "Use Key"
+msgstr ""
+
+msgid "Automatically detected a key file for this database."
+msgstr ""
 
 msgid "A key file will be used to open this database."
 msgstr "Võtmefail, mida kasutatakse selle andmebaasi avamiseks."
-
-msgid "Tap the key icon to use a key file."
-msgstr "Võtmefaili kasutamiseks klõpsa võtme ikooni."
 
 msgid "Select Key File"
 msgstr "Vali võtmefail"
@@ -280,20 +286,11 @@ msgstr "Üldsalasõna"
 msgid "Open"
 msgstr "Ava"
 
-msgid "Key File"
-msgstr "Võtmefail"
-
-msgid "Provide a key file for opening the database."
-msgstr "Sisesta andmebaasi avamiseks vajalik võtmefail."
+msgid "Hide Password"
+msgstr ""
 
 msgid "Show Password"
 msgstr "Näita salasõna"
-
-msgid "Toggle password field visibility"
-msgstr "Lülita salasõnavälja nähtavus sisse/välja"
-
-msgid "Tap the eye icon to show the password."
-msgstr "Salasõna vaatamiseks klõpsa silma ikooni."
 
 msgid "Opening"
 msgstr "Avamisel"
@@ -327,6 +324,24 @@ msgstr "2FA-koodid"
 msgctxt "List of entries with tags"
 msgid "Tags"
 msgstr "Sildid"
+
+#~ msgid "Auto-detected key file for database."
+#~ msgstr "Andmebaasi automaatselt tuvastatud võtmefail."
+
+#~ msgid "Tap the key icon to use a key file."
+#~ msgstr "Võtmefaili kasutamiseks klõpsa võtme ikooni."
+
+#~ msgid "Key File"
+#~ msgstr "Võtmefail"
+
+#~ msgid "Provide a key file for opening the database."
+#~ msgstr "Sisesta andmebaasi avamiseks vajalik võtmefail."
+
+#~ msgid "Toggle password field visibility"
+#~ msgstr "Lülita salasõnavälja nähtavus sisse/välja"
+
+#~ msgid "Tap the eye icon to show the password."
+#~ msgstr "Salasõna vaatamiseks klõpsa silma ikooni."
 
 #~ msgid ""
 #~ "KeePassRX is a work-in-progress password manager for KeePass password "

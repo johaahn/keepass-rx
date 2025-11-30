@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-29 20:25+0000\n"
-"PO-Revision-Date: 2025-11-30 10:00+0000\n"
+"PO-Revision-Date: 2025-11-30 16:00+0000\n"
 "Last-Translator: Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/ubports/"
 "keepassrx/et/>\n"
@@ -260,16 +260,16 @@ msgid "Database Not Opening?"
 msgstr "Kas andmebaas ei avane?"
 
 msgid "Key Loaded"
-msgstr ""
+msgstr "Võti on laaditud"
 
 msgid "Remove Key"
-msgstr ""
+msgstr "Eemalda võti"
 
 msgid "Use Key"
-msgstr ""
+msgstr "Kasuta võtit"
 
 msgid "Automatically detected a key file for this database."
-msgstr ""
+msgstr "Tuvastasin selle andmebaasi võtmefaili automaatselt."
 
 msgid "A key file will be used to open this database."
 msgstr "Võtmefail, mida kasutatakse selle andmebaasi avamiseks."
@@ -287,7 +287,7 @@ msgid "Open"
 msgstr "Ava"
 
 msgid "Hide Password"
-msgstr ""
+msgstr "Peida salasõna"
 
 msgid "Show Password"
 msgstr "Näita salasõna"

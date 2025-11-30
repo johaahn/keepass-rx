@@ -8,7 +8,9 @@ kill: keepassrx
 src_dir: keepass-rx
 image_setup:
   run:
-    - cargo install --locked cargo-about
+    - wget https://github.com/EmbarkStudios/cargo-about/releases/download/0.8.2/cargo-about-0.8.2-x86_64-unknown-linux-musl.tar.gz
+    - tar zxvf cargo-about-0.8.2-x86_64-unknown-linux-musl.tar.gz
+    - mv cargo-about-0.8.2-x86_64-unknown-linux-musl/cargo-about /usr/local/bin/cargo-about
 install_root_data:
 - manifest.json
 - keepassrx.apparmor

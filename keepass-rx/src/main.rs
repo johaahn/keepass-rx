@@ -62,7 +62,7 @@ fn load_gui() -> Result<()> {
     use crate::gui::{
         KeepassRx, RxGuiState,
         actor::KeepassRxActor,
-        utils::{app_data_path, imported_databases_path, move_old_db},
+        utils::{app_data_path, imported_databases_path, move_old_dirs_and_files},
     };
 
     use crate::app::KeepassRxApp;
@@ -103,7 +103,9 @@ fn load_gui() -> Result<()> {
     qml_register_enum::<RxColorType>(uri, 1, 0, cstr!("RxColorType"));
 
     // "Data migration": Move any db.kdbx from the data directory to imported.
-    move_old_db();
+    if let Err(err) = move_old_dirs_and_files() {
+        println!("Error during old app data migration: {}", err);
+    }
 
     qmeta_async::run(|| {
         // We must return app here because it keeps the value alive

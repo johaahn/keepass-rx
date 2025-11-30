@@ -1,5 +1,5 @@
-<!-- KeePass-style square app icon with refined orange lock and faint full border -->
-<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="KeePass-style square icon with faint-bordered padlock">
+<!-- KeePass-style square app icon with refined orange lock and subtle, wider V-shaped two-tone off-white background -->
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="KeePass-style square icon with subtly angled two-tone off-white background and padlock">
   <defs>
     <!-- Gradients for lock -->
     <linearGradient id="lockBody" x1="0" y1="0" x2="0" y2="1">
@@ -21,8 +21,18 @@
     </linearGradient>
   </defs>
 
-  <!-- Square white background -->
-  <rect width="1024" height="1024" fill="#FFFFFF"/>
+  <!-- Base off-white background (light tone) -->
+  <rect width="1024" height="1024" fill="#F6F5F2"/>
+
+  <!-- Angled wide V-shaped darker tone, covering the entire top, with slightly stronger contrast -->
+  <path d="
+    M 0 0
+    L 1024 0
+    L 1024 560
+    L 512 640
+    L 0 560
+    Z"
+    fill="#EEE9E0"/>
 
   <!-- Lock centered -->
   <g transform="translate(512,442)">

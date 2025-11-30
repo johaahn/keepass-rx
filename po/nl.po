@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-29 17:14+0100\n"
-"PO-Revision-Date: 2025-11-29 13:00+0000\n"
+"PO-Revision-Date: 2025-11-30 10:00+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/ubports/keepassrx/"
 "nl/>\n"
@@ -261,16 +261,16 @@ msgid "Database Not Opening?"
 msgstr "Wordt de databank niet geopend?"
 
 msgid "Auto-detected key file for database."
-msgstr ""
+msgstr "Er is automatisch een sleutelbestand vastgesteld."
 
 msgid "A key file will be used to open this database."
-msgstr ""
+msgstr "Er wordt een sleutelbestand gebruikt om deze databank te openen."
 
 msgid "Tap the key icon to use a key file."
-msgstr ""
+msgstr "Druk op het slotje om een sleutelbestand te kiezen."
 
 msgid "Select Key File"
-msgstr ""
+msgstr "Sleutelbestand kiezen"
 
 msgid "Enter the database master password"
 msgstr "Voer het hoofdwachtwoord in"
@@ -282,19 +282,19 @@ msgid "Open"
 msgstr "Openen"
 
 msgid "Key File"
-msgstr ""
+msgstr "Sleutelbestand"
 
 msgid "Provide a key file for opening the database."
-msgstr ""
+msgstr "Kies het sleutelbestand waarmee de databank moet worden geopend."
 
 msgid "Show Password"
-msgstr ""
+msgstr "Wachtwoord tonen"
 
 msgid "Toggle password field visibility"
-msgstr ""
+msgstr "Wachtwoord tonen/verbergen"
 
 msgid "Tap the eye icon to show the password."
-msgstr ""
+msgstr "Druk op het oogje om het wachtwoord te tonen."
 
 msgid "Opening"
 msgstr "Bezig met openen…"

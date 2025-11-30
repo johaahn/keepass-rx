@@ -427,18 +427,18 @@ Page {
 	// List of entries for this container. It's an array of uuids.
 	// It includes both immediate subgroupings and immediate child
 	// entries in the container.
-        function onEntriesReceived(entries) {
-          //Entries is a list of UUIDs
+        function onEntriesReceived(entryUuids) {
+            //Entries is a list of UUIDs
 	    entriesListModel.clear();
 
-            for (const entry of entries) {
+            for (const entryUuid of entryUuids) {
                 let append = true;
-                if (entry.itemType == 'Group' && entry.uuid == recycleBinUuid) {
+                if (entryUuid == recycleBinUuid) {
                     append = settings.showRecycleBin;
                 }
 
                 if (append) {
-                    entriesListModel.append({entryUuid: entry });
+                    entriesListModel.append({ entryUuid });
                 }
             }
 

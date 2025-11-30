@@ -1,5 +1,3 @@
-use qmetaobject::QVariantMap;
-
 pub struct License {
     pub crate_name: &'static str,
     pub crate_version: &'static str,

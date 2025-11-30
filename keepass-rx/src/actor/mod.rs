@@ -16,15 +16,12 @@
  * along with this program. If not, see
  * <https://www.gnu.org/licenses/>.
  */
-use actix::SystemRegistry;
 use actix::prelude::*;
 use qmeta_async::with_executor;
 use qmetaobject::QObject;
-use qmetaobject::QObjectPinned;
 use qmetaobject::QPointer;
 
 use crate::app::AppState;
-use crate::gui::actor::KeepassRxActor;
 
 #[allow(dead_code)]
 pub trait ActorConnected<M>

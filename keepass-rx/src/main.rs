@@ -62,7 +62,7 @@ fn load_gui() -> Result<()> {
     use crate::gui::{
         KeepassRx, RxGuiState,
         actor::KeepassRxActor,
-        utils::{app_data_path, imported_databases_path, move_old_dirs_and_files},
+        utils::move_old_dirs_and_files,
     };
 
     use crate::app::KeepassRxApp;

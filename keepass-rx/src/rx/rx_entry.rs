@@ -1,4 +1,4 @@
-use crate::crypto::{DefaultWithKey, EncryptedValue, MasterKey};
+use crate::crypto::{EncryptedValue, MasterKey};
 
 use super::icons::RxIcon;
 use anyhow::{Result, anyhow};
@@ -131,35 +131,6 @@ fn extract_value(
             _ => None, // discard binary for now. attachments later?
         }
     })
-}
-
-impl DefaultWithKey for RxCustomFields {
-    fn default_with_key(key: &Rc<MasterKey>) -> Self {
-        Self {
-            master_key: key.clone(),
-            data: Default::default(),
-        }
-    }
-}
-
-impl DefaultWithKey for RxEntry {
-    fn default_with_key(key: &Rc<MasterKey>) -> Self {
-        Self {
-            master_key: key.clone(),
-            custom_fields: DefaultWithKey::default_with_key(key),
-            icon: Default::default(),
-            notes: Default::default(),
-            parent_group: Default::default(),
-            password: Default::default(),
-            raw_otp_value: Default::default(),
-            template_uuid: Default::default(),
-            title: Default::default(),
-            url: Default::default(),
-            username: Default::default(),
-            uuid: Default::default(),
-            tags: Default::default(),
-        }
-    }
 }
 
 #[allow(dead_code)]

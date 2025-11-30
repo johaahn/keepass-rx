@@ -1,23 +1,21 @@
 use actix::prelude::*;
 use anyhow::{Result, anyhow};
 use keepass::{Database, DatabaseKey};
-use libsodium_rs::utils::{SecureVec, vec_utils};
+use libsodium_rs::utils::SecureVec;
 use qmetaobject::*;
 use secstr::SecUtf8;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::fs::File;
-use std::path::Path;
 use std::rc::Rc;
 use std::sync::Arc;
 use tokio::task::{JoinHandle, spawn_blocking};
 use uuid::Uuid;
 use zeroize::{Zeroize, Zeroizing};
 
-use super::instructions::get_instructions;
 use super::{KeepassRx, RxDbType};
-use crate::app::{AppState, KeyFile};
-use crate::crypto::{EncryptedPassword, EncryptedValue, MasterKey};
+use crate::app::AppState;
+use crate::crypto::{EncryptedPassword, MasterKey};
 use crate::gui::utils::synced_databases_path;
 use crate::rx::virtual_hierarchy::{
     AllTags, AllTemplates, DefaultView, TotpEntries, VirtualHierarchy,

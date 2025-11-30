@@ -23,18 +23,6 @@ jobs:
       - name: License Check
         run: cargo deny check licenses
 
-      - name: Install Cargo About
-        run: cargo install cargo-about
-
-      - name: Generate licenses.html
-        run: cargo about generate about.hbs > keepass-rx/assets/licenses.html
-
-      - name: Upload licenses.html
-        uses: https://data.forgejo.org/forgejo/upload-artifact@v4
-        with:
-          name: licenses.html
-          path: keepass-rx/assets/licenses.html
-
   test:
     runs-on: docker
     container:
@@ -73,12 +61,6 @@ jobs:
       - name: Setup Cache
         uses: https://github.com/Swatinem/rust-cache@v2
 
-      - name: Download licenses.html
-        uses: https://data.forgejo.org/forgejo/download-artifact@v4
-        with:
-          name: licenses.html
-          path: keepass-rx/assets/
-
       - name: Build
         run: clickable build --clean
 
@@ -106,12 +88,6 @@ jobs:
       - name: Setup Cache
         uses: https://github.com/Swatinem/rust-cache@v2
 
-      - name: Download licenses.html
-        uses: https://data.forgejo.org/forgejo/download-artifact@v4
-        with:
-          name: licenses.html
-          path: keepass-rx/assets/
-
       - name: Build
         run: clickable build --clean
 
@@ -138,12 +114,6 @@ jobs:
 
       - name: Setup Cache
         uses: https://github.com/Swatinem/rust-cache@v2
-
-      - name: Download licenses.html
-        uses: https://data.forgejo.org/forgejo/download-artifact@v4
-        with:
-          name: licenses.html
-          path: keepass-rx/assets/
 
       - name: Build
         run: clickable build --clean

@@ -123,3 +123,36 @@ jobs:
         with:
           name: keepassrx-ci-armhf
           path: build/arm-linux-gnueabihf/app/keepassrx.projectmoon_*.click
+
+  openstore-release:
+    if: forgejo.event_name == 'push' && contains(forgejo.ref, 'refs/tags/v')
+    needs: [build-amd64, build-arm64, build-armhf]
+    container:
+      image: clickable/ci-ut24.04-1.x-armhf
+    steps:
+      - name: Download amd64 build
+        uses: https://data.forgejo.org/forgejo/download-artifact@v4
+        with:
+          name: keepassrx-ci-amd64
+          path: build/x86_64-linux-gnu/app/
+
+      - name: Download arm64 build
+        uses: https://data.forgejo.org/forgejo/download-artifact@v4
+        with:
+          name: keepassrx-ci-arm64
+          path: build/aarch64-linux-gnu/app/
+
+      - name: Download armhf build
+        uses: https://data.forgejo.org/forgejo/download-artifact@v4
+        with:
+          name: keepassrx-ci-amd64
+          path: build/arm-linux-gnueabihf/app
+
+      - name: Publish arm64
+        run: clickable publish --arch arm64
+
+      - name: Publish amd64
+        run: clickable publish --arch amd64
+
+      - name: Publish armhf
+        run: clickable publish --arch armhf

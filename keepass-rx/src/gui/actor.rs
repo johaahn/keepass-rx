@@ -459,11 +459,13 @@ impl Handler<GetEntries> for KeepassRxActor {
         let app_state = self.app_state.pinned();
         let app_state = app_state.borrow();
 
+        let search_type = app_state.search_type();
+
         let binding = self.gui.clone();
         let binding = binding.pinned();
         let gui = binding.borrow();
 
-        let search_term = msg.search_term.as_deref();
+        let search_term = msg.search_term.as_deref().map(|term| term.trim());
         let viewable = app_state
             .curr_view()
             .expect("GetEntries: Viewable not set.");
@@ -474,7 +476,7 @@ impl Handler<GetEntries> for KeepassRxActor {
         };
 
         let results: QStringList = viewable
-            .search(container_uuid, search_term)
+            .search(search_type, container_uuid, search_term)
             .into_iter()
             .map(|container| container.uuid().to_string())
             .collect();

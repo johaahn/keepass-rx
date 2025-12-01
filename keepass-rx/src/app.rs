@@ -5,13 +5,14 @@ use qmeta_async::with_executor;
 use qmetaobject::{QObject, QObjectBox};
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::OnceLock;
+use std::sync::atomic::{AtomicU64, Ordering};
 use zeroize::{Zeroize, Zeroizing};
 
 use crate::crypto::{EncryptedValue, MasterKey};
 use crate::gui::actor::KeepassRxActor;
 use crate::rx::RxDatabase;
+use crate::rx::RxSearchType;
 use crate::rx::virtual_hierarchy::VirtualHierarchy;
 
 /// Hackity hack hack hack. Instead of having a running actor system
@@ -123,6 +124,7 @@ pub struct AppState {
 
     current_view: Option<Rc<Box<dyn VirtualHierarchy>>>,
     curr_db: Option<Rc<Zeroizing<RxDatabase>>>,
+    search_type: RxSearchType,
 
     master_key: Option<MasterKey>,
     db_key: Option<KeyFile>,
@@ -144,6 +146,14 @@ impl AppState {
 
     pub fn db_key(&self) -> Option<KeyFile> {
         self.db_key.clone()
+    }
+
+    pub fn search_type(&self) -> RxSearchType {
+        self.search_type
+    }
+
+    pub fn set_search_type(&mut self, search_type: RxSearchType) {
+        self.search_type = search_type;
     }
 
     pub fn set_db_key(&mut self, key: Option<KeyFile>) {

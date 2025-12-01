@@ -2,56 +2,14 @@
 /// child entries. A container can have any number of child containers
 /// (of the same type) and any number of RxEntry objects.
 use indexmap::{IndexMap, IndexSet};
-use std::{cmp::Ordering, rc::Rc};
+use std::{cmp::Ordering, ops::Deref, rc::Rc};
 use unicase::UniCase;
 use uuid::Uuid;
 
-use super::{RxDatabase, RxEntry, RxGroup, RxTag, RxTemplate};
-
-fn search_contained_ref(contained_ref: &RxContainedRef, term: &str) -> bool {
-    match contained_ref {
-        RxContainedRef::Entry(entry) => search_entry(entry, term),
-        RxContainedRef::Group(group) => search_group(group, term),
-        RxContainedRef::Template(template) => search_template(template, term),
-        RxContainedRef::Tag(tag) => search_tag(tag, term),
-        RxContainedRef::VirtualRoot(_) => true,
-    }
-}
-
-fn search_tag(tag: &RxTag, term: &str) -> bool {
-    UniCase::new(&tag.name).to_folded_case().contains(term)
-}
-
-fn search_group(group: &RxGroup, term: &str) -> bool {
-    UniCase::new(&group.name).to_folded_case().contains(term)
-}
-
-fn search_template(template: &RxTemplate, term: &str) -> bool {
-    UniCase::new(&template.name).to_folded_case().contains(term)
-}
-
-fn search_entry(entry: &RxEntry, term: &str) -> bool {
-    let username = entry.username().and_then(|u| {
-        u.value()
-            .map(|secret| UniCase::new(secret).to_folded_case())
-    });
-
-    let url = entry.url().and_then(|u| {
-        u.value()
-            .map(|secret| UniCase::new(secret).to_folded_case())
-    });
-
-    let title = entry.title().and_then(|u| {
-        u.value()
-            .map(|secret| UniCase::new(secret).to_folded_case())
-    });
-
-    let contains_username = username.map(|u| u.contains(term)).unwrap_or(false);
-    let contains_url = url.map(|u| u.contains(term)).unwrap_or(false);
-    let contains_title = title.map(|t| t.contains(term)).unwrap_or(false);
-
-    contains_username || contains_url || contains_title
-}
+use super::{
+    RxDatabase, RxEntry, RxGroup, RxSearchType, RxTag, RxTemplate,
+    search::{CaseInsensitiveSearch, Search, search_contained_ref},
+};
 
 #[derive(Clone)]
 #[allow(dead_code)]
@@ -203,7 +161,11 @@ impl RxContainer {
         }
     }
 
-    pub fn search_children_immediate(&self, search_term: Option<&str>) -> Vec<RxContainedRef> {
+    pub fn search_children_immediate(
+        &self,
+        search_type: RxSearchType,
+        search_term: Option<&str>,
+    ) -> Vec<RxContainedRef> {
         let search_term = search_term.map(|term| UniCase::new(term).to_folded_case());
         let immediate_children = self.children();
 
@@ -212,7 +174,7 @@ impl RxContainer {
             .map(|child| {
                 child.get_ref().and_then(|contained_ref| {
                     if let Some(term) = &search_term {
-                        match search_contained_ref(&contained_ref, term) {
+                        match search_contained_ref(&contained_ref, search_type, term) {
                             true => Some(contained_ref),
                             false => None,
                         }
@@ -234,6 +196,7 @@ impl RxContainer {
 
     pub fn search_children_recursive(
         &self,
+        search_type: RxSearchType,
         container_uuid: Uuid,
         search_term: Option<&str>,
     ) -> Vec<RxContainedRef> {
@@ -249,7 +212,7 @@ impl RxContainer {
                 .filter_map(|container| {
                     container.get_ref().and_then(|contained_ref| {
                         if let Some(term) = &search_term {
-                            match search_contained_ref(&contained_ref, term) {
+                            match search_contained_ref(&contained_ref, search_type, term) {
                                 true => Some(contained_ref),
                                 false => None,
                             }

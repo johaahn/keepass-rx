@@ -2,7 +2,7 @@ use gettextrs::{gettext, pgettext};
 use std::{collections::HashMap, rc::Rc};
 use uuid::Uuid;
 
-use super::{RxContainedRef, RxContainer, RxDatabase, RxRoot, RxTag};
+use super::{RxContainedRef, RxContainer, RxDatabase, RxRoot, RxSearchType, RxTag};
 
 /// A setting that controls how an RxListItem is rendered in the UI.
 /// Note that the UI container of the list item must also have the
@@ -49,7 +49,12 @@ pub trait VirtualHierarchy {
     }
 
     /// Search for child containers in the virtual hierarchy.
-    fn search(&self, container_uuid: Uuid, search_term: Option<&str>) -> Vec<RxContainedRef>;
+    fn search(
+        &self,
+        search_type: RxSearchType,
+        container_uuid: Uuid,
+        search_term: Option<&str>,
+    ) -> Vec<RxContainedRef>;
 }
 
 #[derive(Clone)]
@@ -78,20 +83,25 @@ impl VirtualHierarchy for AllTemplates {
         &self.0
     }
 
-    fn search(&self, container_uuid: Uuid, search_term: Option<&str>) -> Vec<RxContainedRef> {
+    fn search(
+        &self,
+        search_type: RxSearchType,
+        container_uuid: Uuid,
+        search_term: Option<&str>,
+    ) -> Vec<RxContainedRef> {
         if container_uuid == self.root().uuid() {
             // searching from the (non existant) "root template"
             // means we should search all templates instead.
             self.root()
                 .root_container
-                .search_children_immediate(search_term)
+                .search_children_immediate(search_type, search_term)
         } else {
             // Otherwise, we search inside the template itself
             let maybe_template = self.root().get_container(container_uuid);
 
             maybe_template
                 .as_ref()
-                .map(|tmplt| tmplt.search_children_immediate(search_term))
+                .map(|tmplt| tmplt.search_children_immediate(search_type, search_term))
                 .unwrap_or_default()
         }
     }
@@ -122,13 +132,22 @@ impl VirtualHierarchy for DefaultView {
         )
     }
 
-    fn search(&self, container_uuid: Uuid, search_term: Option<&str>) -> Vec<RxContainedRef> {
+    fn search(
+        &self,
+        search_type: RxSearchType,
+        container_uuid: Uuid,
+        search_term: Option<&str>,
+    ) -> Vec<RxContainedRef> {
         let mut results = self
             .root()
             .get_container(container_uuid)
             .map(|container| match search_term {
-                Some(_) => container.search_children_recursive(container_uuid, search_term),
-                None => container.search_children_immediate(search_term),
+                Some(_) => container.search_children_recursive(
+                    search_type,
+                    container_uuid,
+                    search_term,
+                ),
+                None => container.search_children_immediate(search_type, search_term),
             })
             .unwrap_or_default();
 
@@ -178,10 +197,15 @@ impl VirtualHierarchy for TotpEntries {
         RxViewFeature::DisplayTwoFactorAuth
     }
 
-    fn search(&self, container_uuid: Uuid, search_term: Option<&str>) -> Vec<RxContainedRef> {
+    fn search(
+        &self,
+        search_type: RxSearchType,
+        container_uuid: Uuid,
+        search_term: Option<&str>,
+    ) -> Vec<RxContainedRef> {
         self.root()
             .get_container(container_uuid)
-            .map(|container| container.search_children_immediate(search_term))
+            .map(|container| container.search_children_immediate(search_type, search_term))
             .unwrap_or_default()
     }
 }
@@ -222,10 +246,15 @@ impl VirtualHierarchy for AllTags {
         &self.0
     }
 
-    fn search(&self, container_uuid: Uuid, search_term: Option<&str>) -> Vec<RxContainedRef> {
+    fn search(
+        &self,
+        search_type: RxSearchType,
+        container_uuid: Uuid,
+        search_term: Option<&str>,
+    ) -> Vec<RxContainedRef> {
         self.root()
             .get_container(container_uuid)
-            .map(|container| container.search_children_immediate(search_term))
+            .map(|container| container.search_children_immediate(search_type, search_term))
             .unwrap_or_default()
     }
 }

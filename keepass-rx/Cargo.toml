@@ -40,6 +40,7 @@ regex = "1.12.2"
 paste = "1.0.15"
 palette = "0.7.6"
 poison-guard = "0.1.0"
+fuzzy-matcher = "0.3.7"
 
 [build-dependencies]
 cpp_build = "0.5"

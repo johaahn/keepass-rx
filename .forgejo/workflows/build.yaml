@@ -168,6 +168,12 @@ jobs:
     container:
       image: clickable/ci-ut24.04-1.x-armhf
     steps:
+      - name: Add NodeJS deb repo
+        run: curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+
+      - name: Install NodeJS
+        run: apt update && apt install -y nodejs
+
       - name: Download amd64 build
         uses: https://data.forgejo.org/forgejo/download-artifact@v4
         with:

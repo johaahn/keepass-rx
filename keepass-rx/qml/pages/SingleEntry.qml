@@ -48,7 +48,7 @@ Page {
     }
 
     function headerBackgroundColor() {
-        if (settings.showAccents && colorWashout) {
+        if (SettingsBridge.showAccents && colorWashout) {
             return colorWashout.backgroundColor;
         } else {
             return "transparent";
@@ -56,7 +56,7 @@ Page {
     }
 
     function headerTextColor() {
-        if (settings.showAccents && colorWashout) {
+        if (SettingsBridge.showAccents && colorWashout) {
             // textColorType is the color type for the header text itself.
             return colorWashout.textColorType === 'Light'
                 ? LomiriColors.white

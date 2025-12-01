@@ -68,8 +68,8 @@ Page {
                         'Compatible with KeePassXC.'
                 )
                 control: Switch {
-                    onCheckedChanged: settings.showAccents = checked
-                    checked: settings.showAccents
+                    onCheckedChanged: SettingsBridge.showAccents = checked
+                    checked: SettingsBridge.showAccents
                 }
             }
 

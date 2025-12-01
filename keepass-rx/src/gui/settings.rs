@@ -14,6 +14,9 @@ pub struct SettingsBridge {
 
     pub showRecycleBin: qt_property!(bool; READ get_show_recycle_bin WRITE set_show_recycle_bin NOTIFY showRecycleBinChanged),
     pub showRecycleBinChanged: qt_signal!(),
+
+    pub showAccents: qt_property!(bool; READ get_show_accents WRITE set_show_accents NOTIFY showAccentsChanged),
+    pub showAccentsChanged: qt_signal!(),
 }
 
 impl Default for SettingsBridge {
@@ -34,6 +37,9 @@ impl Default for SettingsBridge {
 
             showRecycleBin: false,
             showRecycleBinChanged: Default::default(),
+
+            showAccents: true,
+            showAccentsChanged: Default::default(),
         }
     }
 }
@@ -53,6 +59,15 @@ impl SettingsBridge {
 
     pub fn set_bool(&mut self, key: &str, value: bool) {
         self.inner.set_bool(key, value);
+    }
+
+    pub fn get_show_accents(&self) -> bool {
+        self.value_bool("showAccents")
+    }
+
+    pub fn set_show_accents(&mut self, value: bool) {
+        self.set_bool("showAccents", value);
+        self.showAccentsChanged();
     }
 
     pub fn get_search_type(&self) -> RxSearchType {

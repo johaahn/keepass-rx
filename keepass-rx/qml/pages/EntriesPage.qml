@@ -43,12 +43,12 @@ Page {
         if (containerStack.containerName && !containerStack.isAtRoot || keepassrx.viewMode != 'All') {
             return containerStack.containerName;
         } else {
-            return settings.showAccents && publicDatabaseName ? publicDatabaseName : "KeePassRX";
+            return SettingsBridge.showAccents && publicDatabaseName ? publicDatabaseName : "KeePassRX";
         }
     }
 
     function headerBackgroundColor() {
-        if (settings.showAccents && colorWashout) {
+        if (SettingsBridge.showAccents && colorWashout) {
             return colorWashout.backgroundColor;
         } else {
             return "transparent";
@@ -56,7 +56,7 @@ Page {
     }
 
     function headerTextColor() {
-        if (settings.showAccents && colorWashout) {
+        if (SettingsBridge.showAccents && colorWashout) {
             // textColorType is the color type for the header text itself.
             return colorWashout.textColorType === 'Light'
                 ? LomiriColors.white

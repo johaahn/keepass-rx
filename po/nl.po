@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-30 20:51+0000\n"
-"PO-Revision-Date: 2025-11-30 10:00+0000\n"
+"PO-Revision-Date: 2025-12-01 11:01+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/ubports/keepassrx/"
 "nl/>\n"
@@ -217,16 +217,16 @@ msgid "Database Not Opening?"
 msgstr "Wordt de databank niet geopend?"
 
 msgid "Key Loaded"
-msgstr ""
+msgstr "De sleutel is ingelezen"
 
 msgid "Remove Key"
-msgstr ""
+msgstr "Sleutel verwijderen"
 
 msgid "Use Key"
-msgstr ""
+msgstr "Sleutel gebruiken"
 
 msgid "Automatically detected a key file for this database."
-msgstr ""
+msgstr "Het sleutelbestand van deze databank is automatisch vastgesteld."
 
 msgid "A key file will be used to open this database."
 msgstr "Er wordt een sleutelbestand gebruikt om deze databank te openen."
@@ -244,7 +244,7 @@ msgid "Open"
 msgstr "Openen"
 
 msgid "Hide Password"
-msgstr ""
+msgstr "Wachtwoord verbergen"
 
 msgid "Show Password"
 msgstr "Wachtwoord tonen"
@@ -297,7 +297,7 @@ msgid "Open Source Licenses"
 msgstr "Opensourcelicenties"
 
 msgid "Website"
-msgstr ""
+msgstr "Website"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

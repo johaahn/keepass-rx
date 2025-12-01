@@ -1,7 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import QtQuick.Controls 2.12
-import Qt.labs.settings 1.0
 import Lomiri.Components 1.3
 import Lomiri.Components.Popups 1.3
 import Lomiri.Content 1.3
@@ -115,14 +114,6 @@ Page {
                 onTriggered: { pageStack.addPageToNextColumn(openDbPage, aboutPage) }
             }
         ]
-    }
-
-    Settings {
-        id: settings
-        property string lastKey
-        property int autoCloseInterval: 5
-        property bool showSlowDBWarning: true
-        property bool easyOpen: true
     }
 
     function openDatabase() {

@@ -21,15 +21,6 @@ Page {
         contentWidth: width
 
         Column {
-            Settings {
-                id: settings
-                property int autoCloseInterval: 5
-                property bool showRecycleBin: false
-                property bool changeGroupOnSearch: true
-                property bool showSlowDBWarning: true
-                property bool databaseLocking: true
-                property bool showAccents: true
-            }
             id: col
             anchors.fill: parent
             spacing: units.gu(2)
@@ -40,14 +31,9 @@ Page {
             Label {
                 width: parent.width
                 wrapMode: Text.WordWrap
-                text: i18n.tr('Change settings based on your preferences. ' +
-                              'Any change to the settings requires a restart to ' +
-                              'take effect.')
+                text: i18n.tr('Change settings based on your preferences.')
             }
 
-            // TODO Currently requires a restart because we have
-            // several Settings instances floating around. Make them
-            // into a singleton!
             SettingsItem {
                 // TRANSLATORS: Enable or disable easy (and secure!) locking and unlocking of the database.
                 title: i18n.tr("Enable database locking")

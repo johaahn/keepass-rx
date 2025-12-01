@@ -4,20 +4,11 @@ import QtQuick.Layouts 1.3
 import Lomiri.Components 1.3
 import Lomiri.Components.Popups 1.3
 import Lomiri.Content 1.3
-import Qt.labs.settings 1.0
 import keepassrx 1.0
 
 import "../components"
 
 Page {
-    Settings {
-        id: settings
-        property bool showAccents: true
-        property bool fetchOnOpen: false
-        property bool showRecycleBin: false
-        property bool databaseLocking: true
-    }
-
     property bool searchMode: false
     property bool resetListView: false
 

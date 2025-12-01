@@ -193,10 +193,10 @@ jobs:
           path: build/arm-linux-gnueabihf/app
 
       - name: Publish arm64
-        run: clickable publish --arch arm64
+        run: clickable publish --apikey=${{secrets.OPEN_STORE_API_KEY}}  --arch arm64
 
       - name: Publish amd64
-        run: clickable publish --arch amd64
+        run: clickable publish --apikey=${{secrets.OPEN_STORE_API_KEY}} --arch amd64
 
       - name: Publish armhf
-        run: clickable publish --arch armhf
+        run: clickable publish --apikey=${{secrets.OPEN_STORE_API_KEY}} --arch armhf

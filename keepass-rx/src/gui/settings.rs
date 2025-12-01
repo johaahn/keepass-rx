@@ -17,8 +17,12 @@ pub struct SettingsBridge {
 
     pub showAccents: qt_property!(bool; READ get_show_accents WRITE set_show_accents NOTIFY showAccentsChanged),
     pub showAccentsChanged: qt_signal!(),
+
+    pub databaseLocking: qt_property!(bool; READ get_database_locking WRITE set_database_locking NOTIFY databaseLockingChanged),
+    pub databaseLockingChanged: qt_signal!(),
 }
 
+#[allow(non_snake_case, dead_code)]
 impl Default for SettingsBridge {
     fn default() -> Self {
         Self {
@@ -40,6 +44,9 @@ impl Default for SettingsBridge {
 
             showAccents: true,
             showAccentsChanged: Default::default(),
+
+            databaseLocking: true,
+            databaseLockingChanged: Default::default(),
         }
     }
 }
@@ -97,5 +104,14 @@ impl SettingsBridge {
     pub fn set_show_recycle_bin(&mut self, value: bool) {
         self.set_bool("showRecycleBin", value);
         self.showRecycleBinChanged();
+    }
+
+    pub fn get_database_locking(&self) -> bool {
+        self.value_bool("databaseLocking")
+    }
+
+    pub fn set_database_locking(&mut self, value: bool) {
+        self.set_bool("databaseLocking", value);
+        self.databaseLockingChanged();
     }
 }

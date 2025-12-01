@@ -56,8 +56,8 @@ Page {
                     "Securely lock and unlock database with a short passcode. Requires restart to take effect."
                 )
                 control: Switch {
-                    onCheckedChanged: settings.databaseLocking = checked
-                    checked: settings.databaseLocking
+                    onCheckedChanged: SettingsBridge.databaseLocking = checked
+                    checked: SettingsBridge.databaseLocking
                 }
             }
 

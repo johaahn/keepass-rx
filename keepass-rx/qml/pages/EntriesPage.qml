@@ -145,8 +145,8 @@ Page {
 
         leadingActionBar.actions: [
             Action {
-                enabled: settings.databaseLocking && containerStack.isAtRoot
-                visible: settings.databaseLocking && containerStack.isAtRoot
+                enabled: SettingsBridge.databaseLocking && containerStack.isAtRoot
+                visible: SettingsBridge.databaseLocking && containerStack.isAtRoot
                 name: "Lock"
                 //TRANSLATORS: Securely lock (NOT close) an open database.
                 text: i18n.tr("Lock")
@@ -157,8 +157,8 @@ Page {
             },
 
             Action {
-                enabled: !settings.databaseLocking && containerStack.isAtRoot
-                visible: !settings.databaseLocking && containerStack.isAtRoot
+                enabled: !SettingsBridge.databaseLocking && containerStack.isAtRoot
+                visible: !SettingsBridge.databaseLocking && containerStack.isAtRoot
                 name: "Close"
                 //TRANSLATORS: Securely close (NOT lock) an open database.
                 text: i18n.tr("Close")
@@ -227,8 +227,8 @@ Page {
 
             Action {
                 name: "Lock"
-                enabled: settings.databaseLocking
-                visible: settings.databaseLocking
+                enabled: SettingsBridge.databaseLocking
+                visible: SettingsBridge.databaseLocking
                 // TRANSLATORS: Lock (NOT close) an open database.
                 text: i18n.tr('Lock Database')
                 iconName: "lock"

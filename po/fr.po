@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-30 19:57+0000\n"
-"PO-Revision-Date: 2025-11-29 19:50+0000\n"
+"PO-Revision-Date: 2025-12-01 05:06+0000\n"
 "Last-Translator: Vlad Nirky <nirky.vlad@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
 "fr/>\n"
@@ -218,16 +218,16 @@ msgid "Database Not Opening?"
 msgstr "La base de données ne s'ouvre pas ?"
 
 msgid "Key Loaded"
-msgstr ""
+msgstr "Clé chargée"
 
 msgid "Remove Key"
-msgstr ""
+msgstr "Supprimer la clé"
 
 msgid "Use Key"
-msgstr ""
+msgstr "Utiliser la clé"
 
 msgid "Automatically detected a key file for this database."
-msgstr ""
+msgstr "Détection automatique d'un fichier clé pour cette base de données."
 
 msgid "A key file will be used to open this database."
 msgstr "Un fichier clé sera utilisé pour ouvrir cette base de données."
@@ -245,7 +245,7 @@ msgid "Open"
 msgstr "Ouvrir"
 
 msgid "Hide Password"
-msgstr ""
+msgstr "Masquer le mot de passe"
 
 msgid "Show Password"
 msgstr "Afficher le mot de passe"
@@ -298,7 +298,7 @@ msgid "Open Source Licenses"
 msgstr "Licences Open Source"
 
 msgid "Website"
-msgstr ""
+msgstr "Site web"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

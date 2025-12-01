@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-30 20:51+0000\n"
+"POT-Creation-Date: 2025-12-01 10:54+0000\n"
 "PO-Revision-Date: 2025-11-27 16:00+0000\n"
 "Last-Translator: BoneNI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://hosted.weblate.org/projects/ubports/keepassrx/lo/"
@@ -37,35 +37,91 @@ msgstr "ເບິ່ງຂໍ້ມູນ"
 msgid "Tap to copy 2FA code"
 msgstr "ແຕະເພື່ອຄັດລອກລະຫັດ 2FA"
 
+msgid "%1 copied to clipboard (30 secs)"
+msgstr "ຄັດລອກ %1 ໃສ່ຄລິບບອດແລ້ວ (30 ວິນາທີ)"
+
+msgid "Back"
+msgstr "ກັບຄືນ"
+
+msgid "Notes"
+msgstr "ບັນທຶກ"
+
+msgid "Tap to copy"
+msgstr "ແຕະເພື່ອຄັດລອກ"
+
+msgid "Notes copied to clipboard (30 secs)"
+msgstr ""
+
+msgid "Main"
+msgstr "ຫຼັກ"
+
+msgid "Username"
+msgstr "ຊື່ຜູ້ໃຊ້"
+
+msgid "Password"
+msgstr "ລະຫັດຜ່ານ"
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Other Fields"
+msgstr "ຊ່ອງຂໍ້ມູນອື່ນໆ"
+
+msgid "KeePassRX: Clipboard cleared."
+msgstr ""
+
+msgid "About"
+msgstr "ກ່ຽວກັບ"
+
+msgid ""
+"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
+"Touch. It is licensed under the GNU AGPL v3 license."
+msgstr ""
+
+msgid ""
+"The built-in KeePass icon images are licensed under a variety of licenses as "
+"detailed in assets/COPYING."
+msgstr ""
+"ຮູບໄອຄອນ KeePass ທີ່ມີມາໃຫ້ນັ້ນຢູ່ພາຍໃຕ້ໃບອະນຸຍາດທີ່ຫຼາກຫຼາຍ ດັ່ງທີ່ລະບຸໄວ້ໃນ assets/COPYING."
+
+msgid "Manual"
+msgstr ""
+
+msgid ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+
+msgid ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+
+msgid "Source Code"
+msgstr ""
+
+msgid ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
+msgstr ""
+
+msgid "Add Database"
+msgstr "ເພີ່ມຖານຂໍ້ມູນ"
+
 msgid "Settings"
 msgstr "ການຕັ້ງຄ່າ"
 
-msgid ""
-"Change settings based on your preferences. Any change to the settings "
-"requires a restart to take effect."
-msgstr "ປ່ຽນການຕັ້ງຄ່າຕາມຄວາມຕ້ອງການຂອງທ່ານ. ການປ່ຽນແປງໃດໆ ຈະມີຜົນຫຼັງຈາກເລີ່ມຕົ້ນໂປຣແກຣມໃໝ່."
+msgid "Loading last database."
+msgstr "ກຳລັງໂຫຼດຖານຂໍ້ມູນຫຼ້າສຸດ."
 
-msgid "Enable database locking"
-msgstr "ເປີດໃຊ້ການລັອກຖານຂໍ້ມູນ"
+msgid "Select Database"
+msgstr "ເລືອກຖານຂໍ້ມູນ"
 
-msgid ""
-"Securely lock and unlock database with a short passcode. Requires restart to "
-"take effect."
-msgstr "ລັອກ ແລະ ປົດລັອກຖານຂໍ້ມູນຢ່າງປອດໄພດ້ວຍລະຫັດຜ່ານສັ້ນ. ຕ້ອງເລີ່ມຕົ້ນໂປຣແກຣມໃໝ່ເພື່ອໃຫ້ມີຜົນ."
+msgid "Tap + to import a database."
+msgstr "ແຕະ + ເພື່ອນຳເຂົ້າຖານຂໍ້ມູນ."
 
-msgid "Enable Accents"
-msgstr "ເປີດໃຊ້ສີເນັ້ນ"
-
-msgid ""
-"Set header color and name according to database settings. Compatible with "
-"KeePassXC."
-msgstr "ຕັ້ງຄ່າສີຫົວຂໍ້ ແລະ ຊື່ຕາມການຕັ້ງຄ່າຖານຂໍ້ມູນ. ເຂົ້າກັນໄດ້ກັບ KeePassXC."
-
-msgid "Show the \"Recycle bin\" group"
-msgstr "ສະແດງກຸ່ມ \"ຖັງຂີ້ເຫຍື້ອ\""
-
-msgid "This group contains all the deleted entries"
-msgstr "ກຸ່ມນີ້ບັນຈຸຂໍ້ມູນທັງໝົດທີ່ຖືກລຶບ"
+msgid "It will only be removed from the app, not your device."
+msgstr "ມັນຈະຖືກລຶບອອກຈາກແອັບເທົ່ານັ້ນ, ບໍ່ແມ່ນຈາກອຸປະກອນຂອງທ່ານ."
 
 msgid "Cancel Search"
 msgstr "ຍົກເລີກການຄົ້ນຫາ"
@@ -85,17 +141,11 @@ msgstr "ລັອກ"
 msgid "Close"
 msgstr "ປິດ"
 
-msgid "Back"
-msgstr "ກັບຄືນ"
-
 msgid "View Mode"
 msgstr "ຮູບແບບການເບິ່ງ"
 
 msgid "Search"
 msgstr "ຄົ້ນຫາ"
-
-msgid "About"
-msgstr "ກ່ຽວກັບ"
 
 msgid "Lock Database"
 msgstr "ລັອກຖານຂໍ້ມູນ"
@@ -139,75 +189,11 @@ msgstr "ເລືອກ"
 msgid "Cancel"
 msgstr "ຍົກເລີກ"
 
-msgid "Add Database"
-msgstr "ເພີ່ມຖານຂໍ້ມູນ"
-
-msgid "Loading last database."
-msgstr "ກຳລັງໂຫຼດຖານຂໍ້ມູນຫຼ້າສຸດ."
-
-msgid "Select Database"
-msgstr "ເລືອກຖານຂໍ້ມູນ"
-
-msgid "Tap + to import a database."
-msgstr "ແຕະ + ເພື່ອນຳເຂົ້າຖານຂໍ້ມູນ."
-
-msgid "It will only be removed from the app, not your device."
-msgstr "ມັນຈະຖືກລຶບອອກຈາກແອັບເທົ່ານັ້ນ, ບໍ່ແມ່ນຈາກອຸປະກອນຂອງທ່ານ."
-
-msgid "%1 copied to clipboard (30 secs)"
-msgstr "ຄັດລອກ %1 ໃສ່ຄລິບບອດແລ້ວ (30 ວິນາທີ)"
-
-msgid "Notes"
-msgstr "ບັນທຶກ"
-
-msgid "Tap to copy"
-msgstr "ແຕະເພື່ອຄັດລອກ"
-
-msgid "Notes copied to clipboard (30 secs)"
+msgid "Open Source Licenses"
 msgstr ""
 
-msgid "Main"
-msgstr "ຫຼັກ"
-
-msgid "Username"
-msgstr "ຊື່ຜູ້ໃຊ້"
-
-msgid "Password"
-msgstr "ລະຫັດຜ່ານ"
-
-msgid "URL"
-msgstr "URL"
-
-msgid "Other Fields"
-msgstr "ຊ່ອງຂໍ້ມູນອື່ນໆ"
-
-msgid "KeePassRX: Clipboard cleared."
+msgid "Website"
 msgstr ""
-
-msgid "Manual path set."
-msgstr "ກຳນົດເສັ້ນທາງເອງແລ້ວ."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"ລະຫັດຜ່ານສັ້ນແມ່ນ 5 ຕົວອັກສອນທຳອິດຂອງລະຫັດຜ່ານຖານຂໍ້ມູນ (ຫຼື ລະຫັດຜ່ານທັງໝົດ ຖ້າໜ້ອຍກວ່າ 5 "
-"ຕົວອັກສອນ)."
-
-msgid "Passcode"
-msgstr "ລະຫັດຜ່ານສັ້ນ"
-
-msgid "Unlock"
-msgstr "ປົດລັອກ"
-
-msgid "Securely Unlocking"
-msgstr "ກຳລັງປົດລັອກຢ່າງປອດໄພ"
-
-msgid "Securely Locking"
-msgstr "ກຳລັງລັອກຢ່າງປອດໄພ"
-
-msgid "Database Not Opening?"
-msgstr "ຖານຂໍ້ມູນເປີດບໍ່ໄດ້ບໍ?"
 
 msgid "Key Loaded"
 msgstr ""
@@ -245,42 +231,62 @@ msgstr ""
 msgid "Opening"
 msgstr "ກຳລັງເປີດ"
 
-msgid ""
-"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
-"Touch. It is licensed under the GNU AGPL v3 license."
-msgstr ""
+msgid "Manual path set."
+msgstr "ກຳນົດເສັ້ນທາງເອງແລ້ວ."
 
 msgid ""
-"The built-in KeePass icon images are licensed under a variety of licenses as "
-"detailed in assets/COPYING."
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
 msgstr ""
-"ຮູບໄອຄອນ KeePass ທີ່ມີມາໃຫ້ນັ້ນຢູ່ພາຍໃຕ້ໃບອະນຸຍາດທີ່ຫຼາກຫຼາຍ ດັ່ງທີ່ລະບຸໄວ້ໃນ assets/COPYING."
+"ລະຫັດຜ່ານສັ້ນແມ່ນ 5 ຕົວອັກສອນທຳອິດຂອງລະຫັດຜ່ານຖານຂໍ້ມູນ (ຫຼື ລະຫັດຜ່ານທັງໝົດ ຖ້າໜ້ອຍກວ່າ 5 "
+"ຕົວອັກສອນ)."
 
-msgid "Manual"
+msgid "Passcode"
+msgstr "ລະຫັດຜ່ານສັ້ນ"
+
+msgid "Unlock"
+msgstr "ປົດລັອກ"
+
+msgid "Securely Unlocking"
+msgstr "ກຳລັງປົດລັອກຢ່າງປອດໄພ"
+
+msgid "Securely Locking"
+msgstr "ກຳລັງລັອກຢ່າງປອດໄພ"
+
+msgid "Database Not Opening?"
+msgstr "ຖານຂໍ້ມູນເປີດບໍ່ໄດ້ບໍ?"
+
+msgid "Change settings based on your preferences."
+msgstr ""
+
+msgid "Enable database locking"
+msgstr "ເປີດໃຊ້ການລັອກຖານຂໍ້ມູນ"
+
+msgid ""
+"Securely lock and unlock database with a short passcode. Requires restart to "
+"take effect."
+msgstr "ລັອກ ແລະ ປົດລັອກຖານຂໍ້ມູນຢ່າງປອດໄພດ້ວຍລະຫັດຜ່ານສັ້ນ. ຕ້ອງເລີ່ມຕົ້ນໂປຣແກຣມໃໝ່ເພື່ອໃຫ້ມີຜົນ."
+
+msgid "Enable Accents"
+msgstr "ເປີດໃຊ້ສີເນັ້ນ"
+
+msgid ""
+"Set header color and name according to database settings. Compatible with "
+"KeePassXC."
+msgstr "ຕັ້ງຄ່າສີຫົວຂໍ້ ແລະ ຊື່ຕາມການຕັ້ງຄ່າຖານຂໍ້ມູນ. ເຂົ້າກັນໄດ້ກັບ KeePassXC."
+
+msgid "Show the \"Recycle bin\" group"
+msgstr "ສະແດງກຸ່ມ \"ຖັງຂີ້ເຫຍື້ອ\""
+
+msgid "This group contains all the deleted entries"
+msgstr "ກຸ່ມນີ້ບັນຈຸຂໍ້ມູນທັງໝົດທີ່ຖືກລຶບ"
+
+msgid "Fuzzy Search"
 msgstr ""
 
 msgid ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-
-msgid ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-
-msgid "Source Code"
-msgstr ""
-
-msgid ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
-msgstr ""
-
-msgid "Open Source Licenses"
-msgstr ""
-
-msgid "Website"
+"Use fuzzy search to find entries. If disabled, search only matches exact "
+"case insensitive text."
 msgstr ""
 
 msgid ""
@@ -310,6 +316,12 @@ msgstr "ລະຫັດ 2FA"
 msgctxt "List of entries with tags"
 msgid "Tags"
 msgstr "ແທັກ"
+
+#~ msgid ""
+#~ "Change settings based on your preferences. Any change to the settings "
+#~ "requires a restart to take effect."
+#~ msgstr ""
+#~ "ປ່ຽນການຕັ້ງຄ່າຕາມຄວາມຕ້ອງການຂອງທ່ານ. ການປ່ຽນແປງໃດໆ ຈະມີຜົນຫຼັງຈາກເລີ່ມຕົ້ນໂປຣແກຣມໃໝ່."
 
 #~ msgid ""
 #~ "KeePassRX is a work-in-progress password manager for KeePass password "

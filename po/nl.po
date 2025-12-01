@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-30 20:51+0000\n"
+"POT-Creation-Date: 2025-12-01 10:54+0000\n"
 "PO-Revision-Date: 2025-12-01 11:01+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -37,41 +37,101 @@ msgstr "Item bekijken"
 msgid "Tap to copy 2FA code"
 msgstr "Druk om de 2FA-code te kopiëren"
 
+msgid "%1 copied to clipboard (30 secs)"
+msgstr "%1 is gekopieerd naar het klembord (30 sec.)"
+
+msgid "Back"
+msgstr "Terug"
+
+msgid "Notes"
+msgstr "Aantekeningen"
+
+msgid "Tap to copy"
+msgstr "Druk om te kopiëren"
+
+msgid "Notes copied to clipboard (30 secs)"
+msgstr "De aantekeningen zijn gekopieerd naar het klembord (30 sec.)"
+
+msgid "Main"
+msgstr "Algemeen"
+
+msgid "Username"
+msgstr "Gebruikersnaam"
+
+msgid "Password"
+msgstr "Wachtwoord"
+
+msgid "URL"
+msgstr "Url"
+
+msgid "Other Fields"
+msgstr "Overige velden"
+
+msgid "KeePassRX: Clipboard cleared."
+msgstr "KeePassRX: klembord gewist."
+
+msgid "About"
+msgstr "Over"
+
+msgid ""
+"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
+"Touch. It is licensed under the GNU AGPL v3 license."
+msgstr ""
+"KeePassRX is een wachtwoordbeheerder die KeePass-databanken kan openen en "
+"bewerken. De app is uitgebracht onder de GNU APGLv3-licentie."
+
+msgid ""
+"The built-in KeePass icon images are licensed under a variety of licenses as "
+"detailed in assets/COPYING."
+msgstr ""
+"De meegeleverde KeePass-pictogrammen zijn uitgebracht onder verschillende "
+"licenties. Meer informatie is te vinden in ‘assets/COPYING’."
+
+msgid "Manual"
+msgstr "Handleiding"
+
+msgid ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+
+msgid ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+
+msgid "Source Code"
+msgstr "Broncode"
+
+msgid ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
+msgstr ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
+
+msgid "Add Database"
+msgstr "Databank toevoegen"
+
 msgid "Settings"
 msgstr "Instellingen"
 
-msgid ""
-"Change settings based on your preferences. Any change to the settings "
-"requires a restart to take effect."
+msgid "Loading last database."
+msgstr "Bezig met openen van vorige databank…"
+
+msgid "Select Database"
+msgstr "Databank kiezen"
+
+msgid "Tap + to import a database."
+msgstr "Druk op ‘+’ om een databank toe te voegen."
+
+msgid "It will only be removed from the app, not your device."
 msgstr ""
-"Zet de instellingen naar eigen hand. Let op: na iedere wijziging is een "
-"herstart van de app vereist."
-
-msgid "Enable database locking"
-msgstr "Databanken vergrendelen"
-
-msgid ""
-"Securely lock and unlock database with a short passcode. Requires restart to "
-"take effect."
-msgstr ""
-"Vergrendel en ontgrendel databanken met een toegangscode. Herstart de app om "
-"de wĳziging toe te passen."
-
-msgid "Enable Accents"
-msgstr "Accenten gebruiken"
-
-msgid ""
-"Set header color and name according to database settings. Compatible with "
-"KeePassXC."
-msgstr ""
-"Voorzie de werkbalk en balk met appnaam van een kleur. Compatibel met "
-"KeePassXC."
-
-msgid "Show the \"Recycle bin\" group"
-msgstr "Prullenbakgroep tonen"
-
-msgid "This group contains all the deleted entries"
-msgstr "Deze groep bevat alle verwijderde items."
+"Let op: de databank wordt alleen verwijderd uit de app, niet van je apparaat."
 
 msgid "Cancel Search"
 msgstr "Zoekopdracht afbreken"
@@ -91,17 +151,11 @@ msgstr "Vergrendelen"
 msgid "Close"
 msgstr "Sluiten"
 
-msgid "Back"
-msgstr "Terug"
-
 msgid "View Mode"
 msgstr "Weergavemodus"
 
 msgid "Search"
 msgstr "Zoeken"
-
-msgid "About"
-msgstr "Over"
 
 msgid "Lock Database"
 msgstr "Databank vergrendelen"
@@ -145,76 +199,11 @@ msgstr "Kiezen"
 msgid "Cancel"
 msgstr "Annuleren"
 
-msgid "Add Database"
-msgstr "Databank toevoegen"
+msgid "Open Source Licenses"
+msgstr "Opensourcelicenties"
 
-msgid "Loading last database."
-msgstr "Bezig met openen van vorige databank…"
-
-msgid "Select Database"
-msgstr "Databank kiezen"
-
-msgid "Tap + to import a database."
-msgstr "Druk op ‘+’ om een databank toe te voegen."
-
-msgid "It will only be removed from the app, not your device."
-msgstr ""
-"Let op: de databank wordt alleen verwijderd uit de app, niet van je apparaat."
-
-msgid "%1 copied to clipboard (30 secs)"
-msgstr "%1 is gekopieerd naar het klembord (30 sec.)"
-
-msgid "Notes"
-msgstr "Aantekeningen"
-
-msgid "Tap to copy"
-msgstr "Druk om te kopiëren"
-
-msgid "Notes copied to clipboard (30 secs)"
-msgstr "De aantekeningen zijn gekopieerd naar het klembord (30 sec.)"
-
-msgid "Main"
-msgstr "Algemeen"
-
-msgid "Username"
-msgstr "Gebruikersnaam"
-
-msgid "Password"
-msgstr "Wachtwoord"
-
-msgid "URL"
-msgstr "Url"
-
-msgid "Other Fields"
-msgstr "Overige velden"
-
-msgid "KeePassRX: Clipboard cleared."
-msgstr "KeePassRX: klembord gewist."
-
-msgid "Manual path set."
-msgstr "Stel de locatie handmatig in."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"De toegangscode bestaat uit de eerste vijf tekens van het databankwachtwoord "
-"(of het gehele wachtwoord, indien minder dan vijf tekens)."
-
-msgid "Passcode"
-msgstr "Toegangscode"
-
-msgid "Unlock"
-msgstr "Ontgrendelen"
-
-msgid "Securely Unlocking"
-msgstr "Veilig ontgrendelen"
-
-msgid "Securely Locking"
-msgstr "Veilig vergrendelen"
-
-msgid "Database Not Opening?"
-msgstr "Wordt de databank niet geopend?"
+msgid "Website"
+msgstr "Website"
 
 msgid "Key Loaded"
 msgstr "De sleutel is ingelezen"
@@ -252,52 +241,67 @@ msgstr "Wachtwoord tonen"
 msgid "Opening"
 msgstr "Bezig met openen…"
 
-msgid ""
-"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
-"Touch. It is licensed under the GNU AGPL v3 license."
-msgstr ""
-"KeePassRX is een wachtwoordbeheerder die KeePass-databanken kan openen en "
-"bewerken. De app is uitgebracht onder de GNU APGLv3-licentie."
+msgid "Manual path set."
+msgstr "Stel de locatie handmatig in."
 
 msgid ""
-"The built-in KeePass icon images are licensed under a variety of licenses as "
-"detailed in assets/COPYING."
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
 msgstr ""
-"De meegeleverde KeePass-pictogrammen zijn uitgebracht onder verschillende "
-"licenties. Meer informatie is te vinden in ‘assets/COPYING’."
+"De toegangscode bestaat uit de eerste vijf tekens van het databankwachtwoord "
+"(of het gehele wachtwoord, indien minder dan vijf tekens)."
 
-msgid "Manual"
-msgstr "Handleiding"
+msgid "Passcode"
+msgstr "Toegangscode"
+
+msgid "Unlock"
+msgstr "Ontgrendelen"
+
+msgid "Securely Unlocking"
+msgstr "Veilig ontgrendelen"
+
+msgid "Securely Locking"
+msgstr "Veilig vergrendelen"
+
+msgid "Database Not Opening?"
+msgstr "Wordt de databank niet geopend?"
+
+msgid "Change settings based on your preferences."
+msgstr ""
+
+msgid "Enable database locking"
+msgstr "Databanken vergrendelen"
 
 msgid ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
+"Securely lock and unlock database with a short passcode. Requires restart to "
+"take effect."
 msgstr ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
+"Vergrendel en ontgrendel databanken met een toegangscode. Herstart de app om "
+"de wĳziging toe te passen."
+
+msgid "Enable Accents"
+msgstr "Accenten gebruiken"
 
 msgid ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
+"Set header color and name according to database settings. Compatible with "
+"KeePassXC."
 msgstr ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
+"Voorzie de werkbalk en balk met appnaam van een kleur. Compatibel met "
+"KeePassXC."
 
-msgid "Source Code"
-msgstr "Broncode"
+msgid "Show the \"Recycle bin\" group"
+msgstr "Prullenbakgroep tonen"
+
+msgid "This group contains all the deleted entries"
+msgstr "Deze groep bevat alle verwijderde items."
+
+msgid "Fuzzy Search"
+msgstr ""
 
 msgid ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
+"Use fuzzy search to find entries. If disabled, search only matches exact "
+"case insensitive text."
 msgstr ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
-
-msgid "Open Source Licenses"
-msgstr "Opensourcelicenties"
-
-msgid "Website"
-msgstr "Website"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
@@ -328,6 +332,13 @@ msgstr "2FA-codes"
 msgctxt "List of entries with tags"
 msgid "Tags"
 msgstr "Labels"
+
+#~ msgid ""
+#~ "Change settings based on your preferences. Any change to the settings "
+#~ "requires a restart to take effect."
+#~ msgstr ""
+#~ "Zet de instellingen naar eigen hand. Let op: na iedere wijziging is een "
+#~ "herstart van de app vereist."
 
 #~ msgid "Auto-detected key file for database."
 #~ msgstr "Er is automatisch een sleutelbestand vastgesteld."

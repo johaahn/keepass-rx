@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-30 20:51+0000\n"
+"POT-Creation-Date: 2025-12-01 10:54+0000\n"
 "PO-Revision-Date: 2025-12-01 05:06+0000\n"
 "Last-Translator: Vlad Nirky <nirky.vlad@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -37,42 +37,100 @@ msgstr "Afficher l'entrée"
 msgid "Tap to copy 2FA code"
 msgstr "Appuyez pour copier le code 2FA"
 
+msgid "%1 copied to clipboard (30 secs)"
+msgstr "%1 copié dans le presse-papiers (30 secondes)"
+
+msgid "Back"
+msgstr "Retour"
+
+msgid "Notes"
+msgstr "Notes"
+
+msgid "Tap to copy"
+msgstr "Appuyez pour copier"
+
+msgid "Notes copied to clipboard (30 secs)"
+msgstr "Notes copiées dans le presse-papiers (30 secondes)"
+
+msgid "Main"
+msgstr "Principal"
+
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+msgid "Password"
+msgstr "Mot de passe"
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Other Fields"
+msgstr "Autres champs"
+
+msgid "KeePassRX: Clipboard cleared."
+msgstr "KeePassRX : Presse-papiers effacé."
+
+msgid "About"
+msgstr "A propos de"
+
+msgid ""
+"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
+"Touch. It is licensed under the GNU AGPL v3 license."
+msgstr ""
+"KeePassRX est un gestionnaire de mots de passe pour les bases de données "
+"KeePass, conçu pour Ubuntu Touch. Il est distribué sous licence GNU AGPL v3."
+
+msgid ""
+"The built-in KeePass icon images are licensed under a variety of licenses as "
+"detailed in assets/COPYING."
+msgstr ""
+"Les images des icônes KeePass intégrées sont soumises à diverses licences, "
+"comme indiqué dans actifs/copie."
+
+msgid "Manual"
+msgstr "Manuel"
+
+msgid ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+
+msgid ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+
+msgid "Source Code"
+msgstr "Code source"
+
+msgid ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
+msgstr ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
+
+msgid "Add Database"
+msgstr "Ajouter une base de données"
+
 msgid "Settings"
 msgstr "Paramètres"
 
-msgid ""
-"Change settings based on your preferences. Any change to the settings "
-"requires a restart to take effect."
-msgstr ""
-"Modifiez les paramètres en fonction de vos préférences. Toute modification "
-"des paramètres nécessite un redémarrage pour prendre effet."
+msgid "Loading last database."
+msgstr "Chargement de la dernière base de données."
 
-msgid "Enable database locking"
-msgstr "Activer le verrouillage de la base de données"
+msgid "Select Database"
+msgstr "Sélectionner la base de données"
 
-msgid ""
-"Securely lock and unlock database with a short passcode. Requires restart to "
-"take effect."
-msgstr ""
-"Verrouillez et déverrouillez la base de données en toute sécurité à l'aide "
-"d'un code d'accès court. Un redémarrage est nécessaire pour que la "
-"modification prenne effet."
+msgid "Tap + to import a database."
+msgstr "Appuyer + pour importer une base de données."
 
-msgid "Enable Accents"
-msgstr "Activer les accents"
-
-msgid ""
-"Set header color and name according to database settings. Compatible with "
-"KeePassXC."
-msgstr ""
-"Définissez la couleur et le nom de l'en-tête en fonction des paramètres de "
-"la base de données. Compatible avec KeePassXC."
-
-msgid "Show the \"Recycle bin\" group"
-msgstr "Afficher le groupe « Corbeille »"
-
-msgid "This group contains all the deleted entries"
-msgstr "Ce groupe contient toutes les entrées supprimées"
+msgid "It will only be removed from the app, not your device."
+msgstr "Elle sera simplement retirée de l’application, pas de votre appareil."
 
 msgid "Cancel Search"
 msgstr "Annuler la recherche"
@@ -92,17 +150,11 @@ msgstr "Verrouiller"
 msgid "Close"
 msgstr "Fermer"
 
-msgid "Back"
-msgstr "Retour"
-
 msgid "View Mode"
 msgstr "Mode d'affichage"
 
 msgid "Search"
 msgstr "Chercher"
-
-msgid "About"
-msgstr "A propos de"
 
 msgid "Lock Database"
 msgstr "Verrouiller la base de données"
@@ -146,76 +198,11 @@ msgstr "Sélectionner"
 msgid "Cancel"
 msgstr "Annuler"
 
-msgid "Add Database"
-msgstr "Ajouter une base de données"
+msgid "Open Source Licenses"
+msgstr "Licences Open Source"
 
-msgid "Loading last database."
-msgstr "Chargement de la dernière base de données."
-
-msgid "Select Database"
-msgstr "Sélectionner la base de données"
-
-msgid "Tap + to import a database."
-msgstr "Appuyer + pour importer une base de données."
-
-msgid "It will only be removed from the app, not your device."
-msgstr "Elle sera simplement retirée de l’application, pas de votre appareil."
-
-msgid "%1 copied to clipboard (30 secs)"
-msgstr "%1 copié dans le presse-papiers (30 secondes)"
-
-msgid "Notes"
-msgstr "Notes"
-
-msgid "Tap to copy"
-msgstr "Appuyez pour copier"
-
-msgid "Notes copied to clipboard (30 secs)"
-msgstr "Notes copiées dans le presse-papiers (30 secondes)"
-
-msgid "Main"
-msgstr "Principal"
-
-msgid "Username"
-msgstr "Nom d'utilisateur"
-
-msgid "Password"
-msgstr "Mot de passe"
-
-msgid "URL"
-msgstr "URL"
-
-msgid "Other Fields"
-msgstr "Autres champs"
-
-msgid "KeePassRX: Clipboard cleared."
-msgstr "KeePassRX : Presse-papiers effacé."
-
-msgid "Manual path set."
-msgstr "Chemin défini manuellement."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"Le code d’accès correspond aux cinq premiers caractères du mot de passe de "
-"la base de données (ou au mot de passe complet s’il comporte moins de cinq "
-"caractères)."
-
-msgid "Passcode"
-msgstr "Code d'accès"
-
-msgid "Unlock"
-msgstr "Déverrouiller"
-
-msgid "Securely Unlocking"
-msgstr "Déverrouillage sécurisé"
-
-msgid "Securely Locking"
-msgstr "Verrouillage sécurisé"
-
-msgid "Database Not Opening?"
-msgstr "La base de données ne s'ouvre pas ?"
+msgid "Website"
+msgstr "Site web"
 
 msgid "Key Loaded"
 msgstr "Clé chargée"
@@ -253,52 +240,69 @@ msgstr "Afficher le mot de passe"
 msgid "Opening"
 msgstr "Ouverture"
 
-msgid ""
-"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
-"Touch. It is licensed under the GNU AGPL v3 license."
-msgstr ""
-"KeePassRX est un gestionnaire de mots de passe pour les bases de données "
-"KeePass, conçu pour Ubuntu Touch. Il est distribué sous licence GNU AGPL v3."
+msgid "Manual path set."
+msgstr "Chemin défini manuellement."
 
 msgid ""
-"The built-in KeePass icon images are licensed under a variety of licenses as "
-"detailed in assets/COPYING."
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
 msgstr ""
-"Les images des icônes KeePass intégrées sont soumises à diverses licences, "
-"comme indiqué dans actifs/copie."
+"Le code d’accès correspond aux cinq premiers caractères du mot de passe de "
+"la base de données (ou au mot de passe complet s’il comporte moins de cinq "
+"caractères)."
 
-msgid "Manual"
-msgstr "Manuel"
+msgid "Passcode"
+msgstr "Code d'accès"
+
+msgid "Unlock"
+msgstr "Déverrouiller"
+
+msgid "Securely Unlocking"
+msgstr "Déverrouillage sécurisé"
+
+msgid "Securely Locking"
+msgstr "Verrouillage sécurisé"
+
+msgid "Database Not Opening?"
+msgstr "La base de données ne s'ouvre pas ?"
+
+msgid "Change settings based on your preferences."
+msgstr ""
+
+msgid "Enable database locking"
+msgstr "Activer le verrouillage de la base de données"
 
 msgid ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
+"Securely lock and unlock database with a short passcode. Requires restart to "
+"take effect."
 msgstr ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
+"Verrouillez et déverrouillez la base de données en toute sécurité à l'aide "
+"d'un code d'accès court. Un redémarrage est nécessaire pour que la "
+"modification prenne effet."
+
+msgid "Enable Accents"
+msgstr "Activer les accents"
 
 msgid ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
+"Set header color and name according to database settings. Compatible with "
+"KeePassXC."
 msgstr ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
+"Définissez la couleur et le nom de l'en-tête en fonction des paramètres de "
+"la base de données. Compatible avec KeePassXC."
 
-msgid "Source Code"
-msgstr "Code source"
+msgid "Show the \"Recycle bin\" group"
+msgstr "Afficher le groupe « Corbeille »"
+
+msgid "This group contains all the deleted entries"
+msgstr "Ce groupe contient toutes les entrées supprimées"
+
+msgid "Fuzzy Search"
+msgstr ""
 
 msgid ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
+"Use fuzzy search to find entries. If disabled, search only matches exact "
+"case insensitive text."
 msgstr ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
-
-msgid "Open Source Licenses"
-msgstr "Licences Open Source"
-
-msgid "Website"
-msgstr "Site web"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
@@ -329,6 +333,13 @@ msgstr "Codes 2FA"
 msgctxt "List of entries with tags"
 msgid "Tags"
 msgstr "Balises"
+
+#~ msgid ""
+#~ "Change settings based on your preferences. Any change to the settings "
+#~ "requires a restart to take effect."
+#~ msgstr ""
+#~ "Modifiez les paramètres en fonction de vos préférences. Toute "
+#~ "modification des paramètres nécessite un redémarrage pour prendre effet."
 
 #~ msgid "Auto-detected key file for database."
 #~ msgstr "Fichier clé détecté automatiquement pour la base de données."

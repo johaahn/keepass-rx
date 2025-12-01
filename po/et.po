@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-30 20:51+0000\n"
+"POT-Creation-Date: 2025-12-01 10:54+0000\n"
 "PO-Revision-Date: 2025-11-30 16:00+0000\n"
 "Last-Translator: Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/ubports/"
@@ -37,41 +37,100 @@ msgstr "Vaata kirjet"
 msgid "Tap to copy 2FA code"
 msgstr "2FA-koodi kopeerimiseks puuduta"
 
+msgid "%1 copied to clipboard (30 secs)"
+msgstr "%1 on kopeeritud lõikelauale (30 sek)"
+
+msgid "Back"
+msgstr "Tagasi"
+
+msgid "Notes"
+msgstr "Märkmed"
+
+msgid "Tap to copy"
+msgstr "Kopeerimiseks klõpsa"
+
+msgid "Notes copied to clipboard (30 secs)"
+msgstr "Märkmed on kopeeritud lõikelauale (30-ks sekundiks)"
+
+msgid "Main"
+msgstr "Peamine"
+
+msgid "Username"
+msgstr "Kasutajanimi"
+
+msgid "Password"
+msgstr "Salasõna"
+
+msgid "URL"
+msgstr "Võrguaadress"
+
+msgid "Other Fields"
+msgstr "Muud väljad"
+
+msgid "KeePassRX: Clipboard cleared."
+msgstr "KeePassRX: lõikelaud on tühjendatud."
+
+msgid "About"
+msgstr "Rakenduse teave"
+
+msgid ""
+"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
+"Touch. It is licensed under the GNU AGPL v3 license."
+msgstr ""
+"KeePassRX on Ubuntu Touchi jaoks mõeldud salasõnahaldur, mis kasutab KeePass-"
+"vormingus andmebaasi. Rakendus on litsentseeritud GNU AGPL v3 alusel."
+
+msgid ""
+"The built-in KeePass icon images are licensed under a variety of licenses as "
+"detailed in assets/COPYING."
+msgstr ""
+"Rakendusega kaasas olevad KeePassi ikoonifailid on litsentseeritud erinevate "
+"litsentside alusel, mis üksikasjalikult on kirjas failis „assets/COPYING“."
+
+msgid "Manual"
+msgstr "Juhend"
+
+msgid ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+
+msgid ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+"• Veeb: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+
+msgid "Source Code"
+msgstr "Lähtekood"
+
+msgid ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
+msgstr ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
+
+msgid "Add Database"
+msgstr "Lisa andmebaas"
+
 msgid "Settings"
 msgstr "Seadistused"
 
-msgid ""
-"Change settings based on your preferences. Any change to the settings "
-"requires a restart to take effect."
-msgstr ""
-"Muuda seadistusi vastavalt oma eelistustele. Iga seadistuste muutus eeldab "
-"jõustamiseks rakenduse uuesti käivitamist."
+msgid "Loading last database."
+msgstr "Laadin viimast andmebaasi."
 
-msgid "Enable database locking"
-msgstr "Lülita andmebaasi lukustamine sisse"
+msgid "Select Database"
+msgstr "Vali andmebaas"
 
-msgid ""
-"Securely lock and unlock database with a short passcode. Requires restart to "
-"take effect."
-msgstr ""
-"Kasuta andmebaasi lukustamiseks ja avamiseks lühikest salakoodi. Jõustamine "
-"eeldab rakenduse uuesti käivitamist."
+msgid "Tap + to import a database."
+msgstr "Andmebaasi importimiseks klõpsa + ikooni."
 
-msgid "Enable Accents"
-msgstr "Kasuta aktsentvärve"
-
-msgid ""
-"Set header color and name according to database settings. Compatible with "
-"KeePassXC."
-msgstr ""
-"Seadista päise värv ja nimi vastavalt andmebaasi seadistustele. Ühildub "
-"KeePassXC-ga."
-
-msgid "Show the \"Recycle bin\" group"
-msgstr "Näita gruppi „Prügikast“"
-
-msgid "This group contains all the deleted entries"
-msgstr "Siin on näha kõik kustutatud kirjed"
+msgid "It will only be removed from the app, not your device."
+msgstr "Ta eemaldatakse rakendusest, mitte aga seadmest."
 
 msgid "Cancel Search"
 msgstr "Katkesta otsing"
@@ -91,17 +150,11 @@ msgstr "Lukusta"
 msgid "Close"
 msgstr "Sulge"
 
-msgid "Back"
-msgstr "Tagasi"
-
 msgid "View Mode"
 msgstr "Vaaterežiim"
 
 msgid "Search"
 msgstr "Otsi"
-
-msgid "About"
-msgstr "Rakenduse teave"
 
 msgid "Lock Database"
 msgstr "Lukusta andmebaas"
@@ -145,75 +198,11 @@ msgstr "Vali"
 msgid "Cancel"
 msgstr "Katkesta"
 
-msgid "Add Database"
-msgstr "Lisa andmebaas"
+msgid "Open Source Licenses"
+msgstr "Avatud lähtekoodiga tarkvara litsentsid"
 
-msgid "Loading last database."
-msgstr "Laadin viimast andmebaasi."
-
-msgid "Select Database"
-msgstr "Vali andmebaas"
-
-msgid "Tap + to import a database."
-msgstr "Andmebaasi importimiseks klõpsa + ikooni."
-
-msgid "It will only be removed from the app, not your device."
-msgstr "Ta eemaldatakse rakendusest, mitte aga seadmest."
-
-msgid "%1 copied to clipboard (30 secs)"
-msgstr "%1 on kopeeritud lõikelauale (30 sek)"
-
-msgid "Notes"
-msgstr "Märkmed"
-
-msgid "Tap to copy"
-msgstr "Kopeerimiseks klõpsa"
-
-msgid "Notes copied to clipboard (30 secs)"
-msgstr "Märkmed on kopeeritud lõikelauale (30-ks sekundiks)"
-
-msgid "Main"
-msgstr "Peamine"
-
-msgid "Username"
-msgstr "Kasutajanimi"
-
-msgid "Password"
-msgstr "Salasõna"
-
-msgid "URL"
-msgstr "Võrguaadress"
-
-msgid "Other Fields"
-msgstr "Muud väljad"
-
-msgid "KeePassRX: Clipboard cleared."
-msgstr "KeePassRX: lõikelaud on tühjendatud."
-
-msgid "Manual path set."
-msgstr "Käsitsi määratud asukoht on seadistatud."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
+msgid "Website"
 msgstr ""
-"Salakood on andmebaasi salasõna viis esimest tähemärki (või kogu salasõna, "
-"kui ta on alla viie tähemärgi pikk)."
-
-msgid "Passcode"
-msgstr "Salakood"
-
-msgid "Unlock"
-msgstr "Eemalda lukustus"
-
-msgid "Securely Unlocking"
-msgstr "Turvaline lukustuse eemaldamine"
-
-msgid "Securely Locking"
-msgstr "Turvaline lukustamine"
-
-msgid "Database Not Opening?"
-msgstr "Kas andmebaas ei avane?"
 
 msgid "Key Loaded"
 msgstr "Võti on laaditud"
@@ -251,51 +240,66 @@ msgstr "Näita salasõna"
 msgid "Opening"
 msgstr "Avamisel"
 
-msgid ""
-"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
-"Touch. It is licensed under the GNU AGPL v3 license."
-msgstr ""
-"KeePassRX on Ubuntu Touchi jaoks mõeldud salasõnahaldur, mis kasutab KeePass-"
-"vormingus andmebaasi. Rakendus on litsentseeritud GNU AGPL v3 alusel."
+msgid "Manual path set."
+msgstr "Käsitsi määratud asukoht on seadistatud."
 
 msgid ""
-"The built-in KeePass icon images are licensed under a variety of licenses as "
-"detailed in assets/COPYING."
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
 msgstr ""
-"Rakendusega kaasas olevad KeePassi ikoonifailid on litsentseeritud erinevate "
-"litsentside alusel, mis üksikasjalikult on kirjas failis „assets/COPYING“."
+"Salakood on andmebaasi salasõna viis esimest tähemärki (või kogu salasõna, "
+"kui ta on alla viie tähemärgi pikk)."
 
-msgid "Manual"
-msgstr "Juhend"
+msgid "Passcode"
+msgstr "Salakood"
+
+msgid "Unlock"
+msgstr "Eemalda lukustus"
+
+msgid "Securely Unlocking"
+msgstr "Turvaline lukustuse eemaldamine"
+
+msgid "Securely Locking"
+msgstr "Turvaline lukustamine"
+
+msgid "Database Not Opening?"
+msgstr "Kas andmebaas ei avane?"
+
+msgid "Change settings based on your preferences."
+msgstr ""
+
+msgid "Enable database locking"
+msgstr "Lülita andmebaasi lukustamine sisse"
 
 msgid ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
+"Securely lock and unlock database with a short passcode. Requires restart to "
+"take effect."
 msgstr ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
+"Kasuta andmebaasi lukustamiseks ja avamiseks lühikest salakoodi. Jõustamine "
+"eeldab rakenduse uuesti käivitamist."
+
+msgid "Enable Accents"
+msgstr "Kasuta aktsentvärve"
 
 msgid ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
+"Set header color and name according to database settings. Compatible with "
+"KeePassXC."
 msgstr ""
-"• Veeb: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
+"Seadista päise värv ja nimi vastavalt andmebaasi seadistustele. Ühildub "
+"KeePassXC-ga."
 
-msgid "Source Code"
-msgstr "Lähtekood"
+msgid "Show the \"Recycle bin\" group"
+msgstr "Näita gruppi „Prügikast“"
+
+msgid "This group contains all the deleted entries"
+msgstr "Siin on näha kõik kustutatud kirjed"
+
+msgid "Fuzzy Search"
+msgstr ""
 
 msgid ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
-msgstr ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
-
-msgid "Open Source Licenses"
-msgstr "Avatud lähtekoodiga tarkvara litsentsid"
-
-msgid "Website"
+"Use fuzzy search to find entries. If disabled, search only matches exact "
+"case insensitive text."
 msgstr ""
 
 msgid ""
@@ -327,6 +331,13 @@ msgstr "2FA-koodid"
 msgctxt "List of entries with tags"
 msgid "Tags"
 msgstr "Sildid"
+
+#~ msgid ""
+#~ "Change settings based on your preferences. Any change to the settings "
+#~ "requires a restart to take effect."
+#~ msgstr ""
+#~ "Muuda seadistusi vastavalt oma eelistustele. Iga seadistuste muutus "
+#~ "eeldab jõustamiseks rakenduse uuesti käivitamist."
 
 #~ msgid "Auto-detected key file for database."
 #~ msgstr "Andmebaasi automaatselt tuvastatud võtmefail."

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-30 20:51+0000\n"
+"POT-Creation-Date: 2025-12-01 08:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,9 +41,9 @@ msgstr ""
 msgid "Tap to copy 2FA code"
 msgstr ""
 
-#: qml/pages/SettingsPage.qml:11 qml/pages/EntriesPage.qml:208
-#: qml/pages/DBList.qml:78 qml/pages/UnlockPage.qml:35
-#: qml/pages/OpenDBPage.qml:105
+#: qml/pages/SettingsPage.qml:11 qml/pages/DBList.qml:78
+#: qml/pages/EntriesPage.qml:208 qml/pages/OpenDBPage.qml:106
+#: qml/pages/UnlockPage.qml:35
 msgid "Settings"
 msgstr ""
 
@@ -81,6 +81,115 @@ msgstr ""
 msgid "This group contains all the deleted entries"
 msgstr ""
 
+#: qml/pages/SingleEntry.qml:29 qml/Main.qml:96
+msgid "%1 copied to clipboard (30 secs)"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:82 qml/pages/EntriesPage.qml:172
+#: qml/pages/OpenDBPage.qml:93
+msgid "Back"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:123
+msgid "Notes"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:131
+msgid "Tap to copy"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:141
+msgid "Notes copied to clipboard (30 secs)"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:190
+msgid "Main"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:196 qml/pages/SingleEntry.qml:199
+msgid "Username"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:204 qml/pages/SingleEntry.qml:209
+msgid "Password"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:215 qml/pages/SingleEntry.qml:217
+msgid "URL"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:238
+msgid "Other Fields"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:264 qml/Main.qml:225
+msgid "KeePassRX: Clipboard cleared."
+msgstr ""
+
+#: qml/pages/AboutPage.qml:12 qml/pages/DBList.qml:85
+#: qml/pages/EntriesPage.qml:217 qml/pages/OpenDBPage.qml:113
+#: qml/pages/UnlockPage.qml:42
+msgid "About"
+msgstr ""
+
+#: qml/pages/AboutPage.qml:79
+msgid ""
+"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
+"Touch. It is licensed under the GNU AGPL v3 license."
+msgstr ""
+
+#: qml/pages/AboutPage.qml:90
+msgid ""
+"The built-in KeePass icon images are licensed under a variety of licenses as "
+"detailed in assets/COPYING."
+msgstr ""
+
+#: qml/pages/AboutPage.qml:98
+msgid "Manual"
+msgstr ""
+
+#: qml/pages/AboutPage.qml:110
+msgid ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+
+#: qml/pages/AboutPage.qml:123
+msgid ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+
+#: qml/pages/AboutPage.qml:132
+msgid "Source Code"
+msgstr ""
+
+#: qml/pages/AboutPage.qml:141
+msgid ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
+msgstr ""
+
+#: qml/pages/DBList.qml:71
+msgid "Add Database"
+msgstr ""
+
+#: qml/pages/DBList.qml:105
+msgid "Loading last database."
+msgstr ""
+
+#: qml/pages/DBList.qml:115
+msgid "Select Database"
+msgstr ""
+
+#: qml/pages/DBList.qml:187
+msgid "Tap + to import a database."
+msgstr ""
+
+#: qml/pages/DBList.qml:292
+msgid "It will only be removed from the app, not your device."
+msgstr ""
+
 #: qml/pages/EntriesPage.qml:101
 msgid "Cancel Search"
 msgstr ""
@@ -105,23 +214,12 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:172 qml/pages/SingleEntry.qml:82
-#: qml/pages/OpenDBPage.qml:92
-msgid "Back"
-msgstr ""
-
 #: qml/pages/EntriesPage.qml:185
 msgid "View Mode"
 msgstr ""
 
 #: qml/pages/EntriesPage.qml:195
 msgid "Search"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:217 qml/pages/DBList.qml:85
-#: qml/pages/UnlockPage.qml:42 qml/pages/OpenDBPage.qml:112
-#: qml/pages/AboutPage.qml:12
-msgid "About"
 msgstr ""
 
 #: qml/pages/EntriesPage.qml:229
@@ -180,64 +278,60 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: qml/pages/DBList.qml:71
-msgid "Add Database"
+#: qml/pages/LicensesPage.qml:13
+msgid "Open Source Licenses"
 msgstr ""
 
-#: qml/pages/DBList.qml:105
-msgid "Loading last database."
+#: qml/pages/LicensesPage.qml:66
+msgid "Website"
 msgstr ""
 
-#: qml/pages/DBList.qml:115
-msgid "Select Database"
+#: qml/pages/OpenDBPage.qml:27
+msgid "Key Loaded"
 msgstr ""
 
-#: qml/pages/DBList.qml:187
-msgid "Tap + to import a database."
+#: qml/pages/OpenDBPage.qml:28
+msgid "Remove Key"
 msgstr ""
 
-#: qml/pages/DBList.qml:292
-msgid "It will only be removed from the app, not your device."
+#: qml/pages/OpenDBPage.qml:30
+msgid "Use Key"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:29 qml/Main.qml:96
-msgid "%1 copied to clipboard (30 secs)"
+#: qml/pages/OpenDBPage.qml:37
+msgid "Automatically detected a key file for this database."
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:123
-msgid "Notes"
+#: qml/pages/OpenDBPage.qml:39
+msgid "A key file will be used to open this database."
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:131
-msgid "Tap to copy"
+#: qml/pages/OpenDBPage.qml:51
+msgid "Select Key File"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:141
-msgid "Notes copied to clipboard (30 secs)"
+#: qml/pages/OpenDBPage.qml:231
+msgid "Enter the database master password"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:190
-msgid "Main"
+#: qml/pages/OpenDBPage.qml:244
+msgid "Master Password"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:196 qml/pages/SingleEntry.qml:199
-msgid "Username"
+#: qml/pages/OpenDBPage.qml:270
+msgid "Open"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:204 qml/pages/SingleEntry.qml:209
-msgid "Password"
+#: qml/pages/OpenDBPage.qml:291
+msgid "Hide Password"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:215 qml/pages/SingleEntry.qml:217
-msgid "URL"
+#: qml/pages/OpenDBPage.qml:291
+msgid "Show Password"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:238
-msgid "Other Fields"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:264 qml/Main.qml:225
-msgid "KeePassRX: Clipboard cleared."
+#: qml/pages/OpenDBPage.qml:348
+msgid "Opening"
 msgstr ""
 
 #: qml/pages/UnlockPage.qml:146
@@ -268,100 +362,6 @@ msgstr ""
 
 #: qml/pages/UnlockPage.qml:242
 msgid "Database Not Opening?"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:26
-msgid "Key Loaded"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:27
-msgid "Remove Key"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:29
-msgid "Use Key"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:36
-msgid "Automatically detected a key file for this database."
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:38
-msgid "A key file will be used to open this database."
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:50
-msgid "Select Key File"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:228
-msgid "Enter the database master password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:241
-msgid "Master Password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:261
-msgid "Open"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:276
-msgid "Hide Password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:276
-msgid "Show Password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:327
-msgid "Opening"
-msgstr ""
-
-#: qml/pages/AboutPage.qml:79
-msgid ""
-"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
-"Touch. It is licensed under the GNU AGPL v3 license."
-msgstr ""
-
-#: qml/pages/AboutPage.qml:90
-msgid ""
-"The built-in KeePass icon images are licensed under a variety of licenses as "
-"detailed in assets/COPYING."
-msgstr ""
-
-#: qml/pages/AboutPage.qml:98
-msgid "Manual"
-msgstr ""
-
-#: qml/pages/AboutPage.qml:110
-msgid ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-
-#: qml/pages/AboutPage.qml:123
-msgid ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-
-#: qml/pages/AboutPage.qml:132
-msgid "Source Code"
-msgstr ""
-
-#: qml/pages/AboutPage.qml:141
-msgid ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
-msgstr ""
-
-#: qml/pages/LicensesPage.qml:13
-msgid "Open Source Licenses"
-msgstr ""
-
-#: qml/pages/LicensesPage.qml:66
-msgid "Website"
 msgstr ""
 
 #: src/gui/instructions.rs:9

@@ -11,6 +11,7 @@ Page {
     id: openDbPage
     property bool busy
     property bool showPassword
+    property bool keepPasswordFocus: true
     property string errorMsg
     property double lastHeartbeat: 0
 
@@ -128,6 +129,8 @@ Page {
         console.log('[OpenDB] QML - Storing password');
         busy = true;
         showPassword = false;
+        keepPasswordFocus = false;
+        openDatabaseButton.forceActiveFocus();
 
         if (keepassrx.isMasterPasswordEncrypted) {
             // TODO should not be able to be in this state
@@ -244,6 +247,12 @@ Page {
                 Layout.fillWidth: true
                 Keys.onReturnPressed: openDatabase()
 
+                onFocusChanged: {
+                    if (keepPasswordFocus) {
+                        focus = true;
+                    }
+                }
+
                 onTextChanged: {
                     errorMsg = ''
                 }
@@ -260,6 +269,12 @@ Page {
                 // TRANSLATORS: Open the database after password entered.
                 text: i18n.tr("Open")
                 onClicked: openDatabase()
+
+                onFocusChanged: (gainedFocus) => {
+                    if (gainedFocus) {
+                        keepPasswordFocus = false;
+                    }
+                }
             }
         }
 
@@ -275,6 +290,7 @@ Page {
                 color: LomiriColors.silk
                 text: showPassword ? i18n.tr('Hide Password') : i18n.tr('Show Password')
                 onTriggered: {
+                    keepPasswordFocus = true;
                     showPassword = !showPassword;
                 }
             }
@@ -287,6 +303,11 @@ Page {
                 iconName: uiDatabase.isKeyFileSet ? "lock-broken" : "lock"
                 color: uiDatabase.isKeyFileDetected ? LomiriColors.orange : LomiriColors.silk
                 text: keyFileActionText()
+                onFocusChanged: (gainedFocus) => {
+                    if (gainedFocus) {
+                        keepPasswordFocus = false;
+                    }
+                }
                 onTriggered: {
                     if (uiDatabase.isKeyFileSet) {
                         uiDatabase.clearKeyFile();

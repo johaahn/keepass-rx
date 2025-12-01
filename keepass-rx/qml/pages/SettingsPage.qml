@@ -79,8 +79,8 @@ Page {
                 // TRANSLATORS: Description of the "Show recycle bin group" setting.
                 description: i18n.tr('This group contains all the deleted entries')
                 control: Switch {
-                    onCheckedChanged: settings.showRecycleBin = checked
-                    checked: settings.showRecycleBin
+                    onCheckedChanged: SettingsBridge.showRecycleBin = checked
+                    checked: SettingsBridge.showRecycleBin
                 }
             }
 

@@ -82,6 +82,10 @@ Page {
             entriesListModel.clear();
             getEntries(newContainerId);
         }
+
+        Component.onCompleted: {
+            SettingsBridge.showRecycleBinChanged.connect(containerStack.refresh);
+        }
     }
 
     PageHeader {
@@ -434,7 +438,7 @@ Page {
             for (const entryUuid of entryUuids) {
                 let append = true;
                 if (entryUuid == recycleBinUuid) {
-                    append = settings.showRecycleBin;
+                    append = SettingsBridge.showRecycleBin;
                 }
 
                 if (append) {

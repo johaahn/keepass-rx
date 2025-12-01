@@ -25,7 +25,6 @@ pub struct RxUiContainerStack {
     /// QML-visible property of the stack, that returns current top of
     /// the stack.
     containerUuid: qt_property!(QString; READ get_current_container NOTIFY containerChanged),
-
     containerName: qt_property!(QString; NOTIFY containerNameChanged),
     instructions: qt_property!(QString; NOTIFY instructionsChanged),
     isAtRoot: qt_property!(bool; READ is_at_root NOTIFY isAtRootChanged),
@@ -40,6 +39,7 @@ pub struct RxUiContainerStack {
     // Control over the UI
     pushContainer: qt_method!(fn(&mut self, container_uuid: QString)),
     popContainer: qt_method!(fn(&mut self)),
+    refresh: qt_method!(fn(&self)),
 }
 
 /// What group/template container we are in. Used in conjunction with
@@ -98,6 +98,13 @@ impl RxUiContainerStack {
             .last()
             .map(|uuid| QString::from(uuid.to_string()))
             .unwrap_or_default()
+    }
+
+    pub fn refresh(&self) {
+        self.containerChanged(self.containerUuid.clone());
+        self.containerNameChanged();
+        self.isAtRootChanged();
+        self.instructionsChanged();
     }
 
     pub fn pushContainer(&mut self, container_uuid: QString) {

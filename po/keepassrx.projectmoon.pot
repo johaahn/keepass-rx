@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-01 10:26+0000\n"
+"POT-Creation-Date: 2025-12-01 11:42+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,61 +41,11 @@ msgstr ""
 msgid "Tap to copy 2FA code"
 msgstr ""
 
-#: qml/pages/SettingsPage.qml:10 qml/pages/DBList.qml:78
-#: qml/pages/EntriesPage.qml:208 qml/pages/OpenDBPage.qml:106
-#: qml/pages/UnlockPage.qml:35
-msgid "Settings"
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:43
-msgid ""
-"Change settings based on your preferences. Any change to the settings "
-"requires a restart to take effect."
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:53
-msgid "Enable database locking"
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:56
-msgid ""
-"Securely lock and unlock database with a short passcode. Requires restart to "
-"take effect."
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:65
-msgid "Enable Accents"
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:67
-msgid ""
-"Set header color and name according to database settings. Compatible with "
-"KeePassXC."
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:78
-msgid "Show the \"Recycle bin\" group"
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:80
-msgid "This group contains all the deleted entries"
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:89
-msgid "Fuzzy Search"
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:92
-msgid ""
-"Use fuzzy search to find entries. If disabled, search only matches exact "
-"case insensitive text."
-msgstr ""
-
 #: qml/pages/SingleEntry.qml:29 qml/Main.qml:96
 msgid "%1 copied to clipboard (30 secs)"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:82 qml/pages/EntriesPage.qml:172
+#: qml/pages/SingleEntry.qml:82 qml/pages/EntriesPage.qml:176
 #: qml/pages/OpenDBPage.qml:93
 msgid "Back"
 msgstr ""
@@ -137,7 +87,7 @@ msgid "KeePassRX: Clipboard cleared."
 msgstr ""
 
 #: qml/pages/AboutPage.qml:12 qml/pages/DBList.qml:85
-#: qml/pages/EntriesPage.qml:217 qml/pages/OpenDBPage.qml:113
+#: qml/pages/EntriesPage.qml:221 qml/pages/OpenDBPage.qml:113
 #: qml/pages/UnlockPage.qml:42
 msgid "About"
 msgstr ""
@@ -184,6 +134,12 @@ msgstr ""
 msgid "Add Database"
 msgstr ""
 
+#: qml/pages/DBList.qml:78 qml/pages/EntriesPage.qml:212
+#: qml/pages/OpenDBPage.qml:106 qml/pages/UnlockPage.qml:35
+#: qml/pages/SettingsPage.qml:10
+msgid "Settings"
+msgstr ""
+
 #: qml/pages/DBList.qml:105
 msgid "Loading last database."
 msgstr ""
@@ -200,91 +156,91 @@ msgstr ""
 msgid "It will only be removed from the app, not your device."
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:101
+#: qml/pages/EntriesPage.qml:105
 msgid "Cancel Search"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:122
+#: qml/pages/EntriesPage.qml:126
 msgid "Search all entries"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:122
+#: qml/pages/EntriesPage.qml:126
 msgid "Search all entries under this group"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:123
+#: qml/pages/EntriesPage.qml:127
 msgid "Search entries in this group"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:148
+#: qml/pages/EntriesPage.qml:152
 msgid "Lock"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:160
+#: qml/pages/EntriesPage.qml:164
 msgid "Close"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:185
+#: qml/pages/EntriesPage.qml:189
 msgid "View Mode"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:195
+#: qml/pages/EntriesPage.qml:199
 msgid "Search"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:229
+#: qml/pages/EntriesPage.qml:233
 msgid "Lock Database"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:239
+#: qml/pages/EntriesPage.qml:243
 msgid "Close Database"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:259
+#: qml/pages/EntriesPage.qml:263
 msgid "Change View"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:265
+#: qml/pages/EntriesPage.qml:269
 msgid "All Entries"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:267
+#: qml/pages/EntriesPage.qml:271
 msgid "All groups and entries."
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:271 src/rx/virtual_hierarchy.rs:71
+#: qml/pages/EntriesPage.qml:275 src/rx/virtual_hierarchy.rs:71
 msgid "Special Categories"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:273
+#: qml/pages/EntriesPage.qml:277
 msgid "Entries grouped by template."
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:277
+#: qml/pages/EntriesPage.qml:281
 msgid "2FA Codes"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:279
+#: qml/pages/EntriesPage.qml:283
 msgid "Entries with 2FA codes."
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:283 src/rx/virtual_hierarchy.rs:242
+#: qml/pages/EntriesPage.qml:287 src/rx/virtual_hierarchy.rs:242
 msgid "Tags"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:285
+#: qml/pages/EntriesPage.qml:289
 msgid "Entries grouped by tag."
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:297
+#: qml/pages/EntriesPage.qml:301
 msgid "Select View"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:316
+#: qml/pages/EntriesPage.qml:320
 msgid "Select"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:326
+#: qml/pages/EntriesPage.qml:330
 msgid "Cancel"
 msgstr ""
 
@@ -372,6 +328,50 @@ msgstr ""
 
 #: qml/pages/UnlockPage.qml:242
 msgid "Database Not Opening?"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:43
+msgid ""
+"Change settings based on your preferences. Any change to the settings "
+"requires a restart to take effect."
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:53
+msgid "Enable database locking"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:56
+msgid ""
+"Securely lock and unlock database with a short passcode. Requires restart to "
+"take effect."
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:65
+msgid "Enable Accents"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:67
+msgid ""
+"Set header color and name according to database settings. Compatible with "
+"KeePassXC."
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:78
+msgid "Show the \"Recycle bin\" group"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:80
+msgid "This group contains all the deleted entries"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:89
+msgid "Fuzzy Search"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:92
+msgid ""
+"Use fuzzy search to find entries. If disabled, search only matches exact "
+"case insensitive text."
 msgstr ""
 
 #: src/gui/instructions.rs:9

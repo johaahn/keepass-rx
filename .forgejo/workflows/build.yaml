@@ -210,7 +210,7 @@ jobs:
       - name: Download armhf build
         uses: https://data.forgejo.org/forgejo/download-artifact@v4
         with:
-          name: keepassrx-ci-amd64
+          name: keepassrx-ci-armhf
           path: build/arm-linux-gnueabihf/app
 
       - name: Publish arm64

@@ -124,6 +124,43 @@ jobs:
           name: keepassrx-ci-armhf
           path: build/arm-linux-gnueabihf/app/keepassrx.projectmoon_*.click
 
+  upload-release:
+    needs: [build-amd64, build-arm64, build-armhf]
+    if: forgejo.event_name == 'push' && contains(forgejo.ref, 'refs/tags/')
+    runs-on: docker
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download amd64 build
+        uses: https://data.forgejo.org/forgejo/download-artifact@v4
+        with:
+          name: keepassrx-ci-amd64
+          path: build/x86_64-linux-gnu/app/
+
+      - name: Download arm64 build
+        uses: https://data.forgejo.org/forgejo/download-artifact@v4
+        with:
+          name: keepassrx-ci-arm64
+          path: build/aarch64-linux-gnu/app/
+
+      - name: Download armhf build
+        uses: https://data.forgejo.org/forgejo/download-artifact@v4
+        with:
+          name: keepassrx-ci-amd64
+          path: build/arm-linux-gnueabihf/app
+
+      - name: Collect .click files
+        run: mkdir release/ && find . -name "*.click" -exec mv {} release/ \;
+
+      - uses: actions/forgejo-release@v2.7.3
+        with:
+          direction: upload
+          url: https://git.agnos.is
+          repo: projectmoon/keepass-rx
+          token: ${{ secrets.RELEASE_TOKEN }}
+          tag: ${{ env.FORGEJO_REF_NAME }}
+          release-dir: release/
+
   openstore-release:
     if: forgejo.event_name == 'push' && contains(forgejo.ref, 'refs/tags/v')
     needs: [build-amd64, build-arm64, build-armhf]

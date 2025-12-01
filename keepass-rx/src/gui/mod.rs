@@ -15,6 +15,7 @@ pub(crate) mod actor;
 pub(crate) mod colors;
 pub(crate) mod instructions;
 pub(crate) mod qml;
+pub(crate) mod settings;
 pub(crate) mod utils;
 
 use actor::*;

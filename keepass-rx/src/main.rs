@@ -60,9 +60,7 @@ fn load_gui() -> Result<()> {
     };
 
     use crate::gui::{
-        KeepassRx, RxGuiState,
-        actor::KeepassRxActor,
-        utils::move_old_dirs_and_files,
+        KeepassRx, RxGuiState, actor::KeepassRxActor, utils::move_old_dirs_and_files,
     };
 
     use crate::app::KeepassRxApp;
@@ -114,14 +112,17 @@ fn load_gui() -> Result<()> {
         // runtime.
         let (mut view, _app) = with_executor(|| -> Result<_> {
             use app::RxActors;
+            use gui::settings::SettingsBridge;
 
-            let app_state = Rc::new(QObjectBox::new(AppState::new()));
+            let settings_bridge = Rc::new(QObjectBox::new(SettingsBridge::default()));
+            let app_state = Rc::new(QObjectBox::new(AppState::new(&settings_bridge)));
             let gui = Arc::new(QObjectBox::new(KeepassRx::new()));
 
             let global_app_actor = KeepassRxActor::new(&gui, &app_state).start();
 
             let app = Rc::new(KeepassRxApp {
                 app_state: app_state.clone(),
+                settings_bridge: settings_bridge.clone(),
             });
 
             RxActors::set_app_actor(global_app_actor);
@@ -131,6 +132,7 @@ fn load_gui() -> Result<()> {
 
             engine.set_property("keepassrx".into(), gui.pinned().into());
             engine.set_object_property("AppState".into(), app.app_state.pinned());
+            engine.set_object_property("SettingsBridge".into(), app.settings_bridge.pinned());
 
             view.set_source("qrc:/qml/Main.qml".into());
             Ok((view, app))

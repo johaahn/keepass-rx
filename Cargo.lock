@@ -1133,6 +1133,7 @@ dependencies = [
  "poison-guard",
  "qmeta-async",
  "qmetaobject",
+ "qttypes",
  "querystring",
  "rayon",
  "regex",

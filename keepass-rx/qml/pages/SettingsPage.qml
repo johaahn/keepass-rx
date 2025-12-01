@@ -4,7 +4,6 @@ import "../components"
 import Qt.labs.settings 1.0
 
 Page {
-    property bool isARMv7: false
     header: PageHeader {
         id: header
         // TRANSLATORS: Page header for the settings.
@@ -82,6 +81,20 @@ Page {
                 control: Switch {
                     onCheckedChanged: settings.showRecycleBin = checked
                     checked: settings.showRecycleBin
+                }
+            }
+
+            SettingsItem {
+                // TRANSLATORS: Whether or not to show the recycling bin group of deleted password entries.
+                title: i18n.tr('Fuzzy Search')
+                // TRANSLATORS: Description of the "Show recycle bin group" setting.
+                description: i18n.tr(
+                    'Use fuzzy search to find entries. ' +
+                        'If disabled, search only matches exact case insensitive text.'
+                )
+                control: Switch {
+                    onCheckedChanged: SettingsBridge.searchType = checked ? 'Fuzzy' : 'CaseInsensitive';
+                    checked: SettingsBridge.searchType == 'Fuzzy'
                 }
             }
         }

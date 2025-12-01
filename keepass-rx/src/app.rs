@@ -11,6 +11,7 @@ use zeroize::{Zeroize, Zeroizing};
 
 use crate::crypto::{EncryptedValue, MasterKey};
 use crate::gui::actor::KeepassRxActor;
+use crate::gui::settings::SettingsBridge;
 use crate::rx::RxDatabase;
 use crate::rx::RxSearchType;
 use crate::rx::virtual_hierarchy::VirtualHierarchy;
@@ -42,6 +43,7 @@ pub static ACTORS: OnceLock<RxActors> = OnceLock::new();
 #[allow(dead_code)]
 pub struct KeepassRxApp {
     pub(crate) app_state: Rc<QObjectBox<AppState>>,
+    pub(crate) settings_bridge: Rc<QObjectBox<SettingsBridge>>,
 }
 
 #[derive(Clone)]
@@ -120,11 +122,12 @@ static KEY_FILE_COUNTER: AtomicU64 = AtomicU64::new(1);
 #[allow(dead_code)]
 pub struct AppState {
     base: qt_base_class!(trait QObject),
+    settings: Option<Rc<QObjectBox<SettingsBridge>>>,
+
     deferred_views: RefCell<Vec<Box<dyn FnOnce(&dyn VirtualHierarchy)>>>,
 
     current_view: Option<Rc<Box<dyn VirtualHierarchy>>>,
     curr_db: Option<Rc<Zeroizing<RxDatabase>>>,
-    search_type: RxSearchType,
 
     master_key: Option<MasterKey>,
     db_key: Option<KeyFile>,
@@ -132,8 +135,11 @@ pub struct AppState {
 
 impl AppState {
     #[with_executor]
-    pub fn new() -> Self {
-        Self::default()
+    pub fn new(settings: &Rc<QObjectBox<SettingsBridge>>) -> Self {
+        Self {
+            settings: Some(settings.clone()),
+            ..Default::default()
+        }
     }
 
     pub fn master_key(&self) -> Option<&MasterKey> {
@@ -149,11 +155,21 @@ impl AppState {
     }
 
     pub fn search_type(&self) -> RxSearchType {
-        self.search_type
+        self.settings
+            .as_ref()
+            .expect("SettingsBridge unavailable")
+            .pinned()
+            .borrow()
+            .get_search_type()
     }
 
     pub fn set_search_type(&mut self, search_type: RxSearchType) {
-        self.search_type = search_type;
+        self.settings
+            .as_mut()
+            .expect("SettingsBridge unavailable")
+            .pinned()
+            .borrow_mut()
+            .set_search_type(search_type)
     }
 
     pub fn set_db_key(&mut self, key: Option<KeyFile>) {

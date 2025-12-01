@@ -14,8 +14,8 @@ use qmetaobject::{QEnum, QMetaType, QString};
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub enum RxSearchType {
-    CaseInsensitive,
     #[default]
+    CaseInsensitive,
     Fuzzy,
 }
 

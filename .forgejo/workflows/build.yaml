@@ -146,7 +146,7 @@ jobs:
       - name: Download armhf build
         uses: https://data.forgejo.org/forgejo/download-artifact@v4
         with:
-          name: keepassrx-ci-amd64
+          name: keepassrx-ci-armhf
           path: build/arm-linux-gnueabihf/app
 
       - name: Collect .click files
@@ -164,6 +164,7 @@ jobs:
   openstore-release:
     if: forgejo.event_name == 'push' && contains(forgejo.ref, 'refs/tags/v')
     needs: [build-amd64, build-arm64, build-armhf]
+    runs-on: docker
     container:
       image: clickable/ci-ut24.04-1.x-armhf
     steps:

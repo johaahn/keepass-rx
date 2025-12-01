@@ -42,8 +42,12 @@ Page {
                     "Securely lock and unlock database with a short passcode. Requires restart to take effect."
                 )
                 control: Switch {
-                    onCheckedChanged: SettingsBridge.databaseLocking = checked
                     checked: SettingsBridge.databaseLocking
+                    onCheckedChanged: {
+                        if (checked != SettingsBridge.databaseLocking) {
+                            SettingsBridge.databaseLocking = checked;
+                        }
+                    }
                 }
             }
 
@@ -54,8 +58,12 @@ Page {
                         'Compatible with KeePassXC.'
                 )
                 control: Switch {
-                    onCheckedChanged: SettingsBridge.showAccents = checked
                     checked: SettingsBridge.showAccents
+                    onCheckedChanged: {
+                        if (checked != SettingsBridge.showAccents) {
+                            SettingsBridge.showAccents = checked;
+                        }
+                    }
                 }
             }
 
@@ -65,8 +73,12 @@ Page {
                 // TRANSLATORS: Description of the "Show recycle bin group" setting.
                 description: i18n.tr('This group contains all the deleted entries')
                 control: Switch {
-                    onCheckedChanged: SettingsBridge.showRecycleBin = checked
                     checked: SettingsBridge.showRecycleBin
+                    onCheckedChanged: {
+                        if (checked != SettingsBridge.showRecycleBin) {
+                            SettingsBridge.showRecycleBin = checked;
+                        }
+                    }
                 }
             }
 
@@ -79,8 +91,8 @@ Page {
                         'If disabled, search only matches exact case insensitive text.'
                 )
                 control: Switch {
-                    onCheckedChanged: SettingsBridge.searchType = checked ? 'Fuzzy' : 'CaseInsensitive';
                     checked: SettingsBridge.searchType == 'Fuzzy'
+                    onCheckedChanged: SettingsBridge.searchType = checked ? 'Fuzzy' : 'CaseInsensitive';
                 }
             }
         }

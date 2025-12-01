@@ -38,7 +38,7 @@ Achieve functional **readonly** parity with the original Keepass app
 for Ubuntu Touch, plus a few extras.
  - [X] Display icons for password entries.
  - [x] Support all app settings (that we want to support).
- - [ ] Key file support.
+ - [x] Key file support.
 
 ## 2.x - Enhanced Features
 

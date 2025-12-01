@@ -3,6 +3,7 @@ use actor_macro::observing_model;
 use anyhow::Result;
 use qmeta_async::with_executor;
 use qmetaobject::{QObjectPinned, prelude::*};
+use regex::Regex;
 use std::{fs::read_to_string, fs::remove_file, path::Path};
 
 use crate::{
@@ -309,9 +310,10 @@ impl RxUiDatabase {
             return;
         }
 
+        let kdb_pattern = Regex::new(r"\.(kdbx|kdb)").unwrap();
         let data_dir = db_path_for_type(self.databaseType);
         let binding = self.databaseName.to_string();
-        let db_raw_name = binding.split(".kdbx").next();
+        let db_raw_name = kdb_pattern.split(&binding).next();
 
         let key_file_name = db_raw_name.and_then(|name| {
             if name.len() > 0 {

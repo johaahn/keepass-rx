@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-01 10:54+0000\n"
+"POT-Creation-Date: 2025-12-01 20:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -34,39 +34,6 @@ msgid "View Entry"
 msgstr ""
 
 msgid "Tap to copy 2FA code"
-msgstr ""
-
-msgid "%1 copied to clipboard (30 secs)"
-msgstr ""
-
-msgid "Back"
-msgstr ""
-
-msgid "Notes"
-msgstr ""
-
-msgid "Tap to copy"
-msgstr ""
-
-msgid "Notes copied to clipboard (30 secs)"
-msgstr ""
-
-msgid "Main"
-msgstr ""
-
-msgid "Username"
-msgstr ""
-
-msgid "Password"
-msgstr ""
-
-msgid "URL"
-msgstr ""
-
-msgid "Other Fields"
-msgstr ""
-
-msgid "KeePassRX: Clipboard cleared."
 msgstr ""
 
 msgid "About"
@@ -103,6 +70,12 @@ msgid ""
 "projectmoon/keepass-rx</a>"
 msgstr ""
 
+msgid "Open Source Licenses"
+msgstr ""
+
+msgid "Website"
+msgstr ""
+
 msgid "Add Database"
 msgstr ""
 
@@ -137,6 +110,9 @@ msgid "Lock"
 msgstr ""
 
 msgid "Close"
+msgstr ""
+
+msgid "Back"
 msgstr ""
 
 msgid "View Mode"
@@ -187,12 +163,6 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-msgid "Open Source Licenses"
-msgstr ""
-
-msgid "Website"
-msgstr ""
-
 msgid "Key Loaded"
 msgstr ""
 
@@ -229,29 +199,6 @@ msgstr ""
 msgid "Opening"
 msgstr ""
 
-msgid "Manual path set."
-msgstr ""
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-
-msgid "Passcode"
-msgstr ""
-
-msgid "Unlock"
-msgstr ""
-
-msgid "Securely Unlocking"
-msgstr ""
-
-msgid "Securely Locking"
-msgstr ""
-
-msgid "Database Not Opening?"
-msgstr ""
-
 msgid "Change settings based on your preferences."
 msgstr ""
 
@@ -283,6 +230,59 @@ msgstr ""
 msgid ""
 "Use fuzzy search to find entries. If disabled, search only matches exact "
 "case insensitive text."
+msgstr ""
+
+msgid "%1 copied to clipboard (30 secs)"
+msgstr ""
+
+msgid "Notes"
+msgstr ""
+
+msgid "Tap to copy"
+msgstr ""
+
+msgid "Notes copied to clipboard (30 secs)"
+msgstr ""
+
+msgid "Main"
+msgstr ""
+
+msgid "Username"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "URL"
+msgstr ""
+
+msgid "Other Fields"
+msgstr ""
+
+msgid "KeePassRX: Clipboard cleared."
+msgstr ""
+
+msgid "Manual path set."
+msgstr ""
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+
+msgid "Passcode"
+msgstr ""
+
+msgid "Unlock"
+msgstr ""
+
+msgid "Securely Unlocking"
+msgstr ""
+
+msgid "Securely Locking"
+msgstr ""
+
+msgid "Database Not Opening?"
 msgstr ""
 
 msgid ""

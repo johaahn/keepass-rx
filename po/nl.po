@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-01 10:54+0000\n"
+"POT-Creation-Date: 2025-12-01 20:39+0000\n"
 "PO-Revision-Date: 2025-12-02 12:00+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -36,39 +36,6 @@ msgstr "Item bekijken"
 
 msgid "Tap to copy 2FA code"
 msgstr "Druk om de 2FA-code te kopiëren"
-
-msgid "%1 copied to clipboard (30 secs)"
-msgstr "%1 is gekopieerd naar het klembord (30 sec.)"
-
-msgid "Back"
-msgstr "Terug"
-
-msgid "Notes"
-msgstr "Aantekeningen"
-
-msgid "Tap to copy"
-msgstr "Druk om te kopiëren"
-
-msgid "Notes copied to clipboard (30 secs)"
-msgstr "De aantekeningen zijn gekopieerd naar het klembord (30 sec.)"
-
-msgid "Main"
-msgstr "Algemeen"
-
-msgid "Username"
-msgstr "Gebruikersnaam"
-
-msgid "Password"
-msgstr "Wachtwoord"
-
-msgid "URL"
-msgstr "Url"
-
-msgid "Other Fields"
-msgstr "Overige velden"
-
-msgid "KeePassRX: Clipboard cleared."
-msgstr "KeePassRX: klembord gewist."
 
 msgid "About"
 msgstr "Over"
@@ -114,6 +81,12 @@ msgstr ""
 "<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
 "projectmoon/keepass-rx</a>"
 
+msgid "Open Source Licenses"
+msgstr "Opensourcelicenties"
+
+msgid "Website"
+msgstr "Website"
+
 msgid "Add Database"
 msgstr "Databank toevoegen"
 
@@ -150,6 +123,9 @@ msgstr "Vergrendelen"
 
 msgid "Close"
 msgstr "Sluiten"
+
+msgid "Back"
+msgstr "Terug"
 
 msgid "View Mode"
 msgstr "Weergavemodus"
@@ -199,12 +175,6 @@ msgstr "Kiezen"
 msgid "Cancel"
 msgstr "Annuleren"
 
-msgid "Open Source Licenses"
-msgstr "Opensourcelicenties"
-
-msgid "Website"
-msgstr "Website"
-
 msgid "Key Loaded"
 msgstr "De sleutel is ingelezen"
 
@@ -240,31 +210,6 @@ msgstr "Wachtwoord tonen"
 
 msgid "Opening"
 msgstr "Bezig met openen…"
-
-msgid "Manual path set."
-msgstr "Stel de locatie handmatig in."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"De toegangscode bestaat uit de eerste vijf tekens van het databankwachtwoord "
-"(of het gehele wachtwoord, indien minder dan vijf tekens)."
-
-msgid "Passcode"
-msgstr "Toegangscode"
-
-msgid "Unlock"
-msgstr "Ontgrendelen"
-
-msgid "Securely Unlocking"
-msgstr "Veilig ontgrendelen"
-
-msgid "Securely Locking"
-msgstr "Veilig vergrendelen"
-
-msgid "Database Not Opening?"
-msgstr "Wordt de databank niet geopend?"
 
 msgid "Change settings based on your preferences."
 msgstr "Zet de instellingen naar eigen hand."
@@ -302,6 +247,61 @@ msgid ""
 "Use fuzzy search to find entries. If disabled, search only matches exact "
 "case insensitive text."
 msgstr "Schakel uit om alleen te zoeken naar items die precies overeenkomen."
+
+msgid "%1 copied to clipboard (30 secs)"
+msgstr "%1 is gekopieerd naar het klembord (30 sec.)"
+
+msgid "Notes"
+msgstr "Aantekeningen"
+
+msgid "Tap to copy"
+msgstr "Druk om te kopiëren"
+
+msgid "Notes copied to clipboard (30 secs)"
+msgstr "De aantekeningen zijn gekopieerd naar het klembord (30 sec.)"
+
+msgid "Main"
+msgstr "Algemeen"
+
+msgid "Username"
+msgstr "Gebruikersnaam"
+
+msgid "Password"
+msgstr "Wachtwoord"
+
+msgid "URL"
+msgstr "Url"
+
+msgid "Other Fields"
+msgstr "Overige velden"
+
+msgid "KeePassRX: Clipboard cleared."
+msgstr "KeePassRX: klembord gewist."
+
+msgid "Manual path set."
+msgstr "Stel de locatie handmatig in."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"De toegangscode bestaat uit de eerste vijf tekens van het databankwachtwoord "
+"(of het gehele wachtwoord, indien minder dan vijf tekens)."
+
+msgid "Passcode"
+msgstr "Toegangscode"
+
+msgid "Unlock"
+msgstr "Ontgrendelen"
+
+msgid "Securely Unlocking"
+msgstr "Veilig ontgrendelen"
+
+msgid "Securely Locking"
+msgstr "Veilig vergrendelen"
+
+msgid "Database Not Opening?"
+msgstr "Wordt de databank niet geopend?"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

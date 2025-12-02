@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-01 10:54+0000\n"
+"POT-Creation-Date: 2025-12-01 20:39+0000\n"
 "PO-Revision-Date: 2025-11-21 00:51+0000\n"
 "Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -36,39 +36,6 @@ msgstr "Eintrag öffnen"
 
 msgid "Tap to copy 2FA code"
 msgstr "Tippen um 2FA Code zu kopieren"
-
-msgid "%1 copied to clipboard (30 secs)"
-msgstr ""
-
-msgid "Back"
-msgstr "Zurück"
-
-msgid "Notes"
-msgstr "Notizen"
-
-msgid "Tap to copy"
-msgstr "Antippen zum Kopieren"
-
-msgid "Notes copied to clipboard (30 secs)"
-msgstr ""
-
-msgid "Main"
-msgstr ""
-
-msgid "Username"
-msgstr ""
-
-msgid "Password"
-msgstr ""
-
-msgid "URL"
-msgstr ""
-
-msgid "Other Fields"
-msgstr ""
-
-msgid "KeePassRX: Clipboard cleared."
-msgstr ""
 
 msgid "About"
 msgstr "Über"
@@ -106,6 +73,12 @@ msgid ""
 "projectmoon/keepass-rx</a>"
 msgstr ""
 
+msgid "Open Source Licenses"
+msgstr ""
+
+msgid "Website"
+msgstr ""
+
 msgid "Add Database"
 msgstr "Datenbank hinzufügen"
 
@@ -141,6 +114,9 @@ msgstr "Sperren"
 
 msgid "Close"
 msgstr "Schließen"
+
+msgid "Back"
+msgstr "Zurück"
 
 msgid "View Mode"
 msgstr "Ansichtsmodus"
@@ -190,12 +166,6 @@ msgstr "Auswählen"
 msgid "Cancel"
 msgstr "Abbrechen"
 
-msgid "Open Source Licenses"
-msgstr ""
-
-msgid "Website"
-msgstr ""
-
 msgid "Key Loaded"
 msgstr ""
 
@@ -231,31 +201,6 @@ msgstr ""
 
 msgid "Opening"
 msgstr "Öffne"
-
-msgid "Manual path set."
-msgstr "Manueller Pfad gesetzt."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"Das Passwort sind die ersten fünf Zeichen des Datenbankpassworts (oder das "
-"gesamte Passwort, falls es weniger als 5 Zeichen hat)."
-
-msgid "Passcode"
-msgstr "Passwort"
-
-msgid "Unlock"
-msgstr "Entsperren"
-
-msgid "Securely Unlocking"
-msgstr "Sicheres entsperren"
-
-msgid "Securely Locking"
-msgstr "Sicheres Sperren"
-
-msgid "Database Not Opening?"
-msgstr "Datenbank öffnet sich nicht?"
 
 msgid "Change settings based on your preferences."
 msgstr ""
@@ -293,6 +238,61 @@ msgid ""
 "Use fuzzy search to find entries. If disabled, search only matches exact "
 "case insensitive text."
 msgstr ""
+
+msgid "%1 copied to clipboard (30 secs)"
+msgstr ""
+
+msgid "Notes"
+msgstr "Notizen"
+
+msgid "Tap to copy"
+msgstr "Antippen zum Kopieren"
+
+msgid "Notes copied to clipboard (30 secs)"
+msgstr ""
+
+msgid "Main"
+msgstr ""
+
+msgid "Username"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "URL"
+msgstr ""
+
+msgid "Other Fields"
+msgstr ""
+
+msgid "KeePassRX: Clipboard cleared."
+msgstr ""
+
+msgid "Manual path set."
+msgstr "Manueller Pfad gesetzt."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"Das Passwort sind die ersten fünf Zeichen des Datenbankpassworts (oder das "
+"gesamte Passwort, falls es weniger als 5 Zeichen hat)."
+
+msgid "Passcode"
+msgstr "Passwort"
+
+msgid "Unlock"
+msgstr "Entsperren"
+
+msgid "Securely Unlocking"
+msgstr "Sicheres entsperren"
+
+msgid "Securely Locking"
+msgstr "Sicheres Sperren"
+
+msgid "Database Not Opening?"
+msgstr "Datenbank öffnet sich nicht?"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

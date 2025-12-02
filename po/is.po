@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-01 10:54+0000\n"
+"POT-Creation-Date: 2025-12-01 20:39+0000\n"
 "PO-Revision-Date: 2025-11-18 09:39+0000\n"
 "Last-Translator: projectmoon <projectmoon@agnos.is>\n"
 "Language-Team: Icelandic <https://hosted.weblate.org/projects/ubports/"
@@ -35,39 +35,6 @@ msgid "View Entry"
 msgstr ""
 
 msgid "Tap to copy 2FA code"
-msgstr ""
-
-msgid "%1 copied to clipboard (30 secs)"
-msgstr ""
-
-msgid "Back"
-msgstr "Til baka"
-
-msgid "Notes"
-msgstr "Athugasemdir"
-
-msgid "Tap to copy"
-msgstr "Ýtið á til að afrita"
-
-msgid "Notes copied to clipboard (30 secs)"
-msgstr ""
-
-msgid "Main"
-msgstr ""
-
-msgid "Username"
-msgstr ""
-
-msgid "Password"
-msgstr ""
-
-msgid "URL"
-msgstr ""
-
-msgid "Other Fields"
-msgstr ""
-
-msgid "KeePassRX: Clipboard cleared."
 msgstr ""
 
 msgid "About"
@@ -102,6 +69,12 @@ msgstr ""
 msgid ""
 "<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
 "projectmoon/keepass-rx</a>"
+msgstr ""
+
+msgid "Open Source Licenses"
+msgstr ""
+
+msgid "Website"
 msgstr ""
 
 msgid "Add Database"
@@ -139,6 +112,9 @@ msgstr "Læsa"
 
 msgid "Close"
 msgstr "Loka"
+
+msgid "Back"
+msgstr "Til baka"
 
 msgid "View Mode"
 msgstr ""
@@ -188,12 +164,6 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-msgid "Open Source Licenses"
-msgstr ""
-
-msgid "Website"
-msgstr ""
-
 msgid "Key Loaded"
 msgstr ""
 
@@ -230,31 +200,6 @@ msgstr ""
 msgid "Opening"
 msgstr "Í vinnslu"
 
-msgid "Manual path set."
-msgstr "Handvirk leið staðsett."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"Stutt lykilorðið er fyrstu fimm stafirnar af lykilorðinu gagnagrunnar (eða "
-"heilt lykilorð ef það er stuttara en fimm stafir)."
-
-msgid "Passcode"
-msgstr "Stutt lykilorð"
-
-msgid "Unlock"
-msgstr "Aflæsa"
-
-msgid "Securely Unlocking"
-msgstr "Að aflæsa með öryggi"
-
-msgid "Securely Locking"
-msgstr "Læsa með öryggi"
-
-msgid "Database Not Opening?"
-msgstr "Er gagnagrunnur ekki að opna?"
-
 msgid "Change settings based on your preferences."
 msgstr ""
 
@@ -289,6 +234,61 @@ msgid ""
 "Use fuzzy search to find entries. If disabled, search only matches exact "
 "case insensitive text."
 msgstr ""
+
+msgid "%1 copied to clipboard (30 secs)"
+msgstr ""
+
+msgid "Notes"
+msgstr "Athugasemdir"
+
+msgid "Tap to copy"
+msgstr "Ýtið á til að afrita"
+
+msgid "Notes copied to clipboard (30 secs)"
+msgstr ""
+
+msgid "Main"
+msgstr ""
+
+msgid "Username"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "URL"
+msgstr ""
+
+msgid "Other Fields"
+msgstr ""
+
+msgid "KeePassRX: Clipboard cleared."
+msgstr ""
+
+msgid "Manual path set."
+msgstr "Handvirk leið staðsett."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"Stutt lykilorðið er fyrstu fimm stafirnar af lykilorðinu gagnagrunnar (eða "
+"heilt lykilorð ef það er stuttara en fimm stafir)."
+
+msgid "Passcode"
+msgstr "Stutt lykilorð"
+
+msgid "Unlock"
+msgstr "Aflæsa"
+
+msgid "Securely Unlocking"
+msgstr "Að aflæsa með öryggi"
+
+msgid "Securely Locking"
+msgstr "Læsa með öryggi"
+
+msgid "Database Not Opening?"
+msgstr "Er gagnagrunnur ekki að opna?"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

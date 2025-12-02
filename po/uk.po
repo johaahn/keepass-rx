@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-01 10:54+0000\n"
+"POT-Creation-Date: 2025-12-01 20:39+0000\n"
 "PO-Revision-Date: 2025-11-20 12:51+0000\n"
 "Last-Translator: Serhii Horichenko <serhii@horichenko.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/ubports/"
@@ -37,39 +37,6 @@ msgstr "Переглянути запис"
 
 msgid "Tap to copy 2FA code"
 msgstr "Тицніть для копіювання коду 2FA"
-
-msgid "%1 copied to clipboard (30 secs)"
-msgstr ""
-
-msgid "Back"
-msgstr "Назад"
-
-msgid "Notes"
-msgstr "Нотатки"
-
-msgid "Tap to copy"
-msgstr "Торкніться для копіювання"
-
-msgid "Notes copied to clipboard (30 secs)"
-msgstr ""
-
-msgid "Main"
-msgstr ""
-
-msgid "Username"
-msgstr ""
-
-msgid "Password"
-msgstr ""
-
-msgid "URL"
-msgstr ""
-
-msgid "Other Fields"
-msgstr ""
-
-msgid "KeePassRX: Clipboard cleared."
-msgstr ""
 
 msgid "About"
 msgstr "Інфо"
@@ -107,6 +74,12 @@ msgid ""
 "projectmoon/keepass-rx</a>"
 msgstr ""
 
+msgid "Open Source Licenses"
+msgstr ""
+
+msgid "Website"
+msgstr ""
+
 msgid "Add Database"
 msgstr "Додати базу даних"
 
@@ -142,6 +115,9 @@ msgstr "Блокувати"
 
 msgid "Close"
 msgstr "Закрити"
+
+msgid "Back"
+msgstr "Назад"
 
 msgid "View Mode"
 msgstr "Режим перегляду"
@@ -191,12 +167,6 @@ msgstr "Вибрати"
 msgid "Cancel"
 msgstr "Скасувати"
 
-msgid "Open Source Licenses"
-msgstr ""
-
-msgid "Website"
-msgstr ""
-
 msgid "Key Loaded"
 msgstr ""
 
@@ -232,31 +202,6 @@ msgstr ""
 
 msgid "Opening"
 msgstr "Відкривається"
-
-msgid "Manual path set."
-msgstr "Шлях встановлений вручну."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"Код доступу — це перші п’ять символів пароля бази даних (або весь пароль, "
-"якщо він менш як п'ять символів)."
-
-msgid "Passcode"
-msgstr "Код доступу"
-
-msgid "Unlock"
-msgstr "Розблокувати"
-
-msgid "Securely Unlocking"
-msgstr "Безпечне розблокування"
-
-msgid "Securely Locking"
-msgstr "Безпечне блокування"
-
-msgid "Database Not Opening?"
-msgstr "База даних не відкривається?"
 
 msgid "Change settings based on your preferences."
 msgstr ""
@@ -294,6 +239,61 @@ msgid ""
 "Use fuzzy search to find entries. If disabled, search only matches exact "
 "case insensitive text."
 msgstr ""
+
+msgid "%1 copied to clipboard (30 secs)"
+msgstr ""
+
+msgid "Notes"
+msgstr "Нотатки"
+
+msgid "Tap to copy"
+msgstr "Торкніться для копіювання"
+
+msgid "Notes copied to clipboard (30 secs)"
+msgstr ""
+
+msgid "Main"
+msgstr ""
+
+msgid "Username"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "URL"
+msgstr ""
+
+msgid "Other Fields"
+msgstr ""
+
+msgid "KeePassRX: Clipboard cleared."
+msgstr ""
+
+msgid "Manual path set."
+msgstr "Шлях встановлений вручну."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"Код доступу — це перші п’ять символів пароля бази даних (або весь пароль, "
+"якщо він менш як п'ять символів)."
+
+msgid "Passcode"
+msgstr "Код доступу"
+
+msgid "Unlock"
+msgstr "Розблокувати"
+
+msgid "Securely Unlocking"
+msgstr "Безпечне розблокування"
+
+msgid "Securely Locking"
+msgstr "Безпечне блокування"
+
+msgid "Database Not Opening?"
+msgstr "База даних не відкривається?"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

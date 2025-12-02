@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-01 10:54+0000\n"
+"POT-Creation-Date: 2025-12-01 20:39+0000\n"
 "PO-Revision-Date: 2025-11-27 16:00+0000\n"
 "Last-Translator: BoneNI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://hosted.weblate.org/projects/ubports/keepassrx/lo/"
@@ -36,39 +36,6 @@ msgstr "ເບິ່ງຂໍ້ມູນ"
 
 msgid "Tap to copy 2FA code"
 msgstr "ແຕະເພື່ອຄັດລອກລະຫັດ 2FA"
-
-msgid "%1 copied to clipboard (30 secs)"
-msgstr "ຄັດລອກ %1 ໃສ່ຄລິບບອດແລ້ວ (30 ວິນາທີ)"
-
-msgid "Back"
-msgstr "ກັບຄືນ"
-
-msgid "Notes"
-msgstr "ບັນທຶກ"
-
-msgid "Tap to copy"
-msgstr "ແຕະເພື່ອຄັດລອກ"
-
-msgid "Notes copied to clipboard (30 secs)"
-msgstr ""
-
-msgid "Main"
-msgstr "ຫຼັກ"
-
-msgid "Username"
-msgstr "ຊື່ຜູ້ໃຊ້"
-
-msgid "Password"
-msgstr "ລະຫັດຜ່ານ"
-
-msgid "URL"
-msgstr "URL"
-
-msgid "Other Fields"
-msgstr "ຊ່ອງຂໍ້ມູນອື່ນໆ"
-
-msgid "KeePassRX: Clipboard cleared."
-msgstr ""
 
 msgid "About"
 msgstr "ກ່ຽວກັບ"
@@ -103,6 +70,12 @@ msgstr ""
 msgid ""
 "<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
 "projectmoon/keepass-rx</a>"
+msgstr ""
+
+msgid "Open Source Licenses"
+msgstr ""
+
+msgid "Website"
 msgstr ""
 
 msgid "Add Database"
@@ -140,6 +113,9 @@ msgstr "ລັອກ"
 
 msgid "Close"
 msgstr "ປິດ"
+
+msgid "Back"
+msgstr "ກັບຄືນ"
 
 msgid "View Mode"
 msgstr "ຮູບແບບການເບິ່ງ"
@@ -189,12 +165,6 @@ msgstr "ເລືອກ"
 msgid "Cancel"
 msgstr "ຍົກເລີກ"
 
-msgid "Open Source Licenses"
-msgstr ""
-
-msgid "Website"
-msgstr ""
-
 msgid "Key Loaded"
 msgstr ""
 
@@ -231,31 +201,6 @@ msgstr ""
 msgid "Opening"
 msgstr "ກຳລັງເປີດ"
 
-msgid "Manual path set."
-msgstr "ກຳນົດເສັ້ນທາງເອງແລ້ວ."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"ລະຫັດຜ່ານສັ້ນແມ່ນ 5 ຕົວອັກສອນທຳອິດຂອງລະຫັດຜ່ານຖານຂໍ້ມູນ (ຫຼື ລະຫັດຜ່ານທັງໝົດ ຖ້າໜ້ອຍກວ່າ 5 "
-"ຕົວອັກສອນ)."
-
-msgid "Passcode"
-msgstr "ລະຫັດຜ່ານສັ້ນ"
-
-msgid "Unlock"
-msgstr "ປົດລັອກ"
-
-msgid "Securely Unlocking"
-msgstr "ກຳລັງປົດລັອກຢ່າງປອດໄພ"
-
-msgid "Securely Locking"
-msgstr "ກຳລັງລັອກຢ່າງປອດໄພ"
-
-msgid "Database Not Opening?"
-msgstr "ຖານຂໍ້ມູນເປີດບໍ່ໄດ້ບໍ?"
-
 msgid "Change settings based on your preferences."
 msgstr ""
 
@@ -288,6 +233,61 @@ msgid ""
 "Use fuzzy search to find entries. If disabled, search only matches exact "
 "case insensitive text."
 msgstr ""
+
+msgid "%1 copied to clipboard (30 secs)"
+msgstr "ຄັດລອກ %1 ໃສ່ຄລິບບອດແລ້ວ (30 ວິນາທີ)"
+
+msgid "Notes"
+msgstr "ບັນທຶກ"
+
+msgid "Tap to copy"
+msgstr "ແຕະເພື່ອຄັດລອກ"
+
+msgid "Notes copied to clipboard (30 secs)"
+msgstr ""
+
+msgid "Main"
+msgstr "ຫຼັກ"
+
+msgid "Username"
+msgstr "ຊື່ຜູ້ໃຊ້"
+
+msgid "Password"
+msgstr "ລະຫັດຜ່ານ"
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Other Fields"
+msgstr "ຊ່ອງຂໍ້ມູນອື່ນໆ"
+
+msgid "KeePassRX: Clipboard cleared."
+msgstr ""
+
+msgid "Manual path set."
+msgstr "ກຳນົດເສັ້ນທາງເອງແລ້ວ."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"ລະຫັດຜ່ານສັ້ນແມ່ນ 5 ຕົວອັກສອນທຳອິດຂອງລະຫັດຜ່ານຖານຂໍ້ມູນ (ຫຼື ລະຫັດຜ່ານທັງໝົດ ຖ້າໜ້ອຍກວ່າ 5 "
+"ຕົວອັກສອນ)."
+
+msgid "Passcode"
+msgstr "ລະຫັດຜ່ານສັ້ນ"
+
+msgid "Unlock"
+msgstr "ປົດລັອກ"
+
+msgid "Securely Unlocking"
+msgstr "ກຳລັງປົດລັອກຢ່າງປອດໄພ"
+
+msgid "Securely Locking"
+msgstr "ກຳລັງລັອກຢ່າງປອດໄພ"
+
+msgid "Database Not Opening?"
+msgstr "ຖານຂໍ້ມູນເປີດບໍ່ໄດ້ບໍ?"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

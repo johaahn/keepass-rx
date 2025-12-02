@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-01 10:54+0000\n"
+"POT-Creation-Date: 2025-12-01 20:39+0000\n"
 "PO-Revision-Date: 2025-12-01 17:08+0000\n"
 "Last-Translator: Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/ubports/"
@@ -36,39 +36,6 @@ msgstr "Vaata kirjet"
 
 msgid "Tap to copy 2FA code"
 msgstr "2FA-koodi kopeerimiseks puuduta"
-
-msgid "%1 copied to clipboard (30 secs)"
-msgstr "%1 on kopeeritud lõikelauale (30 sek)"
-
-msgid "Back"
-msgstr "Tagasi"
-
-msgid "Notes"
-msgstr "Märkmed"
-
-msgid "Tap to copy"
-msgstr "Kopeerimiseks klõpsa"
-
-msgid "Notes copied to clipboard (30 secs)"
-msgstr "Märkmed on kopeeritud lõikelauale (30-ks sekundiks)"
-
-msgid "Main"
-msgstr "Peamine"
-
-msgid "Username"
-msgstr "Kasutajanimi"
-
-msgid "Password"
-msgstr "Salasõna"
-
-msgid "URL"
-msgstr "Võrguaadress"
-
-msgid "Other Fields"
-msgstr "Muud väljad"
-
-msgid "KeePassRX: Clipboard cleared."
-msgstr "KeePassRX: lõikelaud on tühjendatud."
 
 msgid "About"
 msgstr "Rakenduse teave"
@@ -114,6 +81,12 @@ msgstr ""
 "<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
 "projectmoon/keepass-rx</a>"
 
+msgid "Open Source Licenses"
+msgstr "Avatud lähtekoodiga tarkvara litsentsid"
+
+msgid "Website"
+msgstr "Veebisait"
+
 msgid "Add Database"
 msgstr "Lisa andmebaas"
 
@@ -149,6 +122,9 @@ msgstr "Lukusta"
 
 msgid "Close"
 msgstr "Sulge"
+
+msgid "Back"
+msgstr "Tagasi"
 
 msgid "View Mode"
 msgstr "Vaaterežiim"
@@ -198,12 +174,6 @@ msgstr "Vali"
 msgid "Cancel"
 msgstr "Katkesta"
 
-msgid "Open Source Licenses"
-msgstr "Avatud lähtekoodiga tarkvara litsentsid"
-
-msgid "Website"
-msgstr "Veebisait"
-
 msgid "Key Loaded"
 msgstr "Võti on laaditud"
 
@@ -239,31 +209,6 @@ msgstr "Näita salasõna"
 
 msgid "Opening"
 msgstr "Avamisel"
-
-msgid "Manual path set."
-msgstr "Käsitsi määratud asukoht on seadistatud."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"Salakood on andmebaasi salasõna viis esimest tähemärki (või kogu salasõna, "
-"kui ta on alla viie tähemärgi pikk)."
-
-msgid "Passcode"
-msgstr "Salakood"
-
-msgid "Unlock"
-msgstr "Eemalda lukustus"
-
-msgid "Securely Unlocking"
-msgstr "Turvaline lukustuse eemaldamine"
-
-msgid "Securely Locking"
-msgstr "Turvaline lukustamine"
-
-msgid "Database Not Opening?"
-msgstr "Kas andmebaas ei avane?"
 
 msgid "Change settings based on your preferences."
 msgstr "Muuda seadistusi vastavalt oma eelistustele."
@@ -303,6 +248,61 @@ msgid ""
 msgstr ""
 "Hägusa otsinguga saad kirjeid mugavamat otsida. Kui eelistus pole kasutusel, "
 "siis otsing otsib täpset tõstutundetut vastet."
+
+msgid "%1 copied to clipboard (30 secs)"
+msgstr "%1 on kopeeritud lõikelauale (30 sek)"
+
+msgid "Notes"
+msgstr "Märkmed"
+
+msgid "Tap to copy"
+msgstr "Kopeerimiseks klõpsa"
+
+msgid "Notes copied to clipboard (30 secs)"
+msgstr "Märkmed on kopeeritud lõikelauale (30-ks sekundiks)"
+
+msgid "Main"
+msgstr "Peamine"
+
+msgid "Username"
+msgstr "Kasutajanimi"
+
+msgid "Password"
+msgstr "Salasõna"
+
+msgid "URL"
+msgstr "Võrguaadress"
+
+msgid "Other Fields"
+msgstr "Muud väljad"
+
+msgid "KeePassRX: Clipboard cleared."
+msgstr "KeePassRX: lõikelaud on tühjendatud."
+
+msgid "Manual path set."
+msgstr "Käsitsi määratud asukoht on seadistatud."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"Salakood on andmebaasi salasõna viis esimest tähemärki (või kogu salasõna, "
+"kui ta on alla viie tähemärgi pikk)."
+
+msgid "Passcode"
+msgstr "Salakood"
+
+msgid "Unlock"
+msgstr "Eemalda lukustus"
+
+msgid "Securely Unlocking"
+msgstr "Turvaline lukustuse eemaldamine"
+
+msgid "Securely Locking"
+msgstr "Turvaline lukustamine"
+
+msgid "Database Not Opening?"
+msgstr "Kas andmebaas ei avane?"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

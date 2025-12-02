@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-01 10:54+0000\n"
+"POT-Creation-Date: 2025-12-01 20:39+0000\n"
 "PO-Revision-Date: 2025-12-01 17:08+0000\n"
 "Last-Translator: Vlad Nirky <nirky.vlad@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -36,39 +36,6 @@ msgstr "Afficher l'entrée"
 
 msgid "Tap to copy 2FA code"
 msgstr "Appuyez pour copier le code 2FA"
-
-msgid "%1 copied to clipboard (30 secs)"
-msgstr "%1 copié dans le presse-papiers (30 secondes)"
-
-msgid "Back"
-msgstr "Retour"
-
-msgid "Notes"
-msgstr "Notes"
-
-msgid "Tap to copy"
-msgstr "Appuyez pour copier"
-
-msgid "Notes copied to clipboard (30 secs)"
-msgstr "Notes copiées dans le presse-papiers (30 secondes)"
-
-msgid "Main"
-msgstr "Principal"
-
-msgid "Username"
-msgstr "Nom d'utilisateur"
-
-msgid "Password"
-msgstr "Mot de passe"
-
-msgid "URL"
-msgstr "URL"
-
-msgid "Other Fields"
-msgstr "Autres champs"
-
-msgid "KeePassRX: Clipboard cleared."
-msgstr "KeePassRX : Presse-papiers effacé."
 
 msgid "About"
 msgstr "A propos de"
@@ -114,6 +81,12 @@ msgstr ""
 "<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
 "projectmoon/keepass-rx</a>"
 
+msgid "Open Source Licenses"
+msgstr "Licences Open Source"
+
+msgid "Website"
+msgstr "Site web"
+
 msgid "Add Database"
 msgstr "Ajouter une base de données"
 
@@ -149,6 +122,9 @@ msgstr "Verrouiller"
 
 msgid "Close"
 msgstr "Fermer"
+
+msgid "Back"
+msgstr "Retour"
 
 msgid "View Mode"
 msgstr "Mode d'affichage"
@@ -198,12 +174,6 @@ msgstr "Sélectionner"
 msgid "Cancel"
 msgstr "Annuler"
 
-msgid "Open Source Licenses"
-msgstr "Licences Open Source"
-
-msgid "Website"
-msgstr "Site web"
-
 msgid "Key Loaded"
 msgstr "Clé chargée"
 
@@ -239,32 +209,6 @@ msgstr "Afficher le mot de passe"
 
 msgid "Opening"
 msgstr "Ouverture"
-
-msgid "Manual path set."
-msgstr "Chemin défini manuellement."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"Le code d’accès correspond aux cinq premiers caractères du mot de passe de "
-"la base de données (ou au mot de passe complet s’il comporte moins de cinq "
-"caractères)."
-
-msgid "Passcode"
-msgstr "Code d'accès"
-
-msgid "Unlock"
-msgstr "Déverrouiller"
-
-msgid "Securely Unlocking"
-msgstr "Déverrouillage sécurisé"
-
-msgid "Securely Locking"
-msgstr "Verrouillage sécurisé"
-
-msgid "Database Not Opening?"
-msgstr "La base de données ne s'ouvre pas ?"
 
 msgid "Change settings based on your preferences."
 msgstr "Modifiez les paramètres en fonction de vos préférences."
@@ -306,6 +250,62 @@ msgstr ""
 "Utilisez la recherche approximative pour trouver des entrées. Si cette "
 "option est désactivée, la recherche ne trouve que les correspondances "
 "exactes, sans distinction entre majuscules et minuscules."
+
+msgid "%1 copied to clipboard (30 secs)"
+msgstr "%1 copié dans le presse-papiers (30 secondes)"
+
+msgid "Notes"
+msgstr "Notes"
+
+msgid "Tap to copy"
+msgstr "Appuyez pour copier"
+
+msgid "Notes copied to clipboard (30 secs)"
+msgstr "Notes copiées dans le presse-papiers (30 secondes)"
+
+msgid "Main"
+msgstr "Principal"
+
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+msgid "Password"
+msgstr "Mot de passe"
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Other Fields"
+msgstr "Autres champs"
+
+msgid "KeePassRX: Clipboard cleared."
+msgstr "KeePassRX : Presse-papiers effacé."
+
+msgid "Manual path set."
+msgstr "Chemin défini manuellement."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"Le code d’accès correspond aux cinq premiers caractères du mot de passe de "
+"la base de données (ou au mot de passe complet s’il comporte moins de cinq "
+"caractères)."
+
+msgid "Passcode"
+msgstr "Code d'accès"
+
+msgid "Unlock"
+msgstr "Déverrouiller"
+
+msgid "Securely Unlocking"
+msgstr "Déverrouillage sécurisé"
+
+msgid "Securely Locking"
+msgstr "Verrouillage sécurisé"
+
+msgid "Database Not Opening?"
+msgstr "La base de données ne s'ouvre pas ?"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

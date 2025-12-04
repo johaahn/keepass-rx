@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-01 20:39+0000\n"
-"PO-Revision-Date: 2025-11-20 12:51+0000\n"
+"PO-Revision-Date: 2025-12-04 16:00+0000\n"
 "Last-Translator: Serhii Horichenko <serhii@horichenko.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/ubports/"
 "keepassrx/uk/>\n"
@@ -45,6 +45,8 @@ msgid ""
 "KeePassRX is password manager for KeePass databases, designed for Ubuntu "
 "Touch. It is licensed under the GNU AGPL v3 license."
 msgstr ""
+"KeePassRX — це менеджер паролів для баз даних KeePass, зроблений Ubuntu "
+"Touch. Ліцензується за ліцензією GNU AGPL v3."
 
 msgid ""
 "The built-in KeePass icon images are licensed under a variety of licenses as "
@@ -54,31 +56,37 @@ msgstr ""
 "в активах/КОПІЮВАННІ."
 
 msgid "Manual"
-msgstr ""
+msgstr "Інструкція"
 
 msgid ""
 "• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
 "projects/keepassrx/</a>"
 msgstr ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
 
 msgid ""
 "• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
 "projects/keepassrx/</a>"
 msgstr ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
 
 msgid "Source Code"
-msgstr ""
+msgstr "Початковий код"
 
 msgid ""
 "<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
 "projectmoon/keepass-rx</a>"
 msgstr ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
 
 msgid "Open Source Licenses"
-msgstr ""
+msgstr "Ліцензії вихідного коду"
 
 msgid "Website"
-msgstr ""
+msgstr "Вебсайт"
 
 msgid "Add Database"
 msgstr "Додати базу даних"
@@ -102,10 +110,10 @@ msgid "Cancel Search"
 msgstr "Скасувати пошук"
 
 msgid "Search all entries"
-msgstr ""
+msgstr "Пошук у всіх записах"
 
 msgid "Search all entries under this group"
-msgstr ""
+msgstr "Пошук у всіх записах цієї групи"
 
 msgid "Search entries in this group"
 msgstr "Шукати записи у цій групі"
@@ -135,7 +143,7 @@ msgid "Change View"
 msgstr "Змінити вигляд"
 
 msgid "All Entries"
-msgstr ""
+msgstr "Усі записи"
 
 msgid "All groups and entries."
 msgstr "Усі групи та записи."
@@ -147,7 +155,7 @@ msgid "Entries grouped by template."
 msgstr "Записи згруповані за шаблоном."
 
 msgid "2FA Codes"
-msgstr ""
+msgstr "Коди 2FA"
 
 msgid "Entries with 2FA codes."
 msgstr "Записи з кодами 2FA."
@@ -168,22 +176,22 @@ msgid "Cancel"
 msgstr "Скасувати"
 
 msgid "Key Loaded"
-msgstr ""
+msgstr "Завантажені ключі"
 
 msgid "Remove Key"
-msgstr ""
+msgstr "Вилучити ключ"
 
 msgid "Use Key"
-msgstr ""
+msgstr "Використати ключ"
 
 msgid "Automatically detected a key file for this database."
-msgstr ""
+msgstr "Автоматично визначений ключовий файл для цієї бази даних."
 
 msgid "A key file will be used to open this database."
-msgstr ""
+msgstr "Ключовий файл буде використаний для відкриття цієї бази даних."
 
 msgid "Select Key File"
-msgstr ""
+msgstr "Виберіть ключовий файл"
 
 msgid "Enter the database master password"
 msgstr "Вкажіть майстер-пароль бази даних"
@@ -195,16 +203,16 @@ msgid "Open"
 msgstr "Відкрити"
 
 msgid "Hide Password"
-msgstr ""
+msgstr "Приховати пароль"
 
 msgid "Show Password"
-msgstr ""
+msgstr "Показати пароль"
 
 msgid "Opening"
 msgstr "Відкривається"
 
 msgid "Change settings based on your preferences."
-msgstr ""
+msgstr "Змінити налаштування згідно з Вашими уподобаннями."
 
 msgid "Enable database locking"
 msgstr "Активувати блокування бази даних"
@@ -233,15 +241,17 @@ msgid "This group contains all the deleted entries"
 msgstr "Ця група містить усі видаленні записи"
 
 msgid "Fuzzy Search"
-msgstr ""
+msgstr "Нечіткий пошук"
 
 msgid ""
 "Use fuzzy search to find entries. If disabled, search only matches exact "
 "case insensitive text."
 msgstr ""
+"Використовувати нечіткий пошук для пошуку записів. Якщо вимкнено, пошук "
+"відбувається лише за точним текстом без урахування регістру."
 
 msgid "%1 copied to clipboard (30 secs)"
-msgstr ""
+msgstr "%1 скопійовано до буфера обміну (30 сек)"
 
 msgid "Notes"
 msgstr "Нотатки"
@@ -250,25 +260,25 @@ msgid "Tap to copy"
 msgstr "Торкніться для копіювання"
 
 msgid "Notes copied to clipboard (30 secs)"
-msgstr ""
+msgstr "Нотатки скопійовані до буфера обміну (30 сек)"
 
 msgid "Main"
-msgstr ""
+msgstr "Головне"
 
 msgid "Username"
-msgstr ""
+msgstr "Ім'я користувача"
 
 msgid "Password"
-msgstr ""
+msgstr "Пароль"
 
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 msgid "Other Fields"
-msgstr ""
+msgstr "Інші поля"
 
 msgid "KeePassRX: Clipboard cleared."
-msgstr ""
+msgstr "KeePassRX: Буфер обміну очищений."
 
 msgid "Manual path set."
 msgstr "Шлях встановлений вручну."
@@ -304,11 +314,11 @@ msgstr ""
 
 msgctxt "A database imported via ContentHub"
 msgid "Imported"
-msgstr ""
+msgstr "Імпортовано"
 
 msgctxt "A database managed by external file sync"
 msgid "Synced"
-msgstr ""
+msgstr "Синхронізовано"
 
 msgid "All Templates"
 msgstr "Усі шаблони"

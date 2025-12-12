@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-01 20:39+0000\n"
-"PO-Revision-Date: 2025-11-21 00:51+0000\n"
-"Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
+"PO-Revision-Date: 2025-12-12 20:00+0000\n"
+"Last-Translator: Daniel Frost <one@frostinfo.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/ubports/keepassrx/"
 "de/>\n"
 "Language: de\n"
@@ -66,7 +66,7 @@ msgid ""
 msgstr ""
 
 msgid "Source Code"
-msgstr ""
+msgstr "Quellcode"
 
 msgid ""
 "<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
@@ -74,10 +74,10 @@ msgid ""
 msgstr ""
 
 msgid "Open Source Licenses"
-msgstr ""
+msgstr "Open Source Lizenzen"
 
 msgid "Website"
-msgstr ""
+msgstr "Webseite"
 
 msgid "Add Database"
 msgstr "Datenbank hinzufügen"
@@ -101,10 +101,10 @@ msgid "Cancel Search"
 msgstr "Suche abbrechen"
 
 msgid "Search all entries"
-msgstr ""
+msgstr "Alle Einträge durchsuchen"
 
 msgid "Search all entries under this group"
-msgstr ""
+msgstr "Alle Einträge dieser Gruppe durchsuchen"
 
 msgid "Search entries in this group"
 msgstr "Einträge in dieser Gruppe suchen"
@@ -134,7 +134,7 @@ msgid "Change View"
 msgstr "Ansicht wechseln"
 
 msgid "All Entries"
-msgstr ""
+msgstr "Alle Einträge"
 
 msgid "All groups and entries."
 msgstr "Alle Gruppen und Einträge."
@@ -146,7 +146,7 @@ msgid "Entries grouped by template."
 msgstr "Einträge gruppiert nach Vorlage."
 
 msgid "2FA Codes"
-msgstr ""
+msgstr "2FA Codes"
 
 msgid "Entries with 2FA codes."
 msgstr "Einträge mit 2FA Codes."

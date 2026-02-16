@@ -8,401 +8,424 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-01 20:39+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2026-02-16 05:09+0000\n"
+"Last-Translator: Arif Budiman <arifpedia@gmail.com>\n"
+"Language-Team: Indonesian <https://hosted.weblate.org/projects/ubports/"
+"keepassrx/id/>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.16-dev\n"
 
 #: qml/components/EntryItem.qml:86
 msgid "Copy Username"
-msgstr ""
+msgstr "Salin Nama Pengguna"
 
 #: qml/components/EntryItem.qml:94
 msgid "Copy Password"
-msgstr ""
+msgstr "Salin Kata Sandi"
 
 #: qml/components/EntryItem.qml:103
 msgid "Open URL"
-msgstr ""
+msgstr "Buka URL"
 
 #: qml/components/EntryItem.qml:110
 msgid "Copy 2FA Code"
-msgstr ""
+msgstr "Salin Kode 2FA"
 
 #: qml/components/EntryItem.qml:122
 msgid "View Entry"
-msgstr ""
+msgstr "Lihat Entri"
 
 #: qml/components/EntryItem.qml:235
 msgid "Tap to copy 2FA code"
-msgstr ""
+msgstr "Ketuk untuk menyalin kode 2FA"
 
 #: qml/pages/AboutPage.qml:12 qml/pages/DBList.qml:76
 #: qml/pages/EntriesPage.qml:212 qml/pages/OpenDBPage.qml:112
 #: qml/pages/UnlockPage.qml:41
 msgid "About"
-msgstr ""
+msgstr "Tentang"
 
 #: qml/pages/AboutPage.qml:79
 msgid ""
 "KeePassRX is password manager for KeePass databases, designed for Ubuntu "
 "Touch. It is licensed under the GNU AGPL v3 license."
 msgstr ""
+"KeePassRX adalah pengelola kata sandi untuk basis data KeePass, yang "
+"dirancang untuk Ubuntu Touch. Aplikasi ini dilisensikan di bawah lisensi GNU "
+"AGPL v3."
 
 #: qml/pages/AboutPage.qml:90
 msgid ""
 "The built-in KeePass icon images are licensed under a variety of licenses as "
 "detailed in assets/COPYING."
 msgstr ""
+"Gambar ikon bawaan KeePass dilisensikan di bawah berbagai lisensi "
+"sebagaimana dirinci dalam assets/COPYING."
 
 #: qml/pages/AboutPage.qml:98
 msgid "Manual"
-msgstr ""
+msgstr "Panduan"
 
 #: qml/pages/AboutPage.qml:110
 msgid ""
 "• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
 "projects/keepassrx/</a>"
 msgstr ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
 
 #: qml/pages/AboutPage.qml:123
 msgid ""
 "• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
 "projects/keepassrx/</a>"
 msgstr ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
 
 #: qml/pages/AboutPage.qml:132
 msgid "Source Code"
-msgstr ""
+msgstr "Kode Sumber"
 
 #: qml/pages/AboutPage.qml:141
 msgid ""
 "<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
 "projectmoon/keepass-rx</a>"
 msgstr ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
 
 #: qml/pages/LicensesPage.qml:13
 msgid "Open Source Licenses"
-msgstr ""
+msgstr "Lisensi Sumber Terbuka"
 
 #: qml/pages/LicensesPage.qml:66
 msgid "Website"
-msgstr ""
+msgstr "Situs Web"
 
 #: qml/pages/DBList.qml:62
 msgid "Add Database"
-msgstr ""
+msgstr "Tambah Basis Data"
 
 #: qml/pages/DBList.qml:69 qml/pages/EntriesPage.qml:203
 #: qml/pages/OpenDBPage.qml:105 qml/pages/SettingsPage.qml:10
 #: qml/pages/UnlockPage.qml:34
 msgid "Settings"
-msgstr ""
+msgstr "Pengaturan"
 
 #: qml/pages/DBList.qml:96
 msgid "Loading last database."
-msgstr ""
+msgstr "Memuat basis data terakhir."
 
 #: qml/pages/DBList.qml:106
 msgid "Select Database"
-msgstr ""
+msgstr "Pilih Basis Data"
 
 #: qml/pages/DBList.qml:178
 msgid "Tap + to import a database."
-msgstr ""
+msgstr "Ketuk + untuk mengimpor basis data."
 
 #: qml/pages/DBList.qml:283
 msgid "It will only be removed from the app, not your device."
-msgstr ""
+msgstr "Ini hanya akan dihapus dari aplikasi, bukan dari perangkat Anda."
 
 #: qml/pages/EntriesPage.qml:96
 msgid "Cancel Search"
-msgstr ""
+msgstr "Batal Cari"
 
 #: qml/pages/EntriesPage.qml:117
 msgid "Search all entries"
-msgstr ""
+msgstr "Cari semua entri"
 
 #: qml/pages/EntriesPage.qml:117
 msgid "Search all entries under this group"
-msgstr ""
+msgstr "Cari semua entri di bawah grup ini"
 
 #: qml/pages/EntriesPage.qml:118
 msgid "Search entries in this group"
-msgstr ""
+msgstr "Cari entri dalam grup ini"
 
 #: qml/pages/EntriesPage.qml:143
 msgid "Lock"
-msgstr ""
+msgstr "Kunci"
 
 #: qml/pages/EntriesPage.qml:155
 msgid "Close"
-msgstr ""
+msgstr "Tutup"
 
 #: qml/pages/EntriesPage.qml:167 qml/pages/OpenDBPage.qml:92
 #: qml/pages/SingleEntry.qml:76
 msgid "Back"
-msgstr ""
+msgstr "Kembali"
 
 #: qml/pages/EntriesPage.qml:180
 msgid "View Mode"
-msgstr ""
+msgstr "Mode Tampilan"
 
 #: qml/pages/EntriesPage.qml:190
 msgid "Search"
-msgstr ""
+msgstr "Cari"
 
 #: qml/pages/EntriesPage.qml:224
 msgid "Lock Database"
-msgstr ""
+msgstr "Kunci Basis Data"
 
 #: qml/pages/EntriesPage.qml:234
 msgid "Close Database"
-msgstr ""
+msgstr "Tutup Basis Data"
 
 #: qml/pages/EntriesPage.qml:254
 msgid "Change View"
-msgstr ""
+msgstr "Ubah Tampilan"
 
 #: qml/pages/EntriesPage.qml:260
 msgid "All Entries"
-msgstr ""
+msgstr "Semua Entri"
 
 #: qml/pages/EntriesPage.qml:262
 msgid "All groups and entries."
-msgstr ""
+msgstr "Semua grup dan entri."
 
 #: qml/pages/EntriesPage.qml:266 src/rx/virtual_hierarchy.rs:71
 msgid "Special Categories"
-msgstr ""
+msgstr "Kategori Spesial"
 
 #: qml/pages/EntriesPage.qml:268
 msgid "Entries grouped by template."
-msgstr ""
+msgstr "Entri dikelompokkan berdasarkan templat."
 
 #: qml/pages/EntriesPage.qml:272
 msgid "2FA Codes"
-msgstr ""
+msgstr "Kode 2FA"
 
 #: qml/pages/EntriesPage.qml:274
 msgid "Entries with 2FA codes."
-msgstr ""
+msgstr "Entri dengan kode 2FA."
 
 #: qml/pages/EntriesPage.qml:278 src/rx/virtual_hierarchy.rs:242
 msgid "Tags"
-msgstr ""
+msgstr "Tag"
 
 #: qml/pages/EntriesPage.qml:280
 msgid "Entries grouped by tag."
-msgstr ""
+msgstr "Entri dikelompokkan berdasarkan tag."
 
 #: qml/pages/EntriesPage.qml:292
 msgid "Select View"
-msgstr ""
+msgstr "Pilih Tampilan"
 
 #: qml/pages/EntriesPage.qml:311
 msgid "Select"
-msgstr ""
+msgstr "Pilih"
 
 #: qml/pages/EntriesPage.qml:321
 msgid "Cancel"
-msgstr ""
+msgstr "Batal"
 
 #: qml/pages/OpenDBPage.qml:26
 msgid "Key Loaded"
-msgstr ""
+msgstr "Kunci Dimuat"
 
 #: qml/pages/OpenDBPage.qml:27
 msgid "Remove Key"
-msgstr ""
+msgstr "Hapus Kunci"
 
 #: qml/pages/OpenDBPage.qml:29
 msgid "Use Key"
-msgstr ""
+msgstr "Gunakan Kunci"
 
 #: qml/pages/OpenDBPage.qml:36
 msgid "Automatically detected a key file for this database."
-msgstr ""
+msgstr "Secara otomatis mendeteksi file kunci untuk basis data ini."
 
 #: qml/pages/OpenDBPage.qml:38
 msgid "A key file will be used to open this database."
-msgstr ""
+msgstr "File kunci akan digunakan untuk membuka basis data ini."
 
 #: qml/pages/OpenDBPage.qml:50
 msgid "Select Key File"
-msgstr ""
+msgstr "Pilih File Kunci"
 
 #: qml/pages/OpenDBPage.qml:222
 msgid "Enter the database master password"
-msgstr ""
+msgstr "Masukkan kata sandi master basis data"
 
 #: qml/pages/OpenDBPage.qml:235
 msgid "Master Password"
-msgstr ""
+msgstr "Kata Sandi Master"
 
 #: qml/pages/OpenDBPage.qml:261
 msgid "Open"
-msgstr ""
+msgstr "Buka"
 
 #: qml/pages/OpenDBPage.qml:282
 msgid "Hide Password"
-msgstr ""
+msgstr "Sembunyikan Kata Sandi"
 
 #: qml/pages/OpenDBPage.qml:282
 msgid "Show Password"
-msgstr ""
+msgstr "Tampilkan Kata Sandi"
 
 #: qml/pages/OpenDBPage.qml:339
 msgid "Opening"
-msgstr ""
+msgstr "Membuka"
 
 #: qml/pages/SettingsPage.qml:34
 msgid "Change settings based on your preferences."
-msgstr ""
+msgstr "Ubah pengaturan berdasarkan preferensi Anda."
 
 #: qml/pages/SettingsPage.qml:39
 msgid "Enable database locking"
-msgstr ""
+msgstr "Aktifkan penguncian basis data"
 
 #: qml/pages/SettingsPage.qml:42
 msgid ""
 "Securely lock and unlock database with a short passcode. Requires restart to "
 "take effect."
 msgstr ""
+"Kunci dan buka kunci basis data dengan aman menggunakan kode sandi singkat. "
+"Memerlukan mulai ulang untuk menerapkan perubahan."
 
 #: qml/pages/SettingsPage.qml:55
 msgid "Enable Accents"
-msgstr ""
+msgstr "Aktifkan Aksen"
 
 #: qml/pages/SettingsPage.qml:57
 msgid ""
 "Set header color and name according to database settings. Compatible with "
 "KeePassXC."
 msgstr ""
+"Atur warna header dan nama sesuai dengan pengaturan basis data. Kompatibel "
+"dengan KeePassXC."
 
 #: qml/pages/SettingsPage.qml:72
 msgid "Show the \"Recycle bin\" group"
-msgstr ""
+msgstr "Tampilkan grup \"Tempat sampah\""
 
 #: qml/pages/SettingsPage.qml:74
 msgid "This group contains all the deleted entries"
-msgstr ""
+msgstr "Grup ini berisi semua entri yang telah dihapus"
 
 #: qml/pages/SettingsPage.qml:87
 msgid "Fuzzy Search"
-msgstr ""
+msgstr "Pencarian Fuzzy"
 
 #: qml/pages/SettingsPage.qml:90
 msgid ""
 "Use fuzzy search to find entries. If disabled, search only matches exact "
 "case insensitive text."
 msgstr ""
+"Gunakan pencarian fuzzy untuk menemukan entri. Jika dinonaktifkan, pencarian "
+"hanya mencocokkan teks persis tanpa membedakan huruf besar-kecil."
 
 #: qml/pages/SingleEntry.qml:23 qml/Main.qml:96
 msgid "%1 copied to clipboard (30 secs)"
-msgstr ""
+msgstr "%1 disalin ke papan klip (30 detik)"
 
 #: qml/pages/SingleEntry.qml:117
 msgid "Notes"
-msgstr ""
+msgstr "Catatan"
 
 #: qml/pages/SingleEntry.qml:125
 msgid "Tap to copy"
-msgstr ""
+msgstr "Ketuk untuk menyalin"
 
 #: qml/pages/SingleEntry.qml:135
 msgid "Notes copied to clipboard (30 secs)"
-msgstr ""
+msgstr "Catatan disalin ke papan klip (30 detik)"
 
 #: qml/pages/SingleEntry.qml:184
 msgid "Main"
-msgstr ""
+msgstr "Utama"
 
 #: qml/pages/SingleEntry.qml:190 qml/pages/SingleEntry.qml:193
 msgid "Username"
-msgstr ""
+msgstr "Nama Pengguna"
 
 #: qml/pages/SingleEntry.qml:198 qml/pages/SingleEntry.qml:203
 msgid "Password"
-msgstr ""
+msgstr "Kata Sandi"
 
 #: qml/pages/SingleEntry.qml:209 qml/pages/SingleEntry.qml:211
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: qml/pages/SingleEntry.qml:232
 msgid "Other Fields"
-msgstr ""
+msgstr "Bidang Lainnya"
 
 #: qml/pages/SingleEntry.qml:258 qml/Main.qml:225
 msgid "KeePassRX: Clipboard cleared."
-msgstr ""
+msgstr "KeePassRX: Papan klip dikosongkan."
 
 #: qml/pages/UnlockPage.qml:137
 msgid "Manual path set."
-msgstr ""
+msgstr "Jalur manual telah diatur."
 
 #: qml/pages/UnlockPage.qml:154
 msgid ""
 "The passcode is the first five characters of the database password (or the "
 "whole password if less than five characters)."
 msgstr ""
+"Kode sandi adalah lima karakter pertama dari kata sandi basis data (atau "
+"seluruh kata sandi jika kurang dari lima karakter)."
 
 #: qml/pages/UnlockPage.qml:170
 msgid "Passcode"
-msgstr ""
+msgstr "Kode Sandi"
 
 #: qml/pages/UnlockPage.qml:201
 msgid "Unlock"
-msgstr ""
+msgstr "Buka Kunci"
 
 #: qml/pages/UnlockPage.qml:220
 msgid "Securely Unlocking"
-msgstr ""
+msgstr "Membuka Kunci dengan Aman"
 
 #: qml/pages/UnlockPage.qml:221
 msgid "Securely Locking"
-msgstr ""
+msgstr "Mengunci dengan Aman"
 
 #: qml/pages/UnlockPage.qml:232
 msgid "Database Not Opening?"
-msgstr ""
+msgstr "Basis Data Tidak Terbuka?"
 
 #: src/gui/instructions.rs:9
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
 msgstr ""
+"<b>Menampilkan semua kode 2FA dalam basis data.</b><br/>Lihat detail entri "
+"menggunakan bilah tindakannya."
 
 #: src/gui/mod.rs:67
 msgctxt "A database imported via ContentHub"
 msgid "Imported"
-msgstr ""
+msgstr "Diimpor"
 
 #: src/gui/mod.rs:68
 msgctxt "A database managed by external file sync"
 msgid "Synced"
-msgstr ""
+msgstr "Disinkronkan"
 
 #: src/rx/virtual_hierarchy.rs:79
 msgid "All Templates"
-msgstr ""
+msgstr "Semua Templat"
 
 #: src/rx/virtual_hierarchy.rs:131
 msgctxt "Default view of the password database (all entries)"
 msgid "Default View"
-msgstr ""
+msgstr "Tampilan Standar"
 
 #: src/rx/virtual_hierarchy.rs:175 src/rx/virtual_hierarchy.rs:188
 msgctxt "Two-factor/OTP codes (keep phrase short as possible)"
 msgid "2FA Codes"
-msgstr ""
+msgstr "Kode 2FA"
 
 #: src/rx/virtual_hierarchy.rs:234
 msgctxt "List of entries with tags"
 msgid "Tags"
-msgstr ""
+msgstr "Tag"

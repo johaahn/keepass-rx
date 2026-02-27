@@ -8,9 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-01 20:39+0000\n"
-"PO-Revision-Date: 2025-12-21 18:00+0000\n"
-"Last-Translator: Julian Noel Streitberger <juliannoelstreitberger@gmail.com>"
-"\n"
+"PO-Revision-Date: 2026-02-28 00:09+0000\n"
+"Last-Translator: Daniel Frost <one@frostinfo.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/ubports/keepassrx/"
 "de/>\n"
 "Language: de\n"
@@ -18,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.15.1\n"
+"X-Generator: Weblate 5.16.1-dev\n"
 
 msgid "Copy Username"
 msgstr "Nutzernamen kopieren"
@@ -176,22 +175,22 @@ msgid "Cancel"
 msgstr "Abbrechen"
 
 msgid "Key Loaded"
-msgstr ""
+msgstr "Schlüssel geladen"
 
 msgid "Remove Key"
-msgstr ""
+msgstr "Schlüssel entfernen"
 
 msgid "Use Key"
-msgstr ""
+msgstr "Schlüssel verwenden"
 
 msgid "Automatically detected a key file for this database."
-msgstr ""
+msgstr "Für diese Datenbank wurde ein Schlüssel automatisch erkannt."
 
 msgid "A key file will be used to open this database."
-msgstr ""
+msgstr "Eine Schlüsseldatei wird zum Öffnen dieser Datenbank verwendet."
 
 msgid "Select Key File"
-msgstr ""
+msgstr "Wähle Schlüsseldatei"
 
 msgid "Enter the database master password"
 msgstr "Datenbankpasswort eingeben"
@@ -203,16 +202,16 @@ msgid "Open"
 msgstr "Öffnen"
 
 msgid "Hide Password"
-msgstr ""
+msgstr "Passwort ausblenden"
 
 msgid "Show Password"
-msgstr ""
+msgstr "Passwort anzeigen"
 
 msgid "Opening"
 msgstr "Öffne"
 
 msgid "Change settings based on your preferences."
-msgstr ""
+msgstr "Einstellungen ändern basierend auf deinen Vorlieben."
 
 msgid "Enable database locking"
 msgstr "Aktiviere Datenbanksperrung"
@@ -241,15 +240,18 @@ msgid "This group contains all the deleted entries"
 msgstr "Diese Gruppe enthält alle gelöschten Einträge"
 
 msgid "Fuzzy Search"
-msgstr ""
+msgstr "Unscharfe Suche"
 
 msgid ""
 "Use fuzzy search to find entries. If disabled, search only matches exact "
 "case insensitive text."
 msgstr ""
+"Nutze die unscharfe Suche um Einträge zu finden. Wenn deaktiviert, werden "
+"nur exakte Treffer ohne Berücksichtigung von Groß- und Kleinschreibung "
+"zurückgegeben."
 
 msgid "%1 copied to clipboard (30 secs)"
-msgstr ""
+msgstr "%1 in die Zwischenablage kopiert (für 30 Sek.)"
 
 msgid "Notes"
 msgstr "Notizen"
@@ -258,25 +260,25 @@ msgid "Tap to copy"
 msgstr "Antippen zum Kopieren"
 
 msgid "Notes copied to clipboard (30 secs)"
-msgstr ""
+msgstr "Notizen in die Zwischenablage kopiert (für 30 Sek.)"
 
 msgid "Main"
 msgstr ""
 
 msgid "Username"
-msgstr ""
+msgstr "Nutzername"
 
 msgid "Password"
-msgstr ""
+msgstr "Passwort"
 
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 msgid "Other Fields"
-msgstr ""
+msgstr "Andere Felder"
 
 msgid "KeePassRX: Clipboard cleared."
-msgstr ""
+msgstr "KeePassRX: Zwischenablage geleert."
 
 msgid "Manual path set."
 msgstr "Manueller Pfad gesetzt."
@@ -285,11 +287,11 @@ msgid ""
 "The passcode is the first five characters of the database password (or the "
 "whole password if less than five characters)."
 msgstr ""
-"Das Passwort sind die ersten fünf Zeichen des Datenbankpassworts (oder das "
+"Der Passcode sind die ersten fünf Zeichen des Datenbankpassworts (oder das "
 "gesamte Passwort, falls es weniger als 5 Zeichen hat)."
 
 msgid "Passcode"
-msgstr "Passwort"
+msgstr "Passcode"
 
 msgid "Unlock"
 msgstr "Entsperren"
@@ -312,11 +314,11 @@ msgstr ""
 
 msgctxt "A database imported via ContentHub"
 msgid "Imported"
-msgstr ""
+msgstr "Importiert"
 
 msgctxt "A database managed by external file sync"
 msgid "Synced"
-msgstr ""
+msgstr "Synchronisiert"
 
 msgid "All Templates"
 msgstr "Alle Vorlagen"

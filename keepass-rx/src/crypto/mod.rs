@@ -10,11 +10,12 @@ use libsodium_rs::utils::{SecureVec, vec_utils};
 use poison_guard::Poison;
 use secstr::SecUtf8;
 use std::cell::RefCell;
+use std::rc::Rc;
+use std::sync::Arc;
 use uuid::Uuid;
 use zeroize::Zeroize;
 
 const SHORT_PW_LENGTH: usize = 5;
-const KERNEL_SECRET_USER: &str = "keepassrx";
 
 fn to_short_password(value: &str) -> Result<&str> {
     let short_password = {
@@ -45,14 +46,16 @@ fn hash_password(value: &str, pw_salt: &[u8]) -> Result<Vec<u8>> {
 /// Simple wrapper around the keyring library to store credentials in
 /// a secure(ish?) place.
 pub struct KernelBackedSecret {
-    entry_id: Poison<String>,
+    service: String,
+    secret: Poison<Arc<KeyringEntry>>,
 }
 
 impl Clone for KernelBackedSecret {
     fn clone(&self) -> Self {
         KernelBackedSecret {
-            entry_id: Poison::new(
-                self.entry_id
+            service: self.service.clone(),
+            secret: Poison::new(
+                self.secret
                     .get()
                     .expect("Cannot clone poisoned encrypted password")
                     .clone(),
@@ -63,45 +66,40 @@ impl Clone for KernelBackedSecret {
 
 #[allow(dead_code)]
 impl KernelBackedSecret {
-    fn entry_for(service: &str) -> Result<KeyringEntry> {
-        Ok(KeyringEntry::new(service, KERNEL_SECRET_USER)?)
-    }
-
     pub fn new_with_id(id: &str, pw: &[u8]) -> Result<Self> {
-        let entry = Self::entry_for(id)?;
+        let entry = KeyringEntry::new(id, "keepassrx")?;
         entry.set_secret(pw)?;
 
         Ok(Self {
-            entry_id: Poison::new(id.to_owned()),
+            service: id.to_owned(),
+            secret: Poison::new(Arc::new(entry)),
         })
     }
 
     pub fn new(pw: &[u8]) -> Result<Self> {
-        Self::new_with_id(KERNEL_SECRET_USER, pw)
+        Self::new_with_id("keepassrx", pw)
     }
 
     pub fn retrieve(&mut self) -> Result<Vec<u8>> {
-        let service_guard = Poison::unless_recovered(&mut self.entry_id)
+        let value = Poison::unless_recovered(&mut self.secret)
             .map_err(|poisoned| poisoned.into_error())?;
-        let keyring_entry = Self::entry_for(service_guard.as_str())?;
 
-        let result = Ok(keyring_entry.get_secret()?);
-        Poison::recover(service_guard);
+        let result = Ok(value.get_secret()?);
+        Poison::recover(value);
 
         result
     }
 
     pub fn poison(&mut self) -> Result<()> {
-        let service_guard = Poison::unless_recovered(&mut self.entry_id)
+        let secret = Poison::unless_recovered(&mut self.secret)
             .map_err(|poisoned| poisoned.into_error())?;
-        let keyring_entry = Self::entry_for(service_guard.as_str())?;
 
-        keyring_entry.delete_credential()?;
+        secret.delete_credential()?;
         Ok(())
     }
 
     pub fn is_poisoned(&self) -> bool {
-        self.entry_id.is_poisoned()
+        self.secret.is_poisoned()
     }
 }
 

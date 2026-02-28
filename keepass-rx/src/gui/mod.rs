@@ -1,19 +1,15 @@
 use actix::prelude::*;
 use anyhow::{Result, anyhow};
-use chrono::{DateTime, Datelike, Local, Timelike};
 use colors::wash_out_by_blending;
 use gettextrs::pgettext;
-use log::{debug, info, warn};
 use qmeta_async::with_executor;
-use qmetaobject::{QDate, QDateTime, QMetaType, QStringList, QTime, QVariantMap, prelude::*};
+use qmetaobject::*;
 use secstr::SecUtf8;
 use std::fs::{create_dir_all, remove_dir_all};
 use std::path::Path;
 use std::str::FromStr;
-use std::time::SystemTime;
 use unicase::UniCase;
 use uuid::Uuid;
-use zeroize::Zeroize;
 
 pub(crate) mod actor;
 pub(crate) mod colors;
@@ -144,7 +140,6 @@ pub enum RxViewMode {
     Templates,
     Totp,
     Tags,
-    SavedSearches,
 }
 
 fn view_mode_from_string(qval: &QString) -> RxViewMode {
@@ -153,7 +148,6 @@ fn view_mode_from_string(qval: &QString) -> RxViewMode {
         "Templates" => RxViewMode::Templates,
         "Totp" => RxViewMode::Totp,
         "Tags" => RxViewMode::Tags,
-        "SavedSearches" => RxViewMode::SavedSearches,
         _ => panic!("Invalid view mode: {}", qval),
     }
 }
@@ -164,7 +158,6 @@ fn view_mode_to_string(view_mode: &RxViewMode) -> QString {
         RxViewMode::Templates => "Templates",
         RxViewMode::Totp => "Totp",
         RxViewMode::Tags => "Tags",
-        RxViewMode::SavedSearches => "SavedSearches",
     }
     .into()
 }
@@ -172,19 +165,6 @@ fn view_mode_to_string(view_mode: &RxViewMode) -> QString {
 impl QMetaType for RxViewMode {
     const CONVERSION_FROM_STRING: Option<fn(&QString) -> Self> = Some(view_mode_from_string);
     const CONVERSION_TO_STRING: Option<fn(&Self) -> QString> = Some(view_mode_to_string);
-}
-
-fn qdatetime_from_system_time(time: SystemTime) -> QDateTime {
-    let local: DateTime<Local> = time.into();
-    let date = QDate::from_y_m_d(local.year(), local.month() as i32, local.day() as i32);
-    let time = QTime::from_h_m_s_ms(
-        local.hour() as i32,
-        local.minute() as i32,
-        Some(local.second() as i32),
-        Some(local.timestamp_subsec_millis() as i32),
-    );
-
-    QDateTime::from_date_time_local_timezone(date, time)
 }
 
 #[derive(QObject, Default)]
@@ -214,7 +194,6 @@ pub struct KeepassRx {
     getSingleEntry: qt_method!(fn(&self, entry_uuid: QString)),
     getTotp: qt_method!(fn(&self, entry_uuid: QString)),
     getFieldValue: qt_method!(fn(&self, entry_uuid: QString, field_name: QString)),
-    revealFieldValue: qt_method!(fn(&self, entry_uuid: QString, field_name: QString)),
 
     // easy-open management
     storeMasterPassword: qt_method!(fn(&self, master_password: QString)),
@@ -231,7 +210,7 @@ pub struct KeepassRx {
     fileListingCompleted: qt_signal!(),
     rootGroupUuidChanged: qt_signal!(),
     metadataReceived: qt_signal!(metadata: QVariantMap),
-    databaseImported: qt_signal!(db_name: QString, db_type: RxDbType, last_modified: QDateTime),
+    databaseImported: qt_signal!(db_name: QString, db_type: RxDbType),
     databaseOpened: qt_signal!(),
     databaseClosed: qt_signal!(),
     databaseDeleted: qt_signal!(db_name: QString),
@@ -264,26 +243,18 @@ impl KeepassRx {
         }
     }
 
-    fn actor_ref(&self) -> &Addr<KeepassRxActor> {
-        self.actor.as_ref().expect("Actor not initialized")
-    }
-
     pub fn getViewMode(&self) -> RxViewMode {
         self.viewMode
     }
 
     #[with_executor]
     pub fn setViewMode(&mut self, mode: RxViewMode) {
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
         actix::spawn(actor.send(SetViewMode(mode)));
     }
 
     #[with_executor]
     pub fn listImportedDatabases(&self) {
-        fn last_modified_datetime(db: &std::fs::DirEntry) -> Result<QDateTime> {
-            Ok(qdatetime_from_system_time(db.metadata()?.modified()?))
-        }
-
         let want_file = |db: &std::fs::DirEntry| -> bool {
             match db.file_name().into_string() {
                 Ok(file_str) => file_str.ends_with(".kdbx") || file_str.ends_with(".kdb"),
@@ -325,11 +296,9 @@ impl KeepassRx {
             });
 
             for DbListing(db, db_type) in dbs {
-                let last_modified = last_modified_datetime(&db)?;
                 self.databaseImported(
                     QString::from(db.file_name().to_string_lossy().to_string()),
                     db_type,
-                    last_modified,
                 );
             }
 
@@ -347,7 +316,7 @@ impl KeepassRx {
     /// in QML from the same scope as this method call.
     #[with_executor]
     pub fn importDatabase(&self, path: String) {
-        let copy_file = move || -> Result<(String, QDateTime)> {
+        let copy_file = move || -> Result<String> {
             let source = Path::new(&path);
             let db_name = source
                 .file_name()
@@ -362,10 +331,10 @@ impl KeepassRx {
                 return Err(anyhow!("Trying to copy source to the same destination"));
             }
 
-            debug!("Making directory: {}", dest_dir.display());
+            println!("Making directory: {}", dest_dir.display());
             create_dir_all(&dest_dir)?;
 
-            info!(
+            println!(
                 "Copying database from {} to {}",
                 source.display(),
                 dest.display()
@@ -374,7 +343,7 @@ impl KeepassRx {
             // Nuke db.kdbx if it exists and is a directory for some
             // reason. Can result from corruption or weirdness.
             if dest.exists() && dest.is_dir() {
-                warn!(
+                println!(
                     "{} is a directory for some reason. Removing.",
                     dest.display()
                 );
@@ -382,49 +351,43 @@ impl KeepassRx {
             }
 
             let bytes_copied = std::fs::copy(&source, &dest)?;
-            info!("Copied {} bytes", bytes_copied);
-
-            let modified = dest.metadata()?.modified()?;
-            Ok((db_name, qdatetime_from_system_time(modified)))
+            println!("Copied {} bytes", bytes_copied);
+            Ok(db_name)
         };
 
         match copy_file() {
-            Ok((db_name, last_modified)) => self.databaseImported(
-                QString::from(db_name),
-                RxDbType::Imported,
-                last_modified,
-            ),
+            Ok(db_name) => self.databaseImported(QString::from(db_name), RxDbType::Imported),
             Err(err) => self.databaseOpenFailed(format!("{}", err)),
         }
     }
 
     #[with_executor]
     pub fn getMetadata(&self) {
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
         actix::spawn(actor.send(GetMetadata));
     }
 
     #[with_executor]
     pub fn closeDatabase(&mut self) {
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
         actix::spawn(actor.send(CloseDatabase));
     }
 
     #[with_executor]
     pub fn deleteDatabase(&self, db_name: String) {
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
         actix::spawn(actor.send(DeleteDatabase { db_name }));
     }
 
     #[with_executor]
     pub fn getRootContainer(&self) {
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
         actix::spawn(actor.send(GetContainer::root()));
     }
 
     #[with_executor]
     pub fn getContainer(&self, group_uuid: QString) {
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
         let maybe_uuid = Uuid::from_str(&group_uuid.to_string());
 
         match maybe_uuid {
@@ -443,7 +406,7 @@ impl KeepassRx {
             _ => None,
         };
 
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
 
         match maybe_uuid {
             Ok(group_uuid) => {
@@ -455,7 +418,7 @@ impl KeepassRx {
 
     #[with_executor]
     pub fn getSingleEntry(&self, entry_uuid: QString) {
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
         let maybe_uuid = Uuid::from_str(&entry_uuid.to_string());
 
         match maybe_uuid {
@@ -469,64 +432,54 @@ impl KeepassRx {
     #[with_executor]
     pub fn getTotp(&self, entry_uuid: QString) {
         let entry_uuid = entry_uuid.to_string();
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
         actix::spawn(actor.send(GetTotp { entry_uuid }));
     }
 
     #[with_executor]
     pub fn storeMasterPassword(&self, master_password: QString) {
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
         actix::spawn(actor.send(StoreMasterPassword {
-            master_password: qstring_to_secure_utf8(&master_password),
+            master_password: SecUtf8::from(master_password.to_string()),
         }));
     }
 
     #[with_executor]
     pub fn encryptMasterPassword(&self) {
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
         actix::spawn(actor.send(EncryptMasterPassword));
     }
 
     #[with_executor]
     pub fn decryptMasterPassword(&self, short_password: QString) {
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
         actix::spawn(actor.send(DecryptMasterPassword {
-            short_password: qstring_to_secure_utf8(&short_password),
+            short_password: SecUtf8::from(short_password.to_string()),
         }));
     }
 
     #[with_executor]
     pub fn invalidateMasterPassword(&self) {
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
         actix::spawn(actor.send(InvalidateMasterPassword));
     }
 
     #[with_executor]
     pub fn checkLockingStatus(&self) {
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
         actix::spawn(actor.send(CheckLockingStatus));
     }
 
     #[with_executor]
     pub fn getFieldValue(&self, entry_uuid: QString, field_name: QString) {
-        self.request_field_value(entry_uuid, field_name, "copy");
-    }
-
-    #[with_executor]
-    pub fn revealFieldValue(&self, entry_uuid: QString, field_name: QString) {
-        self.request_field_value(entry_uuid, field_name, "reveal");
-    }
-
-    fn request_field_value(&self, entry_uuid: QString, field_name: QString, purpose: &str) {
         let maybe_uuid = Uuid::from_str(&entry_uuid.to_string());
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
 
         match maybe_uuid {
             Ok(entry_uuid) => {
                 actix::spawn(actor.send(GetFieldValue {
                     entry_uuid,
                     field_name: field_name.into(),
-                    purpose: purpose.to_string(),
                 }));
             }
             Err(err) => self.errorReceived(format!("{}", err)),
@@ -539,23 +492,4 @@ impl KeepassRx {
             .expect("No color generated")
             .into()
     }
-}
-
-fn qstring_to_secure_utf8(value: &QString) -> SecUtf8 {
-    let utf16 = value.to_slice();
-    let mut utf8 = Vec::with_capacity(utf16.len());
-
-    for ch in char::decode_utf16(utf16.iter().copied()) {
-        let ch = ch.unwrap_or(char::REPLACEMENT_CHARACTER);
-        let mut buf = [0u8; 4];
-        utf8.extend_from_slice(ch.encode_utf8(&mut buf).as_bytes());
-    }
-
-    let secure = std::str::from_utf8(&utf8)
-        .ok()
-        .and_then(|s| SecUtf8::from_str(s).ok())
-        .unwrap_or_else(|| SecUtf8::from(""));
-
-    utf8.zeroize();
-    secure
 }

@@ -2,7 +2,7 @@
 name = "keepassrx"
 description = "KeePass password manager for Ubuntu Touch"
 license = "AGPL-3.0-or-later"
-version = "0.13.0"
+version = "0.12.1"
 authors = ["projectmoon <projectmoon@agnos.is>"]
 edition = "2024"
 build = "src/build.rs"
@@ -44,7 +44,6 @@ fuzzy-matcher = "0.3.7"
 qttypes = "0.2.12"
 serde = "1.0.228"
 serde_json = "1.0.145"
-deunicode = "1.6.2"
 
 [build-dependencies]
 cpp_build = "0.5"

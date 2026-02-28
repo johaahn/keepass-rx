@@ -17,23 +17,11 @@ Page {
     property string errorMsg
     property double lastHeartbeat: 0
 
-    function clearSensitiveUiState() {
-        shortPassword.text = '';
-        showPasswordAction.checked = false;
-    }
-
     Component.onCompleted: {
         if (keepassrx.databaseOpen) {
             console.log('UnlockPage: Closing an already open database. This is an anomaly.');
             uiDatabase.clearKeyFile();
             keepassrx.closeDatabase();
-        }
-    }
-
-    Component.onDestruction: clearSensitiveUiState()
-    onVisibleChanged: {
-        if (!visible) {
-            clearSensitiveUiState();
         }
     }
 
@@ -58,6 +46,7 @@ Page {
     }
 
     function openDatabase() {
+        console.log('[Unlock] QML - Unlocking master password');
         busy = true;
         showPasswordAction.checked = false;
 
@@ -71,7 +60,7 @@ Page {
     }
 
     function resetApp() {
-        clearSensitiveUiState();
+        console.log('Lost the master password; resetting to Open page.');
         pageStack.removePages(adaptiveLayout.primaryPage);
         adaptiveLayout.primaryPage = openDbPage;
     }
@@ -81,19 +70,16 @@ Page {
 
         function onDatabaseOpened() {
             busy = false;
-            clearSensitiveUiState();
         }
 
         function onDatabaseOpenFailed(error) {
             busy = false;
             errorMsg = `Error: ${error}`;
-            clearSensitiveUiState();
         }
 
         function onDecryptionFailed(error) {
             busy = false;
             errorMsg = `Error: ${error}. Wrong passcode?`;
-            clearSensitiveUiState();
         }
     }
 

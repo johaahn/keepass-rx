@@ -22,24 +22,11 @@ Page {
     property string entryNotes: ""
     property bool entryHasUsername: false
     property bool entryHasPassword: false
-    property var entryEntropy: null
     property bool entryHasUrl: false
     property bool entryHasNotes: false
     property bool entryHasTotp: false
     property var entryCustomFields: null
     property string entryIconUrl: ""
-
-    function hasEntropy() {
-        return entryHasPassword && entryEntropy !== undefined
-            && entryEntropy !== null && !isNaN(Number(entryEntropy));
-    }
-
-    function passwordLabel() {
-        if (!hasEntropy()) {
-            return Tr.tr("Password");
-        }
-        return Tr.tr("Password (Entropy: %1 bits)").arg(Number(entryEntropy).toFixed(2));
-    }
 
     onStatusChanged: {
         if (status === PageStatus.Active) {
@@ -185,7 +172,7 @@ Page {
 
             DetailField {
                 visible: entryHasPassword
-                label: entryPage.passwordLabel()
+                label: Tr.tr("Password")
                 sensitive: true
                 revealed: passwordRevealed.length > 0
                 value: passwordRevealed

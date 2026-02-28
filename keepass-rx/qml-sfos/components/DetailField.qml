@@ -12,7 +12,6 @@ ListItem {
     id: field
 
     property string label
-    property color labelColor: Theme.highlightColor
     property string value
     property bool sensitive: false
     property bool revealed: false
@@ -38,7 +37,7 @@ ListItem {
             width: parent.width
             text: field.label
             font.pixelSize: Theme.fontSizeExtraSmall
-            color: field.highlighted ? Theme.secondaryHighlightColor : field.labelColor
+            color: field.highlighted ? Theme.secondaryHighlightColor : Theme.secondaryColor
         }
 
         Label {
@@ -57,9 +56,7 @@ ListItem {
             rightMargin: Theme.horizontalPageMargin
             verticalCenter: parent.verticalCenter
         }
-        source: field.revealed
-            ? "image://theme/icon-m-hide-password"
-            : "image://theme/icon-m-show-password"
+        source: field.revealed ? "image://theme/icon-m-hide" : "image://theme/icon-m-show"
     }
 
     menu: ContextMenu {

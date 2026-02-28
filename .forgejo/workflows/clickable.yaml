@@ -2,11 +2,6 @@ name: Clickable Build
 
 on:
   workflow_call:
-    inputs:
-      upload:
-        description: Upload the click packages as workflow artifacts.
-        type: boolean
-        default: true
 
 jobs:
   build:
@@ -39,14 +34,16 @@ jobs:
       - name: Build
         run: clickable build --arch ${{ matrix.arch }} --clean
 
+      # Artifacts are only kept for release tags. Branch builds just check
+      # that the app still builds.
       - name: Remove Build Files
-        if: inputs.upload
+        if: startsWith(github.ref, 'refs/tags/v')
         run: |
           rm -rf build/${{ matrix.triplet }}/app/release/
           rm -rf build/${{ matrix.triplet }}/app/${{ matrix.rust_target }}/
 
       - name: Upload Click
-        if: inputs.upload
+        if: startsWith(github.ref, 'refs/tags/v')
         uses: https://data.forgejo.org/forgejo/upload-artifact@v4
         with:
           name: keepassrx-click-${{ matrix.arch }}

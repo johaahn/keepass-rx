@@ -1,21 +1,11 @@
-use deunicode::deunicode_with_tofu_cow;
 use fuzzy_matcher::FuzzyMatcher;
 use fuzzy_matcher::skim::SkimMatcherV2;
 use indexmap::{IndexMap, IndexSet};
 use std::{cmp::Ordering, ops::Deref, rc::Rc};
 use unicase::UniCase;
 use uuid::Uuid;
-use zeroize::Zeroizing;
 
-use super::{RxContainedRef, RxDatabase, RxEntry, RxGroup, RxSavedSearch, RxTag, RxTemplate};
-
-macro_rules! decode {
-    ($term:expr) => {{
-        Zeroizing::new(
-            UniCase::new(deunicode_with_tofu_cow($term, "u{FFFD}")).to_folded_case(),
-        )
-    }};
-}
+use super::{RxContainedRef, RxDatabase, RxEntry, RxGroup, RxTag, RxTemplate};
 
 #[cfg(feature = "gui")]
 use qmetaobject::{QEnum, QMetaType, QString};
@@ -86,20 +76,6 @@ impl Search for CaseInsensitiveSearch<&RxTag> {
     }
 }
 
-impl Search for CaseInsensitiveSearch<&RxSavedSearch> {
-    fn matches(&self, term: &str) -> bool {
-        UniCase::new(&self.name).to_folded_case().contains(term)
-    }
-}
-
-impl Search for FuzzySearch<&RxSavedSearch> {
-    fn matches(&self, term: &str) -> bool {
-        SkimMatcherV2::default()
-            .fuzzy_match(&self.name, term)
-            .is_some()
-    }
-}
-
 impl Search for FuzzySearch<&RxTag> {
     fn matches(&self, term: &str) -> bool {
         SkimMatcherV2::default()
@@ -138,23 +114,24 @@ impl Search for FuzzySearch<&RxTemplate> {
 
 impl Search for CaseInsensitiveSearch<&RxEntry> {
     fn matches(&self, term: &str) -> bool {
-        let term = decode!(term);
+        let username = self.username().and_then(|u| {
+            u.value()
+                .map(|secret| UniCase::new(secret).to_folded_case())
+        });
 
-        let username = self
-            .username()
-            .and_then(|u| u.value().map(|secret| decode!(&secret)));
+        let url = self.url().and_then(|u| {
+            u.value()
+                .map(|secret| UniCase::new(secret).to_folded_case())
+        });
 
-        let url = self
-            .url()
-            .and_then(|u| u.value().map(|secret| decode!(&secret)));
+        let title = self.title().and_then(|u| {
+            u.value()
+                .map(|secret| UniCase::new(secret).to_folded_case())
+        });
 
-        let title = self
-            .title()
-            .and_then(|u| u.value().map(|secret| decode!(&secret)));
-
-        let contains_username = username.map(|u| u.contains(&*term)).unwrap_or(false);
-        let contains_url = url.map(|u| u.contains(&*term)).unwrap_or(false);
-        let contains_title = title.map(|t| t.contains(&*term)).unwrap_or(false);
+        let contains_username = username.map(|u| u.contains(term)).unwrap_or(false);
+        let contains_url = url.map(|u| u.contains(term)).unwrap_or(false);
+        let contains_title = title.map(|t| t.contains(term)).unwrap_or(false);
 
         contains_username || contains_url || contains_title
     }
@@ -162,76 +139,71 @@ impl Search for CaseInsensitiveSearch<&RxEntry> {
 
 impl Search for FuzzySearch<&RxEntry> {
     fn matches(&self, term: &str) -> bool {
-        let term = decode!(term);
+        let username = self.username().and_then(|u| {
+            u.value()
+                .map(|secret| UniCase::new(secret).to_folded_case())
+        });
 
-        let username = self
-            .username()
-            .and_then(|u| u.value().map(|secret| decode!(&secret)));
+        let url = self.url().and_then(|u| {
+            u.value()
+                .map(|secret| UniCase::new(secret).to_folded_case())
+        });
 
-        let url = self
-            .url()
-            .and_then(|u| u.value().map(|secret| decode!(&secret)));
-
-        let title = self
-            .title()
-            .and_then(|u| u.value().map(|secret| decode!(&secret)));
+        let title = self.title().and_then(|u| {
+            u.value()
+                .map(|secret| UniCase::new(secret).to_folded_case())
+        });
 
         let matcher = SkimMatcherV2::default();
 
         let username_matches = username
-            .map(|ref u| matcher.fuzzy_match(u, &term).is_some())
+            .map(|ref u| matcher.fuzzy_match(u, term).is_some())
             .unwrap_or(false);
 
         let url_matches = url
-            .map(|ref u| matcher.fuzzy_match(u, &term).is_some())
+            .map(|ref u| matcher.fuzzy_match(u, term).is_some())
             .unwrap_or(false);
 
         let title_matches = title
-            .map(|ref t| matcher.fuzzy_match(t, &term).is_some())
+            .map(|ref t| matcher.fuzzy_match(t, term).is_some())
             .unwrap_or(false);
 
         username_matches || url_matches || title_matches
     }
 }
 
-impl Search for CaseInsensitiveSearch<&RxContainedRef<'_>> {
+impl Search for CaseInsensitiveSearch<&RxContainedRef> {
     fn matches(&self, term: &str) -> bool {
         match self.deref() {
             RxContainedRef::Entry(entry) => {
-                CaseInsensitiveSearch(entry.as_ref().as_ref()).matches(term)
+                CaseInsensitiveSearch(entry.as_ref()).matches(term)
             }
             RxContainedRef::Group(group) => {
-                CaseInsensitiveSearch(group.as_ref().as_ref()).matches(term)
+                CaseInsensitiveSearch(group.as_ref()).matches(term)
             }
             RxContainedRef::Template(template) => {
-                CaseInsensitiveSearch(template.as_ref().as_ref()).matches(term)
+                CaseInsensitiveSearch(template.as_ref()).matches(term)
             }
-            RxContainedRef::Tag(tag) => CaseInsensitiveSearch(tag.as_ref()).matches(term),
-            RxContainedRef::SavedSearch(search) => {
-                CaseInsensitiveSearch(search.as_ref()).matches(term)
-            }
+            RxContainedRef::Tag(tag) => CaseInsensitiveSearch(tag).matches(term),
             RxContainedRef::VirtualRoot(_) => true,
         }
     }
 }
 
-impl Search for FuzzySearch<&RxContainedRef<'_>> {
+impl Search for FuzzySearch<&RxContainedRef> {
     fn matches(&self, term: &str) -> bool {
         match self.deref() {
-            RxContainedRef::Entry(entry) => FuzzySearch(entry.as_ref().as_ref()).matches(term),
-            RxContainedRef::Group(group) => FuzzySearch(group.as_ref().as_ref()).matches(term),
-            RxContainedRef::Template(template) => {
-                FuzzySearch(template.as_ref().as_ref()).matches(term)
-            }
-            RxContainedRef::Tag(tag) => FuzzySearch(tag.as_ref()).matches(term),
-            RxContainedRef::SavedSearch(search) => FuzzySearch(search.as_ref()).matches(term),
+            RxContainedRef::Entry(entry) => FuzzySearch(entry.as_ref()).matches(term),
+            RxContainedRef::Group(group) => FuzzySearch(group.as_ref()).matches(term),
+            RxContainedRef::Template(template) => FuzzySearch(template.as_ref()).matches(term),
+            RxContainedRef::Tag(tag) => FuzzySearch(tag).matches(term),
             RxContainedRef::VirtualRoot(_) => true,
         }
     }
 }
 
 pub fn search_contained_ref(
-    contained_ref: &RxContainedRef<'_>,
+    contained_ref: &RxContainedRef,
     search_type: RxSearchType,
     term: &str,
 ) -> bool {

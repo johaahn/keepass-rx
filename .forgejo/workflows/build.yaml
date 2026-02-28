@@ -1,21 +1,223 @@
-name: Build KeePassRX
-
-on:
-  push:
-    branches: [master]
-
+on: [push]
 jobs:
-  tests:
-    uses: ./.forgejo/workflows/test.yaml
+  license-check:
+    runs-on: docker
+    container:
+      image: rust:1.91.0
+    steps:
+      - name: Add NodeJS deb repo
+        run: curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
 
-  clickable:
-    needs: tests
-    uses: ./.forgejo/workflows/clickable.yaml
-    with:
-      upload: false
+      - name: Install NodeJS
+        run: apt update && apt install -y nodejs
 
-  sfos:
-    needs: tests
-    uses: ./.forgejo/workflows/sfos.yaml
-    with:
-      upload: false
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Cache
+        uses: https://github.com/Swatinem/rust-cache@v2
+
+      - name: Install Cargo Deny
+        run: cargo install cargo-deny
+
+      - name: License Check
+        run: cargo deny check licenses
+
+  test:
+    runs-on: docker
+    container:
+      image: clickable/ci-ut24.04-1.x-amd64
+    steps:
+      - name: Add NodeJS deb repo
+        run: curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+
+      - name: Install NodeJS
+        run: apt update && apt install -y nodejs
+
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Cache
+        uses: https://github.com/Swatinem/rust-cache@v2
+
+      - name: Test
+        run: cargo test --no-default-features
+
+  build-amd64:
+    needs: [test, license-check]
+    runs-on: docker
+    container:
+      image: clickable/ci-ut24.04-1.x-amd64
+    steps:
+      - name: Add NodeJS deb repo
+        run: curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+
+      - name: Install NodeJS
+        run: apt update && apt install -y nodejs
+
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Cache
+        uses: https://github.com/Swatinem/rust-cache@v2
+
+      - name: Build
+        run: clickable build --clean
+
+      - name: Remove build files
+        run: |
+          rm -rf build/x86_64-linux-gnu/app/release/
+          rm -rf build/x86_64-linux-gnu/app/x86_64-unknown-linux-gnu/
+
+      - name: Upload Artifact
+        uses: https://data.forgejo.org/forgejo/upload-artifact@v4
+        with:
+          name: keepassrx-ci-amd64
+          path: build/x86_64-linux-gnu/app/
+
+  build-arm64:
+    needs: [test, license-check]
+    runs-on: docker
+    container:
+      image: clickable/ci-ut24.04-1.x-arm64
+    steps:
+      - name: Add NodeJS deb repo
+        run: curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+
+      - name: Install NodeJS
+        run: apt update && apt install -y nodejs
+
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Cache
+        uses: https://github.com/Swatinem/rust-cache@v2
+
+      - name: Build
+        run: clickable build --clean
+
+      - name: Remove build files
+        run: |
+          rm -rf build/aarch64-linux-gnu/app/release/
+          rm -rf build/aarch64-linux-gnu/app/aarch64-unknown-linux-gnu/
+
+      - name: Upload Artifact
+        uses: https://data.forgejo.org/forgejo/upload-artifact@v4
+        with:
+          name: keepassrx-ci-arm64
+          path: build/aarch64-linux-gnu/app/
+
+  build-armhf:
+    needs: [test, license-check]
+    runs-on: docker
+    container:
+      image: clickable/ci-ut24.04-1.x-armhf
+    steps:
+      - name: Add NodeJS deb repo
+        run: curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+
+      - name: Install NodeJS
+        run: apt update && apt install -y nodejs
+
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Cache
+        uses: https://github.com/Swatinem/rust-cache@v2
+
+      - name: Build
+        run: clickable build --clean
+
+      - name: Remove build files
+        run: |
+          rm -rf build/arm-linux-gnueabihf/app/release/
+          rm -rf build/arm-linux-gnueabihf/app/armv7-unknown-linux-gnueabihf/
+
+      - name: Upload Artifact
+        uses: https://data.forgejo.org/forgejo/upload-artifact@v4
+        with:
+          name: keepassrx-ci-armhf
+          path: build/arm-linux-gnueabihf/app/
+
+  upload-release:
+    needs: [build-amd64, build-arm64, build-armhf]
+    if: forgejo.event_name == 'push' && contains(forgejo.ref, 'refs/tags/')
+    runs-on: docker
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download amd64 build
+        uses: https://data.forgejo.org/forgejo/download-artifact@v4
+        with:
+          name: keepassrx-ci-amd64
+          path: build/x86_64-linux-gnu/app/
+
+      - name: Download arm64 build
+        uses: https://data.forgejo.org/forgejo/download-artifact@v4
+        with:
+          name: keepassrx-ci-arm64
+          path: build/aarch64-linux-gnu/app/
+
+      - name: Download armhf build
+        uses: https://data.forgejo.org/forgejo/download-artifact@v4
+        with:
+          name: keepassrx-ci-armhf
+          path: build/arm-linux-gnueabihf/app
+
+      - name: Collect .click files
+        run: mkdir release/ && find . -name "*.click" -exec mv {} release/ \;
+
+      - uses: actions/forgejo-release@v2.7.3
+        with:
+          direction: upload
+          url: https://git.agnos.is
+          repo: projectmoon/keepass-rx
+          token: ${{ secrets.RELEASE_TOKEN }}
+          tag: ${{ env.FORGEJO_REF_NAME }}
+          release-dir: release/
+
+  openstore-release:
+    if: forgejo.event_name == 'push' && contains(forgejo.ref, 'refs/tags/v')
+    needs: [build-amd64, build-arm64, build-armhf]
+    runs-on: docker
+    container:
+      image: clickable/ci-ut24.04-1.x-armhf
+    steps:
+      - name: Add NodeJS deb repo
+        run: curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+
+      - name: Install NodeJS
+        run: apt update && apt install -y nodejs
+
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Cache
+        uses: https://github.com/Swatinem/rust-cache@v2
+
+      - name: Download amd64 build
+        uses: https://data.forgejo.org/forgejo/download-artifact@v4
+        with:
+          name: keepassrx-ci-amd64
+          path: build/x86_64-linux-gnu/app/
+
+      - name: Download arm64 build
+        uses: https://data.forgejo.org/forgejo/download-artifact@v4
+        with:
+          name: keepassrx-ci-arm64
+          path: build/aarch64-linux-gnu/app/
+
+      - name: Download armhf build
+        uses: https://data.forgejo.org/forgejo/download-artifact@v4
+        with:
+          name: keepassrx-ci-armhf
+          path: build/arm-linux-gnueabihf/app
+
+      - name: Publish arm64
+        run: clickable publish --apikey=${{secrets.OPEN_STORE_API_KEY}}  --arch arm64
+
+      - name: Publish amd64
+        run: clickable publish --apikey=${{secrets.OPEN_STORE_API_KEY}} --arch amd64
+
+      - name: Publish armhf
+        run: clickable publish --apikey=${{secrets.OPEN_STORE_API_KEY}} --arch armhf

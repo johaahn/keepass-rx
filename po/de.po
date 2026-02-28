@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 15:14+0000\n"
-"PO-Revision-Date: 2026-11-23 20:51+0000\n"
-"Last-Translator: Daniel Frost <danfro@users.noreply.hosted.weblate.org>\n"
+"POT-Creation-Date: 2025-12-01 20:39+0000\n"
+"PO-Revision-Date: 2026-02-28 00:09+0000\n"
+"Last-Translator: Daniel Frost <one@frostinfo.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/ubports/keepassrx/"
 "de/>\n"
 "Language: de\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.12.dev0\n"
+"X-Generator: Weblate 5.16.1-dev\n"
 
 msgid "Copy Username"
 msgstr "Nutzernamen kopieren"
@@ -37,14 +37,61 @@ msgstr "Eintrag öffnen"
 msgid "Tap to copy 2FA code"
 msgstr "Tippen um 2FA Code zu kopieren"
 
+msgid "About"
+msgstr "Über"
+
+msgid ""
+"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
+"Touch. It is licensed under the GNU AGPL v3 license."
+msgstr ""
+"KeePassRX ist ein Passwortmanager für KeePass-Datenbanken, der speziell für "
+"Ubuntu Touch entwickelt wurde. Er steht unter der GNU AGPL v3-Lizenz."
+
+msgid ""
+"The built-in KeePass icon images are licensed under a variety of licenses as "
+"detailed in assets/COPYING."
+msgstr ""
+"Die integrierten KeePass Symbole sind nach verschiedenen Lizenzen lizensiert "
+"wie angegeben unter assets/COPYING."
+
+msgid "Manual"
+msgstr "Handbuch"
+
+msgid ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+"Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+
+msgid ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+
+msgid "Source Code"
+msgstr "Quellcode"
+
+msgid ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
+msgstr ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
+
+msgid "Open Source Licenses"
+msgstr "Open Source Lizenzen"
+
+msgid "Website"
+msgstr "Webseite"
+
 msgid "Add Database"
 msgstr "Datenbank hinzufügen"
 
 msgid "Settings"
 msgstr "Einstellungen"
-
-msgid "About"
-msgstr "Über"
 
 msgid "Loading last database."
 msgstr "Letzte Datenbank wird geladen."
@@ -55,27 +102,8 @@ msgstr "Datenbank auswählen"
 msgid "Tap + to import a database."
 msgstr "Mit + eine Datenbank importieren."
 
-msgctxt ""
-"The sync directory is the directory that holds \"externally managed\" kdb/"
-"kdbx files."
-msgid ""
-"Databases in <a href=\"file://~/.local/share/keepassrx.projectmoon/"
-"synced\">%1</a> will automatically show up in the list."
-msgstr ""
-"Datenbanken in <a href=\"file://~/.local/share/keepassrx.projectmoon/"
-"synced\">%1</a> erscheinen automatisch in der Liste."
-
-msgid "Last Modified: %1"
-msgstr "Zuletzt geändert: %1"
-
 msgid "It will only be removed from the app, not your device."
 msgstr "Diese wird nur aus der App entfernt, aber nicht vom Gerät gelöscht."
-
-msgid "Open Source Licenses"
-msgstr "Open Source Lizenzen"
-
-msgid "Website"
-msgstr "Webseite"
 
 msgid "Cancel Search"
 msgstr "Suche abbrechen"
@@ -137,12 +165,6 @@ msgstr "Schlagwörter"
 msgid "Entries grouped by tag."
 msgstr "Einträge gruppiert nach Tags."
 
-msgid "Saved Searches"
-msgstr "Gespeicherte Suchen"
-
-msgid "Entries matching search queries."
-msgstr "Treffer passend zur Suchanfrage."
-
 msgid "Select View"
 msgstr "Wähle Ansicht"
 
@@ -151,6 +173,42 @@ msgstr "Auswählen"
 
 msgid "Cancel"
 msgstr "Abbrechen"
+
+msgid "Key Loaded"
+msgstr "Schlüssel geladen"
+
+msgid "Remove Key"
+msgstr "Schlüssel entfernen"
+
+msgid "Use Key"
+msgstr "Schlüssel verwenden"
+
+msgid "Automatically detected a key file for this database."
+msgstr "Für diese Datenbank wurde ein Schlüssel automatisch erkannt."
+
+msgid "A key file will be used to open this database."
+msgstr "Eine Schlüsseldatei wird zum Öffnen dieser Datenbank verwendet."
+
+msgid "Select Key File"
+msgstr "Wähle Schlüsseldatei"
+
+msgid "Enter the database master password"
+msgstr "Datenbankpasswort eingeben"
+
+msgid "Master Password"
+msgstr "Datenbankpasswort"
+
+msgid "Open"
+msgstr "Öffnen"
+
+msgid "Hide Password"
+msgstr "Passwort ausblenden"
+
+msgid "Show Password"
+msgstr "Passwort anzeigen"
+
+msgid "Opening"
+msgstr "Öffne"
 
 msgid "Change settings based on your preferences."
 msgstr "Einstellungen ändern basierend auf deinen Vorlieben."
@@ -192,41 +250,35 @@ msgstr ""
 "nur exakte Treffer ohne Berücksichtigung von Groß- und Kleinschreibung "
 "zurückgegeben."
 
-msgid "Key Loaded"
-msgstr "Schlüssel geladen"
+msgid "%1 copied to clipboard (30 secs)"
+msgstr "%1 in die Zwischenablage kopiert (für 30 Sek.)"
 
-msgid "Remove Key"
-msgstr "Schlüssel entfernen"
+msgid "Notes"
+msgstr "Notizen"
 
-msgid "Use Key"
-msgstr "Schlüssel verwenden"
+msgid "Tap to copy"
+msgstr "Antippen zum Kopieren"
 
-msgid "Automatically detected a key file for this database."
-msgstr "Für diese Datenbank wurde ein Schlüssel automatisch erkannt."
+msgid "Notes copied to clipboard (30 secs)"
+msgstr "Notizen in die Zwischenablage kopiert (für 30 Sek.)"
 
-msgid "A key file will be used to open this database."
-msgstr "Eine Schlüsseldatei wird zum Öffnen dieser Datenbank verwendet."
+msgid "Main"
+msgstr ""
 
-msgid "Select Key File"
-msgstr "Wähle Schlüsseldatei"
+msgid "Username"
+msgstr "Nutzername"
 
-msgid "Enter the database master password"
-msgstr "Datenbankpasswort eingeben"
+msgid "Password"
+msgstr "Passwort"
 
-msgid "Master Password"
-msgstr "Datenbankpasswort"
+msgid "URL"
+msgstr "URL"
 
-msgid "Open"
-msgstr "Öffnen"
+msgid "Other Fields"
+msgstr "Andere Felder"
 
-msgid "Hide Password"
-msgstr "Passwort ausblenden"
-
-msgid "Show Password"
-msgstr "Passwort anzeigen"
-
-msgid "Opening"
-msgstr "Öffne"
+msgid "KeePassRX: Clipboard cleared."
+msgstr "KeePassRX: Zwischenablage geleert."
 
 msgid "Manual path set."
 msgstr "Manueller Pfad gesetzt."
@@ -253,152 +305,6 @@ msgstr "Sicheres Sperren"
 msgid "Database Not Opening?"
 msgstr "Datenbank öffnet sich nicht?"
 
-msgid "Entry Notes"
-msgstr "Notizen"
-
-msgid "Note copied to clipboard"
-msgstr "Notiz in die Zwischenablage kopiert"
-
-msgid "Unable to export attachment."
-msgstr "Kann Anhang nicht exportieren."
-
-msgid "Entry Attachments"
-msgstr "Anhänge"
-
-msgid "Export Attachment"
-msgstr "Anhang exportieren"
-
-msgid "Attachment Not Viewable"
-msgstr "nicht darstellbarer Anhang"
-
-msgid "KeePassRX cannot view this %1 attachment, but it can be exported."
-msgstr ""
-"KeePassRX kann den Anhang %1 nicht darstellen, aber er kann exportiert "
-"werden."
-
-msgid "KeePassRX cannot view this attachment, but it can be exported."
-msgstr ""
-"KeePassRX kann diesen Anhang nicht darstellen, aber er kann exportiert "
-"werden."
-
-msgid "Export"
-msgstr "Exportieren"
-
-msgid "%1 ready to export."
-msgstr "%1 bereit für den Export."
-
-msgid "%1 exported."
-msgstr "%1 exportiert."
-
-msgid "%1 bytes"
-msgstr "%1 Bytes"
-
-msgid "Attachment"
-msgstr "Anhang"
-
-msgid "Password"
-msgstr "Passwort"
-
-msgid "%1 bits"
-msgstr "%1 Bit"
-
-msgid "Password (Entropy: %1)"
-msgstr "Passwort (Entropie: %1)"
-
-msgid "%1 copied to clipboard (30 secs)"
-msgstr "%1 in die Zwischenablage kopiert (für 30 Sek.)"
-
-msgctxt "Page header for single entry"
-msgid "Untitled Entry"
-msgstr "Unbenannter Eintrag"
-
-msgid "Attachments"
-msgstr "Anhänge"
-
-msgid "Notes"
-msgstr "Notizen"
-
-msgid "Tap to hide"
-msgstr "Antippen zum Verstecken"
-
-msgid "Tap to reveal"
-msgstr "Antippen zum Anzeigen"
-
-msgid "Tap reveal to view notes"
-msgstr "Tippe Reveal um Notizen anzuzeigen"
-
-msgid "Main"
-msgstr "Hauptordner"
-
-msgid "Username"
-msgstr "Benutzername"
-
-msgid "Loading…"
-msgstr "Lade…"
-
-msgid "URL"
-msgstr "URL"
-
-msgid "TOTP (Valid for %1)"
-msgstr "TOTP (Gültig für %1)"
-
-msgid "TOTP"
-msgstr "TOTP"
-
-msgid "Other Fields"
-msgstr "Andere Felder"
-
-msgid "KeePassRX: Clipboard cleared."
-msgstr "KeePassRX: Zwischenablage geleert."
-
-msgid "Version %1"
-msgstr "Version %1"
-
-msgid ""
-"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
-"Touch. It is licensed under the GNU AGPL v3 license."
-msgstr ""
-"KeePassRX ist ein Passwortmanager für KeePass-Datenbanken, der speziell für "
-"Ubuntu Touch entwickelt wurde. Er steht unter der GNU AGPL v3-Lizenz."
-
-msgid ""
-"The built-in KeePass icon images are licensed under a variety of licenses as "
-"detailed in assets/COPYING."
-msgstr ""
-"Die integrierten KeePass Symbole sind nach verschiedenen Lizenzen lizensiert "
-"wie angegeben unter assets/COPYING."
-
-msgid "Manual"
-msgstr "Handbuch"
-
-msgid ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-"Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
-
-msgid ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
-
-msgid "Source Code"
-msgstr "Quellcode"
-
-msgid ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
-msgstr ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
-
-msgctxt "The totp.validFor field has an s after it. e.g. 30s (seconds)"
-msgid "Token '%1' copied. Valid for %2"
-msgstr "Token '%1' kopiert. Gültig für %2"
-
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
@@ -414,22 +320,6 @@ msgctxt "A database managed by external file sync"
 msgid "Synced"
 msgstr "Synchronisiert"
 
-msgctxt "Password strength"
-msgid "Poor"
-msgstr "Schlecht"
-
-msgctxt "Password strength"
-msgid "Weak"
-msgstr "Schwach"
-
-msgctxt "Password strength"
-msgid "Good"
-msgstr "Gut"
-
-msgctxt "Password strength"
-msgid "Excellent"
-msgstr "Exzellent"
-
 msgid "All Templates"
 msgstr "Alle Vorlagen"
 
@@ -444,166 +334,6 @@ msgstr "2FA-Codes"
 msgctxt "List of entries with tags"
 msgid "Tags"
 msgstr "Schlagwörter"
-
-msgctxt "Saved database searches"
-msgid "Saved Searches"
-msgstr "Gespeicherte Suchen"
-
-msgid "View details"
-msgstr "Details anzeigen"
-
-msgid "Copy username"
-msgstr "Nutzername kopieren"
-
-msgid "Copy password"
-msgstr "Passwort kopieren"
-
-msgid "Copy 2FA code"
-msgstr "2FA Code kopieren"
-
-msgid "Copy to clipboard"
-msgstr "In die Zwischenablage kopieren"
-
-msgid "Hide"
-msgstr "Verbergen"
-
-msgid "Show"
-msgstr "Anzeigen"
-
-msgid "Database locked"
-msgstr "Datenbank gesperrt"
-
-msgid "Password copied"
-msgstr "Passwort kopiert"
-
-msgid "2FA code copied"
-msgstr "2FA Code kopiert"
-
-msgid "Username copied"
-msgstr "Nutzername kopiert"
-
-msgid "Clipboard cleared."
-msgstr "Zwischenablage geleert."
-
-msgid "Token '%1' copied. Valid for %2"
-msgstr "Token '%1' kopiert. Gültig für %2"
-
-msgid ""
-"KeePassRX is a password manager for KeePass databases. It is licensed under "
-"the GNU AGPL v3 license."
-msgstr ""
-"KeePassRX ist ein Passwortmanager für KeePass-Datenbanken. Die App ist "
-"lizenziert unter der GNU AGPL v3 Lizenz."
-
-msgid "Select database"
-msgstr "Datenbank auswählen"
-
-msgid "Refresh"
-msgstr "Aktualisieren"
-
-msgid "No databases"
-msgstr "Keine Datenbanken"
-
-msgid "Pull down to add a database."
-msgstr "Nach unten ziehen um eine Datenbank hinzuzufügen."
-
-msgid "Last modified: %1"
-msgstr "Zuletzt geändert: %1"
-
-msgid "Delete"
-msgstr "Löschen"
-
-msgid "Deleting"
-msgstr "Lösche"
-
-msgid "Error: %1"
-msgstr "Fehler: %1"
-
-msgid "Master password"
-msgstr "Hauptpasswort"
-
-msgid "Database accent colors"
-msgstr "Datenbank Akzentierungsfarbe"
-
-msgid "Tint entries with the color assigned to them in the database."
-msgstr "Färbe Einträge mit der der Datenbank zugeordneten Farbe."
-
-msgid "Show recycle bin"
-msgstr "Papierkorb anzeigen"
-
-msgid "Include entries from the database's recycle bin group while browsing."
-msgstr "Bei der Suche auch Einträge aus dem Papierkorb anzeigen."
-
-msgid ""
-"Offer a Lock action that locks the database with your master password "
-"instead of closing it."
-msgstr ""
-"Eine Sperren Option anbieten, welche die Datenbank mit dem Hauptpasswort "
-"sperrt statt sie zu schließen."
-
-msgid "Lock or close when idle"
-msgstr "bei Nichtverwendung sperren oder schließen"
-
-msgid ""
-"Lock the open database (or close it, when locking is disabled) 30 seconds "
-"after the app is minimized."
-msgstr ""
-"Sperre die Datenbank (oder schließe sie wenn Sperren deaktiviert ist) 30 "
-"Sekunden nachdem die App minimiert wurde."
-
-msgid "There is no locked database"
-msgstr "Es gibt keine gesperrte Datenbank"
-
-msgid "Error: %1. Wrong passcode?"
-msgstr "Fehler: %1. Falscher Passcode?"
-
-msgid "Saved %1"
-msgstr "%1 gespeichert"
-
-msgid "Export to"
-msgstr "Exportieren nach"
-
-msgid "Cannot preview this file type"
-msgstr "Keine Vorschau für diesen Dateityp verfügbar"
-
-msgid "Pull down to export the attachment."
-msgstr "Nach unten ziehen um den Anhang zu exportieren."
-
-msgid "All entries"
-msgstr "Alle Einträge"
-
-msgid "Special categories"
-msgstr "Spezielle Kategorien"
-
-msgid "2FA codes"
-msgstr "2FA Codes"
-
-msgid "Saved searches"
-msgstr "Gespeicherte Suchen"
-
-msgid "No entries"
-msgstr "Keine Einträge"
-
-msgid "Password (Entropy: %1 bits)"
-msgstr "Passwort (Entropie: %1 bit)"
-
-msgid "Untitled entry"
-msgstr "Unbenannter Eintrag"
-
-msgid "Unable to open attachment."
-msgstr "Kann Anhang nicht öffnen."
-
-msgid "TOTP (valid for %1)"
-msgstr "TOTP (gültig für %1)"
-
-msgid "Other fields"
-msgstr "Andere Felder"
-
-#~ msgid "Tap to copy"
-#~ msgstr "Antippen zum Kopieren"
-
-#~ msgid "Notes copied to clipboard (30 secs)"
-#~ msgstr "Notizen in die Zwischenablage kopiert (für 30 Sek.)"
 
 #~ msgid ""
 #~ "Change settings based on your preferences. Any change to the settings "

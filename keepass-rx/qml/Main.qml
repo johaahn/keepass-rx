@@ -75,36 +75,27 @@ MainView {
         }
 
         function onMasterPasswordDecrypted() {
+            console.log('Re-opening database from locked state.');
             uiDatabase.open();
-        }
-
-        function onMasterPasswordInvalidated() {
-            clearSensitiveUiState();
-        }
-
-        function onDatabaseClosed() {
-            clearSensitiveUiState();
         }
 
         // When the UI requests getting a single value from an entry.
         function onFieldValueReceived(entryUuid, fieldName, fieldValue, fieldExtra) {
-            if (fieldExtra !== "copy" || !fieldValue) {
-                return;
-            }
+            if (fieldValue) {
+                // TODO Add some better URL handling, for fields that
+                // are not marked specifically with title "URL".
+                if (fieldName.toLowerCase() == "url") {
+                    if (fieldValue.indexOf('//') === -1) {
+                        Qt.openUrlExternally('http://' + fieldValue);
+                        return;
+                    }ng
 
-            // TODO Add some better URL handling, for fields that
-            // are not marked specifically with title "URL".
-            if (fieldName.toLowerCase() == "url") {
-                if (fieldValue.indexOf('//') === -1) {
-                    Qt.openUrlExternally('http://' + fieldValue);
-                    return;
+                    Qt.openUrlExternally(fieldValue);
+                } else {
+                    Clipboard.push(fieldValue);
+                    toast.show(i18n.tr('%1 copied to clipboard (30 secs)').arg(fieldName));
+                    clearClipboardTimer.start();
                 }
-
-                Qt.openUrlExternally(fieldValue);
-            } else {
-                Clipboard.push(fieldValue);
-                toast.show(i18n.tr('%1 copied to clipboard (30 secs)').arg(fieldName));
-                clearClipboardTimer.start();
             }
         }
 
@@ -128,19 +119,12 @@ MainView {
         reload();
     }
 
-    function clearSensitiveUiState() {
-        clearClipboardTimer.stop();
-        Clipboard.clear();
-    }
-
     function lockUI() {
-        clearSensitiveUiState();
         keepassrx.guiState = 'Locked';
         reload();
     }
 
     function closeUI() {
-        clearSensitiveUiState();
         keepassrx.guiState = 'NotOpen';
         uiDatabase.databaseName = null;
         reload();

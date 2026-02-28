@@ -6,9 +6,8 @@ use std::{
     path::{Path, PathBuf},
 };
 use syn::{
-    Fields, Ident, Item, ItemStruct, LitInt, LitStr, Path as SynPath, Token,
     parse::{Parse, ParseStream},
-    parse_macro_input,
+    parse_macro_input, Fields, Ident, Item, ItemStruct, LitInt, LitStr, Path as SynPath, Token,
 };
 use walkdir::WalkDir;
 
@@ -249,11 +248,7 @@ fn find_source_file(
                 continue;
             }
 
-            if !path_matches_target_namespace(
-                path,
-                target_segments,
-                preferred_package.as_ref(),
-            ) {
+            if !path_matches_target_namespace(path, target_segments, preferred_package.as_ref()) {
                 continue;
             }
 
@@ -304,11 +299,7 @@ fn find_source_file(
         );
 
         for hit in hits.iter().take(8) {
-            msg.push_str(&format!(
-                "  score {:>4}: {}\n",
-                hit.score,
-                hit.path.display()
-            ));
+            msg.push_str(&format!("  score {:>4}: {}\n", hit.score, hit.path.display()));
         }
 
         return Err(syn::Error::new(proc_macro2::Span::call_site(), msg));
@@ -473,20 +464,14 @@ fn score_path(
     score
 }
 
-fn resolve_preferred_package(
-    manifest_dir: &Path,
-    crate_name: &str,
-) -> Option<PreferredPackage> {
-    let manifest_package =
-        parse_manifest_dependency(&manifest_dir.join("Cargo.toml"), crate_name);
+fn resolve_preferred_package(manifest_dir: &Path, crate_name: &str) -> Option<PreferredPackage> {
+    let manifest_package = parse_manifest_dependency(&manifest_dir.join("Cargo.toml"), crate_name);
     let lockfile_package = manifest_dir
         .ancestors()
         .map(|dir| dir.join("Cargo.lock"))
         .filter(|path| path.is_file())
         .filter_map(|lockfile| parse_lockfile_package(&lockfile, crate_name))
-        .max_by_key(|package| {
-            lockfile_package_compatibility(manifest_package.as_ref(), package)
-        });
+        .max_by_key(|package| lockfile_package_compatibility(manifest_package.as_ref(), package));
 
     match (manifest_package, lockfile_package) {
         (Some(mut manifest), Some(lockfile)) => {
@@ -494,10 +479,7 @@ fn resolve_preferred_package(
                 manifest.version = lockfile.version;
             }
 
-            if preferred_source_is_more_specific(
-                lockfile.source.as_deref(),
-                manifest.source.as_deref(),
-            ) {
+            if preferred_source_is_more_specific(lockfile.source.as_deref(), manifest.source.as_deref()) {
                 manifest.source = lockfile.source;
             }
 
@@ -550,8 +532,8 @@ fn parse_manifest_dependency(manifest: &Path, crate_name: &str) -> Option<Prefer
             continue;
         }
 
-        let version = extract_key_from_inline_table(value, "version")
-            .and_then(extract_semverish_version);
+        let version =
+            extract_key_from_inline_table(value, "version").and_then(extract_semverish_version);
         let source = if extract_key_from_inline_table(value, "git").is_some() {
             Some("git+".to_string())
         } else if extract_key_from_inline_table(value, "path").is_some() {
@@ -638,11 +620,7 @@ fn parse_toml_quoted_string(value: &str) -> Option<&str> {
 fn extract_key_from_inline_table<'a>(value: &'a str, key: &str) -> Option<&'a str> {
     let needle = format!("{key} = ");
     let tail = value.split(&needle).nth(1)?.trim_start();
-    let field = tail
-        .split_once(',')
-        .map(|(head, _)| head)
-        .unwrap_or(tail)
-        .trim();
+    let field = tail.split_once(',').map(|(head, _)| head).unwrap_or(tail).trim();
     parse_toml_quoted_string(field)
 }
 
@@ -682,15 +660,11 @@ fn lockfile_package_compatibility(
     let mut score = source_specificity(lockfile_package.source.as_deref().unwrap_or_default());
 
     if let Some(manifest_package) = manifest_package {
-        if source_kind(manifest_package.source.as_deref())
-            == source_kind(lockfile_package.source.as_deref())
-        {
+        if source_kind(manifest_package.source.as_deref()) == source_kind(lockfile_package.source.as_deref()) {
             score += 100;
         }
 
-        if manifest_package.version.is_some()
-            && manifest_package.version == lockfile_package.version
-        {
+        if manifest_package.version.is_some() && manifest_package.version == lockfile_package.version {
             score += 50;
         }
     }
@@ -759,9 +733,7 @@ fn package_match_score(normalized_path: &str, preferred_package: &PreferredPacka
                 score -= 120;
             }
         } else if source.starts_with("path+") {
-            if normalized_path.contains("/registry/src/")
-                || normalized_path.contains("/git/checkouts/")
-            {
+            if normalized_path.contains("/registry/src/") || normalized_path.contains("/git/checkouts/") {
                 score -= 120;
             }
         } else if source.starts_with("git+") {
@@ -842,8 +814,7 @@ mod tests {
 
     #[test]
     fn rejects_unknown_option() {
-        let err =
-            syn::parse_str::<MirrorArgs>("keepass::db::Entry, nope = \"x\"").unwrap_err();
+        let err = syn::parse_str::<MirrorArgs>("keepass::db::Entry, nope = \"x\"").unwrap_err();
         assert!(err.to_string().contains("unknown mirror_from option"));
     }
 
@@ -925,8 +896,9 @@ mod tests {
         let old = Path::new(
             "/tmp/.cargo/registry/src/index.crates.io-xyz/keepass-0.10.6/src/db/types/entry.rs",
         );
-        let git =
-            Path::new("/tmp/.cargo/git/checkouts/keepass-rs-hash/rev/src/db/types/entry.rs");
+        let git = Path::new(
+            "/tmp/.cargo/git/checkouts/keepass-rs-hash/rev/src/db/types/entry.rs",
+        );
 
         let selected_score = score_path(selected, target, "entry", Some(&preferred));
         let old_score = score_path(old, target, "entry", Some(&preferred));
@@ -938,8 +910,10 @@ mod tests {
 
     #[test]
     fn parses_matching_package_from_lockfile() {
-        let temp_dir =
-            env::temp_dir().join(format!("mirror_from_macro_test_{}", std::process::id()));
+        let temp_dir = env::temp_dir().join(format!(
+            "mirror_from_macro_test_{}",
+            std::process::id()
+        ));
         let lockfile = temp_dir.join("Cargo.lock");
         fs::create_dir_all(&temp_dir).expect("create temp dir");
         fs::write(
@@ -1075,15 +1049,10 @@ source = "git+https://github.com/sseemayer/keepass-rs?branch=303-kdbx41-support#
         .expect("write lockfile");
 
         let package = resolve_preferred_package(&temp_dir, "keepass").expect("package");
-        assert_eq!(
-            package.version.as_deref(),
-            Some("0.0.0-placeholder-version")
-        );
+        assert_eq!(package.version.as_deref(), Some("0.0.0-placeholder-version"));
         assert_eq!(
             package.source.as_deref(),
-            Some(
-                "git+https://github.com/sseemayer/keepass-rs?branch=303-kdbx41-support#0e924b43b81878fe310d9c8dd4a7b1779ebadef5"
-            )
+            Some("git+https://github.com/sseemayer/keepass-rs?branch=303-kdbx41-support#0e924b43b81878fe310d9c8dd4a7b1779ebadef5")
         );
 
         let _ = fs::remove_file(manifest_path);

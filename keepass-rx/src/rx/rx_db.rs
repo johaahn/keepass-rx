@@ -2,30 +2,44 @@ use crate::crypto::MasterKey;
 
 use super::rx_loader::RxLoader;
 use super::{RxEntry, RxGroup, RxTemplate, RxTotp, ZeroableDatabase};
-use anyhow::{Context, Result, anyhow};
+use anyhow::{Result, anyhow};
 use indexmap::IndexMap;
 use keepass::config::DatabaseConfig;
 use keepass::db::Meta;
-use log::{debug, info};
+use paste::paste;
+use regex::Regex;
 use std::rc::Rc;
-use std::{collections::HashMap, mem, str::FromStr};
+use std::sync::LazyLock;
+use std::{collections::HashMap, str::FromStr};
 use uuid::Uuid;
 use zeroize::{Zeroize, Zeroizing};
 
-fn get_kpxc_string_field(config: &DatabaseConfig, field: &str) -> Option<String> {
-    config
-        .public_custom_data
-        .as_ref()
-        .and_then(|data| data.get(field))
-        .and_then(|value| Into::<Option<&String>>::into(value).cloned())
+fn extract_string(input: String) -> Option<String> {
+    static RE: LazyLock<Regex> =
+        LazyLock::new(|| Regex::new(r#"String\("([^"\\]*(?:\\.[^"\\]*)*)"\)"#).unwrap());
+
+    RE.captures(&input)
+        .and_then(|caps| caps.get(1).map(|m| m.as_str().to_string()))
 }
 
-fn get_kpxc_i32_field(config: &DatabaseConfig, field: &str) -> Option<i32> {
-    config
-        .public_custom_data
-        .as_ref()
-        .and_then(|data| data.get(field))
-        .and_then(|value| Into::<Option<&i32>>::into(value).copied())
+fn extract_i32(input: String) -> Option<i32> {
+    static RE: LazyLock<Regex> =
+        LazyLock::new(|| Regex::new(r#"Int32\(([^"\\]*(?:\\.[^"\\]*)*)\)"#).unwrap());
+
+    RE.captures(&input)
+        .and_then(|caps| caps.get(1).map(|m| m.as_str()))
+        .and_then(|num| num.parse().ok())
+}
+
+// Hippity hackity time to extractity
+macro_rules! get_kpxc_field {
+    ($kind:ty, $dbdata:expr, $field:expr) => {{
+        $dbdata
+            .as_mut()
+            .and_then(|d| d.remove($field))
+            .map(|val| format!("{:?}", val))
+            .and_then(paste! { [<extract_ $kind:lower>] })
+    }};
 }
 
 #[derive(Default, Clone)]
@@ -33,21 +47,18 @@ pub struct RxMetadata {
     pub color: Option<String>,
     pub name: Option<String>,
     pub icon: Option<i32>,
+
     pub recycle_bin_uuid: Option<Uuid>,
 }
 
-#[derive(Default, Clone)]
-pub struct RxSavedSearchDef {
-    pub name: String,
-    pub query: String,
-}
-
 impl RxMetadata {
-    pub fn new(config: DatabaseConfig, meta: Meta) -> RxMetadata {
+    pub fn new(mut config: DatabaseConfig, meta: Meta) -> RxMetadata {
+        let mut custom_db_data = config.public_custom_data.take().map(|pcd| pcd.data);
+
         RxMetadata {
-            name: get_kpxc_string_field(&config, "KPXC_PUBLIC_NAME"),
-            color: get_kpxc_string_field(&config, "KPXC_PUBLIC_COLOR"),
-            icon: get_kpxc_i32_field(&config, "KPXC_PUBLIC_ICON"),
+            name: get_kpxc_field!(String, custom_db_data, "KPXC_PUBLIC_NAME"),
+            color: get_kpxc_field!(String, custom_db_data, "KPXC_PUBLIC_COLOR"),
+            icon: get_kpxc_field!(i32, custom_db_data, "KPXC_PUBLIC_ICON"),
             recycle_bin_uuid: meta.recyclebin_uuid,
         }
     }
@@ -63,7 +74,6 @@ pub struct RxDatabase {
     templates: HashMap<Uuid, Rc<RxTemplate>>,
     all_groups: IndexMap<Uuid, Rc<RxGroup>>,
     all_entries: IndexMap<Uuid, Rc<RxEntry>>,
-    saved_searches: Vec<RxSavedSearchDef>,
 }
 
 impl Zeroize for RxDatabase {
@@ -122,10 +132,9 @@ impl std::fmt::Debug for RxDatabase {
 
 #[allow(dead_code)]
 impl RxDatabase {
-    pub fn new(db: Zeroizing<ZeroableDatabase>) -> Result<Self> {
-        info!("Loading password database.");
+    pub fn new(db: Zeroizing<ZeroableDatabase>) -> Self {
         let loader = RxLoader::new(db);
-        let mut loaded = loader.load().context("materializing database view")?;
+        let mut loaded = loader.load().expect("Coud not load the database");
 
         let mut db = Self {
             master_key: loaded.master_key,
@@ -133,7 +142,6 @@ impl RxDatabase {
             templates: Default::default(),
             all_groups: loaded.state.all_groups,
             all_entries: loaded.state.all_entries,
-            saved_searches: loaded.saved_searches,
             metadata: loaded.metadata,
         };
 
@@ -142,19 +150,14 @@ impl RxDatabase {
             .state
             .templates
             .iter_mut()
-            .map(|(uuid, t)| {
-                Rc::get_mut(t).ok_or_else(|| {
-                    anyhow!("Could not acquire mutable template ref for {uuid}")
-                })
-            })
-            .collect::<Result<Vec<_>>>()?;
+            .map(|(_, t)| Rc::get_mut(t).expect("Could not acquire mutable template ref"));
 
         for rx_template in rx_templates {
             let template_entry = db.get_entry(rx_template.uuid);
             let template_name = template_entry
                 .as_ref()
                 .and_then(|t| t.title().and_then(|v| v.value()))
-                .map(|mut template_name| mem::take(&mut *template_name))
+                .map(|template_name| template_name.to_string())
                 .unwrap_or_else(|| "Unknown Template".to_string());
 
             let template_icon = template_entry
@@ -167,13 +170,8 @@ impl RxDatabase {
         }
 
         db.templates = loaded.state.templates;
-        debug!(
-            "Finished RxDatabase construction ({} groups, {} entries)",
-            db.all_groups.len(),
-            db.all_entries.len()
-        );
 
-        Ok(db)
+        db
     }
 
     pub fn master_key(&self) -> &MasterKey {
@@ -181,7 +179,7 @@ impl RxDatabase {
     }
 
     pub fn close(&mut self) {
-        info!("Closing database.");
+        println!("Closing database.");
         self.zeroize();
     }
 
@@ -226,75 +224,56 @@ impl RxDatabase {
 
         Ok(entry.totp()?)
     }
-
-    pub fn saved_searches_iter(&self) -> impl Iterator<Item = &RxSavedSearchDef> {
-        self.saved_searches.iter()
-    }
 }
 
 #[cfg(test)]
 mod tests {
-    use std::{fs::File, path::PathBuf};
-
-    use keepass::{Database, DatabaseKey};
     use keyring::set_default_credential_builder;
-
-    use crate::rx::kpxc_search::evaluate_saved_search;
 
     use super::*;
     use crate::rx::{RxCustomFields, RxValue, TEMPLATE_FIELD_NAME};
 
-    fn fixture_path(name: &str) -> PathBuf {
-        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-            .join("tests")
-            .join("fixtures")
-            .join(name)
+    #[test]
+    fn test_extract_string() {
+        let text = String::from(r#"String("value")"#);
+        let result = extract_string(text);
+        assert!(result.is_some());
+        assert_eq!(result, Some(String::from("value")));
     }
 
     #[test]
     fn loads_recursively() {
         set_default_credential_builder(keyring::mock::default_credential_builder());
-        let mut db = keepass::db::Database::new();
-        let group_id = db.root().id().uuid();
-        let (subgroup_id, entry_id) = {
-            let mut root = db.root_mut();
-            root.name = "groupname".into();
+        let mut db = keepass::db::Database::new(Default::default());
+        let mut group = keepass::db::Group::new("groupname");
+        let mut subgroup = keepass::db::Group::new("subgroupname");
 
-            let subgroup_id = root
-                .add_group()
-                .edit(|group| group.name = "subgroupname".into())
-                .id();
+        let group_id = group.uuid;
+        let subgroup_id = subgroup.uuid;
 
-            let entry_id = root
-                .add_entry()
-                .edit(|entry| {
-                    entry.fields.insert(
-                        "Tite".to_string(),
-                        keepass::db::Value::Unprotected("top-level entry".to_string()),
-                    );
-                })
-                .id();
+        let mut entry = keepass::db::Entry::new();
+        let entry_id = entry.uuid;
 
-            (subgroup_id, entry_id)
-        };
+        entry.fields.insert(
+            "Tite".to_string(),
+            keepass::db::Value::Unprotected("top-level entry".to_string()),
+        );
 
-        let sub_entry_id = db
-            .group_mut(subgroup_id)
-            .unwrap()
-            .add_entry()
-            .edit(|entry| {
-                entry.fields.insert(
-                    "SubTite".to_string(),
-                    keepass::db::Value::Unprotected("sub entry".to_string()),
-                );
-            })
-            .id();
+        let mut sub_entry = keepass::db::Entry::new();
+        let sub_entry_id = sub_entry.uuid;
 
-        let subgroup_id = subgroup_id.uuid();
-        let entry_id = entry_id.uuid();
-        let sub_entry_id = sub_entry_id.uuid();
+        sub_entry.fields.insert(
+            "SubTite".to_string(),
+            keepass::db::Value::Unprotected("sub entry".to_string()),
+        );
 
-        let rx_db = RxDatabase::new(Zeroizing::new(ZeroableDatabase(db))).expect("load rx db");
+        subgroup.add_child(keepass::db::Node::Entry(sub_entry));
+        group.add_child(keepass::db::Node::Entry(entry));
+        group.add_child(keepass::db::Node::Group(subgroup));
+
+        db.root = group;
+
+        let rx_db = RxDatabase::new(Zeroizing::new(ZeroableDatabase(db)));
         let rx_root = rx_db.root_group();
 
         assert_eq!(rx_db.all_groups_iter().count(), 2);
@@ -312,33 +291,6 @@ mod tests {
 
         assert_eq!(rx_subgroup.uuid, subgroup_id);
         assert_eq!(rx_subgroup.entries, vec![sub_entry_id]);
-    }
-
-    #[test]
-    fn parses_saved_searches_from_test_db() {
-        set_default_credential_builder(keyring::mock::default_credential_builder());
-
-        let mut file =
-            File::open(fixture_path("test_saved_searches.kdbx")).expect("open test fixture");
-        let db = Database::open(&mut file, DatabaseKey::new().with_password("somePassw0rd"))
-            .expect("open keepass db");
-
-        let rx_db = RxDatabase::new(Zeroizing::new(ZeroableDatabase(db))).expect("load rx db");
-        let saved: Vec<_> = rx_db.saved_searches_iter().collect();
-        assert!(!saved.is_empty(), "expected at least one saved search");
-
-        let account_search = saved
-            .iter()
-            .find(|search| search.name == "a saved search")
-            .expect("missing expected saved search");
-
-        assert_eq!(account_search.query, "account");
-
-        let results = evaluate_saved_search(&rx_db, &account_search.query);
-        assert!(
-            !results.is_empty(),
-            "saved search query should match at least one entry"
-        );
     }
 
     // TODO move to rx_containers

@@ -67,8 +67,11 @@ fn loads_supported_database_formats_into_rx_database() {
 
     for case in cases {
         let mut file = File::open(fixture_path(case.name)).expect("open fixture");
-        let db = Database::open(&mut file, DatabaseKey::new().with_password(case.password))
-            .expect("open keepass db");
+        let db = Database::open(
+            &mut file,
+            DatabaseKey::new().with_password(case.password),
+        )
+        .expect("open keepass db");
 
         assert_eq!(db.config.version, case.version, "{}", case.name);
 
@@ -79,11 +82,6 @@ fn loads_supported_database_formats_into_rx_database() {
         assert_eq!(root.name, case.root_name, "{}", case.name);
         assert_eq!(root.subgroups.len(), case.root_subgroups, "{}", case.name);
         assert_eq!(root.entries.len(), case.root_entries, "{}", case.name);
-        assert_eq!(
-            rx_db.all_entries_iter().count(),
-            case.total_entries,
-            "{}",
-            case.name
-        );
+        assert_eq!(rx_db.all_entries_iter().count(), case.total_entries, "{}", case.name);
     }
 }

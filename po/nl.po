@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 15:14+0000\n"
-"PO-Revision-Date: 2026-11-22 11:51+0000\n"
-"Last-Translator: Heimen Stoffels <vistaus@users.noreply.hosted.weblate.org>\n"
+"POT-Creation-Date: 2025-12-01 20:39+0000\n"
+"PO-Revision-Date: 2026-02-07 23:09+0000\n"
+"Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/ubports/keepassrx/"
 "nl/>\n"
 "Language: nl\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.12.dev0\n"
+"X-Generator: Weblate 5.16-dev\n"
 
 msgid "Copy Username"
 msgstr "Gebruikersnaam kopiëren"
@@ -37,14 +37,61 @@ msgstr "Item bekijken"
 msgid "Tap to copy 2FA code"
 msgstr "Druk om de 2FA-code te kopiëren"
 
+msgid "About"
+msgstr "Over"
+
+msgid ""
+"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
+"Touch. It is licensed under the GNU AGPL v3 license."
+msgstr ""
+"KeePassRX is een wachtwoordbeheerder die KeePass-databanken kan openen en "
+"bewerken. De app is uitgebracht onder de GNU APGLv3-licentie."
+
+msgid ""
+"The built-in KeePass icon images are licensed under a variety of licenses as "
+"detailed in assets/COPYING."
+msgstr ""
+"De meegeleverde KeePass-pictogrammen zijn uitgebracht onder verschillende "
+"licenties. Meer informatie is te vinden in ‘assets/COPYING’."
+
+msgid "Manual"
+msgstr "Handleiding"
+
+msgid ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+
+msgid ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+
+msgid "Source Code"
+msgstr "Broncode"
+
+msgid ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
+msgstr ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
+
+msgid "Open Source Licenses"
+msgstr "Opensourcelicenties"
+
+msgid "Website"
+msgstr "Website"
+
 msgid "Add Database"
 msgstr "Databank toevoegen"
 
 msgid "Settings"
 msgstr "Instellingen"
-
-msgid "About"
-msgstr "Over"
 
 msgid "Loading last database."
 msgstr "Bezig met openen van vorige databank…"
@@ -55,31 +102,12 @@ msgstr "Databank kiezen"
 msgid "Tap + to import a database."
 msgstr "Druk op ‘+’ om een databank toe te voegen."
 
-msgctxt ""
-"The sync directory is the directory that holds \"externally managed\" kdb/"
-"kdbx files."
-msgid ""
-"Databases in <a href=\"file://~/.local/share/keepassrx.projectmoon/"
-"synced\">%1</a> will automatically show up in the list."
-msgstr ""
-"Databanken die zijn aangetroffen in <a href=\"file://~/.local/share/"
-"keepassrx.projectmoon/synced\">%1</a> worden automatisch op de lijst getoond."
-
-msgid "Last Modified: %1"
-msgstr "Laatst bewerkt op: %1"
-
 msgid "It will only be removed from the app, not your device."
 msgstr ""
 "Let op: de databank wordt alleen verwijderd uit de app, niet van je apparaat."
 
-msgid "Open Source Licenses"
-msgstr "Opensourcelicenties"
-
-msgid "Website"
-msgstr "Website"
-
 msgid "Cancel Search"
-msgstr "Zoekopdracht afbreken"
+msgstr "Zoeken afbreken"
 
 msgid "Search all entries"
 msgstr "Alle items doorzoeken"
@@ -138,12 +166,6 @@ msgstr "Labels"
 msgid "Entries grouped by tag."
 msgstr "Items gegroepeerd op label."
 
-msgid "Saved Searches"
-msgstr "Opgeslagen zoekopdrachten"
-
-msgid "Entries matching search queries."
-msgstr "Deze items komen overeen met de zoekopdracht."
-
 msgid "Select View"
 msgstr "Kies een weergave"
 
@@ -152,43 +174,6 @@ msgstr "Kiezen"
 
 msgid "Cancel"
 msgstr "Annuleren"
-
-msgid "Change settings based on your preferences."
-msgstr "Zet de instellingen naar eigen hand."
-
-msgid "Enable database locking"
-msgstr "Databanken vergrendelen"
-
-msgid ""
-"Securely lock and unlock database with a short passcode. Requires restart to "
-"take effect."
-msgstr ""
-"Vergrendel en ontgrendel databanken met een toegangscode. Herstart de app om "
-"de wĳziging toe te passen."
-
-msgid "Enable Accents"
-msgstr "Accentkleuren gebruiken"
-
-msgid ""
-"Set header color and name according to database settings. Compatible with "
-"KeePassXC."
-msgstr ""
-"Voorzie de werkbalk en balk met appnaam van een kleur. Compatibel met "
-"KeePassXC."
-
-msgid "Show the \"Recycle bin\" group"
-msgstr "Prullenbakgroep tonen"
-
-msgid "This group contains all the deleted entries"
-msgstr "Deze groep bevat alle verwijderde items."
-
-msgid "Fuzzy Search"
-msgstr "Zoeken naar gedeeltelijke overeenkomsten"
-
-msgid ""
-"Use fuzzy search to find entries. If disabled, search only matches exact "
-"case insensitive text."
-msgstr "Schakel uit om alleen te zoeken naar items die precies overeenkomen."
 
 msgid "Key Loaded"
 msgstr "De sleutel is ingelezen"
@@ -226,6 +211,73 @@ msgstr "Wachtwoord tonen"
 msgid "Opening"
 msgstr "Bezig met openen…"
 
+msgid "Change settings based on your preferences."
+msgstr "Zet de instellingen naar eigen hand."
+
+msgid "Enable database locking"
+msgstr "Databanken vergrendelen"
+
+msgid ""
+"Securely lock and unlock database with a short passcode. Requires restart to "
+"take effect."
+msgstr ""
+"Vergrendel en ontgrendel databanken met een toegangscode. Herstart de app om "
+"de wĳziging toe te passen."
+
+msgid "Enable Accents"
+msgstr "Accenten gebruiken"
+
+msgid ""
+"Set header color and name according to database settings. Compatible with "
+"KeePassXC."
+msgstr ""
+"Voorzie de werkbalk en balk met appnaam van een kleur. Compatibel met "
+"KeePassXC."
+
+msgid "Show the \"Recycle bin\" group"
+msgstr "Prullenbakgroep tonen"
+
+msgid "This group contains all the deleted entries"
+msgstr "Deze groep bevat alle verwijderde items."
+
+msgid "Fuzzy Search"
+msgstr "Zoeken naar gedeeltelijke overeenkomsten"
+
+msgid ""
+"Use fuzzy search to find entries. If disabled, search only matches exact "
+"case insensitive text."
+msgstr "Schakel uit om alleen te zoeken naar items die precies overeenkomen."
+
+msgid "%1 copied to clipboard (30 secs)"
+msgstr "%1 is gekopieerd naar het klembord (30 sec.)"
+
+msgid "Notes"
+msgstr "Aantekeningen"
+
+msgid "Tap to copy"
+msgstr "Druk om te kopiëren"
+
+msgid "Notes copied to clipboard (30 secs)"
+msgstr "De aantekeningen zijn gekopieerd naar het klembord (30 sec.)"
+
+msgid "Main"
+msgstr "Algemeen"
+
+msgid "Username"
+msgstr "Gebruikersnaam"
+
+msgid "Password"
+msgstr "Wachtwoord"
+
+msgid "URL"
+msgstr "Url"
+
+msgid "Other Fields"
+msgstr "Overige velden"
+
+msgid "KeePassRX: Clipboard cleared."
+msgstr "KeePassRX: klembord gewist."
+
 msgid "Manual path set."
 msgstr "Stel de locatie handmatig in."
 
@@ -251,154 +303,12 @@ msgstr "Veilig vergrendelen"
 msgid "Database Not Opening?"
 msgstr "Wordt de databank niet geopend?"
 
-msgid "Entry Notes"
-msgstr "Aantekeningen"
-
-msgid "Note copied to clipboard"
-msgstr "De aantekening is gekopieerd"
-
-msgid "Unable to export attachment."
-msgstr "De bijlage kan niet worden geëxporteerd."
-
-msgid "Entry Attachments"
-msgstr "Bijlagen"
-
-msgid "Export Attachment"
-msgstr "Bijlage exporteren"
-
-msgid "Attachment Not Viewable"
-msgstr "Bijlage kan niet worden getoond"
-
-msgid "KeePassRX cannot view this %1 attachment, but it can be exported."
-msgstr "KeePassRX kan de %1-bijlage niet tonen, maar wel exporteren."
-
-msgid "KeePassRX cannot view this attachment, but it can be exported."
-msgstr "KeePassRX kan deze bijlage niet tonen, maar wel exporteren."
-
-msgid "Export"
-msgstr "Exporteren"
-
-msgid "%1 ready to export."
-msgstr "‘%1’ kan worden geëxporteerd."
-
-msgid "%1 exported."
-msgstr "‘%1’ is geëxporteerd."
-
-msgid "%1 bytes"
-msgstr "%1 bytes"
-
-msgid "Attachment"
-msgstr "Bijlage"
-
-msgid "Password"
-msgstr "Wachtwoord"
-
-msgid "%1 bits"
-msgstr "%1 bits"
-
-msgid "Password (Entropy: %1)"
-msgstr "Wachtwoord (sterkte: %1)"
-
-msgid "%1 copied to clipboard (30 secs)"
-msgstr "%1 is gekopieerd naar het klembord (30 sec.)"
-
-msgctxt "Page header for single entry"
-msgid "Untitled Entry"
-msgstr "Naamloos item"
-
-msgid "Attachments"
-msgstr "Bijlagen"
-
-msgid "Notes"
-msgstr "Aantekeningen"
-
-msgid "Tap to hide"
-msgstr "Druk om te verbergen"
-
-msgid "Tap to reveal"
-msgstr "Druk om te tonen"
-
-msgid "Tap reveal to view notes"
-msgstr "Druk om aantekeningen te bekijken"
-
-msgid "Main"
-msgstr "Algemeen"
-
-msgid "Username"
-msgstr "Gebruikersnaam"
-
-msgid "Loading…"
-msgstr "Bezig met laden…"
-
-msgid "URL"
-msgstr "Url"
-
-msgid "TOTP (Valid for %1)"
-msgstr "Totp (%1 geldig)"
-
-msgid "TOTP"
-msgstr "Totp"
-
-msgid "Other Fields"
-msgstr "Overige velden"
-
-msgid "KeePassRX: Clipboard cleared."
-msgstr "KeePassRX: klembord gewist."
-
-msgid "Version %1"
-msgstr "Versie %1"
-
-msgid ""
-"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
-"Touch. It is licensed under the GNU AGPL v3 license."
-msgstr ""
-"KeePassRX is een wachtwoordbeheerder die KeePass-databanken kan openen en "
-"bewerken. De app is uitgebracht onder de GNU APGLv3-licentie."
-
-msgid ""
-"The built-in KeePass icon images are licensed under a variety of licenses as "
-"detailed in assets/COPYING."
-msgstr ""
-"De meegeleverde KeePass-pictogrammen zijn uitgebracht onder verschillende "
-"licenties. Meer informatie is te vinden in ‘assets/COPYING’."
-
-msgid "Manual"
-msgstr "Handleiding"
-
-msgid ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
-
-msgid ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
-
-msgid "Source Code"
-msgstr "Broncode"
-
-msgid ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
-msgstr ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
-
-msgctxt "The totp.validFor field has an s after it. e.g. 30s (seconds)"
-msgid "Token '%1' copied. Valid for %2"
-msgstr "‘%1’ is gekopieerd en %2 geldig"
-
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
 msgstr ""
 "<b>Alle 2FA-codes in de databank worden getoond.</b><br/>Gebruik het "
-"actiemenu om de details van een item te bekijken."
+"actiemenu om details van een item te bekijken."
 
 msgctxt "A database imported via ContentHub"
 msgid "Imported"
@@ -407,22 +317,6 @@ msgstr "Geïmporteerd"
 msgctxt "A database managed by external file sync"
 msgid "Synced"
 msgstr "Gesynchroniseerd"
-
-msgctxt "Password strength"
-msgid "Poor"
-msgstr "Erg zwak"
-
-msgctxt "Password strength"
-msgid "Weak"
-msgstr "Zwak"
-
-msgctxt "Password strength"
-msgid "Good"
-msgstr "Goed"
-
-msgctxt "Password strength"
-msgid "Excellent"
-msgstr "Uitstekend"
 
 msgid "All Templates"
 msgstr "Alle sjablonen"
@@ -438,166 +332,6 @@ msgstr "2FA-codes"
 msgctxt "List of entries with tags"
 msgid "Tags"
 msgstr "Labels"
-
-msgctxt "Saved database searches"
-msgid "Saved Searches"
-msgstr "Opgeslagen zoekopdrachten"
-
-msgid "View details"
-msgstr "Details bekijken"
-
-msgid "Copy username"
-msgstr "Gebruikersnaam kopiëren"
-
-msgid "Copy password"
-msgstr "Wachtwoord kopiëren"
-
-msgid "Copy 2FA code"
-msgstr "2FA-code kopiëren"
-
-msgid "Copy to clipboard"
-msgstr "Kopiëren naar klembord"
-
-msgid "Hide"
-msgstr "Verbergen"
-
-msgid "Show"
-msgstr "Tonen"
-
-msgid "Database locked"
-msgstr "De databank is vergrendeld"
-
-msgid "Password copied"
-msgstr "Het wachtwoord is gekopieerd"
-
-msgid "2FA code copied"
-msgstr "De 2FA-code is gekopieerd"
-
-msgid "Username copied"
-msgstr "De gebruikersnaam is gekopieerd"
-
-msgid "Clipboard cleared."
-msgstr "Het klembord is gewist."
-
-msgid "Token '%1' copied. Valid for %2"
-msgstr "‘%1’ is gekopieerd en %2 geldig"
-
-msgid ""
-"KeePassRX is a password manager for KeePass databases. It is licensed under "
-"the GNU AGPL v3 license."
-msgstr ""
-"KeePassRX is een wachtwoordbeheerder voor KeePass-databanken, uitgebracht "
-"onder de GNU AGPL v3-licentie."
-
-msgid "Select database"
-msgstr "Kies een databank"
-
-msgid "Refresh"
-msgstr "Herladen"
-
-msgid "No databases"
-msgstr "Er zijn geen databanken"
-
-msgid "Pull down to add a database."
-msgstr "Trek omlaag om een databank toe te voegen."
-
-msgid "Last modified: %1"
-msgstr "Bewerkt op %1"
-
-msgid "Delete"
-msgstr "Verwijderen"
-
-msgid "Deleting"
-msgstr "Bezig met verwijderen…"
-
-msgid "Error: %1"
-msgstr "Foutmelding: %1"
-
-msgid "Master password"
-msgstr "Hoofdwachtwoord"
-
-msgid "Database accent colors"
-msgstr "Databanken voorzien van accentkleuren"
-
-msgid "Tint entries with the color assigned to them in the database."
-msgstr "Toon items met de in de databank toegewezen kleur."
-
-msgid "Show recycle bin"
-msgstr "Prullenbak tonen"
-
-msgid "Include entries from the database's recycle bin group while browsing."
-msgstr "Toon items uit de prullenbak tijdens het bladeren."
-
-msgid ""
-"Offer a Lock action that locks the database with your master password "
-"instead of closing it."
-msgstr ""
-"Toon een optie waarmee je de databank met je hoofdwachtwoord kunt "
-"vergrendelen in plaats van hem te sluiten."
-
-msgid "Lock or close when idle"
-msgstr "Vergrendelen of sluiten na inactiviteit"
-
-msgid ""
-"Lock the open database (or close it, when locking is disabled) 30 seconds "
-"after the app is minimized."
-msgstr ""
-"Vergrendel de geopende databank als de app zich gedurende 30 seconden op de "
-"achtergrond bevindt (of sluit hem, als vergrendelen is uitgeschakeld)."
-
-msgid "There is no locked database"
-msgstr "Er is geen vergrendelde databank"
-
-msgid "Error: %1. Wrong passcode?"
-msgstr "Foutmelding: %1. Is de toegangscode juist?"
-
-msgid "Saved %1"
-msgstr "‘%1’ is opgeslagen"
-
-msgid "Export to"
-msgstr "Exporteren naar"
-
-msgid "Cannot preview this file type"
-msgstr "Dit bestandstype kan niet worden voorvertoond"
-
-msgid "Pull down to export the attachment."
-msgstr "Trek omlaag om de bijlage te exporteren."
-
-msgid "All entries"
-msgstr "Alle items"
-
-msgid "Special categories"
-msgstr "Speciale categorieën"
-
-msgid "2FA codes"
-msgstr "2FA-codes"
-
-msgid "Saved searches"
-msgstr "Opgeslagen zoekopdrachten"
-
-msgid "No entries"
-msgstr "Er zijn geen items"
-
-msgid "Password (Entropy: %1 bits)"
-msgstr "Wachtwoord (sterkte: %1 bits)"
-
-msgid "Untitled entry"
-msgstr "Naamloos item"
-
-msgid "Unable to open attachment."
-msgstr "De bijlage kan niet worden geopend."
-
-msgid "TOTP (valid for %1)"
-msgstr "Totp (%1 geldig)"
-
-msgid "Other fields"
-msgstr "Overige velden"
-
-#~ msgid "Tap to copy"
-#~ msgstr "Druk om te kopiëren"
-
-#~ msgid "Notes copied to clipboard (30 secs)"
-#~ msgstr "De aantekeningen zijn gekopieerd naar het klembord (30 sec.)"
 
 #~ msgid ""
 #~ "Change settings based on your preferences. Any change to the settings "

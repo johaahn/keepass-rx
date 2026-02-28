@@ -1,6 +1,5 @@
 use crate::crypto::{EncryptedValue, MasterKey};
 
-use super::entropy::calculate_entropy;
 use super::icons::RxIcon;
 use anyhow::{Result, anyhow};
 use base64::{Engine, prelude::BASE64_STANDARD};
@@ -9,11 +8,9 @@ use humanize_duration::prelude::DurationExt;
 use infer;
 use keepass::db::{CustomData, Entry, Icon, TOTP as KeePassTOTP, Value};
 use libsodium_rs::utils::{SecureVec, vec_utils};
-use log::warn;
 use querystring::querify;
 use secstr::SecStr;
 use std::borrow::Cow;
-use std::cell::OnceCell;
 use std::rc::Rc;
 use std::str::FromStr;
 use std::sync::atomic::Ordering;
@@ -27,7 +24,7 @@ macro_rules! expose {
     ($masterkey:expr, $secret:expr) => {{
         $secret
             .as_ref()
-            .and_then(|secret| secret.value($masterkey))
+            .and_then(|secret| secret.value($masterkey).map(|value| value.to_string()))
             .unwrap_or_default()
     }};
 }
@@ -72,7 +69,6 @@ fn should_hide_field(field_name: &str) -> bool {
 }
 
 #[derive(Clone, Zeroize, ZeroizeOnDrop)]
-#[allow(dead_code)]
 pub struct RxEntry {
     #[zeroize(skip)]
     pub uuid: Uuid,
@@ -97,16 +93,9 @@ pub struct RxEntry {
 
     pub(super) url: Option<RxValue>,
     pub(super) raw_otp_value: Option<RxValue>,
-    pub(super) is_expired: bool,
 
     #[zeroize(skip)]
     pub icon: RxIcon,
-
-    #[zeroize(skip)]
-    icon_data_url: OnceCell<Option<String>>,
-
-    #[zeroize(skip)]
-    pub(super) entropy: OnceCell<f64>,
 }
 
 fn extract_remaining_fields(
@@ -171,18 +160,12 @@ impl RxEntry {
                     .and_then(|uuid_str| Uuid::from_str(&uuid_str).ok())
             });
 
-        // Icon: Can either be the custom one (provided), or the
+        // Icon: Can eiher be the custom one (provided), or the
         // built-in one, or nothing.
         let rx_icon = icon
             .map(|i| RxIcon::Image(i.data))
             .or_else(|| entry.icon_id.map(|id| RxIcon::Builtin(id)))
             .unwrap_or(RxIcon::None);
-
-        // Expiration: self-explanatory.
-        let is_expired = entry
-            .get_expiry_time()
-            .map(|expiry| entry.times.expires && *expiry <= keepass::db::Times::now())
-            .unwrap_or(false);
 
         // Has to come after the above, otherwise those fields end up
         // in the custom fields.
@@ -203,11 +186,8 @@ impl RxEntry {
             custom_fields: custom_fields,
             url: url,
             raw_otp_value: raw_otp_value,
-            is_expired,
             icon: rx_icon,
-            icon_data_url: OnceCell::new(),
             tags: mem::take(&mut entry.tags),
-            entropy: OnceCell::new(),
         }
     }
 
@@ -233,16 +213,6 @@ impl RxEntry {
         self.url
             .as_ref()
             .map(|u| RxValueKeyRef::new(u, &self.master_key))
-    }
-
-    pub fn notes(&self) -> Option<RxValueKeyRef<'_>> {
-        self.notes
-            .as_ref()
-            .map(|n| RxValueKeyRef::new(n, &self.master_key))
-    }
-
-    pub fn tags(&self) -> &[String] {
-        self.tags.as_slice()
     }
 
     pub fn raw_otp_value(&self) -> Option<RxValueKeyRef<'_>> {
@@ -287,39 +257,6 @@ impl RxEntry {
 
     pub fn has_tags(&self) -> bool {
         self.tags.len() > 0
-    }
-
-    pub fn is_expired(&self) -> bool {
-        self.is_expired
-    }
-
-    pub fn entropy(&self) -> f64 {
-        *self.entropy.get_or_init(|| {
-            let mut maybe_pw = self.password().and_then(|val| val.value_secure());
-
-            let entropy = maybe_pw
-                .as_ref()
-                .map(|pw| calculate_entropy(pw))
-                .transpose()
-                .map(|res| res.unwrap_or(0.0));
-
-            if let Some(pw) = maybe_pw.as_mut() {
-                pw.zeroize();
-            }
-
-            match entropy {
-                Ok(ent) => ent,
-                Err(err) => {
-                    warn!("Could not calculate entropy: {}", err);
-                    warn!("Defaulting to 0.0 bits");
-                    0.0
-                }
-            }
-        })
-    }
-
-    pub fn is_password_weak(&self) -> bool {
-        self.password().is_some() && self.entropy() < 75.0
     }
 
     pub fn has_otp(&self) -> bool {
@@ -377,19 +314,15 @@ impl RxEntry {
         })
     }
 
-    pub fn icon_data_url(&self) -> Option<&str> {
+    pub fn icon_data_url(&self) -> Option<String> {
         if let RxIcon::Image(ref data) = self.icon {
-            self.icon_data_url
-                .get_or_init(|| {
-                    infer::get(data).map(|k| {
-                        format!(
-                            "data:{};base64,{}",
-                            k.mime_type(),
-                            BASE64_STANDARD.encode(data)
-                        )
-                    })
-                })
-                .as_deref()
+            infer::get(data).map(|k| {
+                format!(
+                    "data:{};base64,{}",
+                    k.mime_type(),
+                    BASE64_STANDARD.encode(data)
+                )
+            })
         } else {
             None
         }
@@ -407,30 +340,16 @@ impl<'a> RxValueKeyRef<'a> {
         Self(value.into(), key)
     }
 
-    #[inline]
-    fn inner_ref(&self) -> &RxValue {
-        self.0.as_ref()
-    }
-
-    #[inline]
-    fn key_ref(&self) -> &'a MasterKey {
-        self.1
-    }
-
     pub fn value(&self) -> Option<Zeroizing<String>> {
-        self.inner_ref().value(self.key_ref()).map(Zeroizing::new)
-    }
-
-    pub fn value_secure(&self) -> Option<SecureVec<u8>> {
-        self.inner_ref().value_secure(self.key_ref())
+        self.0.value(self.1).map(Zeroizing::new)
     }
 
     pub fn is_hidden_by_default(&self) -> bool {
-        self.inner_ref().is_hidden_by_default()
+        self.0.is_hidden_by_default()
     }
 
     pub fn totp_value(&self) -> Option<&RxTotp> {
-        self.inner_ref().totp_value()
+        self.0.totp_value()
     }
 }
 
@@ -498,7 +417,7 @@ impl RxValue {
 
     pub fn is_hidden_by_default(&self) -> bool {
         match self {
-            RxValue::Protected(_) | RxValue::Sensitive(_) => true,
+            RxValue::Protected(_) => true,
             _ => false,
         }
     }
@@ -513,22 +432,6 @@ impl RxValue {
                 .flatten(),
             Sensitive(val) => std::str::from_utf8(&val).ok().map(|v| v.to_string()),
             Unprotected(value) => Some(value.clone()),
-            _ => None,
-        }
-    }
-
-    pub fn value_secure(&self, master_key: &MasterKey) -> Option<SecureVec<u8>> {
-        use RxValue::*;
-        match self {
-            Protected(val) => val.expose(master_key).ok(),
-            Sensitive(val) => Some(val.clone()),
-            Unprotected(value) => match vec_utils::secure_vec::<u8>(value.len()).ok() {
-                Some(mut buf) => {
-                    buf.copy_from_slice(value.as_bytes());
-                    Some(buf)
-                }
-                None => None,
-            },
             _ => None,
         }
     }
@@ -575,7 +478,9 @@ impl std::fmt::Debug for RxValue {
 impl TryFrom<String> for RxValue {
     type Error = anyhow::Error;
     fn try_from(value: String) -> std::result::Result<Self, Self::Error> {
-        Ok(RxValue::Unprotected(value))
+        let mut secure_vec = vec_utils::secure_vec::<u8>(value.len())?;
+        secure_vec.copy_from_slice(value.as_ref());
+        Ok(RxValue::Sensitive(secure_vec))
     }
 }
 

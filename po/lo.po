@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-11 14:27+0000\n"
+"POT-Creation-Date: 2025-12-01 20:39+0000\n"
 "PO-Revision-Date: 2026-01-26 18:01+0000\n"
 "Last-Translator: BoneNI <bounkirdni@gmail.com>\n"
-"Language-Team: Lao <https://hosted.weblate.org/projects/ubports/keepassrx/lo/"
-">\n"
+"Language-Team: Lao <https://hosted.weblate.org/projects/ubports/keepassrx/"
+"lo/>\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -80,6 +80,12 @@ msgstr ""
 "<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
 "projectmoon/keepass-rx</a>"
 
+msgid "Open Source Licenses"
+msgstr "ໃບອະນຸຍາດໂອເພນຊອດ"
+
+msgid "Website"
+msgstr "ເວັບໄຊ"
+
 msgid "Add Database"
 msgstr "ເພີ່ມຖານຂໍ້ມູນ"
 
@@ -97,12 +103,6 @@ msgstr "ແຕະ + ເພື່ອນຳເຂົ້າຖານຂໍ້ມູ
 
 msgid "It will only be removed from the app, not your device."
 msgstr "ມັນຈະຖືກລຶບອອກຈາກແອັບເທົ່ານັ້ນ, ບໍ່ແມ່ນຈາກອຸປະກອນຂອງທ່ານ."
-
-msgid "Open Source Licenses"
-msgstr "ໃບອະນຸຍາດໂອເພນຊອດ"
-
-msgid "Website"
-msgstr "ເວັບໄຊ"
 
 msgid "Cancel Search"
 msgstr "ຍົກເລີກການຄົ້ນຫາ"
@@ -164,12 +164,6 @@ msgstr "ແທັກ"
 msgid "Entries grouped by tag."
 msgstr "ຂໍ້ມູນຖືກຈັດກຸ່ມຕາມແທັກ."
 
-msgid "Saved Searches"
-msgstr ""
-
-msgid "Entries matching search queries."
-msgstr ""
-
 msgid "Select View"
 msgstr "ເລືອກມຸມມອງ"
 
@@ -178,92 +172,6 @@ msgstr "ເລືອກ"
 
 msgid "Cancel"
 msgstr "ຍົກເລີກ"
-
-msgid "Change settings based on your preferences."
-msgstr "ປ່ຽນການຕັ້ງຄ່າຕາມຄວາມຕ້ອງການຂອງທ່ານ."
-
-msgid "Enable database locking"
-msgstr "ເປີດໃຊ້ການລັອກຖານຂໍ້ມູນ"
-
-msgid ""
-"Securely lock and unlock database with a short passcode. Requires restart to "
-"take effect."
-msgstr "ລັອກ ແລະ ປົດລັອກຖານຂໍ້ມູນຢ່າງປອດໄພດ້ວຍລະຫັດຜ່ານສັ້ນ. ຕ້ອງເລີ່ມຕົ້ນໂປຣແກຣມໃໝ່ເພື່ອໃຫ້ມີຜົນ."
-
-msgid "Enable Accents"
-msgstr "ເປີດໃຊ້ສີເນັ້ນ"
-
-msgid ""
-"Set header color and name according to database settings. Compatible with "
-"KeePassXC."
-msgstr "ຕັ້ງຄ່າສີຫົວຂໍ້ ແລະ ຊື່ຕາມການຕັ້ງຄ່າຖານຂໍ້ມູນ. ເຂົ້າກັນໄດ້ກັບ KeePassXC."
-
-msgid "Show the \"Recycle bin\" group"
-msgstr "ສະແດງກຸ່ມ \"ຖັງຂີ້ເຫຍື້ອ\""
-
-msgid "This group contains all the deleted entries"
-msgstr "ກຸ່ມນີ້ບັນຈຸຂໍ້ມູນທັງໝົດທີ່ຖືກລຶບ"
-
-msgid "Fuzzy Search"
-msgstr "ການຄົ້ນຫາແບບຄຸມເຄືອ"
-
-msgid ""
-"Use fuzzy search to find entries. If disabled, search only matches exact "
-"case insensitive text."
-msgstr ""
-"ໃຊ້ການຄົ້ນຫາແບບຄຸມເຄືອເພື່ອຊອກຫາຂໍ້ມູນ. ຫາກປິດໄວ້, ການຄົ້ນຫາຈະກົງກັບຂໍ້ຄວາມທີ່ຖືກຕ້ອງທຸກຕົວອັກສອນ "
-"(ບໍ່ຈຳແນກຕົວພິມໃຫຍ່-ນ້ອຍ)."
-
-msgid "Password"
-msgstr "ລະຫັດຜ່ານ"
-
-msgid "%1 bits"
-msgstr ""
-
-msgid "Password (Entropy: %1)"
-msgstr ""
-
-msgid "%1 copied to clipboard (30 secs)"
-msgstr "ຄັດລອກ %1 ໃສ່ຄລິບບອດແລ້ວ (30 ວິນາທີ)"
-
-msgid "Notes"
-msgstr "ບັນທຶກ"
-
-msgid "Tap to hide"
-msgstr ""
-
-msgid "Tap to reveal"
-msgstr ""
-
-msgid "Tap to copy"
-msgstr "ແຕະເພື່ອຄັດລອກ"
-
-msgid "Tap reveal to view notes"
-msgstr ""
-
-msgid "Main"
-msgstr "ຫຼັກ"
-
-msgid "Username"
-msgstr "ຊື່ຜູ້ໃຊ້"
-
-msgid "Loading…"
-msgstr ""
-
-msgid "URL"
-msgstr "URL"
-
-msgid "TOTP (Valid for %1)"
-msgstr ""
-
-msgid "TOTP"
-msgstr ""
-
-msgid "Other Fields"
-msgstr "ຊ່ອງຂໍ້ມູນອື່ນໆ"
-
-msgid "KeePassRX: Clipboard cleared."
-msgstr "KeePassRX: ລ້າງຂໍ້ມູນໃນຄລິບບອດແລ້ວ."
 
 msgid "Key Loaded"
 msgstr "ໂຫຼດກະແຈແລ້ວ"
@@ -300,6 +208,71 @@ msgstr "ສະແດງລະຫັດຜ່ານ"
 
 msgid "Opening"
 msgstr "ກຳລັງເປີດ"
+
+msgid "Change settings based on your preferences."
+msgstr "ປ່ຽນການຕັ້ງຄ່າຕາມຄວາມຕ້ອງການຂອງທ່ານ."
+
+msgid "Enable database locking"
+msgstr "ເປີດໃຊ້ການລັອກຖານຂໍ້ມູນ"
+
+msgid ""
+"Securely lock and unlock database with a short passcode. Requires restart to "
+"take effect."
+msgstr "ລັອກ ແລະ ປົດລັອກຖານຂໍ້ມູນຢ່າງປອດໄພດ້ວຍລະຫັດຜ່ານສັ້ນ. ຕ້ອງເລີ່ມຕົ້ນໂປຣແກຣມໃໝ່ເພື່ອໃຫ້ມີຜົນ."
+
+msgid "Enable Accents"
+msgstr "ເປີດໃຊ້ສີເນັ້ນ"
+
+msgid ""
+"Set header color and name according to database settings. Compatible with "
+"KeePassXC."
+msgstr "ຕັ້ງຄ່າສີຫົວຂໍ້ ແລະ ຊື່ຕາມການຕັ້ງຄ່າຖານຂໍ້ມູນ. ເຂົ້າກັນໄດ້ກັບ KeePassXC."
+
+msgid "Show the \"Recycle bin\" group"
+msgstr "ສະແດງກຸ່ມ \"ຖັງຂີ້ເຫຍື້ອ\""
+
+msgid "This group contains all the deleted entries"
+msgstr "ກຸ່ມນີ້ບັນຈຸຂໍ້ມູນທັງໝົດທີ່ຖືກລຶບ"
+
+msgid "Fuzzy Search"
+msgstr "ການຄົ້ນຫາແບບຄຸມເຄືອ"
+
+msgid ""
+"Use fuzzy search to find entries. If disabled, search only matches exact "
+"case insensitive text."
+msgstr ""
+"ໃຊ້ການຄົ້ນຫາແບບຄຸມເຄືອເພື່ອຊອກຫາຂໍ້ມູນ. ຫາກປິດໄວ້, ການຄົ້ນຫາຈະກົງກັບຂໍ້ຄວາມທີ່ຖືກຕ້ອງທຸກຕົວອັກສອນ (ບໍ່ຈຳ"
+"ແນກຕົວພິມໃຫຍ່-ນ້ອຍ)."
+
+msgid "%1 copied to clipboard (30 secs)"
+msgstr "ຄັດລອກ %1 ໃສ່ຄລິບບອດແລ້ວ (30 ວິນາທີ)"
+
+msgid "Notes"
+msgstr "ບັນທຶກ"
+
+msgid "Tap to copy"
+msgstr "ແຕະເພື່ອຄັດລອກ"
+
+msgid "Notes copied to clipboard (30 secs)"
+msgstr "ຄັດລອກບັນທຶກໃສ່ຄລິບບອດແລ້ວ (30 ວິນາທີ)"
+
+msgid "Main"
+msgstr "ຫຼັກ"
+
+msgid "Username"
+msgstr "ຊື່ຜູ້ໃຊ້"
+
+msgid "Password"
+msgstr "ລະຫັດຜ່ານ"
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Other Fields"
+msgstr "ຊ່ອງຂໍ້ມູນອື່ນໆ"
+
+msgid "KeePassRX: Clipboard cleared."
+msgstr "KeePassRX: ລ້າງຂໍ້ມູນໃນຄລິບບອດແລ້ວ."
 
 msgid "Manual path set."
 msgstr "ກຳນົດເສັ້ນທາງເອງແລ້ວ."
@@ -353,29 +326,6 @@ msgstr "ລະຫັດ 2FA"
 msgctxt "List of entries with tags"
 msgid "Tags"
 msgstr "ແທັກ"
-
-msgctxt "Saved database searches"
-msgid "Saved Searches"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Poor"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Weak"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Good"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Excellent"
-msgstr ""
-
-#~ msgid "Notes copied to clipboard (30 secs)"
-#~ msgstr "ຄັດລອກບັນທຶກໃສ່ຄລິບບອດແລ້ວ (30 ວິນາທີ)"
 
 #~ msgid ""
 #~ "Change settings based on your preferences. Any change to the settings "

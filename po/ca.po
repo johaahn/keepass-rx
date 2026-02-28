@@ -8,487 +8,464 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-11 14:27+0000\n"
-"PO-Revision-Date: 2026-03-17 16:09+0000\n"
-"Last-Translator: Walter Garcia-Fontes <walter.garcia@upf.edu>\n"
-"Language-Team: Catalan <https://hosted.weblate.org/projects/ubports/"
-"keepassrx/ca/>\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17-dev\n"
 
 #: qml/components/EntryItem.qml:103
 msgid "Copy Username"
-msgstr "Copia el nom d'usuari"
+msgstr ""
 
 #: qml/components/EntryItem.qml:111
 msgid "Copy Password"
-msgstr "Copia la contrasenya"
+msgstr ""
 
 #: qml/components/EntryItem.qml:120
 msgid "Open URL"
-msgstr "Obre l'URL"
+msgstr ""
 
 #: qml/components/EntryItem.qml:127
 msgid "Copy 2FA Code"
-msgstr "Copia el codi 2FA"
+msgstr ""
 
 #: qml/components/EntryItem.qml:139
 msgid "View Entry"
-msgstr "Visualitza l'entrada"
+msgstr ""
 
 #: qml/components/EntryItem.qml:256
 msgid "Tap to copy 2FA code"
-msgstr "Feu un toc per copiar el codi 2FA"
+msgstr ""
 
 #: qml/pages/AboutPage.qml:12 qml/pages/DBList.qml:76
 #: qml/pages/EntriesPage.qml:212 qml/pages/OpenDBPage.qml:118
 #: qml/pages/UnlockPage.qml:53
 msgid "About"
-msgstr "Quant a"
+msgstr ""
 
 #: qml/pages/AboutPage.qml:79
 msgid ""
 "KeePassRX is password manager for KeePass databases, designed for Ubuntu "
 "Touch. It is licensed under the GNU AGPL v3 license."
 msgstr ""
-"El KeePassRX és un gestor de bases de dades KeePass, dissenyat per a "
-"l'Ubuntu Touch. Està llicenciat sota una llicència GNU AGPL v3."
 
 #: qml/pages/AboutPage.qml:90
 msgid ""
 "The built-in KeePass icon images are licensed under a variety of licenses as "
 "detailed in assets/COPYING."
 msgstr ""
-"Les imatges incorporades d'icones KeePass estan llicenciades sota una "
-"varietat de llicències tal com es detalla a assets/COPYING."
 
 #: qml/pages/AboutPage.qml:98
 msgid "Manual"
-msgstr "Manual"
+msgstr ""
 
 #: qml/pages/AboutPage.qml:110
 msgid ""
 "• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
 "projects/keepassrx/</a>"
 msgstr ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
 
 #: qml/pages/AboutPage.qml:123
 msgid ""
 "• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
 "projects/keepassrx/</a>"
 msgstr ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
 
 #: qml/pages/AboutPage.qml:132
 msgid "Source Code"
-msgstr "Codi font"
+msgstr ""
 
 #: qml/pages/AboutPage.qml:141
 msgid ""
 "<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
 "projectmoon/keepass-rx</a>"
 msgstr ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
 
 #: qml/pages/DBList.qml:62
 msgid "Add Database"
-msgstr "Afegeix una base de dades"
+msgstr ""
 
 #: qml/pages/DBList.qml:69 qml/pages/EntriesPage.qml:203
 #: qml/pages/SettingsPage.qml:10 qml/pages/OpenDBPage.qml:111
 #: qml/pages/UnlockPage.qml:46
 msgid "Settings"
-msgstr "Paràmetres"
+msgstr ""
 
 #: qml/pages/DBList.qml:96
 msgid "Loading last database."
-msgstr "S'està carregant l'última base de dades."
+msgstr ""
 
 #: qml/pages/DBList.qml:106
 msgid "Select Database"
-msgstr "Selecciona la base de dades"
+msgstr ""
 
 #: qml/pages/DBList.qml:178
 msgid "Tap + to import a database."
-msgstr "Feu un toc sobre + per importar la base de dades."
+msgstr ""
 
 #: qml/pages/DBList.qml:283
 msgid "It will only be removed from the app, not your device."
-msgstr "Sols se suprimirà de l'aplicació, no del dispositiu."
+msgstr ""
 
 #: qml/pages/LicensesPage.qml:13
 msgid "Open Source Licenses"
-msgstr "Llicències de codi obert"
+msgstr ""
 
 #: qml/pages/LicensesPage.qml:66
 msgid "Website"
-msgstr "Lloc web"
+msgstr ""
 
 #: qml/pages/EntriesPage.qml:96
 msgid "Cancel Search"
-msgstr "Cancel·la la cerca"
+msgstr ""
 
 #: qml/pages/EntriesPage.qml:117
 msgid "Search all entries"
-msgstr "Cerca totes les entrades"
+msgstr ""
 
 #: qml/pages/EntriesPage.qml:117
 msgid "Search all entries under this group"
-msgstr "Cerca totes les entrades sota aquest grup"
+msgstr ""
 
 #: qml/pages/EntriesPage.qml:118
 msgid "Search entries in this group"
-msgstr "Cerca entrades a aquest grup"
+msgstr ""
 
 #: qml/pages/EntriesPage.qml:143
 msgid "Lock"
-msgstr "Bloqueja"
+msgstr ""
 
 #: qml/pages/EntriesPage.qml:155
 msgid "Close"
-msgstr "Tanca"
+msgstr ""
 
 #: qml/pages/EntriesPage.qml:167 qml/pages/SingleEntry.qml:287
 #: qml/pages/OpenDBPage.qml:98
 msgid "Back"
-msgstr "Endarrere"
+msgstr ""
 
 #: qml/pages/EntriesPage.qml:180
 msgid "View Mode"
-msgstr "Mode de visualització"
+msgstr ""
 
 #: qml/pages/EntriesPage.qml:190
 msgid "Search"
-msgstr "Cerca"
+msgstr ""
 
 #: qml/pages/EntriesPage.qml:224
 msgid "Lock Database"
-msgstr "Bloqueja la base de dades"
+msgstr ""
 
 #: qml/pages/EntriesPage.qml:234
 msgid "Close Database"
-msgstr "Tanca la base de dades"
+msgstr ""
 
 #: qml/pages/EntriesPage.qml:254
 msgid "Change View"
-msgstr "Canvia la visualització"
+msgstr ""
 
 #: qml/pages/EntriesPage.qml:260
 msgid "All Entries"
-msgstr "Totes les entrades"
+msgstr ""
 
 #: qml/pages/EntriesPage.qml:262
 msgid "All groups and entries."
-msgstr "Tots els grups i entrades."
+msgstr ""
 
 #: qml/pages/EntriesPage.qml:266 src/rx/virtual_hierarchy.rs:86
 msgid "Special Categories"
-msgstr "Categories especials"
+msgstr ""
 
 #: qml/pages/EntriesPage.qml:268
 msgid "Entries grouped by template."
-msgstr "Entrades agrupades per plantilla."
+msgstr ""
 
 #: qml/pages/EntriesPage.qml:272
 msgid "2FA Codes"
-msgstr "Codis 2FA"
+msgstr ""
 
 #: qml/pages/EntriesPage.qml:274
 msgid "Entries with 2FA codes."
-msgstr "Entrades amb codis 2FA."
+msgstr ""
 
 #: qml/pages/EntriesPage.qml:278 src/rx/virtual_hierarchy.rs:260
 msgid "Tags"
-msgstr "Etiquetes"
+msgstr ""
 
 #: qml/pages/EntriesPage.qml:280
 msgid "Entries grouped by tag."
-msgstr "Entrades agrupades per etiquetes."
+msgstr ""
 
 #: qml/pages/EntriesPage.qml:284
 msgid "Saved Searches"
-msgstr "Cerques desades"
+msgstr ""
 
 #: qml/pages/EntriesPage.qml:286
 msgid "Entries matching search queries."
-msgstr "Entrades que concorden amb cerques."
+msgstr ""
 
 #: qml/pages/EntriesPage.qml:298
 msgid "Select View"
-msgstr "Selecciona la visualització"
+msgstr ""
 
 #: qml/pages/EntriesPage.qml:317
 msgid "Select"
-msgstr "Selecciona"
+msgstr ""
 
 #: qml/pages/EntriesPage.qml:327
 msgid "Cancel"
-msgstr "Cancel·la"
+msgstr ""
 
 #: qml/pages/SettingsPage.qml:34
 msgid "Change settings based on your preferences."
-msgstr "Canvieu els paràmetres basat en les vostres preferències."
+msgstr ""
 
 #: qml/pages/SettingsPage.qml:39
 msgid "Enable database locking"
-msgstr "Habilita el bloqueig de la base de dades"
+msgstr ""
 
 #: qml/pages/SettingsPage.qml:42
 msgid ""
 "Securely lock and unlock database with a short passcode. Requires restart to "
 "take effect."
 msgstr ""
-"Bloqueja i desbloqueja la base de dades de manera segura amb un codi d'accés "
-"curt."
 
 #: qml/pages/SettingsPage.qml:55
 msgid "Enable Accents"
-msgstr "Habilita els accents"
+msgstr ""
 
 #: qml/pages/SettingsPage.qml:57
 msgid ""
 "Set header color and name according to database settings. Compatible with "
 "KeePassXC."
 msgstr ""
-"Estableix el color i el nom de la capçalera d'acord amb els paràmetres de la "
-"base de dades. Compatible amb KeePassXC."
 
 #: qml/pages/SettingsPage.qml:72
 msgid "Show the \"Recycle bin\" group"
-msgstr "Mostra el grup \"Paperera\""
+msgstr ""
 
 #: qml/pages/SettingsPage.qml:74
 msgid "This group contains all the deleted entries"
-msgstr "Aquest grup conté totes les entrades suprimides"
+msgstr ""
 
 #: qml/pages/SettingsPage.qml:87
 msgid "Fuzzy Search"
-msgstr "Cerca difusa"
+msgstr ""
 
 #: qml/pages/SettingsPage.qml:90
 msgid ""
 "Use fuzzy search to find entries. If disabled, search only matches exact "
 "case insensitive text."
 msgstr ""
-"Usa la cerca difusa per trobar entrades. Si està desactivat, la cerca sols "
-"troba coincidències exactes de text sense distinció de majúscules i "
-"minúscules."
 
 #: qml/pages/SingleEntry.qml:63
 msgid "Password"
-msgstr "Contrasenya"
+msgstr ""
 
 #: qml/pages/SingleEntry.qml:68
 msgid "%1 bits"
-msgstr "%1 bits"
+msgstr ""
 
 #: qml/pages/SingleEntry.qml:70
 msgid "Password (Entropy: %1)"
-msgstr "Contrasenya (Entropia: %1)"
+msgstr ""
 
 #: qml/pages/SingleEntry.qml:75 qml/Main.qml:106
 msgid "%1 copied to clipboard (30 secs)"
-msgstr "S'ha copiat %1 al porta-retalls (30 segons)"
+msgstr ""
 
 #: qml/pages/SingleEntry.qml:345
 msgid "Notes"
-msgstr "Notes"
+msgstr ""
 
 #: qml/pages/SingleEntry.qml:353
 msgid "Tap to hide"
-msgstr "Feu un toc per amagar"
+msgstr ""
 
 #: qml/pages/SingleEntry.qml:353 qml/pages/SingleEntry.qml:445
 #: qml/pages/SingleEntry.qml:489 qml/pages/SingleEntry.qml:542
 msgid "Tap to reveal"
-msgstr "Feu un toc per mostrar"
+msgstr ""
 
 #: qml/pages/SingleEntry.qml:374
 msgid "Tap to copy"
-msgstr "Feu un toc per copiar"
+msgstr ""
 
 #: qml/pages/SingleEntry.qml:401
 msgid "Tap reveal to view notes"
-msgstr "Feu un toc per mostrar notes"
+msgstr ""
 
 #: qml/pages/SingleEntry.qml:430
 msgid "Main"
-msgstr "Principal"
+msgstr ""
 
 #: qml/pages/SingleEntry.qml:440
 msgid "Username"
-msgstr "Nom d'usuari"
+msgstr ""
 
 #: qml/pages/SingleEntry.qml:444 qml/pages/SingleEntry.qml:467
 #: qml/pages/SingleEntry.qml:488 qml/pages/SingleEntry.qml:541
 msgid "Loading…"
-msgstr "S'està carregant…"
+msgstr ""
 
 #: qml/pages/SingleEntry.qml:485
 msgid "URL"
-msgstr "URL"
+msgstr ""
 
 #: qml/pages/SingleEntry.qml:505
 msgid "TOTP (Valid for %1)"
-msgstr "TOTP (Vàlid per a %1)"
+msgstr ""
 
 #: qml/pages/SingleEntry.qml:506 qml/pages/SingleEntry.qml:510
 msgid "TOTP"
-msgstr "TOTP"
+msgstr ""
 
 #: qml/pages/SingleEntry.qml:532
 msgid "Other Fields"
-msgstr "Altres camps"
+msgstr ""
 
 #: qml/pages/SingleEntry.qml:573 qml/Main.qml:241
 msgid "KeePassRX: Clipboard cleared."
-msgstr "KeePassRX: S'ha netejat el porta-retalls."
+msgstr ""
 
 #: qml/pages/OpenDBPage.qml:32
 msgid "Key Loaded"
-msgstr "S'ha carregat la clau"
+msgstr ""
 
 #: qml/pages/OpenDBPage.qml:33
 msgid "Remove Key"
-msgstr "Suprimeix la clau"
+msgstr ""
 
 #: qml/pages/OpenDBPage.qml:35
 msgid "Use Key"
-msgstr "Usa la clau"
+msgstr ""
 
 #: qml/pages/OpenDBPage.qml:42
 msgid "Automatically detected a key file for this database."
-msgstr "Detecta automàticament un fitxer de clau per a aquesta base de dades."
+msgstr ""
 
 #: qml/pages/OpenDBPage.qml:44
 msgid "A key file will be used to open this database."
-msgstr "S'usarà un fitxer de clau per obrir aquesta base de dades."
+msgstr ""
 
 #: qml/pages/OpenDBPage.qml:56
 msgid "Select Key File"
-msgstr "Selecciona un fitxer de clau"
+msgstr ""
 
 #: qml/pages/OpenDBPage.qml:237
 msgid "Enter the database master password"
-msgstr "Entreu la contrasenya mestra de la base de dades"
+msgstr ""
 
 #: qml/pages/OpenDBPage.qml:250
 msgid "Master Password"
-msgstr "Contrasenya mestra"
+msgstr ""
 
 #: qml/pages/OpenDBPage.qml:276
 msgid "Open"
-msgstr "Obre"
+msgstr ""
 
 #: qml/pages/OpenDBPage.qml:297
 msgid "Hide Password"
-msgstr "Amaga la contrasenya"
+msgstr ""
 
 #: qml/pages/OpenDBPage.qml:297
 msgid "Show Password"
-msgstr "Mostra la contrasenya"
+msgstr ""
 
 #: qml/pages/OpenDBPage.qml:354
 msgid "Opening"
-msgstr "S'està obrint"
+msgstr ""
 
 #: qml/pages/UnlockPage.qml:151
 msgid "Manual path set."
-msgstr "S'ha establert el camí manual."
+msgstr ""
 
 #: qml/pages/UnlockPage.qml:168
 msgid ""
 "The passcode is the first five characters of the database password (or the "
 "whole password if less than five characters)."
 msgstr ""
-"La clau d'accés és els primers cinc caràcters de la contrasenya de la base "
-"de dades (o tota la contrasenya si és de menys de cinc caràcters)."
 
 #: qml/pages/UnlockPage.qml:184
 msgid "Passcode"
-msgstr "Clau d'accés"
+msgstr ""
 
 #: qml/pages/UnlockPage.qml:215
 msgid "Unlock"
-msgstr "Debloqueja"
+msgstr ""
 
 #: qml/pages/UnlockPage.qml:234
 msgid "Securely Unlocking"
-msgstr "S'està desbloquejant amb seguretat"
+msgstr ""
 
 #: qml/pages/UnlockPage.qml:235
 msgid "Securely Locking"
-msgstr "S'està bloquejant amb seguretat"
+msgstr ""
 
 #: qml/pages/UnlockPage.qml:246
 msgid "Database Not Opening?"
-msgstr "No s'obre la base de dades?"
+msgstr ""
 
 #: src/gui/instructions.rs:9
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
 msgstr ""
-"<b>S'estan mostrant tots el codis 2FA a la base de dades.</b><br/>Vegeu els "
-"detalls d'una entrada usant la seva barra d'acció."
 
 #: src/gui/mod.rs:69
 msgctxt "A database imported via ContentHub"
 msgid "Imported"
-msgstr "Importat"
+msgstr ""
 
 #: src/gui/mod.rs:70
 msgctxt "A database managed by external file sync"
 msgid "Synced"
-msgstr "Sincronitzat"
+msgstr ""
 
 #: src/rx/virtual_hierarchy.rs:94
 msgid "All Templates"
-msgstr "Totes les plantilles"
+msgstr ""
 
 #: src/rx/virtual_hierarchy.rs:147
 msgctxt "Default view of the password database (all entries)"
 msgid "Default View"
-msgstr "Visualització per defecte"
+msgstr ""
 
 #: src/rx/virtual_hierarchy.rs:192 src/rx/virtual_hierarchy.rs:205
 msgctxt "Two-factor/OTP codes (keep phrase short as possible)"
 msgid "2FA Codes"
-msgstr "Codis 2FA"
+msgstr ""
 
 #: src/rx/virtual_hierarchy.rs:252
 msgctxt "List of entries with tags"
 msgid "Tags"
-msgstr "Etiquetes"
+msgstr ""
 
 #: src/rx/virtual_hierarchy.rs:301 src/rx/virtual_hierarchy.rs:309
 msgctxt "Saved database searches"
 msgid "Saved Searches"
-msgstr "Cerques desades"
+msgstr ""
 
 #: src/rx/rx_gui_traits.rs:115
 msgctxt "Password strength"
 msgid "Poor"
-msgstr "Pobre"
+msgstr ""
 
 #: src/rx/rx_gui_traits.rs:117
 msgctxt "Password strength"
 msgid "Weak"
-msgstr "Feble"
+msgstr ""
 
 #: src/rx/rx_gui_traits.rs:118
 msgctxt "Password strength"
 msgid "Good"
-msgstr "Bo"
+msgstr ""
 
 #: src/rx/rx_gui_traits.rs:120
 msgctxt "Password strength"
 msgid "Excellent"
-msgstr "Excel·lent"
+msgstr ""

@@ -1,8 +1,11 @@
+use actix::prelude::*;
 use actor_macro::observing_model;
 use qmeta_async::with_executor;
 use qmetaobject::prelude::*;
 
-use crate::{app::AppState, rx::virtual_hierarchy::VirtualHierarchyType};
+use crate::{
+    actor::ConnectedModelActor, app::AppState, rx::virtual_hierarchy::VirtualHierarchy,
+};
 
 /// A QObject that is wired to interact with a database entry via the
 /// app actor.
@@ -25,14 +28,20 @@ pub struct RxUiEntry {
 #[allow(dead_code, non_snake_case)]
 impl RxUiEntry {
     fn init_from_state(&mut self, _: &AppState) {}
-    fn init_from_view(&mut self, _: &VirtualHierarchyType) {}
+    fn init_from_view(&mut self, _: &dyn VirtualHierarchy) {}
+
+    fn self_actor(&self) -> Option<Addr<ConnectedModelActor<Self>>> {
+        self._connected_model_registration
+            .as_ref()
+            .map(|reg| reg.actor.clone())
+    }
 
     #[with_executor]
     pub fn updateTotp(&mut self) {
         let app_state = self._app.as_pinned().expect("No app state");
         let app_state = app_state.borrow();
 
-        let maybe_db = app_state.curr_db_ref();
+        let maybe_db = app_state.curr_db();
 
         let totp = maybe_db.and_then(|db| db.get_totp(&self.entryUuid.to_string()));
 

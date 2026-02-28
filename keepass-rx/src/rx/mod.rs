@@ -1,6 +1,4 @@
-mod entropy;
 pub(crate) mod icons;
-mod kpxc_search;
 mod rx_container;
 mod rx_db;
 mod rx_entry;

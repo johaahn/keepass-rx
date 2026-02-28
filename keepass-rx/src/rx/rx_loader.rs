@@ -1,10 +1,9 @@
 use crate::crypto::MasterKey;
 
-use super::{RxEntry, RxGroup, RxMetadata, RxSavedSearchDef, RxTemplate, ZeroableDatabase};
+use super::{RxEntry, RxGroup, RxMetadata, RxTemplate, ZeroableDatabase};
 use anyhow::Result;
 use indexmap::IndexMap;
-use keepass::db::{CustomDataValue, Entry, Group, Meta as KeePassMeta, Value};
-use serde_json::Value as JsonValue;
+use keepass::db::{Group, Icon, Node};
 use std::collections::HashMap;
 use std::mem;
 use std::rc::Rc;
@@ -15,43 +14,14 @@ pub struct RxLoader {
     db: Zeroizing<ZeroableDatabase>,
     state: LoadState,
     master_key: Option<Rc<MasterKey>>,
+    icons: HashMap<Uuid, Icon>,
 }
 
 pub struct Loaded {
     pub root_uuid: Uuid,
     pub state: LoadState,
     pub metadata: RxMetadata,
-    pub saved_searches: Vec<RxSavedSearchDef>,
     pub master_key: Rc<MasterKey>,
-}
-
-enum Node {
-    Entry(Entry),
-    Group(Group),
-}
-
-fn parse_saved_searches(meta: &KeePassMeta) -> Vec<RxSavedSearchDef> {
-    let raw_json = meta
-        .custom_data
-        .get("KPXC_SavedSearch")
-        .and_then(|item| item.value.as_ref())
-        .and_then(|value| match value {
-            CustomDataValue::String(value) => Some(value.to_string()),
-            _ => None,
-        })
-        .and_then(|decoded| serde_json::from_str::<JsonValue>(&decoded).ok())
-        .and_then(|json| json.as_object().cloned())
-        .unwrap_or_default();
-
-    raw_json
-        .into_iter()
-        .filter_map(|(name, value)| {
-            value.as_str().map(|query| RxSavedSearchDef {
-                name,
-                query: query.to_string(),
-            })
-        })
-        .collect()
 }
 
 impl RxLoader {
@@ -60,6 +30,7 @@ impl RxLoader {
             db: db,
             state: Default::default(),
             master_key: Default::default(),
+            icons: Default::default(),
         }
     }
 
@@ -68,6 +39,15 @@ impl RxLoader {
     }
 
     pub fn load(mut self) -> Result<Loaded> {
+        self.icons = self
+            .db()
+            .meta
+            .custom_icons
+            .icons
+            .iter()
+            .map(|icon| (icon.uuid, icon.to_owned()))
+            .collect();
+
         self.master_key = Some(Rc::new(
             MasterKey::new().expect("Could not create a master key"),
         ));
@@ -83,10 +63,10 @@ impl RxLoader {
             .all_groups
             .insert(root_group.uuid, Rc::new(root_group));
 
-        let config = mem::take(&mut self.db().config);
-        let meta = mem::take(&mut self.db().meta);
-        let saved_searches = parse_saved_searches(&meta);
-        let rx_metadata = RxMetadata::new(config, meta);
+        let rx_metadata = RxMetadata::new(
+            mem::take(&mut self.db().config),
+            mem::take(&mut self.db().meta),
+        );
 
         self.db.zeroize();
 
@@ -94,7 +74,6 @@ impl RxLoader {
             master_key: self.master_key.unwrap(),
             state: self.state,
             metadata: rx_metadata,
-            saved_searches,
             root_uuid: root_uuid,
         })
     }
@@ -109,14 +88,7 @@ impl RxLoader {
         let mut subgroups = vec![];
         let mut entries = vec![];
 
-        let child_entries = mem::take(&mut group.entries)
-            .into_iter()
-            .map(|ent| Node::Entry(ent));
-        let child_groups = mem::take(&mut group.groups)
-            .into_iter()
-            .map(|grp| Node::Group(grp));
-
-        let children: Vec<Node> = child_groups.chain(child_entries).collect();
+        let children = mem::take(&mut group.children);
 
         for node in children.into_iter() {
             match node {
@@ -128,8 +100,16 @@ impl RxLoader {
                     subgroups.push(rx_subgroup);
                 }
                 Node::Entry(entry) => {
-                    let rx_entry =
-                        RxEntry::new(self.master_key.as_ref().unwrap(), entry, group.uuid);
+                    let icon = entry
+                        .custom_icon_uuid
+                        .and_then(|icon_uuid| self.icons.get(&icon_uuid).cloned());
+
+                    let rx_entry = RxEntry::new(
+                        self.master_key.as_ref().unwrap(),
+                        entry,
+                        group.uuid,
+                        icon,
+                    );
 
                     // Build up template entries as we go. Name of the
                     // template will be set later, in RxDatabase::new.
@@ -176,4 +156,45 @@ pub struct LoadState {
     pub templates: HashMap<Uuid, Rc<RxTemplate>>,
     pub all_groups: IndexMap<Uuid, Rc<RxGroup>>,
     pub all_entries: IndexMap<Uuid, Rc<RxEntry>>,
+}
+
+#[cfg(test)]
+mod tests {
+    use keepass::Database;
+    use keyring::set_default_credential_builder;
+    use std::str::FromStr;
+
+    use crate::rx::TEMPLATE_FIELD_NAME;
+
+    use super::*;
+
+    #[test]
+    fn finds_templates() {
+        set_default_credential_builder(keyring::mock::default_credential_builder());
+        let template_uuid =
+            Uuid::from_str("8e4ff17c-a985-4e50-abde-e641783464ca").expect("bad uuid");
+
+        let mut group = keepass::db::Group::new("groupname");
+        let mut entry = keepass::db::Entry::new();
+
+        entry.fields.insert(
+            TEMPLATE_FIELD_NAME.to_string(),
+            keepass::db::Value::Unprotected(template_uuid.to_string()),
+        );
+
+        group.add_child(keepass::db::Node::Entry(entry));
+
+        let mut loader = RxLoader::new(Zeroizing::new(ZeroableDatabase(Database::new(
+            Default::default(),
+        ))));
+
+        loader.master_key = Some(Rc::new(
+            MasterKey::new().expect("Could not make master key"),
+        ));
+
+        loader.load_groups_recursive(&mut group, None);
+
+        assert_eq!(loader.state.templates.len(), 1);
+        assert!(loader.state.templates.contains_key(&template_uuid));
+    }
 }

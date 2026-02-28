@@ -1,12 +1,8 @@
-use enum_dispatch::enum_dispatch;
 use gettextrs::{gettext, pgettext};
 use std::{collections::HashMap, rc::Rc};
 use uuid::Uuid;
 
-use super::{
-    RxContainedRef, RxContainer, RxDatabase, RxRoot, RxSavedSearch, RxSearchType, RxTag,
-    kpxc_search::evaluate_saved_search,
-};
+use super::{RxContainedRef, RxContainer, RxDatabase, RxRoot, RxSearchType, RxTag};
 
 /// A setting that controls how an RxListItem is rendered in the UI.
 /// Note that the UI container of the list item must also have the
@@ -37,7 +33,6 @@ impl std::fmt::Display for RxViewFeature {
 /// VirtualHierarchy manages two lifetimes when searching: the
 /// lifetime of the RxContainer ('cnt) and the lifetime of the
 /// RxDatabase ('db).
-#[enum_dispatch]
 pub trait VirtualHierarchy {
     fn root(&self) -> &RxRoot;
 
@@ -47,10 +42,10 @@ pub trait VirtualHierarchy {
         RxViewFeature::None
     }
 
-    fn get(&self, container_uuid: Uuid) -> Option<RxContainedRef<'_>> {
+    fn get(&self, container_uuid: Uuid) -> Option<RxContainedRef> {
         self.root()
             .get_container(container_uuid)
-            .and_then(|c| c.contained_ref())
+            .and_then(|c| c.get_ref())
     }
 
     /// Search for child containers in the virtual hierarchy.
@@ -59,17 +54,7 @@ pub trait VirtualHierarchy {
         search_type: RxSearchType,
         container_uuid: Uuid,
         search_term: Option<&str>,
-    ) -> Vec<RxContainedRef<'_>>;
-}
-
-#[enum_dispatch(VirtualHierarchy)]
-#[derive(Clone)]
-pub enum VirtualHierarchyType {
-    AllTemplates,
-    DefaultView,
-    TotpEntries,
-    AllTags,
-    SavedSearches,
+    ) -> Vec<RxContainedRef>;
 }
 
 #[derive(Clone)]
@@ -79,7 +64,7 @@ impl AllTemplates {
     pub fn new(db: &RxDatabase) -> Self {
         let children: Vec<_> = db
             .templates_iter()
-            .map(|t| RxContainer::from(t, db))
+            .map(|t| RxContainer::from(t.clone(), db))
             .collect();
 
         AllTemplates(RxRoot::virtual_root(
@@ -103,7 +88,7 @@ impl VirtualHierarchy for AllTemplates {
         search_type: RxSearchType,
         container_uuid: Uuid,
         search_term: Option<&str>,
-    ) -> Vec<RxContainedRef<'_>> {
+    ) -> Vec<RxContainedRef> {
         if container_uuid == self.root().uuid() {
             // searching from the (non existant) "root template"
             // means we should search all templates instead.
@@ -122,12 +107,11 @@ impl VirtualHierarchy for AllTemplates {
     }
 }
 
-#[derive(Clone)]
 pub struct DefaultView(RxRoot);
 
 impl DefaultView {
     pub fn new(db: &RxDatabase) -> Self {
-        let root = RxContainer::from(db.root_group(), db);
+        let root = RxContainer::from(db.root_group().clone(), db);
 
         DefaultView(RxRoot {
             all_containers: root.child_uuids_recursive(),
@@ -153,7 +137,7 @@ impl VirtualHierarchy for DefaultView {
         search_type: RxSearchType,
         container_uuid: Uuid,
         search_term: Option<&str>,
-    ) -> Vec<RxContainedRef<'_>> {
+    ) -> Vec<RxContainedRef> {
         let mut results = self
             .root()
             .get_container(container_uuid)
@@ -174,7 +158,6 @@ impl VirtualHierarchy for DefaultView {
     }
 }
 
-#[derive(Clone)]
 pub struct TotpEntries(RxRoot);
 
 impl TotpEntries {
@@ -219,7 +202,7 @@ impl VirtualHierarchy for TotpEntries {
         search_type: RxSearchType,
         container_uuid: Uuid,
         search_term: Option<&str>,
-    ) -> Vec<RxContainedRef<'_>> {
+    ) -> Vec<RxContainedRef> {
         self.root()
             .get_container(container_uuid)
             .map(|container| container.search_children_immediate(search_type, search_term))
@@ -227,7 +210,6 @@ impl VirtualHierarchy for TotpEntries {
     }
 }
 
-#[derive(Clone)]
 pub struct AllTags(RxRoot);
 
 impl AllTags {
@@ -269,56 +251,7 @@ impl VirtualHierarchy for AllTags {
         search_type: RxSearchType,
         container_uuid: Uuid,
         search_term: Option<&str>,
-    ) -> Vec<RxContainedRef<'_>> {
-        self.root()
-            .get_container(container_uuid)
-            .map(|container| container.search_children_immediate(search_type, search_term))
-            .unwrap_or_default()
-    }
-}
-
-#[derive(Clone)]
-pub struct SavedSearches(RxRoot);
-
-impl SavedSearches {
-    pub fn new(db: &RxDatabase) -> Self {
-        let children: Vec<_> = db
-            .saved_searches_iter()
-            .map(|search| {
-                let matched_entries = evaluate_saved_search(db, &search.query);
-                RxContainer::from(
-                    RxSavedSearch::new(
-                        search.name.to_string(),
-                        search.query.to_string(),
-                        matched_entries,
-                    ),
-                    db,
-                )
-            })
-            .collect();
-
-        SavedSearches(RxRoot::virtual_root(
-            &pgettext("Saved database searches", "Saved Searches"),
-            children,
-        ))
-    }
-}
-
-impl VirtualHierarchy for SavedSearches {
-    fn name(&self) -> String {
-        pgettext("Saved database searches", "Saved Searches")
-    }
-
-    fn root(&self) -> &RxRoot {
-        &self.0
-    }
-
-    fn search(
-        &self,
-        search_type: RxSearchType,
-        container_uuid: Uuid,
-        search_term: Option<&str>,
-    ) -> Vec<RxContainedRef<'_>> {
+    ) -> Vec<RxContainedRef> {
         self.root()
             .get_container(container_uuid)
             .map(|container| container.search_children_immediate(search_type, search_term))

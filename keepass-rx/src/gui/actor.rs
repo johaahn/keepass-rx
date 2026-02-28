@@ -2,24 +2,23 @@ use actix::prelude::*;
 use anyhow::{Result, anyhow};
 use keepass::{Database, DatabaseKey};
 use libsodium_rs::utils::SecureVec;
-use log::{debug, info, warn};
-use qmetaobject::{QMetaType, QStringList, QVariantMap, prelude::*};
+use qmetaobject::*;
 use secstr::SecUtf8;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::fs::File;
 use std::rc::Rc;
-use tokio::task::AbortHandle;
+use std::sync::Arc;
+use tokio::task::{JoinHandle, spawn_blocking};
 use uuid::Uuid;
 use zeroize::{Zeroize, Zeroizing};
 
 use super::{KeepassRx, RxDbType};
-use crate::app::{AppState, KeyFile};
+use crate::app::AppState;
 use crate::crypto::{EncryptedPassword, MasterKey};
 use crate::gui::utils::synced_databases_path;
 use crate::rx::virtual_hierarchy::{
-    AllTags, AllTemplates, DefaultView, SavedSearches, TotpEntries, VirtualHierarchy,
-    VirtualHierarchyType,
+    AllTags, AllTemplates, DefaultView, TotpEntries, VirtualHierarchy,
 };
 use crate::{
     gui::{RxViewMode, utils::imported_databases_path},
@@ -29,18 +28,21 @@ use crate::{
 #[derive(Default)]
 pub struct KeepassRxActor {
     app_state: Rc<QObjectBox<AppState>>,
-    gui: Rc<QObjectBox<KeepassRx>>,
+    gui: Arc<QObjectBox<KeepassRx>>,
     //curr_db: RefCell<Option<Zeroizing<RxDatabase>>>,
-    curr_master_pw: Rc<RefCell<Option<EncryptedPassword>>>,
-    stored_master_password: Rc<RefCell<Option<SecUtf8>>>,
+    curr_master_pw: Arc<RefCell<Option<EncryptedPassword>>>,
+    stored_master_password: Arc<RefCell<Option<SecUtf8>>>,
 
     // any in-progress operation on another thread pool that might
     // need to be aborted.
-    current_operation: Option<AbortHandle>,
+    current_operation: Option<JoinHandle<Result<()>>>,
 }
 
 impl KeepassRxActor {
-    pub fn new(gui: &Rc<QObjectBox<KeepassRx>>, app_state: &Rc<QObjectBox<AppState>>) -> Self {
+    pub fn new(
+        gui: &Arc<QObjectBox<KeepassRx>>,
+        app_state: &Rc<QObjectBox<AppState>>,
+    ) -> Self {
         Self {
             gui: gui.clone(),
             app_state: app_state.clone(),
@@ -53,7 +55,7 @@ impl KeepassRxActor {
         if let Some(ref in_progress) = self.current_operation {
             if !in_progress.is_finished() {
                 in_progress.abort();
-                info!("Aborting ongoing encryption/decryption operation.");
+                println!("Aborting ongoing encryption/decryption operation.");
             }
         }
     }
@@ -62,7 +64,7 @@ impl KeepassRxActor {
     pub fn key_file_bytes(&self) -> Result<Option<SecureVec<u8>>> {
         let app_state = self.app_state.pinned();
         let app_state = app_state.borrow();
-        let key_file = app_state.db_key_ref();
+        let key_file = app_state.db_key();
         let master_key = app_state.master_key();
 
         match master_key {
@@ -76,7 +78,7 @@ impl Supervised for KeepassRxActor {}
 
 impl SystemService for KeepassRxActor {
     fn service_started(&mut self, ctx: &mut Context<Self>) {
-        debug!("service started");
+        println!("service started");
         self.gui.pinned().borrow_mut().actor = Some(ctx.address());
     }
 }
@@ -133,7 +135,6 @@ pub struct GetSingleEntry {
 pub struct GetFieldValue {
     pub entry_uuid: Uuid,
     pub field_name: RxFieldName,
-    pub purpose: String,
 }
 
 impl GetEntries {
@@ -202,45 +203,44 @@ impl Handler<SetViewMode> for KeepassRxActor {
     fn handle(&mut self, msg: SetViewMode, _: &mut Self::Context) -> Self::Result {
         let SetViewMode(mode) = msg;
 
-        let binding = self.gui.pinned();
+        let binding = self.gui.clone();
+        let binding = binding.pinned();
         let mut gui = binding.borrow_mut();
 
         let app_state = self.app_state.pinned();
         let mut app_state = app_state.borrow_mut();
-        let db_binding = app_state.curr_db_ref();
+        let db_binding = app_state.curr_db();
 
         let db = match db_binding {
             Ok(db) => db,
             Err(err) => return gui.errorReceived(format!("{}", err)),
         };
 
-        let view = match mode {
-            RxViewMode::All => VirtualHierarchyType::DefaultView(DefaultView::new(&db)),
-            RxViewMode::Templates => {
-                VirtualHierarchyType::AllTemplates(AllTemplates::new(&db))
-            }
-            RxViewMode::Totp => VirtualHierarchyType::TotpEntries(TotpEntries::new(&db)),
-            RxViewMode::Tags => VirtualHierarchyType::AllTags(AllTags::new(&db)),
-            RxViewMode::SavedSearches => {
-                VirtualHierarchyType::SavedSearches(SavedSearches::new(&db))
-            }
+        let view: Box<dyn VirtualHierarchy> = match mode {
+            RxViewMode::All => Box::new(DefaultView::new(&db)),
+            RxViewMode::Templates => Box::new(AllTemplates::new(&db)),
+            RxViewMode::Totp => Box::new(TotpEntries::new(&db)),
+            RxViewMode::Tags => Box::new(AllTags::new(&db)),
         };
 
         app_state.set_curr_view(view);
         gui.viewMode = mode;
         gui.viewModeChanged(mode);
 
-        debug!("Set view to: {}", app_state.curr_view_ref().unwrap().name());
+        println!(
+            "Set view to: {}",
+            app_state.curr_view().as_ref().unwrap().name()
+        );
     }
 }
 
 impl Handler<OpenDatabase> for KeepassRxActor {
-    type Result = ResponseActFuture<Self, anyhow::Result<()>>;
+    type Result = AtomicResponse<Self, anyhow::Result<()>>;
     fn handle(&mut self, msg: OpenDatabase, _: &mut Self::Context) -> Self::Result {
-        // Determine if key file is set and extract key bytes if needed.
+        // Extract key file if needed.
         let app_state = self.app_state.pinned();
         let app_state = app_state.borrow();
-        let has_key_file = app_state.db_key_ref().is_some();
+        let maybe_key_file = app_state.db_key();
 
         let db_path = match msg.db_type {
             RxDbType::Imported => imported_databases_path().join(msg.db_name),
@@ -251,9 +251,9 @@ impl Handler<OpenDatabase> for KeepassRxActor {
         let stored_pw = self.stored_master_password.clone();
         let maybe_key_file_bytes = self.key_file_bytes();
 
-        info!("Opening {} DB: {}", msg.db_type, db_path.display());
+        println!("Opening {} DB: {}", msg.db_type, db_path.display());
 
-        Box::pin(
+        AtomicResponse::new(Box::pin(
             async move {
                 let pw_binding = stored_pw.borrow();
                 let pw_binding = pw_binding.as_ref();
@@ -264,58 +264,63 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                 let mut db_file = File::open(db_path)?;
 
                 let db_key = DatabaseKey::new().with_password(pw_binding.unsecure());
-                let db_key = if has_key_file {
-                    match maybe_key_file_bytes? {
-                        Some(bytes) => {
-                            println!(
-                                "Opening database with a key file of {} bytes.",
-                                bytes.len()
-                            );
-                            db_key.with_keyfile(&mut bytes.as_ref())?
+                let db_key = match maybe_key_file.as_ref() {
+                    Some(_) => {
+                        let key_bytes = maybe_key_file_bytes?;
+                        match key_bytes {
+                            Some(bytes) => {
+                                println!(
+                                    "Opening database with a key file of {} bytes.",
+                                    bytes.len()
+                                );
+                                db_key.with_keyfile(&mut bytes.as_ref())?
+                            }
+                            _ => db_key,
                         }
-                        _ => db_key,
                     }
-                } else {
-                    db_key
+                    None => db_key,
                 };
 
                 // Opening the database is synchronous I/O, which means it
                 // must be done on a separate thread.
-                let open_result =
-                    actix_rt::task::spawn_blocking(move || -> Result<Database> {
-                        Database::open(&mut db_file, db_key).map_err(Into::into)
-                    })
-                    .await
-                    .map_err(|err| anyhow!(err))??;
+                let open_result = spawn_blocking(move || -> Result<Database> {
+                    let db = Database::open(&mut db_file, db_key)?;
+                    Ok(db)
+                })
+                .await??;
+
+                // Remove imported key file if necessary.
+                if let Some(mut key) = maybe_key_file {
+                    key.zeroize();
+                }
 
                 Ok(open_result)
             }
             .into_actor(self)
             .map(|result: Result<Database>, this, _| {
-                let binding = this.gui.pinned();
+                let binding = this.gui.clone();
+                let binding = binding.pinned();
                 let mut gui = binding.borrow_mut();
 
                 match result {
                     Ok(keepass_db) => {
                         let wrapped_db = Zeroizing::new(ZeroableDatabase(keepass_db));
                         let rx_db = RxDatabase::new(wrapped_db);
-                        let view = VirtualHierarchyType::DefaultView(DefaultView::new(&rx_db));
+                        let view = Box::new(DefaultView::new(&rx_db));
 
                         let app_state = this.app_state.pinned();
                         let mut app_state = app_state.borrow_mut();
 
                         // Encrypt key file
-                        if let Some(kf) = app_state.take_db_key() {
-                            if kf.is_unencrypted() {
-                                let mk = MasterKey::new()
-                                    .expect("Could not create key file master key");
-                                let kf = kf.encrypt(&mk).expect("Could not encrypt key file");
+                        if let Some(kf) = app_state.db_key()
+                            && kf.is_unencrypted()
+                        {
+                            let mk = MasterKey::new()
+                                .expect("Could not create key file master key");
+                            let kf = kf.encrypt(&mk).expect("Could not encrypt key file");
 
-                                app_state.set_master_key(Some(mk));
-                                app_state.set_db_key(Some(kf));
-                            } else {
-                                app_state.set_db_key(Some(kf));
-                            }
+                            app_state.set_master_key(Some(mk));
+                            app_state.set_db_key(Some(kf));
                         }
 
                         gui.rootGroupUuid = QString::from(rx_db.root_group().uuid.to_string());
@@ -335,7 +340,7 @@ impl Handler<OpenDatabase> for KeepassRxActor {
 
                 Ok(())
             }),
-        )
+        ))
     }
 }
 
@@ -357,7 +362,8 @@ impl Handler<CloseDatabase> for KeepassRxActor {
             }
             .into_actor(self)
             .map(|result: Result<()>, this, _| {
-                let binding = this.gui.pinned();
+                let binding = this.gui.clone();
+                let binding = binding.pinned();
                 let mut gui = binding.borrow_mut();
 
                 match result {
@@ -376,8 +382,9 @@ impl Handler<DeleteDatabase> for KeepassRxActor {
     type Result = Result<()>;
 
     fn handle(&mut self, msg: DeleteDatabase, _: &mut Self::Context) -> Self::Result {
-        info!("Deleting db {}", msg.db_name);
-        let binding = self.gui.pinned();
+        println!("Deleting db {}", msg.db_name);
+        let binding = self.gui.clone();
+        let binding = binding.pinned();
         let gui = binding.borrow();
 
         let db_path = imported_databases_path().join(&msg.db_name);
@@ -395,12 +402,13 @@ impl Handler<GetMetadata> for KeepassRxActor {
     type Result = ();
 
     fn handle(&mut self, _: GetMetadata, _: &mut Self::Context) -> Self::Result {
-        let binding = self.gui.pinned();
+        let binding = self.gui.clone();
+        let binding = binding.pinned();
         let gui = binding.borrow();
 
         let app_state = self.app_state.pinned();
         let app_state = app_state.borrow();
-        let db_binding = app_state.curr_db_ref();
+        let db_binding = app_state.curr_db();
 
         let db = match db_binding {
             Ok(db) => db,
@@ -418,10 +426,11 @@ impl Handler<GetContainer> for KeepassRxActor {
         let app_state = self.app_state.pinned();
         let app_state = app_state.borrow();
 
-        let binding = self.gui.pinned();
+        let binding = self.gui.clone();
+        let binding = binding.pinned();
         let gui = binding.borrow();
 
-        let view = app_state.curr_view_ref().expect("GetGroup: No view set.");
+        let view = app_state.curr_view().expect("GetGroup: No view set.");
 
         let container_uuid = match msg.container_uuid {
             Some(id) => id,
@@ -432,10 +441,10 @@ impl Handler<GetContainer> for KeepassRxActor {
             .root()
             .get_container(container_uuid)
             .expect("GetContainer: No container found")
-            .contained_ref();
+            .get_ref();
 
         let this_container_name = maybe_container
-            .map(|container| QString::from(container.name().as_ref()))
+            .map(|container| QString::from(container.name()))
             .unwrap_or_default();
 
         let this_container_uuid = QString::from(container_uuid.to_string());
@@ -452,16 +461,13 @@ impl Handler<GetEntries> for KeepassRxActor {
 
         let search_type = app_state.search_type();
 
-        let binding = self.gui.pinned();
+        let binding = self.gui.clone();
+        let binding = binding.pinned();
         let gui = binding.borrow();
 
-        let search_term = msg
-            .search_term
-            .as_deref()
-            .map(|term| term.trim())
-            .filter(|term| !term.is_empty());
+        let search_term = msg.search_term.as_deref().map(|term| term.trim());
         let viewable = app_state
-            .curr_view_ref()
+            .curr_view()
             .expect("GetEntries: Viewable not set.");
 
         let container_uuid = match msg.container_uuid {
@@ -482,12 +488,13 @@ impl Handler<GetEntries> for KeepassRxActor {
 impl Handler<GetSingleEntry> for KeepassRxActor {
     type Result = ();
     fn handle(&mut self, msg: GetSingleEntry, _: &mut Self::Context) -> Self::Result {
-        let binding = self.gui.pinned();
+        let binding = self.gui.clone();
+        let binding = binding.pinned();
         let gui = binding.borrow();
 
         let app_state = self.app_state.pinned();
         let app_state = app_state.borrow();
-        let db_binding = app_state.curr_db_ref();
+        let db_binding = app_state.curr_db();
 
         let db = match db_binding {
             Ok(db) => db,
@@ -520,12 +527,14 @@ fn get_value(db: &RxDatabase, entry_uuid: Uuid, field_name: &RxFieldName) -> QSt
 impl Handler<GetFieldValue> for KeepassRxActor {
     type Result = ();
     fn handle(&mut self, msg: GetFieldValue, _: &mut Self::Context) -> Self::Result {
-        let binding = self.gui.pinned();
+        let binding = self.gui.clone();
+        let binding = binding.pinned();
         let gui = binding.borrow();
 
         let app_state = self.app_state.pinned();
         let app_state = app_state.borrow();
-        let db_binding = app_state.curr_db_ref();
+        let db_binding = app_state.curr_db();
+        let db_binding = db_binding.as_deref();
 
         let db = match db_binding {
             Ok(db) => db,
@@ -538,7 +547,7 @@ impl Handler<GetFieldValue> for KeepassRxActor {
             QString::from(msg.entry_uuid.to_string()),
             QString::from(msg.field_name.to_string()),
             value,
-            QString::from(msg.purpose),
+            QString::default(), // Extra info for this field.
         );
     }
 }
@@ -546,12 +555,14 @@ impl Handler<GetFieldValue> for KeepassRxActor {
 impl Handler<GetTotp> for KeepassRxActor {
     type Result = ();
     fn handle(&mut self, msg: GetTotp, _: &mut Self::Context) -> Self::Result {
-        let binding = self.gui.pinned();
+        let binding = self.gui.clone();
+        let binding = binding.pinned();
         let gui = binding.borrow();
 
         let app_state = self.app_state.pinned();
         let app_state = app_state.borrow();
-        let db_binding = app_state.curr_db_ref();
+        let db_binding = app_state.curr_db();
+        let db_binding = db_binding.as_deref();
 
         let db = match db_binding {
             Ok(db) => db,
@@ -584,7 +595,8 @@ impl Handler<GetTotp> for KeepassRxActor {
 impl Handler<StoreMasterPassword> for KeepassRxActor {
     type Result = ();
     fn handle(&mut self, msg: StoreMasterPassword, _: &mut Self::Context) -> Self::Result {
-        let binding = self.gui.pinned();
+        let binding = self.gui.clone();
+        let binding = binding.pinned();
         let gui = binding.borrow();
 
         self.stored_master_password
@@ -599,7 +611,8 @@ impl Handler<InvalidateMasterPassword> for KeepassRxActor {
     fn handle(&mut self, _: InvalidateMasterPassword, _: &mut Self::Context) -> Self::Result {
         self.abort_ongoing_operations();
 
-        let binding = self.gui.pinned();
+        let binding = self.gui.clone();
+        let binding = binding.pinned();
         let mut gui = binding.borrow_mut();
 
         if let Some(pw) = self.stored_master_password.take() {
@@ -613,14 +626,15 @@ impl Handler<InvalidateMasterPassword> for KeepassRxActor {
         gui.isMasterPasswordEncrypted = false;
         gui.masterPasswordInvalidated();
         gui.masterPasswordStateChanged(false);
-        info!("Master password invalidated.");
+        println!("Master password invalidated.");
     }
 }
 
 impl Handler<CheckLockingStatus> for KeepassRxActor {
     type Result = ();
     fn handle(&mut self, _: CheckLockingStatus, _: &mut Self::Context) -> Self::Result {
-        let binding = self.gui.pinned();
+        let binding = self.gui.clone();
+        let binding = binding.pinned();
         let gui = binding.borrow_mut();
 
         let current_master_pw = self.curr_master_pw.borrow();
@@ -633,95 +647,117 @@ impl Handler<CheckLockingStatus> for KeepassRxActor {
 }
 
 impl Handler<EncryptMasterPassword> for KeepassRxActor {
-    type Result = ResponseActFuture<Self, ()>;
+    type Result = ();
 
     // TODO do not bother with this if database locking is disabled in
     // settings.
     fn handle(&mut self, _: EncryptMasterPassword, _: &mut Self::Context) -> Self::Result {
         self.abort_ongoing_operations();
         let stored_pw = self.stored_master_password.take();
+        let binding = self.gui.clone();
+        let ez_open = self.curr_master_pw.clone();
 
-        let handle = actix_rt::task::spawn_blocking(move || -> Result<EncryptedPassword> {
-            let stored_pw = stored_pw.ok_or(anyhow!("[Encrypt] No master password stored"))?;
-            EncryptedPassword::new(stored_pw)
+        // Encrypting the password is CPU-intensive and can block the
+        // UI. It is run on a separate fire-and-forget async call,
+        // which itself spawns a separate thread pool to actually
+        // encrypt the password. If we were to wait for the
+        // actix::spawn to complete, the UI would still block.
+        let handle: JoinHandle<Result<_>> = actix::spawn(async move {
+            let stored_pw = stored_pw.ok_or(anyhow!("[Encrypt] No master password stored"));
+
+            let (tx, rx) = tokio::sync::oneshot::channel();
+            rayon::spawn(move || {
+                if let Err(_) = tx.send(stored_pw.map(|pw| EncryptedPassword::new(pw))) {
+                    println!("Receiver dropped before receiving encrypted password.");
+                }
+            });
+
+            // Very nested errors.
+            let result = rx
+                .await
+                .map_err(Box::<dyn std::error::Error>::from)
+                .and_then(|res2| res2.map_err(Into::into))
+                .and_then(|res3| res3.map_err(Into::into));
+
+            let binding = binding.pinned();
+            let mut gui = binding.borrow_mut();
+
+            match result {
+                Ok(encrypted_pw) => {
+                    ez_open.replace(Some(encrypted_pw));
+                    gui.isMasterPasswordEncrypted = true;
+                    gui.masterPasswordStateChanged(true);
+                    println!("Master password encrypted.");
+                }
+                Err(err) => {
+                    gui.errorReceived(format!("{}", err));
+                }
+            }
+
+            Ok(())
         });
 
-        self.current_operation = Some(handle.abort_handle());
-
-        Box::pin(async move { handle.await? }.into_actor(self).map(
-            move |result: Result<EncryptedPassword>, this, _| {
-                let binding = this.gui.pinned();
-                let mut gui = binding.borrow_mut();
-
-                match result {
-                    Ok(encrypted_pw) => {
-                        this.curr_master_pw.replace(Some(encrypted_pw));
-                        gui.isMasterPasswordEncrypted = true;
-                        gui.masterPasswordStateChanged(true);
-                        info!("Master password encrypted.");
-                    }
-                    Err(err) => {
-                        gui.errorReceived(format!("{}", err));
-                    }
-                }
-
-                if let Some(op) = this.current_operation.as_ref()
-                    && op.is_finished()
-                {
-                    this.current_operation = None;
-                }
-            },
-        ))
+        self.current_operation = Some(handle);
     }
 }
 
 impl Handler<DecryptMasterPassword> for KeepassRxActor {
-    type Result = ResponseActFuture<Self, ()>;
+    type Result = ();
     fn handle(&mut self, msg: DecryptMasterPassword, _: &mut Self::Context) -> Self::Result {
         let short_pw = msg.short_password;
+        let gui_binding = self.gui.clone();
+        let encrypted_master_pw = self.curr_master_pw.clone();
+        let stored_master_pw = self.stored_master_password.clone();
 
         self.abort_ongoing_operations();
 
-        // Remove from RefCell and keep a backup in case decryption fails.
-        let mut maybe_master_pw = self.curr_master_pw.take();
-        let backup = maybe_master_pw.clone();
-        let master_pw = maybe_master_pw
-            .take()
-            .ok_or(anyhow!("[Decrypt] No master password stored"));
+        let handle: JoinHandle<Result<_>> = actix::spawn(async move {
+            // Remove from RefCell.
+            let mut maybe_master_pw = encrypted_master_pw.take();
 
-        let handle = actix_rt::task::spawn_blocking(move || -> Result<SecUtf8> {
-            master_pw.and_then(|pw| pw.decrypt(short_pw))
+            // In case we need to retain it because of error.
+            let backup = maybe_master_pw.clone();
+
+            // Extract from inner option.
+            let master_pw = maybe_master_pw
+                .take()
+                .ok_or(anyhow!("[Decrypt] No master password stored"));
+
+            let gui_binding = gui_binding.pinned();
+            let mut gui = gui_binding.borrow_mut();
+
+            let (tx, rx) = tokio::sync::oneshot::channel();
+            rayon::spawn(move || {
+                if let Err(_) = tx.send(master_pw.map(|pw| pw.decrypt(short_pw))) {
+                    println!("Receiver dropped before receiving decrypted password.");
+                }
+            });
+
+            // Very nested result
+            let result = rx
+                .await
+                .map_err(Box::<dyn std::error::Error>::from)
+                .and_then(|res2| res2.map_err(Into::into))
+                .and_then(|res3| res3.map_err(Into::into));
+
+            match result {
+                Ok(secure_decrypted_password) => {
+                    stored_master_pw.replace(Some(secure_decrypted_password));
+                    gui.isMasterPasswordEncrypted = false;
+                    gui.masterPasswordStateChanged(false);
+                    gui.masterPasswordDecrypted();
+                    println!("Master password decrypted.");
+                }
+                Err(err) => {
+                    // Here, we put the encrypted pw back into the secret.
+                    encrypted_master_pw.replace(backup);
+                    gui.decryptionFailed(QString::from(format!("{}", err)));
+                }
+            }
+
+            Ok(())
         });
 
-        self.current_operation = Some(handle.abort_handle());
-
-        Box::pin(async move { handle.await? }.into_actor(self).map(
-            move |result: Result<SecUtf8>, this, _| {
-                let binding = this.gui.pinned();
-                let mut gui = binding.borrow_mut();
-
-                match result {
-                    Ok(secure_decrypted_password) => {
-                        this.stored_master_password
-                            .replace(Some(secure_decrypted_password));
-                        gui.isMasterPasswordEncrypted = false;
-                        gui.masterPasswordStateChanged(false);
-                        gui.masterPasswordDecrypted();
-                        info!("Master password decrypted.");
-                    }
-                    Err(err) => {
-                        // Put the encrypted password back on failure.
-                        this.curr_master_pw.replace(backup);
-                        gui.decryptionFailed(QString::from(format!("{}", err)));
-                    }
-                }
-
-                if let Some(op) = this.current_operation.as_ref()
-                    && op.is_finished()
-                {
-                    this.current_operation = None;
-                }
-            },
-        ))
+        self.current_operation = Some(handle);
     }
 }

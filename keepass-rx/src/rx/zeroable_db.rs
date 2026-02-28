@@ -2,7 +2,7 @@ use std::ops::{Deref, DerefMut};
 
 use keepass::{
     Database,
-    db::{CustomDataValue, Entry, Group, Value},
+    db::{Entry, Group, NodeRefMut, Value},
 };
 use take_mut::take;
 use zeroize::Zeroize;
@@ -33,17 +33,16 @@ macro_rules! zero_out {
 }
 
 fn zero_group(group: &mut Group) {
-    for entry in group.entries.iter_mut() {
-        zero_entry(entry);
+    for node in group.children.iter_mut() {
+        match node.as_mut() {
+            NodeRefMut::Group(group) => zero_group(group),
+            NodeRefMut::Entry(entry) => zero_entry(entry),
+        }
     }
 
-    for group in group.groups.iter_mut() {
-        zero_group(group);
-    }
-
-    for (_, data_item) in group.custom_data.iter_mut() {
+    for (_, data_item) in group.custom_data.items.iter_mut() {
         if let Some(value) = &mut data_item.value {
-            zero_custom_data_value(value);
+            zero_value(value);
         }
     }
 
@@ -56,19 +55,10 @@ fn zero_entry(entry: &mut Entry) {
     }
 }
 
-fn zero_custom_data_value(value: &mut CustomDataValue) {
+fn zero_value(value: &mut Value) {
     match value {
-        CustomDataValue::Binary(bytes) => take(bytes, |mut bytes| zero_out!(bytes)),
-        CustomDataValue::String(value) => value.zeroize(),
-    }
-}
-
-fn zero_value<T>(value: &mut Value<T>)
-where
-    T: Zeroize,
-{
-    match value {
-        Value::Protected(value) => value.zeroize(),
+        Value::Bytes(bytes) => take(bytes, |mut bytes| zero_out!(bytes)),
+        Value::Protected(value) => value.zero_out(),
         Value::Unprotected(value) => take(value, |mut value| zero_out!(value)),
     }
 }

@@ -29,16 +29,12 @@ use actix::Actor;
 use anyhow::Result;
 use cpp::cpp;
 use gettextrs::{bindtextdomain, textdomain};
-use log::{LevelFilter, error, info};
-use pretty_env_logger::env_logger::Builder;
 use qmeta_async::with_executor;
-use qmetaobject::{
-    QObjectBox, QQuickStyle, QQuickView, QString, QVariant, qml_register_enum,
-    qml_register_type,
-};
+use qmetaobject::{QObjectBox, QQuickStyle, QQuickView, qml_register_enum, qml_register_type};
 use std::env;
 use std::path::PathBuf;
 use std::rc::Rc;
+use std::sync::Arc;
 
 mod crypto;
 mod license;
@@ -106,7 +102,7 @@ fn load_gui() -> Result<()> {
 
     // "Data migration": Move any db.kdbx from the data directory to imported.
     if let Err(err) = move_old_dirs_and_files() {
-        error!("Error during old app data migration: {}", err);
+        println!("Error during old app data migration: {}", err);
     }
 
     qmeta_async::run(|| {
@@ -120,13 +116,13 @@ fn load_gui() -> Result<()> {
 
             let settings_bridge = Rc::new(QObjectBox::new(SettingsBridge::default()));
             let app_state = Rc::new(QObjectBox::new(AppState::new(&settings_bridge)));
-            let gui = Rc::new(QObjectBox::new(KeepassRx::new()));
+            let gui = Arc::new(QObjectBox::new(KeepassRx::new()));
 
             let global_app_actor = KeepassRxActor::new(&gui, &app_state).start();
 
             let app = Rc::new(KeepassRxApp {
-                app_state,
-                settings_bridge,
+                app_state: app_state.clone(),
+                settings_bridge: settings_bridge.clone(),
             });
 
             RxActors::set_app_actor(global_app_actor);
@@ -135,10 +131,6 @@ fn load_gui() -> Result<()> {
             let engine = view.engine();
 
             engine.set_property("keepassrx".into(), gui.pinned().into());
-            engine.set_property(
-                "keepassRxVersion".into(),
-                QVariant::from(QString::from(env!("CARGO_PKG_VERSION"))),
-            );
             engine.set_object_property("AppState".into(), app.app_state.pinned());
             engine.set_object_property("SettingsBridge".into(), app.settings_bridge.pinned());
 
@@ -172,13 +164,6 @@ fn init_gettext() {
 }
 
 fn main() -> Result<()> {
-    // Logging
-    let mut builder = Builder::new();
-
-    builder.filter_level(LevelFilter::Error);
-    builder.filter_module("keepassrx", LevelFilter::Info);
-    builder.init();
-
     libsodium_rs::ensure_init()?;
 
     match () {
@@ -186,7 +171,7 @@ fn main() -> Result<()> {
         () => load_gui()?,
 
         #[cfg(not(feature = "gui"))]
-        () => info!("GUI not enabled."),
+        () => println!("GUI not enabled."),
     }
 
     Ok(())

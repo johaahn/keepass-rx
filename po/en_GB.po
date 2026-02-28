@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-01 20:39+0000\n"
-"PO-Revision-Date: 2026-03-01 01:09+0000\n"
+"PO-Revision-Date: 2026-02-27 18:09+0000\n"
 "Last-Translator: Andi Chandler <andi@gowling.com>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "ubports/keepassrx/en_GB/>\n"
@@ -47,7 +47,7 @@ msgstr ""
 #: qml/pages/EntriesPage.qml:212 qml/pages/OpenDBPage.qml:112
 #: qml/pages/UnlockPage.qml:41
 msgid "About"
-msgstr "About"
+msgstr ""
 
 #: qml/pages/AboutPage.qml:79
 msgid ""
@@ -103,7 +103,7 @@ msgstr ""
 #: qml/pages/OpenDBPage.qml:105 qml/pages/SettingsPage.qml:10
 #: qml/pages/UnlockPage.qml:34
 msgid "Settings"
-msgstr "Settings"
+msgstr ""
 
 #: qml/pages/DBList.qml:96
 msgid "Loading last database."

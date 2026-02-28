@@ -1,7 +1,6 @@
 use actix::prelude::*;
 use actor_macro::observing_model;
 use anyhow::Result;
-use log::{error, info, warn};
 use qmeta_async::with_executor;
 use qmetaobject::{QObjectPinned, prelude::*};
 use regex::Regex;
@@ -15,7 +14,7 @@ use crate::{
         actor::OpenDatabase,
         utils::{app_data_path, db_path_for_type},
     },
-    rx::virtual_hierarchy::VirtualHierarchyType,
+    rx::virtual_hierarchy::VirtualHierarchy,
 };
 
 #[derive(Message)]
@@ -77,7 +76,7 @@ impl ActorConnected<UseKeyFileCommand> for RxUiDatabase {
         // in data dir.
         if message.delete_key {
             if let Err(err) = std::fs::remove_file(&key_file_path) {
-                warn!("Could not remove imported key file: {}", err);
+                println!("Could not remove imported key file: {}", err);
             }
         }
     }
@@ -141,7 +140,7 @@ fn load_last_db() -> Result<(Option<String>, Option<String>)> {
         }
         (db, db_type) if db.exists() && !db_type.exists() => {
             // only db file recorded (from old app versions)
-            warn!("No last DB type. Assuming last DB is Imported");
+            println!("No last DB type. Assuming last DB is Imported");
             (Some(read_to_string(db)?), None)
         }
         _ => {
@@ -211,16 +210,16 @@ impl RxUiDatabase {
         self.detectKeyFile();
     }
 
-    fn init_from_view(&mut self, _: &VirtualHierarchyType) {}
+    fn init_from_view(&mut self, _: &dyn VirtualHierarchy) {}
 
     fn app_state_cell(&self) -> QObjectPinned<'_, crate::app::AppState> {
         self._app.as_pinned().expect("No app state")
     }
 
-    fn connected_actor(&self) -> Option<&Addr<ConnectedModelActor<Self>>> {
+    fn connected_actor(&self) -> Option<Addr<ConnectedModelActor<Self>>> {
         self._connected_model_registration
             .as_ref()
-            .map(|reg| &reg.actor)
+            .map(|reg| reg.actor.clone())
     }
 
     fn set_key_file(&mut self, key_file_path: impl AsRef<Path>) {
@@ -241,7 +240,7 @@ impl RxUiDatabase {
                 self.key_file_set = true;
             }
             Err(err) => {
-                error!("Error setting key file: {}", err);
+                println!("Error setting key file: {}", err);
                 self.key_file_set = false;
             }
         }
@@ -292,13 +291,13 @@ impl RxUiDatabase {
             let res = write_last_db(self.databaseName.to_string(), self.databaseType);
 
             if let Err(err) = res {
-                error!("{}", err);
+                println!("{}", err);
             }
         } else {
             // Nuke the settings files if we are explicitly un-setting
             // last db.
             if let Err(err) = clear_last_db() {
-                error!("{}", err);
+                println!("{}", err);
             }
         }
     }
@@ -331,7 +330,7 @@ impl RxUiDatabase {
         if let Some(key_file) = maybe_key_path.as_ref()
             && key_file.exists()
         {
-            info!(
+            println!(
                 "Found a companion key file for: {}",
                 self.databaseName.to_string()
             );
@@ -359,7 +358,7 @@ impl RxUiDatabase {
     /// hub from deleting the file on finalize() before we copy it.
     #[with_executor]
     pub fn useKeyFile(&mut self, key_file_path: QString) {
-        info!("Attempting to use key file: {:?}", key_file_path);
+        println!("Attempting to use key file: {:?}", key_file_path);
         let key_file_path = key_file_path.to_string();
         self.set_key_file(&key_file_path);
 
@@ -367,7 +366,7 @@ impl RxUiDatabase {
         // from ContentHub; we don't want to keep the key file on disk
         // in data dir.
         if let Err(err) = std::fs::remove_file(&key_file_path) {
-            warn!("Could not remove imported key file: {}", err);
+            println!("Could not remove imported key file: {}", err);
         }
     }
 
@@ -400,7 +399,7 @@ impl RxUiDatabase {
         if let Some(actor) = self.connected_actor() {
             actix::spawn(actor.send(OpenCommand));
         } else {
-            warn!("No actor connection active?");
+            println!("No actor connection active?");
         }
     }
 

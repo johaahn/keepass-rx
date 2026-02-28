@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-11 14:27+0000\n"
+"POT-Creation-Date: 2025-12-01 20:39+0000\n"
 "PO-Revision-Date: 2026-02-06 20:01+0000\n"
 "Last-Translator: Matthias Dahlmanns <matdahl@gmx.de>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -81,6 +81,12 @@ msgstr ""
 "<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
 "projectmoon/keepass-rx</a>"
 
+msgid "Open Source Licenses"
+msgstr "Licences Open Source"
+
+msgid "Website"
+msgstr "Site web"
+
 msgid "Add Database"
 msgstr "Ajouter une base de données"
 
@@ -98,12 +104,6 @@ msgstr "Appuyer + pour importer une base de données."
 
 msgid "It will only be removed from the app, not your device."
 msgstr "Elle sera simplement retirée de l’application, pas de votre appareil."
-
-msgid "Open Source Licenses"
-msgstr "Licences Open Source"
-
-msgid "Website"
-msgstr "Site web"
 
 msgid "Cancel Search"
 msgstr "Annuler la recherche"
@@ -165,12 +165,6 @@ msgstr "Balises"
 msgid "Entries grouped by tag."
 msgstr "Entrées regroupées par balise."
 
-msgid "Saved Searches"
-msgstr ""
-
-msgid "Entries matching search queries."
-msgstr ""
-
 msgid "Select View"
 msgstr "Sélectionner Affichage"
 
@@ -179,6 +173,42 @@ msgstr "Sélectionner"
 
 msgid "Cancel"
 msgstr "Annuler"
+
+msgid "Key Loaded"
+msgstr "Clé chargée"
+
+msgid "Remove Key"
+msgstr "Supprimer la clé"
+
+msgid "Use Key"
+msgstr "Utiliser la clé"
+
+msgid "Automatically detected a key file for this database."
+msgstr "Détection automatique d'un fichier clé pour cette base de données."
+
+msgid "A key file will be used to open this database."
+msgstr "Un fichier clé sera utilisé pour ouvrir cette base de données."
+
+msgid "Select Key File"
+msgstr "Sélectionner le fichier clé"
+
+msgid "Enter the database master password"
+msgstr "Entrez le mot de passe principal de la base de données"
+
+msgid "Master Password"
+msgstr "Mot de passe principal"
+
+msgid "Open"
+msgstr "Ouvrir"
+
+msgid "Hide Password"
+msgstr "Masquer le mot de passe"
+
+msgid "Show Password"
+msgstr "Afficher le mot de passe"
+
+msgid "Opening"
+msgstr "Ouverture"
 
 msgid "Change settings based on your preferences."
 msgstr "Modifiez les paramètres en fonction de vos préférences."
@@ -221,32 +251,17 @@ msgstr ""
 "option est désactivée, la recherche ne trouve que les correspondances "
 "exactes, sans distinction entre majuscules et minuscules."
 
-msgid "Password"
-msgstr "Mot de passe"
-
-msgid "%1 bits"
-msgstr ""
-
-msgid "Password (Entropy: %1)"
-msgstr ""
-
 msgid "%1 copied to clipboard (30 secs)"
 msgstr "%1 copié dans le presse-papiers (30 secondes)"
 
 msgid "Notes"
 msgstr "Notes"
 
-msgid "Tap to hide"
-msgstr ""
-
-msgid "Tap to reveal"
-msgstr ""
-
 msgid "Tap to copy"
 msgstr "Appuyez pour copier"
 
-msgid "Tap reveal to view notes"
-msgstr ""
+msgid "Notes copied to clipboard (30 secs)"
+msgstr "Notes copiées dans le presse-papiers (30 secondes)"
 
 msgid "Main"
 msgstr "Principal"
@@ -254,59 +269,17 @@ msgstr "Principal"
 msgid "Username"
 msgstr "Nom d'utilisateur"
 
-msgid "Loading…"
-msgstr ""
+msgid "Password"
+msgstr "Mot de passe"
 
 msgid "URL"
 msgstr "URL"
-
-msgid "TOTP (Valid for %1)"
-msgstr ""
-
-msgid "TOTP"
-msgstr ""
 
 msgid "Other Fields"
 msgstr "Autres champs"
 
 msgid "KeePassRX: Clipboard cleared."
 msgstr "KeePassRX : Presse-papiers effacé."
-
-msgid "Key Loaded"
-msgstr "Clé chargée"
-
-msgid "Remove Key"
-msgstr "Supprimer la clé"
-
-msgid "Use Key"
-msgstr "Utiliser la clé"
-
-msgid "Automatically detected a key file for this database."
-msgstr "Détection automatique d'un fichier clé pour cette base de données."
-
-msgid "A key file will be used to open this database."
-msgstr "Un fichier clé sera utilisé pour ouvrir cette base de données."
-
-msgid "Select Key File"
-msgstr "Sélectionner le fichier clé"
-
-msgid "Enter the database master password"
-msgstr "Entrez le mot de passe principal de la base de données"
-
-msgid "Master Password"
-msgstr "Mot de passe principal"
-
-msgid "Open"
-msgstr "Ouvrir"
-
-msgid "Hide Password"
-msgstr "Masquer le mot de passe"
-
-msgid "Show Password"
-msgstr "Afficher le mot de passe"
-
-msgid "Opening"
-msgstr "Ouverture"
 
 msgid "Manual path set."
 msgstr "Chemin défini manuellement."
@@ -363,29 +336,6 @@ msgstr "Codes 2FA"
 msgctxt "List of entries with tags"
 msgid "Tags"
 msgstr "Balises"
-
-msgctxt "Saved database searches"
-msgid "Saved Searches"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Poor"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Weak"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Good"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Excellent"
-msgstr ""
-
-#~ msgid "Notes copied to clipboard (30 secs)"
-#~ msgstr "Notes copiées dans le presse-papiers (30 secondes)"
 
 #~ msgid ""
 #~ "Change settings based on your preferences. Any change to the settings "

@@ -430,7 +430,6 @@ fn generate_methods(
             fn set_app(&mut self, app: QPointer<crate::app::AppState>) {
                 use actix::prelude::*;
                 use crate::actor::*;
-                use log::warn;
 
                 self._app = app.clone();
                 let this = qmetaobject::QPointer::from(&*self);
@@ -455,7 +454,7 @@ fn generate_methods(
                 // Deferred view init
                 app.deferred_with_view(move |view| {
                     let Some(this) = this.as_pinned() else {
-                        warn!("Object destroyed before being initialized");
+                        println!("Object destroyed before being initialized");
                         return;
                     };
 
@@ -464,7 +463,7 @@ fn generate_methods(
 
             }
 
-            fn reinit_with(&mut self, view: &crate::rx::virtual_hierarchy::VirtualHierarchyType) {
+            fn reinit_with(&mut self, view: &dyn VirtualHierarchy) {
                 use actix::prelude::*;
                 use crate::actor::*;
 
@@ -482,10 +481,18 @@ fn generate_methods(
                 let maybe_view = app_state.curr_view();
 
                 if let Some(view) = maybe_view {
-                    self.init_from_view(view.as_ref());
+                    self.init_from_view(view.as_ref().as_ref());
                     self._ready = true;
                     self._readyChanged();
                 }
+            }
+
+            fn view(&self) -> std::rc::Rc<Box<dyn crate::rx::virtual_hierarchy::VirtualHierarchy>> {
+                self._app.as_pinned()
+                    .expect("app set by QML")
+                    .borrow()
+                    .curr_view()
+                    .expect("view was not initialized")
             }
         }
     }

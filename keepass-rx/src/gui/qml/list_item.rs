@@ -7,8 +7,8 @@ use qmetaobject::{QMetaType, QObject, QPointer, QString};
 use uuid::Uuid;
 
 use crate::app::AppState;
-use crate::rx::virtual_hierarchy::{RxViewFeature, VirtualHierarchy, VirtualHierarchyType};
-use crate::rx::{RxContainedRef, RxEntry, RxGroup, RxSavedSearch, RxTag, RxTemplate};
+use crate::rx::virtual_hierarchy::{RxViewFeature, VirtualHierarchy};
+use crate::rx::{RxContainedRef, RxEntry, RxGroup, RxTag, RxTemplate};
 
 #[derive(QEnum, Clone, Default, Copy, PartialEq, Eq)]
 #[repr(C)]
@@ -18,7 +18,6 @@ pub enum RxItemType {
     Group,
     Template,
     Tag,
-    SavedSearch,
 }
 
 fn entry_type_from_string(qval: &QString) -> RxItemType {
@@ -27,7 +26,6 @@ fn entry_type_from_string(qval: &QString) -> RxItemType {
         "Entry" => RxItemType::Entry,
         "Template" => RxItemType::Template,
         "Tag" => RxItemType::Tag,
-        "SavedSearch" => RxItemType::SavedSearch,
         _ => panic!("Invalid entry type: {}", qval),
     }
 }
@@ -38,7 +36,6 @@ fn entry_type_to_string(entry_type: &RxItemType) -> QString {
         RxItemType::Entry => "Entry",
         RxItemType::Template => "Template",
         RxItemType::Tag => "Tag",
-        RxItemType::SavedSearch => "SavedSearch",
     }
     .into()
 }
@@ -139,7 +136,7 @@ macro_rules! set_value {
 
 impl RxListItem {
     fn init_from_state(&mut self, _: &AppState) {}
-    fn init_from_view(&mut self, view: &VirtualHierarchyType) {
+    fn init_from_view(&mut self, view: &dyn VirtualHierarchy) {
         let mut loader = || -> anyhow::Result<()> {
             let uuid = Uuid::from_str(&self.entryUuid.to_string())?;
 
@@ -151,7 +148,7 @@ impl RxListItem {
             // Only allow available feature of list item if the
             // current UI container has it enabled.
             if view.feature() != self.feature {
-                // warn!("Disabling unavailable UI feature in current container");
+                //println!("WARN: Disabling unavailable UI feature in current container");
                 self.feature = RxViewFeature::None;
                 self.featureChanged();
             }
@@ -161,7 +158,7 @@ impl RxListItem {
         loader().expect("Unable to load from current view");
     }
 
-    pub fn init_from_virtual_root(&mut self, root_name: &str) {
+    pub fn init_from_virtual_root(&mut self, root_name: String) {
         set_value!(self.itemType, RxItemType::Group);
         set_value!(self.entryUuid, QString::from(Uuid::default().to_string()));
         set_value!(self.parentUuid, QString::default());
@@ -175,20 +172,19 @@ impl RxListItem {
 
         set_value!(self.iconPath, QString::default());
         set_value!(self.iconBuiltin, false);
-        set_value!(self.title, QString::from(root_name));
+        set_value!(self.title, QString::from(root_name.as_ref()));
         set_value!(self.subtitle, QString::from(""));
     }
 }
 
-impl InitFrom<RxContainedRef<'_>> for RxListItem {
-    fn init_from(&mut self, value: RxContainedRef<'_>) {
+impl InitFrom<RxContainedRef> for RxListItem {
+    fn init_from(&mut self, value: RxContainedRef) {
         match value {
-            RxContainedRef::Entry(entry) => self.init_from(entry.as_ref().as_ref()),
-            RxContainedRef::Group(group) => self.init_from(group.as_ref().as_ref()),
-            RxContainedRef::Template(template) => self.init_from(template.as_ref().as_ref()),
-            RxContainedRef::Tag(tag) => self.init_from(tag.as_ref()),
-            RxContainedRef::SavedSearch(saved_search) => self.init_from(saved_search.as_ref()),
-            RxContainedRef::VirtualRoot(root_name) => self.init_from_virtual_root(root_name.as_ref()),
+            RxContainedRef::Entry(entry) => self.init_from(entry.as_ref()),
+            RxContainedRef::Group(group) => self.init_from(group.as_ref()),
+            RxContainedRef::Template(template) => self.init_from(template.as_ref()),
+            RxContainedRef::Tag(tag) => self.init_from(&tag),
+            RxContainedRef::VirtualRoot(root_name) => self.init_from_virtual_root(root_name),
         }
     }
 }
@@ -241,26 +237,6 @@ impl InitFrom<&RxTemplate> for RxListItem {
     }
 }
 
-impl InitFrom<&RxSavedSearch> for RxListItem {
-    fn init_from(&mut self, value: &RxSavedSearch) {
-        set_value!(self.itemType, RxItemType::SavedSearch);
-        set_value!(self.entryUuid, QString::from(value.uuid.to_string()));
-        set_value!(self.parentUuid, QString::default());
-        set_value!(self.feature, RxViewFeature::None);
-
-        set_value!(self.hasUsername, false);
-        set_value!(self.hasPassword, false);
-        set_value!(self.hasURL, false);
-        set_value!(self.hasTOTP, false);
-
-        set_value!(self.iconPath, QString::default());
-        set_value!(self.iconBuiltin, false);
-        set_value!(self.title, QString::from(value.name.as_ref()));
-        set_value!(self.subtitle, QString::from("Saved Search"));
-        set_value!(self.description, QString::from(value.query.as_ref()));
-    }
-}
-
 impl InitFrom<&RxEntry> for RxListItem {
     fn init_from(&mut self, value: &RxEntry) {
         set_value!(self.itemType, RxItemType::Entry);
@@ -298,8 +274,8 @@ impl InitFrom<&RxEntry> for RxListItem {
             self.url,
             value
                 .url()
-                .and_then(|url| url.value())
-                .map(|url| QString::from(url.as_str()))
+                .and_then(|url| url.value().map(|u| u.to_string()))
+                .map(QString::from)
                 .unwrap_or_default()
         );
 
@@ -351,7 +327,7 @@ impl InitFrom<&RxGroup> for RxListItem {
                 .unwrap_or_default()
         );
 
-        set_value!(self.title, QString::from(value.name.as_str()));
+        set_value!(self.title, value.name.clone().into());
         set_value!(self.subtitle, QString::from("Group"));
         set_value!(
             self.description,
@@ -379,29 +355,5 @@ impl InitFrom<&RxGroup> for RxListItem {
 impl InitFrom<RxGroup> for RxListItem {
     fn init_from(&mut self, value: RxGroup) {
         self.init_from(&value);
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::{InitFrom, RxItemType, RxListItem};
-    use crate::rx::RxSavedSearch;
-    use uuid::Uuid;
-
-    #[test]
-    fn saved_search_item_description_uses_query() {
-        let search = RxSavedSearch::new(
-            "My Search".to_string(),
-            "title:github user:jeff".to_string(),
-            vec![Uuid::new_v4(), Uuid::new_v4()],
-        );
-
-        let mut item = RxListItem::default();
-        item.init_from(&search);
-
-        assert!(item.itemType == RxItemType::SavedSearch);
-        assert_eq!(item.title.to_string(), "My Search");
-        assert_eq!(item.subtitle.to_string(), "Saved Search");
-        assert_eq!(item.description.to_string(), "title:github user:jeff");
     }
 }

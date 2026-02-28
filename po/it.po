@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 12:02+0000\n"
-"PO-Revision-Date: 2026-07-20 16:01+0000\n"
-"Last-Translator: Sylke Vicious <silkevicious@tuta.io>\n"
+"POT-Creation-Date: 2025-12-01 20:39+0000\n"
+"PO-Revision-Date: 2025-11-04 22:51+0000\n"
+"Last-Translator: projectmoon <projectmoon@agnos.is>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/ubports/"
 "keepassrx/it/>\n"
 "Language: it\n"
@@ -17,415 +17,299 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.8.dev0\n"
+"X-Generator: Weblate 5.14.1-dev\n"
 
 msgid "Copy Username"
-msgstr "Copia Nome Utente"
+msgstr ""
 
 msgid "Copy Password"
-msgstr "Copia Password"
+msgstr ""
 
 msgid "Open URL"
-msgstr "Apri URL"
+msgstr ""
 
 msgid "Copy 2FA Code"
-msgstr "Copia Codice 2FA"
+msgstr ""
 
 msgid "View Entry"
-msgstr "Vedi Voce"
+msgstr ""
 
 msgid "Tap to copy 2FA code"
-msgstr "Premi per copiare il codice 2FA"
-
-msgid "Add Database"
-msgstr "Aggiungi Database"
-
-msgid "Settings"
-msgstr "Impostazioni"
+msgstr ""
 
 msgid "About"
-msgstr "Info"
-
-msgid "Loading last database."
-msgstr "Carica ultimo database."
-
-msgid "Select Database"
-msgstr "Seleziona Database"
-
-msgid "Tap + to import a database."
-msgstr "Premi + per importare un database."
-
-msgid "Last Modified: %1"
-msgstr "Ultima Modifica: %1"
-
-msgid "It will only be removed from the app, not your device."
-msgstr "Verrà solo rimosso dall'app, non dal tuo dispositivo."
-
-msgid "Open Source Licenses"
-msgstr "Licenze Open Source"
-
-msgid "Website"
-msgstr "Sito Web"
-
-msgid "Cancel Search"
-msgstr "Annulla Ricerca"
-
-msgid "Search all entries"
-msgstr "Cerca tutte le voci"
-
-msgid "Search all entries under this group"
-msgstr "Ricerca tutte le voci di questo gruppo"
-
-msgid "Search entries in this group"
-msgstr "Ricerca le voci in questo gruppo"
-
-msgid "Lock"
-msgstr "Blocca"
-
-msgid "Close"
-msgstr "Chiudi"
-
-msgid "Back"
-msgstr "Indietro"
-
-msgid "View Mode"
-msgstr "Modalità Vista"
-
-msgid "Search"
-msgstr "Cerca"
-
-msgid "Lock Database"
-msgstr "Blocca Database"
-
-msgid "Close Database"
-msgstr "Chiudi Database"
-
-msgid "Change View"
-msgstr "Cambia Vista"
-
-msgid "All Entries"
-msgstr "Tutte le Voci"
-
-msgid "All groups and entries."
-msgstr "Tutti i gruppi e le voci."
-
-msgid "Special Categories"
-msgstr "Categorie Speciali"
-
-msgid "Entries grouped by template."
-msgstr "Voci raggruppate per modello."
-
-msgid "2FA Codes"
-msgstr "Codici 2FA"
-
-msgid "Entries with 2FA codes."
-msgstr "Voci con codici 2FA."
-
-msgid "Tags"
-msgstr "Etichette"
-
-msgid "Entries grouped by tag."
-msgstr "Voci raggruppate per etichetta."
-
-msgid "Saved Searches"
-msgstr "Ricerche Salvate"
-
-msgid "Entries matching search queries."
-msgstr "Voci corrispondenti alle parole chiave di ricerca."
-
-msgid "Select View"
-msgstr "Seleziona Vista"
-
-msgid "Select"
-msgstr "Seleziona"
-
-msgid "Cancel"
-msgstr "Annulla"
-
-msgid "Change settings based on your preferences."
-msgstr "Cambia impostazioni in base alle tue preferenze."
-
-msgid "Enable database locking"
-msgstr "Abilita blocco database"
-
-msgid ""
-"Securely lock and unlock database with a short passcode. Requires restart to "
-"take effect."
 msgstr ""
-"Blocca e sblocca in modo sicuro il database con un breve codice di accesso. "
-"Richiede il riavvio per avere effetto."
-
-msgid "Enable Accents"
-msgstr "Abilita Accenti di Colore"
-
-msgid ""
-"Set header color and name according to database settings. Compatible with "
-"KeePassXC."
-msgstr ""
-"Imposta colore e nome dell'intestazione come nelle impostazioni del "
-"database. Compatibile con KeePassXC."
-
-msgid "Show the \"Recycle bin\" group"
-msgstr "Mostra il gruppo \"Cestino\""
-
-msgid "This group contains all the deleted entries"
-msgstr "Questo gruppo contiene tutte le voci eliminate"
-
-msgid "Fuzzy Search"
-msgstr "Ricerca Parziale"
-
-msgid ""
-"Use fuzzy search to find entries. If disabled, search only matches exact "
-"case insensitive text."
-msgstr ""
-"Usa la ricerca parziale per trovare le voci. Se disabilitata, ricerca solo "
-"le corrispondenze di testo esatte senza considerare le minuscole e maiuscole."
-
-msgid "Key Loaded"
-msgstr "Chiave Caricata"
-
-msgid "Remove Key"
-msgstr "Rimuovi Chiave"
-
-msgid "Use Key"
-msgstr "Usa Chiave"
-
-msgid "Automatically detected a key file for this database."
-msgstr "Rilevato automaticamente un file di chiave per questo database."
-
-msgid "A key file will be used to open this database."
-msgstr "Un file di chiave verrà utilizzato per aprire questo database."
-
-msgid "Select Key File"
-msgstr "Seleziona File di Chiave"
-
-msgid "Enter the database master password"
-msgstr "Inserisci la password master del database"
-
-msgid "Master Password"
-msgstr "Password Master"
-
-msgid "Open"
-msgstr "Apri"
-
-msgid "Hide Password"
-msgstr "Nascondi Password"
-
-msgid "Show Password"
-msgstr "Mostra Password"
-
-msgid "Opening"
-msgstr "Apertura in corso"
-
-msgid "Manual path set."
-msgstr "Percorso manuale impostato."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"Il codice di accesso sono i primi cinque caratteri della password del "
-"database (o l'intera password se meno di cinque caratteri)."
-
-msgid "Passcode"
-msgstr "Codice di accesso"
-
-msgid "Unlock"
-msgstr "Sblocca"
-
-msgid "Securely Unlocking"
-msgstr "Sbloccando in modo sicuro"
-
-msgid "Securely Locking"
-msgstr "Bloccando in modo sicuro"
-
-msgid "Database Not Opening?"
-msgstr "Il Database Non si sta Aprendo?"
-
-msgid "Entry Notes"
-msgstr "Note della Voce"
-
-msgid "Note copied to clipboard"
-msgstr "Nota copiata negli appunti"
-
-msgid "Unable to export attachment."
-msgstr "Impossibile esportare l'allegato."
-
-msgid "Entry Attachments"
-msgstr "Allegati della Voce"
-
-msgid "Export Attachment"
-msgstr "Esporta allegato"
-
-msgid "Attachment Not Viewable"
-msgstr "Allegato Non Visualizzabile"
-
-msgid "KeePassRX cannot view this %1 attachment, but it can be exported."
-msgstr ""
-"KeePassRX non è in grado di visualizzare questi %1 allegati, ma possono "
-"essere esportati."
-
-msgid "KeePassRX cannot view this attachment, but it can be exported."
-msgstr ""
-"KeePassRX non è in grado di visualizzare questo allegato, ma può essere "
-"esportato."
-
-msgid "Export"
-msgstr "Esporta"
-
-msgid "%1 ready to export."
-msgstr "%1 pronta per l'esportazione."
-
-msgid "%1 exported."
-msgstr "%1 esportata."
-
-msgid "%1 bytes"
-msgstr "%1 bytes"
-
-msgid "Attachment"
-msgstr "Allegato"
-
-msgid "Password"
-msgstr "Password"
-
-msgid "%1 bits"
-msgstr "%1 bits"
-
-msgid "Password (Entropy: %1)"
-msgstr "Password (Entropia: %1)"
-
-msgid "%1 copied to clipboard (30 secs)"
-msgstr "%1 copiato negli appunti (30 secondi)"
-
-msgid "Attachments"
-msgstr "Allegati"
-
-msgid "Notes"
-msgstr "Note"
-
-msgid "Tap to hide"
-msgstr "Premi per nascondere"
-
-msgid "Tap to reveal"
-msgstr "Premi per rivelare"
-
-msgid "Tap reveal to view notes"
-msgstr "Premendo vengono visualizzate le note"
-
-msgid "Main"
-msgstr "Principale"
-
-msgid "Username"
-msgstr "Nome Utente"
-
-msgid "Loading…"
-msgstr "Caricamento…"
-
-msgid "URL"
-msgstr "URL"
-
-msgid "TOTP (Valid for %1)"
-msgstr "TOTP (Valido per %1)"
-
-msgid "TOTP"
-msgstr "TOTP"
-
-msgid "Other Fields"
-msgstr "Altri Campi"
-
-msgid "KeePassRX: Clipboard cleared."
-msgstr "KeePassRX: Appunti ripuliti."
-
-msgid "Version %1"
-msgstr "Versione %1"
 
 msgid ""
 "KeePassRX is password manager for KeePass databases, designed for Ubuntu "
 "Touch. It is licensed under the GNU AGPL v3 license."
 msgstr ""
-"KeePassRX è un gestore password per i database KeePass, progettato per "
-"Ubuntu Touch. È rilasciato sotto licenza GNU AGPL v3."
 
 msgid ""
 "The built-in KeePass icon images are licensed under a variety of licenses as "
 "detailed in assets/COPYING."
 msgstr ""
-"Le icone integrate in KeePass sono rilasciate sotto varie licenze come "
-"specificato in assets/COPYING."
 
 msgid "Manual"
-msgstr "Manuale"
+msgstr ""
 
 msgid ""
 "• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
 "projects/keepassrx/</a>"
 msgstr ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
 
 msgid ""
 "• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
 "projects/keepassrx/</a>"
 msgstr ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
 
 msgid "Source Code"
-msgstr "Codice Sorgente"
+msgstr ""
 
 msgid ""
 "<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
 "projectmoon/keepass-rx</a>"
 msgstr ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
+
+msgid "Open Source Licenses"
+msgstr ""
+
+msgid "Website"
+msgstr ""
+
+msgid "Add Database"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Loading last database."
+msgstr ""
+
+msgid "Select Database"
+msgstr ""
+
+msgid "Tap + to import a database."
+msgstr ""
+
+msgid "It will only be removed from the app, not your device."
+msgstr ""
+
+msgid "Cancel Search"
+msgstr ""
+
+msgid "Search all entries"
+msgstr ""
+
+msgid "Search all entries under this group"
+msgstr ""
+
+msgid "Search entries in this group"
+msgstr ""
+
+msgid "Lock"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "Back"
+msgstr ""
+
+msgid "View Mode"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Lock Database"
+msgstr ""
+
+msgid "Close Database"
+msgstr ""
+
+msgid "Change View"
+msgstr ""
+
+msgid "All Entries"
+msgstr ""
+
+msgid "All groups and entries."
+msgstr ""
+
+msgid "Special Categories"
+msgstr ""
+
+msgid "Entries grouped by template."
+msgstr ""
+
+msgid "2FA Codes"
+msgstr ""
+
+msgid "Entries with 2FA codes."
+msgstr ""
+
+msgid "Tags"
+msgstr ""
+
+msgid "Entries grouped by tag."
+msgstr ""
+
+msgid "Select View"
+msgstr ""
+
+msgid "Select"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Key Loaded"
+msgstr ""
+
+msgid "Remove Key"
+msgstr ""
+
+msgid "Use Key"
+msgstr ""
+
+msgid "Automatically detected a key file for this database."
+msgstr ""
+
+msgid "A key file will be used to open this database."
+msgstr ""
+
+msgid "Select Key File"
+msgstr ""
+
+msgid "Enter the database master password"
+msgstr ""
+
+msgid "Master Password"
+msgstr ""
+
+msgid "Open"
+msgstr ""
+
+msgid "Hide Password"
+msgstr ""
+
+msgid "Show Password"
+msgstr ""
+
+msgid "Opening"
+msgstr ""
+
+msgid "Change settings based on your preferences."
+msgstr ""
+
+msgid "Enable database locking"
+msgstr ""
+
+msgid ""
+"Securely lock and unlock database with a short passcode. Requires restart to "
+"take effect."
+msgstr ""
+
+msgid "Enable Accents"
+msgstr ""
+
+msgid ""
+"Set header color and name according to database settings. Compatible with "
+"KeePassXC."
+msgstr ""
+
+msgid "Show the \"Recycle bin\" group"
+msgstr ""
+
+msgid "This group contains all the deleted entries"
+msgstr ""
+
+msgid "Fuzzy Search"
+msgstr ""
+
+msgid ""
+"Use fuzzy search to find entries. If disabled, search only matches exact "
+"case insensitive text."
+msgstr ""
+
+msgid "%1 copied to clipboard (30 secs)"
+msgstr ""
+
+msgid "Notes"
+msgstr ""
+
+msgid "Tap to copy"
+msgstr ""
+
+msgid "Notes copied to clipboard (30 secs)"
+msgstr ""
+
+msgid "Main"
+msgstr ""
+
+msgid "Username"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "URL"
+msgstr ""
+
+msgid "Other Fields"
+msgstr ""
+
+msgid "KeePassRX: Clipboard cleared."
+msgstr ""
+
+msgid "Manual path set."
+msgstr ""
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+
+msgid "Passcode"
+msgstr ""
+
+msgid "Unlock"
+msgstr ""
+
+msgid "Securely Unlocking"
+msgstr ""
+
+msgid "Securely Locking"
+msgstr ""
+
+msgid "Database Not Opening?"
+msgstr ""
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
 msgstr ""
-"<b>Mostrando tutti i codici 2FA nel database.</b><br/>Mostra i dettagli di "
-"una voce utilizzando la sua barra delle azioni."
 
 msgctxt "A database imported via ContentHub"
 msgid "Imported"
-msgstr "Importato"
+msgstr ""
 
 msgctxt "A database managed by external file sync"
 msgid "Synced"
-msgstr "Sincronizzato"
-
-msgctxt "Password strength"
-msgid "Poor"
-msgstr "Scarsa"
-
-msgctxt "Password strength"
-msgid "Weak"
-msgstr "Debole"
-
-msgctxt "Password strength"
-msgid "Good"
-msgstr "Buona"
-
-msgctxt "Password strength"
-msgid "Excellent"
-msgstr "Eccellente"
+msgstr ""
 
 msgid "All Templates"
-msgstr "Tutti i Modelli"
+msgstr ""
 
 msgctxt "Default view of the password database (all entries)"
 msgid "Default View"
-msgstr "Vista Predefinita"
+msgstr ""
 
 msgctxt "Two-factor/OTP codes (keep phrase short as possible)"
 msgid "2FA Codes"
-msgstr "Codici 2FA"
+msgstr ""
 
 msgctxt "List of entries with tags"
 msgid "Tags"
-msgstr "Etichette"
-
-msgctxt "Saved database searches"
-msgid "Saved Searches"
-msgstr "Ricerche Salvate"
+msgstr ""

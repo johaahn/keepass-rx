@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = [ "actor-macro", "keepass-rx", "mirror_from_macro" ]
+members = [ "actor-macro", "keepass-rx" ]
 
 [profile.release]
 strip="debuginfo"

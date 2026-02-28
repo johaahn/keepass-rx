@@ -23,28 +23,22 @@ extern crate cstr;
 #[macro_use]
 extern crate qmetaobject;
 
+extern crate libsodium_rs;
+
 use actix::Actor;
-use anyhow::{Context, Result};
+use anyhow::Result;
 use cpp::cpp;
 use gettextrs::{bindtextdomain, textdomain};
-use log::{LevelFilter, error, info};
 use qmeta_async::with_executor;
-use qmetaobject::{
-    QObjectBox, QQuickStyle, QQuickView, QString, QVariant, qml_register_enum,
-    qml_register_type,
-};
-use simplelog::{
-    ColorChoice, CombinedLogger, ConfigBuilder, SharedLogger, TermLogger, TerminalMode,
-    WriteLogger,
-};
+use qmetaobject::{QObjectBox, QQuickStyle, QQuickView, qml_register_enum, qml_register_type};
 use std::env;
-use std::fs::{File, OpenOptions, create_dir_all};
-use std::io::Write;
 use std::path::PathBuf;
 use std::rc::Rc;
-use std::sync::OnceLock;
+use std::sync::Arc;
 
-pub use keepassrx::{crypto, license, rx};
+mod crypto;
+mod license;
+mod rx;
 
 #[cfg(feature = "gui")]
 mod actor;
@@ -57,80 +51,6 @@ mod qrc;
 
 #[cfg(feature = "gui")]
 use crate::app::AppState;
-
-const APP_ID: &str = "keepassrx.projectmoon";
-static LOG_DIR: OnceLock<PathBuf> = OnceLock::new();
-
-fn app_data_path() -> PathBuf {
-    dirs::data_dir()
-        .unwrap_or_else(|| PathBuf::from("."))
-        .join(APP_ID)
-}
-
-fn log_dir_path() -> PathBuf {
-    app_data_path().join("logs")
-}
-
-fn append_panic_log(log_dir: &PathBuf, message: &str) {
-    if create_dir_all(log_dir).is_err() {
-        return;
-    }
-
-    let log_path = log_dir.join("panic.log");
-    if let Ok(mut file) = OpenOptions::new().create(true).append(true).open(log_path) {
-        let _ = writeln!(file, "{message}");
-    }
-}
-
-fn panic_payload_to_string(payload: &(dyn std::any::Any + Send)) -> String {
-    if let Some(message) = payload.downcast_ref::<&str>() {
-        (*message).to_string()
-    } else if let Some(message) = payload.downcast_ref::<String>() {
-        message.clone()
-    } else {
-        "non-string panic payload".to_string()
-    }
-}
-
-fn install_panic_hook(log_dir: PathBuf) {
-    let _ = LOG_DIR.set(log_dir.clone());
-
-    std::panic::set_hook(Box::new(move |panic_info| {
-        let location = panic_info
-            .location()
-            .map(|loc| format!("{}:{}", loc.file(), loc.line()))
-            .unwrap_or_else(|| "unknown location".to_string());
-        let payload = panic_payload_to_string(panic_info.payload());
-        let backtrace = std::backtrace::Backtrace::force_capture();
-        let message = format!("panic at {location}: {payload}\n{backtrace}");
-
-        error!("{message}");
-        append_panic_log(&log_dir, &message);
-    }));
-}
-
-fn init_logging() -> Result<()> {
-    let log_dir = log_dir_path();
-    create_dir_all(&log_dir).context("creating log directory")?;
-
-    let config = ConfigBuilder::new().build();
-    let file = File::create(log_dir.join("keepassrx.log")).context("creating keepassrx.log")?;
-
-    let loggers: Vec<Box<dyn SharedLogger>> = vec![
-        TermLogger::new(
-            LevelFilter::Info,
-            config.clone(),
-            TerminalMode::Mixed,
-            ColorChoice::Auto,
-        ),
-        WriteLogger::new(LevelFilter::Debug, config, file),
-    ];
-
-    CombinedLogger::init(loggers).context("initializing logger")?;
-    install_panic_hook(log_dir);
-
-    Ok(())
-}
 
 #[cfg(feature = "gui")]
 fn load_gui() -> Result<()> {
@@ -182,7 +102,7 @@ fn load_gui() -> Result<()> {
 
     // "Data migration": Move any db.kdbx from the data directory to imported.
     if let Err(err) = move_old_dirs_and_files() {
-        error!("Error during old app data migration: {}", err);
+        println!("Error during old app data migration: {}", err);
     }
 
     qmeta_async::run(|| {
@@ -196,13 +116,13 @@ fn load_gui() -> Result<()> {
 
             let settings_bridge = Rc::new(QObjectBox::new(SettingsBridge::default()));
             let app_state = Rc::new(QObjectBox::new(AppState::new(&settings_bridge)));
-            let gui = Rc::new(QObjectBox::new(KeepassRx::new()));
+            let gui = Arc::new(QObjectBox::new(KeepassRx::new()));
 
             let global_app_actor = KeepassRxActor::new(&gui, &app_state).start();
 
             let app = Rc::new(KeepassRxApp {
-                app_state,
-                settings_bridge,
+                app_state: app_state.clone(),
+                settings_bridge: settings_bridge.clone(),
             });
 
             RxActors::set_app_actor(global_app_actor);
@@ -211,10 +131,6 @@ fn load_gui() -> Result<()> {
             let engine = view.engine();
 
             engine.set_property("keepassrx".into(), gui.pinned().into());
-            engine.set_property(
-                "keepassRxVersion".into(),
-                QVariant::from(QString::from(env!("CARGO_PKG_VERSION"))),
-            );
             engine.set_object_property("AppState".into(), app.app_state.pinned());
             engine.set_object_property("SettingsBridge".into(), app.settings_bridge.pinned());
 
@@ -248,10 +164,6 @@ fn init_gettext() {
 }
 
 fn main() -> Result<()> {
-    if let Err(err) = init_logging() {
-        eprintln!("keepassrx: failed to initialize file logging: {err}");
-    }
-
     libsodium_rs::ensure_init()?;
 
     match () {
@@ -259,7 +171,7 @@ fn main() -> Result<()> {
         () => load_gui()?,
 
         #[cfg(not(feature = "gui"))]
-        () => info!("GUI not enabled."),
+        () => println!("GUI not enabled."),
     }
 
     Ok(())

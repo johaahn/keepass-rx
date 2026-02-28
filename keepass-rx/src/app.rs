@@ -14,7 +14,7 @@ use crate::gui::actor::KeepassRxActor;
 use crate::gui::settings::SettingsBridge;
 use crate::rx::RxDatabase;
 use crate::rx::RxSearchType;
-use crate::rx::virtual_hierarchy::VirtualHierarchyType;
+use crate::rx::virtual_hierarchy::VirtualHierarchy;
 
 /// Hackity hack hack hack. Instead of having a running actor system
 /// via qmeta_async and using Actix's registry, we'll just keep a
@@ -27,12 +27,14 @@ pub struct RxActors {
 impl RxActors {
     pub fn set_app_actor(actor: Addr<KeepassRxActor>) {
         ACTORS
-            .set(RxActors { gui_actor: actor })
+            .set(RxActors {
+                gui_actor: actor.clone(),
+            })
             .expect("Actor addresses already set");
     }
 
-    pub fn app_actor() -> Option<&'static Addr<KeepassRxActor>> {
-        ACTORS.get().map(|actors| &actors.gui_actor)
+    pub fn app_actor() -> Option<Addr<KeepassRxActor>> {
+        ACTORS.get().map(|actors| actors.gui_actor.clone())
     }
 }
 
@@ -75,6 +77,7 @@ impl KeyFile {
     pub fn bytes_unencrypted(&self) -> Option<SecureVec<u8>> {
         match self {
             KeyFile::Unencrypted(bytes) => {
+                let bytes = bytes.clone();
                 let mut bytes_buf = vec_utils::secure_vec::<u8>(bytes.len()).ok()?;
                 bytes_buf.copy_from_slice(bytes.as_slice());
                 Some(bytes_buf)
@@ -86,6 +89,7 @@ impl KeyFile {
     pub fn bytes(&self, master_key: &MasterKey) -> Result<SecureVec<u8>> {
         let value = match self {
             KeyFile::Unencrypted(bytes) => {
+                let bytes = bytes.clone();
                 let mut bytes_buf = vec_utils::secure_vec::<u8>(bytes.len())?;
                 bytes_buf.copy_from_slice(bytes.as_slice());
                 bytes_buf
@@ -120,9 +124,9 @@ pub struct AppState {
     base: qt_base_class!(trait QObject),
     settings: Option<Rc<QObjectBox<SettingsBridge>>>,
 
-    deferred_views: RefCell<Vec<Box<dyn FnOnce(&VirtualHierarchyType)>>>,
+    deferred_views: RefCell<Vec<Box<dyn FnOnce(&dyn VirtualHierarchy)>>>,
 
-    current_view: Option<Rc<VirtualHierarchyType>>,
+    current_view: Option<Rc<Box<dyn VirtualHierarchy>>>,
     curr_db: Option<Rc<Zeroizing<RxDatabase>>>,
 
     master_key: Option<MasterKey>,
@@ -146,13 +150,8 @@ impl AppState {
         self.master_key = master_key;
     }
 
-    #[allow(dead_code)]
     pub fn db_key(&self) -> Option<KeyFile> {
         self.db_key.clone()
-    }
-
-    pub fn db_key_ref(&self) -> Option<&KeyFile> {
-        self.db_key.as_ref()
     }
 
     pub fn search_type(&self) -> RxSearchType {
@@ -177,27 +176,12 @@ impl AppState {
         self.db_key = key;
     }
 
-    pub fn take_db_key(&mut self) -> Option<KeyFile> {
-        self.db_key.take()
-    }
-
-    #[allow(dead_code)]
-    pub fn curr_view(&self) -> Option<Rc<VirtualHierarchyType>> {
+    pub fn curr_view(&self) -> Option<Rc<Box<dyn VirtualHierarchy>>> {
         self.current_view.clone()
     }
 
-    pub fn curr_view_ref(&self) -> Option<&VirtualHierarchyType> {
-        self.current_view.as_deref()
-    }
-
-    #[allow(dead_code)]
     pub fn curr_db(&self) -> Result<Rc<Zeroizing<RxDatabase>>> {
         let db = self.curr_db.clone().ok_or(anyhow!("No database set"))?;
-        Ok(db)
-    }
-
-    pub fn curr_db_ref(&self) -> Result<&Zeroizing<RxDatabase>> {
-        let db = self.curr_db.as_deref().ok_or(anyhow!("No database set"))?;
         Ok(db)
     }
 
@@ -216,24 +200,24 @@ impl AppState {
         self.curr_db.replace(Rc::new(db));
     }
 
-    pub fn set_curr_view(&mut self, view: VirtualHierarchyType) {
+    pub fn set_curr_view(&mut self, view: Box<dyn VirtualHierarchy>) {
         let view = Rc::new(view);
         for cb in self.deferred_views.take() {
             let view_ref = view.clone();
             // Reason for actix::spawn, see below
-            actix::spawn(async move { cb(view_ref.as_ref()) });
+            actix::spawn(async move { cb(view_ref.as_ref().as_ref()) });
         }
 
         self.current_view.replace(view);
     }
 
-    pub fn deferred_with_view(&self, cb: impl FnOnce(&VirtualHierarchyType) + 'static) {
+    pub fn deferred_with_view(&self, cb: impl FnOnce(&dyn VirtualHierarchy) + 'static) {
         // Calling the callback from within AppState means we have the
         // RefCells that AppState is encapsulated in potentially
         // panic. Spawn the closure on actix, this ensures the borrow
         // of self will have ended.
         if let Some(view) = self.curr_view() {
-            actix::spawn(async move { cb(view.as_ref()) });
+            actix::spawn(async move { cb(view.as_ref().as_ref()) });
         } else {
             self.deferred_views.borrow_mut().push(Box::new(cb));
         }

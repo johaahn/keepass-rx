@@ -33,18 +33,9 @@ ListItem {
             return 'folder';
         } else if (theEntry.itemType == 'Tag') {
             return 'tag';
-        } else if (theEntry.itemType == 'SavedSearch') {
-            return 'find';
         } else {
             return 'up';
         }
-    }
-
-    function isGroupingItem() {
-        return theEntry.itemType == 'Group'
-            || theEntry.itemType == 'Template'
-            || theEntry.itemType == 'Tag'
-            || theEntry.itemType == 'SavedSearch';
     }
 
     function resolveImagePath() {
@@ -71,20 +62,12 @@ ListItem {
                     entriesPage,
                     Qt.resolvedUrl("../pages/SingleEntry.qml"),
                     {
-                        entryUuid: entry.uuid ? entry.uuid : null,
                         entryTitle: entry.title ? entry.title : null,
-                        entryUsername: entry.username ? entry.username : "",
-                        entryPassword: entry.password ? entry.password : "",
-                        entryUrl: entry.url ? entry.url : "",
-                        entryNotes: entry.notes ? entry.notes : "",
-                        entryHasUsername: entry.hasUsername === true,
-                        entryHasPassword: entry.hasPassword === true,
-                        entryHasUrl: entry.hasUrl === true,
-                        entryHasNotes: entry.hasNotes === true,
-                        entryCustomFields: entry.customFields ? entry.customFields : null,
-                        entryHasTotp: entry.hasTotp === true,
-                        entryEntropy: entry.entropy !== undefined ? entry.entropy : null,
-                        entryEntropyQuality: entry.entropyQuality ? entry.entropyQuality : null
+                        entryUsername: entry.username ? entry.username : null,
+                        entryPassword: entry.password ? entry.password : null,
+                        entryUrl: entry.url ? entry.url : null,
+                        entryNotes: entry.notes ? entry.notes : null,
+                        entryCustomFields: entry.customFields ? entry.customFields : null
                     }
                 )
             }
@@ -164,7 +147,7 @@ ListItem {
             id: imgLoader
             width: units.gu(5)
             height: parent.height
-            sourceComponent: isGroupingItem() ? folderImgComponent : entryImgComponent
+            sourceComponent: theEntry.itemType == 'Group' || theEntry.itemType == 'Tag' ? folderImgComponent : entryImgComponent
 
             Component {
                 id: folderImgComponent
@@ -184,8 +167,7 @@ ListItem {
                     // Icon of the group/folder, if it has one.
                     Image {
                         id: groupEntryImg
-                        // no tiny images for tags or searches. the != instead of !== is intentional.
-                        visible: theEntry.itemType != 'Tag' && theEntry.itemType != 'SavedSearch'
+                        visible: theEntry.itemType !== 'Tag' // no tiny images for tags.
                         fillMode: Image.PreserveAspectFit
                         source: '../../assets/placeholder.png'
                         width: units.gu(2.75)
@@ -242,16 +224,13 @@ ListItem {
             Text {
                 width: parent.width
                 elide: Text.ElideRight
-                color: theme.palette.normal.backgroundSecondaryText
+                color: theme.palette.normal.backgroundTertiaryText
                 text: theEntry.subtitle
             }
 
             Text {
                 elide: Text.ElideRight
-                width: parent.width
-                color: hasFeature('DisplayTwoFactorAuth')
-                    ? theme.palette.normal.activity
-                    : theme.palette.normal.backgroundTertiaryText
+                color: theme.palette.normal.activity
                 text: hasFeature('DisplayTwoFactorAuth')
                     ? i18n.tr("Tap to copy 2FA code")
                     : (theEntry.description)

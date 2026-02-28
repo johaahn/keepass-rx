@@ -101,7 +101,6 @@ Page {
                 entryNotes: entry.notes ? entry.notes : "",
                 entryHasUsername: entry.hasUsername === true,
                 entryHasPassword: entry.hasPassword === true,
-                entryEntropy: entry.entropy !== undefined ? entry.entropy : null,
                 entryHasUrl: entry.hasUrl === true,
                 entryHasNotes: entry.hasNotes === true,
                 entryHasTotp: entry.hasTotp === true,
@@ -115,15 +114,9 @@ Page {
         id: entriesModel
     }
 
-    // The header rides above the list rather than living in it: as a ListView
-    // header the SearchField loses focus every time the model reloads (once per
-    // keystroke) and the keyboard closes. It is pinned to the spacer item the
-    // list reserves for it, so it tracks the real content position instead of
-    // assuming the content starts at contentY == 0 -- that assumption is what
-    // let it drift into the middle of the list after a reload.
     Item {
         id: headerBox
-        y: (entriesList.headerItem ? entriesList.headerItem.y : 0) - entriesList.contentY
+        y: 0 - entriesList.contentY - height
         z: 1
         width: parent.width
         height: pageHeader.height + searchField.height

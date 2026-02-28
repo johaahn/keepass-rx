@@ -129,13 +129,6 @@ fn output_kpxc_icons() {
     fs::write(Path::new(&out_dir).join("kpxc_icons.rs"), out).unwrap();
 }
 
-fn compile_kpxc_zxcvbn() {
-    cc::Build::new()
-        .file("src/zxcvbn/zxcvbn.c")
-        .include("src/zxcvbn")
-        .compile("kpxc_zxcvbn");
-}
-
 /// Generate gettext translation files
 fn update_language_files() {
     let pot_file = "../po/keepassrx.projectmoon.pot";
@@ -237,7 +230,6 @@ fn walk_dir(dir: PathBuf, ext: &str) -> Vec<PathBuf> {
 fn main() {
     generate_licenses_rs().expect("Unable to generate licenses");
     output_kpxc_icons();
-    compile_kpxc_zxcvbn();
     update_language_files();
 
     let qmake_cmd = qmake_call();
@@ -261,8 +253,6 @@ fn main() {
     println!("cargo:rerun-if-changed=src/main.rs");
     println!("cargo:rerun-if-changed=src/rx/icons.rs");
     println!("cargo:rerun-if-changed=src/rx/virtual_hierarchy.rs");
-    println!("cargo:rerun-if-changed=src/zxcvbn/zxcvbn.c");
-    println!("cargo:rerun-if-changed=src/zxcvbn/zxcvbn.h");
     println!("cargo:rerun-if-changed=../about.hbs");
     println!("cargo:rerun-if-changed=qml/");
 
@@ -279,9 +269,6 @@ fn main() {
 #[cfg(not(feature = "gui"))]
 fn main() {
     output_kpxc_icons();
-    compile_kpxc_zxcvbn();
     generate_licenses_rs().expect("Unable to generate licenses");
-    println!("cargo:rerun-if-changed=src/zxcvbn/zxcvbn.c");
-    println!("cargo:rerun-if-changed=src/zxcvbn/zxcvbn.h");
     println!("cargo:rerun-if-changed=../about.hbs");
 }

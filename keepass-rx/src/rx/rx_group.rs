@@ -80,25 +80,3 @@ impl RxTag {
         }
     }
 }
-
-#[derive(Zeroize, ZeroizeOnDrop, Default, Clone)]
-pub struct RxSavedSearch {
-    #[zeroize(skip)]
-    pub(crate) uuid: Uuid,
-    pub(crate) name: String,
-    pub(crate) query: String,
-    #[zeroize(skip)]
-    pub(crate) entry_uuids: Vec<Uuid>,
-}
-
-impl RxSavedSearch {
-    pub fn new(name: String, query: String, entry_uuids: Vec<Uuid>) -> Self {
-        let stable_id = format!("{name}\n{query}");
-        Self {
-            uuid: Uuid::new_v5(&Uuid::NAMESPACE_OID, stable_id.as_bytes()),
-            name,
-            query,
-            entry_uuids,
-        }
-    }
-}

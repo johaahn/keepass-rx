@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-11 14:27+0000\n"
+"POT-Creation-Date: 2025-12-01 20:39+0000\n"
 "PO-Revision-Date: 2025-11-18 09:39+0000\n"
 "Last-Translator: projectmoon <projectmoon@agnos.is>\n"
 "Language-Team: Icelandic <https://hosted.weblate.org/projects/ubports/"
@@ -71,6 +71,12 @@ msgid ""
 "projectmoon/keepass-rx</a>"
 msgstr ""
 
+msgid "Open Source Licenses"
+msgstr ""
+
+msgid "Website"
+msgstr ""
+
 msgid "Add Database"
 msgstr "Bæta við Gangnagrunn"
 
@@ -88,12 +94,6 @@ msgstr "Ýtið á + til að flytja inn gagnagrunn."
 
 msgid "It will only be removed from the app, not your device."
 msgstr "Það mun eyða frá appinu en ekki síminn þinn."
-
-msgid "Open Source Licenses"
-msgstr ""
-
-msgid "Website"
-msgstr ""
 
 msgid "Cancel Search"
 msgstr "Hætta leit"
@@ -155,12 +155,6 @@ msgstr ""
 msgid "Entries grouped by tag."
 msgstr ""
 
-msgid "Saved Searches"
-msgstr ""
-
-msgid "Entries matching search queries."
-msgstr ""
-
 msgid "Select View"
 msgstr ""
 
@@ -168,92 +162,6 @@ msgid "Select"
 msgstr ""
 
 msgid "Cancel"
-msgstr ""
-
-msgid "Change settings based on your preferences."
-msgstr ""
-
-msgid "Enable database locking"
-msgstr "Virkja læsingu gagnagrunnsins"
-
-msgid ""
-"Securely lock and unlock database with a short passcode. Requires restart to "
-"take effect."
-msgstr ""
-"Notaðu stutt lykilorð til að Loka og aflæsa gagnagrunnur með öryggi. Appið "
-"þarf að endurræsa."
-
-msgid "Enable Accents"
-msgstr "Virkja Lit"
-
-msgid ""
-"Set header color and name according to database settings. Compatible with "
-"KeePassXC."
-msgstr ""
-
-msgid "Show the \"Recycle bin\" group"
-msgstr "Sýna \"ruslið\" flokkur"
-
-msgid "This group contains all the deleted entries"
-msgstr ""
-
-msgid "Fuzzy Search"
-msgstr ""
-
-msgid ""
-"Use fuzzy search to find entries. If disabled, search only matches exact "
-"case insensitive text."
-msgstr ""
-
-msgid "Password"
-msgstr ""
-
-msgid "%1 bits"
-msgstr ""
-
-msgid "Password (Entropy: %1)"
-msgstr ""
-
-msgid "%1 copied to clipboard (30 secs)"
-msgstr ""
-
-msgid "Notes"
-msgstr "Athugasemdir"
-
-msgid "Tap to hide"
-msgstr ""
-
-msgid "Tap to reveal"
-msgstr ""
-
-msgid "Tap to copy"
-msgstr "Ýtið á til að afrita"
-
-msgid "Tap reveal to view notes"
-msgstr ""
-
-msgid "Main"
-msgstr ""
-
-msgid "Username"
-msgstr ""
-
-msgid "Loading…"
-msgstr ""
-
-msgid "URL"
-msgstr ""
-
-msgid "TOTP (Valid for %1)"
-msgstr ""
-
-msgid "TOTP"
-msgstr ""
-
-msgid "Other Fields"
-msgstr ""
-
-msgid "KeePassRX: Clipboard cleared."
 msgstr ""
 
 msgid "Key Loaded"
@@ -291,6 +199,71 @@ msgstr ""
 
 msgid "Opening"
 msgstr "Í vinnslu"
+
+msgid "Change settings based on your preferences."
+msgstr ""
+
+msgid "Enable database locking"
+msgstr "Virkja læsingu gagnagrunnsins"
+
+msgid ""
+"Securely lock and unlock database with a short passcode. Requires restart to "
+"take effect."
+msgstr ""
+"Notaðu stutt lykilorð til að Loka og aflæsa gagnagrunnur með öryggi. Appið "
+"þarf að endurræsa."
+
+msgid "Enable Accents"
+msgstr "Virkja Lit"
+
+msgid ""
+"Set header color and name according to database settings. Compatible with "
+"KeePassXC."
+msgstr ""
+
+msgid "Show the \"Recycle bin\" group"
+msgstr "Sýna \"ruslið\" flokkur"
+
+msgid "This group contains all the deleted entries"
+msgstr ""
+
+msgid "Fuzzy Search"
+msgstr ""
+
+msgid ""
+"Use fuzzy search to find entries. If disabled, search only matches exact "
+"case insensitive text."
+msgstr ""
+
+msgid "%1 copied to clipboard (30 secs)"
+msgstr ""
+
+msgid "Notes"
+msgstr "Athugasemdir"
+
+msgid "Tap to copy"
+msgstr "Ýtið á til að afrita"
+
+msgid "Notes copied to clipboard (30 secs)"
+msgstr ""
+
+msgid "Main"
+msgstr ""
+
+msgid "Username"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "URL"
+msgstr ""
+
+msgid "Other Fields"
+msgstr ""
+
+msgid "KeePassRX: Clipboard cleared."
+msgstr ""
 
 msgid "Manual path set."
 msgstr "Handvirk leið staðsett."
@@ -343,26 +316,6 @@ msgstr ""
 
 msgctxt "List of entries with tags"
 msgid "Tags"
-msgstr ""
-
-msgctxt "Saved database searches"
-msgid "Saved Searches"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Poor"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Weak"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Good"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Excellent"
 msgstr ""
 
 #~ msgid ""

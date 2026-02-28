@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-11 14:27+0000\n"
-"PO-Revision-Date: 2026-03-11 12:09+0000\n"
+"POT-Creation-Date: 2025-12-01 20:39+0000\n"
+"PO-Revision-Date: 2026-02-07 23:09+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/ubports/keepassrx/"
 "nl/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 5.16-dev\n"
 
 msgid "Copy Username"
 msgstr "Gebruikersnaam kopiëren"
@@ -81,6 +81,12 @@ msgstr ""
 "<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
 "projectmoon/keepass-rx</a>"
 
+msgid "Open Source Licenses"
+msgstr "Opensourcelicenties"
+
+msgid "Website"
+msgstr "Website"
+
 msgid "Add Database"
 msgstr "Databank toevoegen"
 
@@ -99,12 +105,6 @@ msgstr "Druk op ‘+’ om een databank toe te voegen."
 msgid "It will only be removed from the app, not your device."
 msgstr ""
 "Let op: de databank wordt alleen verwijderd uit de app, niet van je apparaat."
-
-msgid "Open Source Licenses"
-msgstr "Opensourcelicenties"
-
-msgid "Website"
-msgstr "Website"
 
 msgid "Cancel Search"
 msgstr "Zoeken afbreken"
@@ -166,12 +166,6 @@ msgstr "Labels"
 msgid "Entries grouped by tag."
 msgstr "Items gegroepeerd op label."
 
-msgid "Saved Searches"
-msgstr "Opgeslagen zoekopdrachten"
-
-msgid "Entries matching search queries."
-msgstr "Deze items komen overeen met de zoekopdracht."
-
 msgid "Select View"
 msgstr "Kies een weergave"
 
@@ -180,6 +174,42 @@ msgstr "Kiezen"
 
 msgid "Cancel"
 msgstr "Annuleren"
+
+msgid "Key Loaded"
+msgstr "De sleutel is ingelezen"
+
+msgid "Remove Key"
+msgstr "Sleutel verwijderen"
+
+msgid "Use Key"
+msgstr "Sleutel gebruiken"
+
+msgid "Automatically detected a key file for this database."
+msgstr "Het sleutelbestand van deze databank is automatisch vastgesteld."
+
+msgid "A key file will be used to open this database."
+msgstr "Er wordt een sleutelbestand gebruikt om deze databank te openen."
+
+msgid "Select Key File"
+msgstr "Sleutelbestand kiezen"
+
+msgid "Enter the database master password"
+msgstr "Voer het hoofdwachtwoord in"
+
+msgid "Master Password"
+msgstr "Hoofdwachtwoord"
+
+msgid "Open"
+msgstr "Openen"
+
+msgid "Hide Password"
+msgstr "Wachtwoord verbergen"
+
+msgid "Show Password"
+msgstr "Wachtwoord tonen"
+
+msgid "Opening"
+msgstr "Bezig met openen…"
 
 msgid "Change settings based on your preferences."
 msgstr "Zet de instellingen naar eigen hand."
@@ -218,32 +248,17 @@ msgid ""
 "case insensitive text."
 msgstr "Schakel uit om alleen te zoeken naar items die precies overeenkomen."
 
-msgid "Password"
-msgstr "Wachtwoord"
-
-msgid "%1 bits"
-msgstr "%1 bits"
-
-msgid "Password (Entropy: %1)"
-msgstr "Wachtwoord (entropie: %1)"
-
 msgid "%1 copied to clipboard (30 secs)"
 msgstr "%1 is gekopieerd naar het klembord (30 sec.)"
 
 msgid "Notes"
 msgstr "Aantekeningen"
 
-msgid "Tap to hide"
-msgstr ""
-
-msgid "Tap to reveal"
-msgstr ""
-
 msgid "Tap to copy"
 msgstr "Druk om te kopiëren"
 
-msgid "Tap reveal to view notes"
-msgstr ""
+msgid "Notes copied to clipboard (30 secs)"
+msgstr "De aantekeningen zijn gekopieerd naar het klembord (30 sec.)"
 
 msgid "Main"
 msgstr "Algemeen"
@@ -251,59 +266,17 @@ msgstr "Algemeen"
 msgid "Username"
 msgstr "Gebruikersnaam"
 
-msgid "Loading…"
-msgstr ""
+msgid "Password"
+msgstr "Wachtwoord"
 
 msgid "URL"
 msgstr "Url"
-
-msgid "TOTP (Valid for %1)"
-msgstr "Totp (%1 geldig)"
-
-msgid "TOTP"
-msgstr "Totp"
 
 msgid "Other Fields"
 msgstr "Overige velden"
 
 msgid "KeePassRX: Clipboard cleared."
 msgstr "KeePassRX: klembord gewist."
-
-msgid "Key Loaded"
-msgstr "De sleutel is ingelezen"
-
-msgid "Remove Key"
-msgstr "Sleutel verwijderen"
-
-msgid "Use Key"
-msgstr "Sleutel gebruiken"
-
-msgid "Automatically detected a key file for this database."
-msgstr "Het sleutelbestand van deze databank is automatisch vastgesteld."
-
-msgid "A key file will be used to open this database."
-msgstr "Er wordt een sleutelbestand gebruikt om deze databank te openen."
-
-msgid "Select Key File"
-msgstr "Sleutelbestand kiezen"
-
-msgid "Enter the database master password"
-msgstr "Voer het hoofdwachtwoord in"
-
-msgid "Master Password"
-msgstr "Hoofdwachtwoord"
-
-msgid "Open"
-msgstr "Openen"
-
-msgid "Hide Password"
-msgstr "Wachtwoord verbergen"
-
-msgid "Show Password"
-msgstr "Wachtwoord tonen"
-
-msgid "Opening"
-msgstr "Bezig met openen…"
 
 msgid "Manual path set."
 msgstr "Stel de locatie handmatig in."
@@ -359,29 +332,6 @@ msgstr "2FA-codes"
 msgctxt "List of entries with tags"
 msgid "Tags"
 msgstr "Labels"
-
-msgctxt "Saved database searches"
-msgid "Saved Searches"
-msgstr "Opgeslagen zoekopdrachten"
-
-msgctxt "Password strength"
-msgid "Poor"
-msgstr "Erg zwak"
-
-msgctxt "Password strength"
-msgid "Weak"
-msgstr "Zwak"
-
-msgctxt "Password strength"
-msgid "Good"
-msgstr "Goed"
-
-msgctxt "Password strength"
-msgid "Excellent"
-msgstr "Uitstekend"
-
-#~ msgid "Notes copied to clipboard (30 secs)"
-#~ msgstr "De aantekeningen zijn gekopieerd naar het klembord (30 sec.)"
 
 #~ msgid ""
 #~ "Change settings based on your preferences. Any change to the settings "

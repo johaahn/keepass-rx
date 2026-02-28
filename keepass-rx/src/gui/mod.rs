@@ -2,16 +2,14 @@ use actix::prelude::*;
 use anyhow::{Result, anyhow};
 use colors::wash_out_by_blending;
 use gettextrs::pgettext;
-use log::{debug, info, warn};
 use qmeta_async::with_executor;
-use qmetaobject::{QMetaType, QStringList, QVariantMap, prelude::*};
+use qmetaobject::*;
 use secstr::SecUtf8;
 use std::fs::{create_dir_all, remove_dir_all};
 use std::path::Path;
 use std::str::FromStr;
 use unicase::UniCase;
 use uuid::Uuid;
-use zeroize::Zeroize;
 
 pub(crate) mod actor;
 pub(crate) mod colors;
@@ -142,7 +140,6 @@ pub enum RxViewMode {
     Templates,
     Totp,
     Tags,
-    SavedSearches,
 }
 
 fn view_mode_from_string(qval: &QString) -> RxViewMode {
@@ -151,7 +148,6 @@ fn view_mode_from_string(qval: &QString) -> RxViewMode {
         "Templates" => RxViewMode::Templates,
         "Totp" => RxViewMode::Totp,
         "Tags" => RxViewMode::Tags,
-        "SavedSearches" => RxViewMode::SavedSearches,
         _ => panic!("Invalid view mode: {}", qval),
     }
 }
@@ -162,7 +158,6 @@ fn view_mode_to_string(view_mode: &RxViewMode) -> QString {
         RxViewMode::Templates => "Templates",
         RxViewMode::Totp => "Totp",
         RxViewMode::Tags => "Tags",
-        RxViewMode::SavedSearches => "SavedSearches",
     }
     .into()
 }
@@ -199,7 +194,6 @@ pub struct KeepassRx {
     getSingleEntry: qt_method!(fn(&self, entry_uuid: QString)),
     getTotp: qt_method!(fn(&self, entry_uuid: QString)),
     getFieldValue: qt_method!(fn(&self, entry_uuid: QString, field_name: QString)),
-    revealFieldValue: qt_method!(fn(&self, entry_uuid: QString, field_name: QString)),
 
     // easy-open management
     storeMasterPassword: qt_method!(fn(&self, master_password: QString)),
@@ -249,17 +243,13 @@ impl KeepassRx {
         }
     }
 
-    fn actor_ref(&self) -> &Addr<KeepassRxActor> {
-        self.actor.as_ref().expect("Actor not initialized")
-    }
-
     pub fn getViewMode(&self) -> RxViewMode {
         self.viewMode
     }
 
     #[with_executor]
     pub fn setViewMode(&mut self, mode: RxViewMode) {
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
         actix::spawn(actor.send(SetViewMode(mode)));
     }
 
@@ -341,10 +331,10 @@ impl KeepassRx {
                 return Err(anyhow!("Trying to copy source to the same destination"));
             }
 
-            debug!("Making directory: {}", dest_dir.display());
+            println!("Making directory: {}", dest_dir.display());
             create_dir_all(&dest_dir)?;
 
-            info!(
+            println!(
                 "Copying database from {} to {}",
                 source.display(),
                 dest.display()
@@ -353,7 +343,7 @@ impl KeepassRx {
             // Nuke db.kdbx if it exists and is a directory for some
             // reason. Can result from corruption or weirdness.
             if dest.exists() && dest.is_dir() {
-                warn!(
+                println!(
                     "{} is a directory for some reason. Removing.",
                     dest.display()
                 );
@@ -361,7 +351,7 @@ impl KeepassRx {
             }
 
             let bytes_copied = std::fs::copy(&source, &dest)?;
-            info!("Copied {} bytes", bytes_copied);
+            println!("Copied {} bytes", bytes_copied);
             Ok(db_name)
         };
 
@@ -373,31 +363,31 @@ impl KeepassRx {
 
     #[with_executor]
     pub fn getMetadata(&self) {
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
         actix::spawn(actor.send(GetMetadata));
     }
 
     #[with_executor]
     pub fn closeDatabase(&mut self) {
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
         actix::spawn(actor.send(CloseDatabase));
     }
 
     #[with_executor]
     pub fn deleteDatabase(&self, db_name: String) {
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
         actix::spawn(actor.send(DeleteDatabase { db_name }));
     }
 
     #[with_executor]
     pub fn getRootContainer(&self) {
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
         actix::spawn(actor.send(GetContainer::root()));
     }
 
     #[with_executor]
     pub fn getContainer(&self, group_uuid: QString) {
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
         let maybe_uuid = Uuid::from_str(&group_uuid.to_string());
 
         match maybe_uuid {
@@ -416,7 +406,7 @@ impl KeepassRx {
             _ => None,
         };
 
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
 
         match maybe_uuid {
             Ok(group_uuid) => {
@@ -428,7 +418,7 @@ impl KeepassRx {
 
     #[with_executor]
     pub fn getSingleEntry(&self, entry_uuid: QString) {
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
         let maybe_uuid = Uuid::from_str(&entry_uuid.to_string());
 
         match maybe_uuid {
@@ -442,64 +432,54 @@ impl KeepassRx {
     #[with_executor]
     pub fn getTotp(&self, entry_uuid: QString) {
         let entry_uuid = entry_uuid.to_string();
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
         actix::spawn(actor.send(GetTotp { entry_uuid }));
     }
 
     #[with_executor]
     pub fn storeMasterPassword(&self, master_password: QString) {
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
         actix::spawn(actor.send(StoreMasterPassword {
-            master_password: qstring_to_secure_utf8(&master_password),
+            master_password: SecUtf8::from(master_password.to_string()),
         }));
     }
 
     #[with_executor]
     pub fn encryptMasterPassword(&self) {
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
         actix::spawn(actor.send(EncryptMasterPassword));
     }
 
     #[with_executor]
     pub fn decryptMasterPassword(&self, short_password: QString) {
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
         actix::spawn(actor.send(DecryptMasterPassword {
-            short_password: qstring_to_secure_utf8(&short_password),
+            short_password: SecUtf8::from(short_password.to_string()),
         }));
     }
 
     #[with_executor]
     pub fn invalidateMasterPassword(&self) {
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
         actix::spawn(actor.send(InvalidateMasterPassword));
     }
 
     #[with_executor]
     pub fn checkLockingStatus(&self) {
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
         actix::spawn(actor.send(CheckLockingStatus));
     }
 
     #[with_executor]
     pub fn getFieldValue(&self, entry_uuid: QString, field_name: QString) {
-        self.request_field_value(entry_uuid, field_name, "copy");
-    }
-
-    #[with_executor]
-    pub fn revealFieldValue(&self, entry_uuid: QString, field_name: QString) {
-        self.request_field_value(entry_uuid, field_name, "reveal");
-    }
-
-    fn request_field_value(&self, entry_uuid: QString, field_name: QString, purpose: &str) {
         let maybe_uuid = Uuid::from_str(&entry_uuid.to_string());
-        let actor = self.actor_ref();
+        let actor = self.actor.clone().expect("Actor not initialized");
 
         match maybe_uuid {
             Ok(entry_uuid) => {
                 actix::spawn(actor.send(GetFieldValue {
                     entry_uuid,
                     field_name: field_name.into(),
-                    purpose: purpose.to_string(),
                 }));
             }
             Err(err) => self.errorReceived(format!("{}", err)),
@@ -512,23 +492,4 @@ impl KeepassRx {
             .expect("No color generated")
             .into()
     }
-}
-
-fn qstring_to_secure_utf8(value: &QString) -> SecUtf8 {
-    let utf16 = value.to_slice();
-    let mut utf8 = Vec::with_capacity(utf16.len());
-
-    for ch in char::decode_utf16(utf16.iter().copied()) {
-        let ch = ch.unwrap_or(char::REPLACEMENT_CHARACTER);
-        let mut buf = [0u8; 4];
-        utf8.extend_from_slice(ch.encode_utf8(&mut buf).as_bytes());
-    }
-
-    let secure = std::str::from_utf8(&utf8)
-        .ok()
-        .and_then(|s| SecUtf8::from_str(s).ok())
-        .unwrap_or_else(|| SecUtf8::from(""));
-
-    utf8.zeroize();
-    secure
 }

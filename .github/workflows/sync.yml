@@ -1,0 +1,35 @@
+name: Sync and Merge git.agnos.is
+on:
+  schedule:
+    - cron: '0 * * * *' # Runs every hour
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:          
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.SYNC_TOKEN }}
+          
+      - name: Sync and merge
+        run: |
+          git config --global user.email "johaahn@gmail.com"
+          git config --global user.name "GitHub Actions"
+          git remote add external https://git.agnos.is/projectmoon/keepass-rx
+          git fetch external
+          # git checkout master
+          # git merge external/master --allow-unrelated-histories --no-edit
+             # Merge all other branches from the external repository
+          for branch in $(git branch -r | grep external/ | grep -v HEAD ); do
+            local_branch=${branch#external/}
+            echo Checking Out "$local_branch"
+            git checkout -b "$local_branch" "$branch" 2>/dev/null || git checkout "$local_branch"
+            #git merge "$branch" --allow-unrelated-histories --no-edit
+            echo Rebasing "$branch"
+            git rebase "$branch" -X theirs
+          done
+          git remote set-url origin https://x-access-token:${{ secrets.SYNC_TOKEN }}@github.com/johaahn/keepass-rx.git
+          git push -f origin --all
+          git push -f origin --tags

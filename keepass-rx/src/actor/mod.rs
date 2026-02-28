@@ -17,7 +17,6 @@
  * <https://www.gnu.org/licenses/>.
  */
 use actix::prelude::*;
-use log::warn;
 use qmeta_async::with_executor;
 use qmetaobject::QObject;
 use qmetaobject::QPointer;
@@ -44,8 +43,8 @@ pub struct ModelContext<T: QObject + 'static> {
 
 #[allow(dead_code)]
 impl<T: QObject + 'static> ModelContext<T> {
-    pub fn addr(&self) -> &Addr<ConnectedModelActor<T>> {
-        &self.addr
+    pub fn addr(&self) -> Addr<ConnectedModelActor<T>> {
+        self.addr.clone()
     }
 }
 
@@ -83,7 +82,7 @@ where
                 // when the model got dropped, because the actor's
                 // only strong reference is contained in the
                 // ObservingModel.
-                warn!("Model got dropped, stopping actor execution.");
+                println!("Model got dropped, stopping actor execution.");
                 // XXX What is the difference between stop and terminate?
                 ctx.stop();
             }

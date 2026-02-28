@@ -1,13 +1,11 @@
-mod entropy;
 pub(crate) mod icons;
-mod kpxc_search;
 mod rx_container;
 mod rx_db;
 mod rx_entry;
 mod rx_group;
 mod rx_loader;
 mod search;
-pub mod virtual_hierarchy;
+pub(crate) mod virtual_hierarchy;
 mod zeroable_db;
 
 #[cfg(feature = "gui")]

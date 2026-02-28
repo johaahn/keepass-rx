@@ -1,4 +1,4 @@
-use keepass::db::{Group, GroupMut, Icon};
+use keepass::db::Group;
 use uuid::Uuid;
 use zeroize::{Zeroize, ZeroizeOnDrop};
 
@@ -26,20 +26,20 @@ pub struct RxGroup {
 }
 
 impl RxGroup {
-    pub fn new<'db>(
-        mut group: GroupMut<'db>,
+    pub fn new(
+        group: &mut Group,
         subgroups: Vec<Uuid>,
         entries: Vec<Uuid>,
         parent: Option<Uuid>,
     ) -> Self {
-        let icon = match group.icon() {
-            Some(Icon::BuiltIn(builtin_id)) => RxIcon::Builtin(*builtin_id),
-            Some(Icon::Custom(_custom_icon_id)) => RxIcon::None, // TODO support custom group icons
+        let icon = match (group.custom_icon_uuid, group.icon_id) {
+            (Some(_custom_id), _) => RxIcon::None, // TODO support custom group icons
+            (_, Some(buitin_id)) => RxIcon::Builtin(buitin_id),
             _ => RxIcon::None,
         };
 
         Self {
-            uuid: group.id().uuid(),
+            uuid: group.uuid,
             name: std::mem::take(&mut group.name),
             subgroups: subgroups,
             entries: entries,
@@ -65,10 +65,10 @@ pub struct RxTemplate {
 #[derive(Zeroize, ZeroizeOnDrop, Default, Clone)]
 pub struct RxTag {
     #[zeroize(skip)]
-    pub uuid: Uuid,
-    pub name: String,
+    pub(crate) uuid: Uuid,
+    pub(crate) name: String,
     #[zeroize(skip)]
-    pub entry_uuids: Vec<Uuid>,
+    pub(crate) entry_uuids: Vec<Uuid>,
 }
 
 impl RxTag {
@@ -77,28 +77,6 @@ impl RxTag {
             uuid: Uuid::new_v4(), // TODO check for collision?
             name: name,
             entry_uuids: entry_uuids,
-        }
-    }
-}
-
-#[derive(Zeroize, ZeroizeOnDrop, Default, Clone)]
-pub struct RxSavedSearch {
-    #[zeroize(skip)]
-    pub uuid: Uuid,
-    pub name: String,
-    pub query: String,
-    #[zeroize(skip)]
-    pub entry_uuids: Vec<Uuid>,
-}
-
-impl RxSavedSearch {
-    pub fn new(name: String, query: String, entry_uuids: Vec<Uuid>) -> Self {
-        let stable_id = format!("{name}\n{query}");
-        Self {
-            uuid: Uuid::new_v5(&Uuid::NAMESPACE_OID, stable_id.as_bytes()),
-            name,
-            query,
-            entry_uuids,
         }
     }
 }

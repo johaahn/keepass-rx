@@ -226,19 +226,21 @@ fn password_term_matches(token: &QueryToken, password: &[u8]) -> bool {
 }
 
 fn entry_matches(db: &RxDatabase, entry: &RxEntry, tokens: &[QueryToken]) -> bool {
-    tokens.iter().all(|token| match token.operator.as_deref() {
-        Some(op) if is_password_operator(op) => entry
-            .password()
-            .and_then(|value| value.value_secure())
-            .as_deref()
-            .is_some_and(|password| password_term_matches(token, password)),
-        Some(op) => operator_field(entry, op, db)
-            .iter()
-            .any(|field| term_matches(token, field)),
-        None => entry_default_fields(entry, db)
-            .iter()
-            .any(|field| term_matches(token, field)),
-    })
+    tokens
+        .iter()
+        .all(|token| match token.operator.as_deref() {
+            Some(op) if is_password_operator(op) => entry
+                .password()
+                .and_then(|value| value.value_secure())
+                .as_deref()
+                .is_some_and(|password| password_term_matches(token, password)),
+            Some(op) => operator_field(entry, op, db)
+                .iter()
+                .any(|field| term_matches(token, field)),
+            None => entry_default_fields(entry, db)
+                .iter()
+                .any(|field| term_matches(token, field)),
+        })
 }
 
 pub fn evaluate_saved_search(db: &RxDatabase, query: &str) -> Vec<Uuid> {
@@ -261,6 +263,7 @@ pub fn evaluate_saved_search(db: &RxDatabase, query: &str) -> Vec<Uuid> {
 
 #[cfg(test)]
 mod tests {
+    use keepass::db::Node;
     use keyring::set_default_credential_builder;
     use zeroize::Zeroizing;
 
@@ -271,54 +274,48 @@ mod tests {
     fn test_db() -> RxDatabase {
         set_default_credential_builder(keyring::mock::default_credential_builder());
 
-        let mut db = keepass::db::Database::new();
-        let child_id = {
-            let mut root = db.root_mut();
-            root.name = "Root".into();
+        let mut db = keepass::db::Database::new(Default::default());
+        let mut root = keepass::db::Group::new("Root");
+        let mut child = keepass::db::Group::new("Email");
 
-            root.add_group().edit(|group| {
-                group.name = "Email".into();
-            }).id()
-        };
+        let mut entry1 = keepass::db::Entry::new();
+        entry1.fields.insert(
+            "Title".into(),
+            keepass::db::Value::Unprotected("Gmail".into()),
+        );
+        entry1.fields.insert(
+            "UserName".into(),
+            keepass::db::Value::Unprotected("alice".into()),
+        );
+        entry1.fields.insert(
+            "URL".into(),
+            keepass::db::Value::Unprotected("gmail.com".into()),
+        );
+        entry1.fields.insert(
+            "Password".into(),
+            keepass::db::Value::Unprotected("Alic3Pass!".into()),
+        );
 
-        {
-            let mut root = db.root_mut();
-            root.add_entry().edit(|entry| {
-                entry.fields.insert(
-                    "Title".into(),
-                    keepass::db::Value::Unprotected("GitLab".into()),
-                );
-                entry.fields.insert(
-                    "UserName".into(),
-                    keepass::db::Value::Unprotected("bob".into()),
-                );
-                entry.fields.insert(
-                    "Password".into(),
-                    keepass::db::Value::Unprotected("BobSecret1".into()),
-                );
-            });
-        }
+        let mut entry2 = keepass::db::Entry::new();
+        entry2.fields.insert(
+            "Title".into(),
+            keepass::db::Value::Unprotected("GitLab".into()),
+        );
+        entry2.fields.insert(
+            "UserName".into(),
+            keepass::db::Value::Unprotected("bob".into()),
+        );
+        entry2.fields.insert(
+            "Password".into(),
+            keepass::db::Value::Unprotected("BobSecret1".into()),
+        );
 
-        db.group_mut(child_id).unwrap().add_entry().edit(|entry| {
-            entry.fields.insert(
-                "Title".into(),
-                keepass::db::Value::Unprotected("Gmail".into()),
-            );
-            entry.fields.insert(
-                "UserName".into(),
-                keepass::db::Value::Unprotected("alice".into()),
-            );
-            entry.fields.insert(
-                "URL".into(),
-                keepass::db::Value::Unprotected("gmail.com".into()),
-            );
-            entry.fields.insert(
-                "Password".into(),
-                keepass::db::Value::Unprotected("Alic3Pass!".into()),
-            );
-        });
+        child.add_child(Node::Entry(entry1));
+        root.add_child(Node::Group(child));
+        root.add_child(Node::Entry(entry2));
+        db.root = root;
 
-        RxDatabase::new(Zeroizing::new(ZeroableDatabase(db))).expect("load rx db")
+        RxDatabase::new(Zeroizing::new(ZeroableDatabase(db)))
     }
 
     #[test]

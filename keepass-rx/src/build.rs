@@ -129,24 +129,8 @@ fn output_kpxc_icons() {
     fs::write(Path::new(&out_dir).join("kpxc_icons.rs"), out).unwrap();
 }
 
-fn compile_kpxc_zxcvbn() {
-    cc::Build::new()
-        .file("src/zxcvbn/zxcvbn.c")
-        .include("src/zxcvbn")
-        .compile("kpxc_zxcvbn");
-}
-
 /// Generate gettext translation files
 fn update_language_files() {
-    // INSTALL_DIR is provided by clickable (the Ubuntu Touch build). Outside of
-    // clickable (e.g. the Sailfish OS / mb2 build, or a plain `cargo build`) it
-    // is absent; in that case the RPM's %install step is responsible for
-    // compiling and installing the .mo files, so skip generation here rather
-    // than panicking or mutating the source .po tree.
-    if env::var("INSTALL_DIR").is_err() {
-        return;
-    }
-
     let pot_file = "../po/keepassrx.projectmoon.pot";
     let source_files = source_files();
 
@@ -157,7 +141,6 @@ fn update_language_files() {
             "--qt",
             "--keyword=tr",
             "--keyword=tr:1,2",
-            "--keyword=ctr:1c,2",
             "--keyword=QT_TR_NOOP",
             "--keyword=QT_TR_NOOP:1,2",
             "--add-comments=i18n",
@@ -210,13 +193,6 @@ fn source_files() -> Vec<PathBuf> {
     let mut files = vec![];
     files.append(&mut qml);
     files.append(&mut src);
-
-    // The Sailfish OS QML tree translates via the `Tr.tr`/`Tr.ctr` gettext
-    // bridge, so its strings must be extracted too.
-    if PathBuf::from("qml-sfos").is_dir() {
-        files.append(&mut walk_dir(PathBuf::from("qml-sfos"), "qml"));
-    }
-
     files
 }
 
@@ -254,7 +230,6 @@ fn walk_dir(dir: PathBuf, ext: &str) -> Vec<PathBuf> {
 fn main() {
     generate_licenses_rs().expect("Unable to generate licenses");
     output_kpxc_icons();
-    compile_kpxc_zxcvbn();
     update_language_files();
 
     let qmake_cmd = qmake_call();
@@ -262,20 +237,10 @@ fn main() {
 
     let qt_include_path = qmake_query(&qmake_cmd, &args, "QT_INSTALL_HEADERS");
     let qt_library_path = qmake_query(&qmake_cmd, &args, "QT_INSTALL_LIBS");
-    let qt_include_path = qt_include_path.trim();
 
-    let mut cfg = cpp_build::Config::new();
-    cfg.include(qt_include_path);
-
-    // Sailfish OS ships an old Qt 5.6. Point the compiler at QtCore explicitly
-    // and silence -Wdeprecated-copy noise that its headers trigger (matches
-    // the Whisperfish setup).
-    if cfg!(feature = "sailfish") {
-        cfg.include(format!("{}/QtCore", qt_include_path))
-            .flag("-Wno-deprecated-copy");
-    }
-
-    cfg.build("src/main.rs");
+    cpp_build::Config::new()
+        .include(qt_include_path.trim())
+        .build("src/main.rs");
 
     let macos_lib_search = if cfg!(target_os = "macos") {
         "=framework"
@@ -288,35 +253,22 @@ fn main() {
     println!("cargo:rerun-if-changed=src/main.rs");
     println!("cargo:rerun-if-changed=src/rx/icons.rs");
     println!("cargo:rerun-if-changed=src/rx/virtual_hierarchy.rs");
-    println!("cargo:rerun-if-changed=src/zxcvbn/zxcvbn.c");
-    println!("cargo:rerun-if-changed=src/zxcvbn/zxcvbn.h");
     println!("cargo:rerun-if-changed=../about.hbs");
     println!("cargo:rerun-if-changed=qml/");
 
     println!("cargo:rustc-link-search{macos_lib_search}={qt_library_path}");
-
-    // Qt modules needed on every platform.
+    println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}Widgets");
     println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}Gui");
     println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}Core");
     println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}Quick");
     println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}Qml");
-
-    // Ubuntu Touch (Lomiri, Qt 5.15) additionally uses Widgets, the
-    // QtQuickControls2 style engine, and WebEngine. None of these exist on
-    // Sailfish OS' Qt 5.6, and the Silica UI does not need them.
-    if !cfg!(feature = "sailfish") {
-        println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}Widgets");
-        println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}QuickControls2");
-        println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}WebEngine");
-    }
+    println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}QuickControls2");
+    println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}WebEngine");
 }
 
 #[cfg(not(feature = "gui"))]
 fn main() {
     output_kpxc_icons();
-    compile_kpxc_zxcvbn();
     generate_licenses_rs().expect("Unable to generate licenses");
-    println!("cargo:rerun-if-changed=src/zxcvbn/zxcvbn.c");
-    println!("cargo:rerun-if-changed=src/zxcvbn/zxcvbn.h");
     println!("cargo:rerun-if-changed=../about.hbs");
 }

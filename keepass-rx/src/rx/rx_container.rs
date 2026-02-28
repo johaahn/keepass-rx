@@ -2,38 +2,14 @@
 /// child entries. A container can have any number of child containers
 /// (of the same type) and any number of RxEntry objects.
 use indexmap::{IndexMap, IndexSet};
-use std::{borrow::Cow, cmp::Ordering, rc::Rc};
+use std::{cmp::Ordering, ops::Deref, rc::Rc};
 use unicase::UniCase;
 use uuid::Uuid;
 
 use super::{
-    RxDatabase, RxEntry, RxGroup, RxSavedSearch, RxSearchType, RxTag, RxTemplate,
-    search::search_contained_ref,
+    RxDatabase, RxEntry, RxGroup, RxSearchType, RxTag, RxTemplate,
+    search::{CaseInsensitiveSearch, Search, search_contained_ref},
 };
-
-fn contained_sort_name(item: &RxContainedRef<'_>) -> String {
-    UniCase::new(item.name().into_owned()).to_folded_case()
-}
-
-fn compare_contained_refs(this: &RxContainedRef<'_>, that: &RxContainedRef<'_>) -> Ordering {
-    this.variant_rank()
-        .cmp(&that.variant_rank())
-        .then_with(|| contained_sort_name(this).cmp(&contained_sort_name(that)))
-        .then_with(|| this.uuid().cmp(&that.uuid()))
-}
-
-pub(crate) fn sort_contained_refs(items: &mut [RxContainedRef<'_>]) {
-    items.sort_by(compare_contained_refs);
-}
-
-pub(crate) fn sort_containers(items: &mut [RxContainer]) {
-    items.sort_by(|this, that| match (this.contained_ref(), that.contained_ref()) {
-        (Some(this), Some(that)) => compare_contained_refs(&this, &that),
-        (Some(_), None) => Ordering::Less,
-        (None, Some(_)) => Ordering::Greater,
-        (None, None) => this.uuid().cmp(&that.uuid()),
-    });
-}
 
 #[derive(Clone)]
 #[allow(dead_code)]
@@ -50,15 +26,12 @@ impl RxRoot {
 
     pub fn root_name(&self) -> String {
         self.root_container
-            .contained_ref()
-            .map(|r| r.name().into_owned())
+            .get_ref()
+            .map(|r| r.name())
             .unwrap_or_else(|| "No Name".to_string())
     }
 
     pub fn virtual_root(name: &str, children: Vec<RxContainer>) -> Self {
-        let mut children = children;
-        sort_containers(&mut children);
-
         let all_child_uuids: IndexSet<Uuid> = children
             .iter()
             .flat_map(|child| child.child_uuids_recursive())
@@ -84,15 +57,6 @@ pub trait IntoContainer {
     fn into_container(&self, db: &RxDatabase) -> RxContainer;
 }
 
-impl<T> IntoContainer for &T
-where
-    T: IntoContainer,
-{
-    fn into_container(&self, db: &RxDatabase) -> RxContainer {
-        (*self).into_container(db)
-    }
-}
-
 /// What exactly this container points to. The actual resource, as
 /// opposed to its function (e.g. a Grouping can be a Group or a
 /// Template or a Tag).
@@ -102,7 +66,6 @@ pub enum RxContainedType {
     Group,
     Template,
     Tag,
-    SavedSearch,
     VirtualRoot,
 }
 
@@ -138,21 +101,15 @@ impl RxContainer {
         self.item.children()
     }
 
-    pub fn contained_ref(&self) -> Option<RxContainedRef<'_>> {
+    pub fn get_ref(&self) -> Option<RxContainedRef> {
         match self.contained_type {
-            RxContainedType::Group
-            | RxContainedType::Template
-            | RxContainedType::Tag
-            | RxContainedType::SavedSearch => {
+            RxContainedType::Group | RxContainedType::Template | RxContainedType::Tag => {
                 self.item().grouping().and_then(|g| g.contained_ref())
             }
-            RxContainedType::Entry => self
-                .item()
-                .entry_ref()
-                .map(|entry| RxContainedRef::Entry(Cow::Borrowed(entry))),
+            RxContainedType::Entry => self.item().entry().map(|e| RxContainedRef::Entry(e)),
             RxContainedType::VirtualRoot => match self.item() {
                 RxContainerItem::VirtualRoot(name, _) => {
-                    Some(RxContainedRef::VirtualRoot(Cow::Borrowed(name.as_str())))
+                    Some(RxContainedRef::VirtualRoot(name.clone()))
                 }
                 _ => None,
             },
@@ -208,28 +165,32 @@ impl RxContainer {
         &self,
         search_type: RxSearchType,
         search_term: Option<&str>,
-    ) -> Vec<RxContainedRef<'_>> {
+    ) -> Vec<RxContainedRef> {
         let search_term = search_term.map(|term| UniCase::new(term).to_folded_case());
-        let mut results = self
-            .children()
-            .iter()
-            .filter_map(|child| {
-                let contained_ref = child.contained_ref()?;
-                let is_match = search_term.as_ref().is_none_or(|term| {
-                    search_contained_ref(&contained_ref, search_type, term)
-                });
-                is_match.then_some(contained_ref)
-            })
-            .collect::<Vec<_>>();
+        let immediate_children = self.children();
 
-        sort_contained_refs(&mut results);
-        results
+        immediate_children
+            .into_iter()
+            .map(|child| {
+                child.get_ref().and_then(|contained_ref| {
+                    if let Some(term) = &search_term {
+                        match search_contained_ref(&contained_ref, search_type, term) {
+                            true => Some(contained_ref),
+                            false => None,
+                        }
+                    } else {
+                        Some(contained_ref)
+                    }
+                })
+            })
+            .flatten()
+            .collect::<Vec<_>>()
     }
 
-    pub fn child_groupings_immedate(&self) -> Vec<RxContainedRef<'_>> {
+    pub fn child_groupings_immedate(&self) -> Vec<RxContainedRef> {
         self.child_groupings()
             .into_iter()
-            .filter_map(|child| child.contained_ref())
+            .flat_map(|child| child.get_ref())
             .collect()
     }
 
@@ -238,7 +199,7 @@ impl RxContainer {
         search_type: RxSearchType,
         container_uuid: Uuid,
         search_term: Option<&str>,
-    ) -> Vec<RxContainedRef<'_>> {
+    ) -> Vec<RxContainedRef> {
         let search_term = search_term.map(|term| UniCase::new(term).to_folded_case());
         let container = self.get_container_recursive(container_uuid);
 
@@ -249,19 +210,21 @@ impl RxContainer {
         let filtered_by_search = containers_in_tree.map(|containers_iter| {
             containers_iter
                 .filter_map(|container| {
-                    let contained_ref = container.contained_ref()?;
-                    let is_match = search_term.as_ref().is_none_or(|term| {
-                        search_contained_ref(&contained_ref, search_type, term)
-                    });
-
-                    is_match.then_some(contained_ref)
+                    container.get_ref().and_then(|contained_ref| {
+                        if let Some(term) = &search_term {
+                            match search_contained_ref(&contained_ref, search_type, term) {
+                                true => Some(contained_ref),
+                                false => None,
+                            }
+                        } else {
+                            Some(contained_ref)
+                        }
+                    })
                 })
                 .collect::<Vec<_>>()
         });
 
-        let mut results = filtered_by_search.unwrap_or_default();
-        sort_contained_refs(&mut results);
-        results
+        filtered_by_search.unwrap_or_default()
     }
 }
 
@@ -299,13 +262,6 @@ impl RxContainerItem {
         }
     }
 
-    pub fn entry_ref(&self) -> Option<&Rc<RxEntry>> {
-        match self {
-            Self::Entry(entry) => Some(entry),
-            _ => None,
-        }
-    }
-
     pub fn children(&self) -> &[RxContainer] {
         match self {
             Self::Grouping(grouping) => grouping.children.as_slice(),
@@ -317,19 +273,18 @@ impl RxContainerItem {
 
 impl From<Rc<RxEntry>> for RxContainerItem {
     fn from(value: Rc<RxEntry>) -> Self {
-        Self::Entry(value)
+        Self::Entry(value.clone())
     }
 }
 
 impl IntoContainer for RxTag {
     fn into_container(&self, db: &RxDatabase) -> RxContainer {
-        let mut entries: Vec<_> = self
+        let entries: Vec<_> = self
             .entry_uuids
             .as_slice()
             .into_iter()
             .flat_map(|id| db.get_entry(*id).map(|entry| RxContainer::from(entry, db)))
             .collect();
-        sort_containers(&mut entries);
 
         RxContainer {
             is_root: false,
@@ -337,27 +292,6 @@ impl IntoContainer for RxTag {
             item: RxContainerItem::Grouping(RxContainerGrouping {
                 children: entries,
                 grouping: RxGrouping::Tag(self.clone()),
-            }),
-        }
-    }
-}
-
-impl IntoContainer for RxSavedSearch {
-    fn into_container(&self, db: &RxDatabase) -> RxContainer {
-        let mut entries: Vec<_> = self
-            .entry_uuids
-            .as_slice()
-            .into_iter()
-            .flat_map(|id| db.get_entry(*id).map(|entry| RxContainer::from(entry, db)))
-            .collect();
-        sort_containers(&mut entries);
-
-        RxContainer {
-            is_root: false,
-            contained_type: RxContainedType::SavedSearch,
-            item: RxContainerItem::Grouping(RxContainerGrouping {
-                children: entries,
-                grouping: RxGrouping::SavedSearch(self.clone()),
             }),
         }
     }
@@ -378,8 +312,6 @@ impl IntoContainer for Rc<RxGroup> {
             .into_iter()
             .flat_map(|id| db.get_entry(*id).map(|entry| RxContainer::from(entry, db)))
             .collect();
-        sort_containers(&mut subgroups);
-        sort_containers(&mut entries);
 
         let mut children = vec![];
         children.append(&mut subgroups);
@@ -398,12 +330,11 @@ impl IntoContainer for Rc<RxGroup> {
 
 impl IntoContainer for Rc<RxTemplate> {
     fn into_container(&self, db: &RxDatabase) -> RxContainer {
-        let mut children: Vec<_> = self
+        let children: Vec<_> = self
             .entry_uuids
             .iter()
             .flat_map(|id| db.get_entry(*id).map(|ent| RxContainer::from(ent, db)))
             .collect();
-        sort_containers(&mut children);
 
         RxContainer {
             is_root: false,
@@ -430,22 +361,16 @@ impl IntoContainer for Rc<RxEntry> {
 pub enum RxGrouping {
     Template(Rc<RxTemplate>),
     Tag(RxTag),
-    SavedSearch(RxSavedSearch),
     Group(Rc<RxGroup>),
     VirtualRoot,
 }
 
 impl RxGrouping {
-    pub fn contained_ref(&self) -> Option<RxContainedRef<'_>> {
+    pub fn contained_ref(&self) -> Option<RxContainedRef> {
         match &self {
-            RxGrouping::Group(group) => Some(RxContainedRef::Group(Cow::Borrowed(group))),
-            RxGrouping::Template(template) => {
-                Some(RxContainedRef::Template(Cow::Borrowed(template)))
-            }
-            RxGrouping::Tag(tag) => Some(RxContainedRef::Tag(Cow::Borrowed(tag))),
-            RxGrouping::SavedSearch(search) => {
-                Some(RxContainedRef::SavedSearch(Cow::Borrowed(search)))
-            }
+            RxGrouping::Group(group) => Some(RxContainedRef::Group(group.clone())),
+            RxGrouping::Template(template) => Some(RxContainedRef::Template(template.clone())),
+            RxGrouping::Tag(tag) => Some(RxContainedRef::Tag(tag.clone())),
             RxGrouping::VirtualRoot => None,
         }
     }
@@ -464,7 +389,6 @@ impl RxContainerGrouping {
             RxGrouping::Group(group) => group.uuid,
             RxGrouping::Template(template) => template.uuid,
             RxGrouping::Tag(tag) => tag.uuid,
-            RxGrouping::SavedSearch(search) => search.uuid,
             RxGrouping::VirtualRoot => Uuid::default(),
         }
     }
@@ -476,156 +400,75 @@ impl RxContainerGrouping {
 
 /// A reference to the actual thing in the database, as pointed to by the container.
 #[derive(Clone)]
-pub enum RxContainedRef<'a> {
-    VirtualRoot(Cow<'a, str>), // name
-    Group(Cow<'a, Rc<RxGroup>>),
-    Template(Cow<'a, Rc<RxTemplate>>),
-    Tag(Cow<'a, RxTag>),
-    SavedSearch(Cow<'a, RxSavedSearch>),
-    Entry(Cow<'a, Rc<RxEntry>>),
+pub enum RxContainedRef {
+    VirtualRoot(String), // name
+    Group(Rc<RxGroup>),
+    Template(Rc<RxTemplate>),
+    Tag(RxTag),
+    Entry(Rc<RxEntry>),
 }
 
-impl PartialEq for RxContainedRef<'_> {
+impl PartialEq for RxContainedRef {
     fn eq(&self, other: &Self) -> bool {
-        compare_contained_refs(self, other) == Ordering::Equal
+        self.variant_rank() == other.variant_rank()
     }
 }
 
-impl Eq for RxContainedRef<'_> {}
+impl Eq for RxContainedRef {}
 
-impl PartialOrd for RxContainedRef<'_> {
+impl PartialOrd for RxContainedRef {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(compare_contained_refs(self, other))
+        Some(self.variant_rank().cmp(&other.variant_rank()))
     }
 }
 
-impl Ord for RxContainedRef<'_> {
+impl Ord for RxContainedRef {
     fn cmp(&self, other: &Self) -> Ordering {
-        compare_contained_refs(self, other)
+        self.variant_rank().cmp(&other.variant_rank())
     }
 }
 
 #[allow(dead_code)]
-impl RxContainedRef<'_> {
+impl RxContainedRef {
     fn variant_rank(&self) -> u8 {
         match self {
             RxContainedRef::VirtualRoot(_) => 0,
             RxContainedRef::Group(_) => 1,
             RxContainedRef::Template(_) => 2,
             RxContainedRef::Tag(_) => 3,
-            RxContainedRef::SavedSearch(_) => 4,
-            RxContainedRef::Entry(_) => 5,
+            RxContainedRef::Entry(_) => 4,
         }
     }
 
     pub fn uuid(&self) -> Uuid {
         match self {
-            RxContainedRef::Entry(entry) => entry.as_ref().uuid,
-            RxContainedRef::Group(group) => group.as_ref().uuid,
-            RxContainedRef::Template(template) => template.as_ref().uuid,
-            RxContainedRef::Tag(tag) => tag.as_ref().uuid,
-            RxContainedRef::SavedSearch(search) => search.as_ref().uuid,
+            RxContainedRef::Entry(entry) => entry.uuid,
+            RxContainedRef::Group(group) => group.uuid,
+            RxContainedRef::Template(template) => template.uuid,
+            RxContainedRef::Tag(tag) => tag.uuid,
             RxContainedRef::VirtualRoot(_) => Uuid::default(),
         }
     }
 
-    pub fn name(&self) -> Cow<'_, str> {
+    pub fn name(&self) -> String {
         match self {
             RxContainedRef::Entry(entry) => entry
-                .as_ref()
                 .title()
-                .and_then(|t| t.value())
-                .map(|mut title| Cow::Owned(std::mem::take(&mut *title)))
-                .unwrap_or_else(|| Cow::Borrowed("Untitled")),
-            RxContainedRef::Group(group) => Cow::Borrowed(group.as_ref().name.as_str()),
-            RxContainedRef::Template(template) => {
-                Cow::Borrowed(template.as_ref().name.as_str())
-            }
-            RxContainedRef::Tag(tag) => Cow::Borrowed(tag.as_ref().name.as_str()),
-            RxContainedRef::SavedSearch(search) => {
-                Cow::Borrowed(search.as_ref().name.as_str())
-            }
-            RxContainedRef::VirtualRoot(name) => Cow::Borrowed(name.as_ref()),
+                .and_then(|t| t.value().as_deref().cloned())
+                .unwrap_or_else(|| "Untitled".to_string()),
+            RxContainedRef::Group(group) => group.name.clone(),
+            RxContainedRef::Template(template) => template.name.clone(),
+            RxContainedRef::Tag(tag) => tag.name.clone(),
+            RxContainedRef::VirtualRoot(name) => name.clone(),
         }
     }
 
     pub fn parent(&self) -> Option<Uuid> {
         match self {
-            RxContainedRef::Entry(entry) => Some(entry.as_ref().parent_group),
-            RxContainedRef::Group(group) => group.as_ref().parent,
-            RxContainedRef::Template(_)
-            | RxContainedRef::Tag(_)
-            | RxContainedRef::SavedSearch(_) => Some(Uuid::default()), //virtual root
+            RxContainedRef::Entry(entry) => Some(entry.parent_group),
+            RxContainedRef::Group(group) => group.parent,
+            RxContainedRef::Template(_) | RxContainedRef::Tag(_) => Some(Uuid::default()), //virtual root
             RxContainedRef::VirtualRoot(_) => None,
         }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use keepass::db::{Database as KeePassDatabase, fields};
-    use keyring::set_default_credential_builder;
-    use uuid::Uuid;
-    use zeroize::Zeroizing;
-
-    use crate::rx::{ZeroableDatabase, virtual_hierarchy::{DefaultView, VirtualHierarchy}};
-
-    use super::*;
-
-    fn title_for(item: &RxContainedRef<'_>) -> String {
-        item.name().into_owned()
-    }
-
-    #[test]
-    fn default_view_orders_groups_before_entries_and_names_case_insensitively() {
-        set_default_credential_builder(keyring::mock::default_credential_builder());
-
-        let mut db = KeePassDatabase::new();
-
-        {
-            let mut root = db.root_mut();
-
-            root.add_entry().edit(|entry| {
-                entry.set_unprotected(fields::TITLE, "zebra");
-            });
-            root.add_group().edit(|group| {
-                group.name = "bravo".into();
-            });
-            root.add_entry().edit(|entry| {
-                entry.set_unprotected(fields::TITLE, "Alpha".to_string());
-            });
-            root.add_group().edit(|group| {
-                group.name = "charlie".into();
-            });
-        }
-
-        let rx_db = RxDatabase::new(Zeroizing::new(ZeroableDatabase(db))).expect("load rx db");
-        let view = DefaultView::new(&rx_db);
-        let results = view.search(RxSearchType::CaseInsensitive, view.root().uuid(), None);
-        let names: Vec<_> = results.iter().map(title_for).collect();
-
-        assert_eq!(names, vec!["bravo", "charlie", "Alpha", "zebra"]);
-    }
-
-    #[test]
-    fn default_view_uses_uuid_tiebreaker_for_duplicate_names() {
-        set_default_credential_builder(keyring::mock::default_credential_builder());
-
-        let first = RxContainedRef::SavedSearch(Cow::Owned(RxSavedSearch::new(
-            "same".into(),
-            "query-b".into(),
-            vec![],
-        )));
-        let second = RxContainedRef::SavedSearch(Cow::Owned(RxSavedSearch::new(
-            "same".into(),
-            "query-a".into(),
-            vec![],
-        )));
-
-        let mut items = vec![first, second];
-        sort_contained_refs(&mut items);
-        let uuids: Vec<_> = items.iter().map(RxContainedRef::uuid).collect();
-
-        assert!(uuids[0] < uuids[1]);
     }
 }

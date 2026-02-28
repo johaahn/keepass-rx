@@ -90,18 +90,14 @@ Item {
 
         Label {
             text: detailField.title
-            textFormat: Text.RichText
             fontSize: "small"
             color: theme.palette.normal.backgroundTertiaryText
         }
 
         Label {
             width: parent.width
-            text: detailField.showVisibilityToggle
-                ? (detailField.isContentVisible
-                   ? detailField.visibleContent
-                   : detailField.hiddenContent)
-                : detailField.subtitle
+            text: detailField.showVisibilityToggle ? (detailField.isContentVisible ? detailField.visibleContent : detailField.hiddenContent) : detailField.subtitle
+            wrapMode: Text.WordWrap
             fontSize: "medium"
             elide: Text.ElideRight
         }

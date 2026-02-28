@@ -40,11 +40,8 @@ jobs:
       - name: Setup Cache
         uses: https://github.com/Swatinem/rust-cache@v2
 
-      - name: Build
-        run: clickable build --clean
-
       - name: Test
-        run: clickable test
+        run: cargo test --no-default-features
 
   build-amd64:
     needs: [test, license-check]
@@ -217,7 +214,7 @@ jobs:
           path: build/arm-linux-gnueabihf/app
 
       - name: Publish arm64
-        run: clickable publish --apikey=${{secrets.OPEN_STORE_API_KEY}} --arch arm64
+        run: clickable publish --apikey=${{secrets.OPEN_STORE_API_KEY}}  --arch arm64
 
       - name: Publish amd64
         run: clickable publish --apikey=${{secrets.OPEN_STORE_API_KEY}} --arch amd64

@@ -14,12 +14,6 @@ Page {
     property string errorMsg
     property double lastHeartbeat: 0
 
-    function clearSensitiveUiState() {
-        password.text = '';
-        showPassword = false;
-        keepPasswordFocus = true;
-    }
-
     function keyFileColor() {
         return uiDatabase.isKeyFileSet
             ? LomiriColors.orange
@@ -123,6 +117,7 @@ Page {
     }
 
     function openDatabase() {
+        console.log('[OpenDB] QML - Storing password');
         busy = true;
         showPassword = false;
         keepPasswordFocus = false;
@@ -138,30 +133,20 @@ Page {
         password.text = '';
     }
 
-    Component.onDestruction: clearSensitiveUiState()
-    onVisibleChanged: {
-        if (!visible) {
-            clearSensitiveUiState();
-        }
-    }
-
     Connections {
         target: keepassrx
 
         function onDatabaseOpened() {
             busy = false;
-            clearSensitiveUiState();
         }
 
         function onDatabaseOpenFailed(error) {
             busy = false;
             errorMsg = `Error: ${error}`;
-            clearSensitiveUiState();
         }
 
         function onLockingStatusReceived(status) {
             if (status === 'unset') {
-                clearSensitiveUiState();
                 resetApp();
             }
         }

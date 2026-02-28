@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 12:02+0000\n"
+"POT-Creation-Date: 2025-12-01 20:39+0000\n"
 "PO-Revision-Date: 2025-11-18 09:39+0000\n"
 "Last-Translator: projectmoon <projectmoon@agnos.is>\n"
 "Language-Team: Icelandic <https://hosted.weblate.org/projects/ubports/"
@@ -37,14 +37,51 @@ msgstr ""
 msgid "Tap to copy 2FA code"
 msgstr ""
 
+msgid "About"
+msgstr "Um appið"
+
+msgid ""
+"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
+"Touch. It is licensed under the GNU AGPL v3 license."
+msgstr ""
+
+msgid ""
+"The built-in KeePass icon images are licensed under a variety of licenses as "
+"detailed in assets/COPYING."
+msgstr ""
+
+msgid "Manual"
+msgstr ""
+
+msgid ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+
+msgid ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+
+msgid "Source Code"
+msgstr ""
+
+msgid ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
+msgstr ""
+
+msgid "Open Source Licenses"
+msgstr ""
+
+msgid "Website"
+msgstr ""
+
 msgid "Add Database"
 msgstr "Bæta við Gangnagrunn"
 
 msgid "Settings"
 msgstr "Stillingar"
-
-msgid "About"
-msgstr "Um appið"
 
 msgid "Loading last database."
 msgstr "Síðasti gagnagrunnurinn í vinnslu."
@@ -55,17 +92,8 @@ msgstr "Kjósa gagnagrunn"
 msgid "Tap + to import a database."
 msgstr "Ýtið á + til að flytja inn gagnagrunn."
 
-msgid "Last Modified: %1"
-msgstr ""
-
 msgid "It will only be removed from the app, not your device."
 msgstr "Það mun eyða frá appinu en ekki síminn þinn."
-
-msgid "Open Source Licenses"
-msgstr ""
-
-msgid "Website"
-msgstr ""
 
 msgid "Cancel Search"
 msgstr "Hætta leit"
@@ -127,12 +155,6 @@ msgstr ""
 msgid "Entries grouped by tag."
 msgstr ""
 
-msgid "Saved Searches"
-msgstr ""
-
-msgid "Entries matching search queries."
-msgstr ""
-
 msgid "Select View"
 msgstr ""
 
@@ -140,41 +162,6 @@ msgid "Select"
 msgstr ""
 
 msgid "Cancel"
-msgstr ""
-
-msgid "Change settings based on your preferences."
-msgstr ""
-
-msgid "Enable database locking"
-msgstr "Virkja læsingu gagnagrunnsins"
-
-msgid ""
-"Securely lock and unlock database with a short passcode. Requires restart to "
-"take effect."
-msgstr ""
-"Notaðu stutt lykilorð til að Loka og aflæsa gagnagrunnur með öryggi. Appið "
-"þarf að endurræsa."
-
-msgid "Enable Accents"
-msgstr "Virkja Lit"
-
-msgid ""
-"Set header color and name according to database settings. Compatible with "
-"KeePassXC."
-msgstr ""
-
-msgid "Show the \"Recycle bin\" group"
-msgstr "Sýna \"ruslið\" flokkur"
-
-msgid "This group contains all the deleted entries"
-msgstr ""
-
-msgid "Fuzzy Search"
-msgstr ""
-
-msgid ""
-"Use fuzzy search to find entries. If disabled, search only matches exact "
-"case insensitive text."
 msgstr ""
 
 msgid "Key Loaded"
@@ -213,6 +200,71 @@ msgstr ""
 msgid "Opening"
 msgstr "Í vinnslu"
 
+msgid "Change settings based on your preferences."
+msgstr ""
+
+msgid "Enable database locking"
+msgstr "Virkja læsingu gagnagrunnsins"
+
+msgid ""
+"Securely lock and unlock database with a short passcode. Requires restart to "
+"take effect."
+msgstr ""
+"Notaðu stutt lykilorð til að Loka og aflæsa gagnagrunnur með öryggi. Appið "
+"þarf að endurræsa."
+
+msgid "Enable Accents"
+msgstr "Virkja Lit"
+
+msgid ""
+"Set header color and name according to database settings. Compatible with "
+"KeePassXC."
+msgstr ""
+
+msgid "Show the \"Recycle bin\" group"
+msgstr "Sýna \"ruslið\" flokkur"
+
+msgid "This group contains all the deleted entries"
+msgstr ""
+
+msgid "Fuzzy Search"
+msgstr ""
+
+msgid ""
+"Use fuzzy search to find entries. If disabled, search only matches exact "
+"case insensitive text."
+msgstr ""
+
+msgid "%1 copied to clipboard (30 secs)"
+msgstr ""
+
+msgid "Notes"
+msgstr "Athugasemdir"
+
+msgid "Tap to copy"
+msgstr "Ýtið á til að afrita"
+
+msgid "Notes copied to clipboard (30 secs)"
+msgstr ""
+
+msgid "Main"
+msgstr ""
+
+msgid "Username"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "URL"
+msgstr ""
+
+msgid "Other Fields"
+msgstr ""
+
+msgid "KeePassRX: Clipboard cleared."
+msgstr ""
+
 msgid "Manual path set."
 msgstr "Handvirk leið staðsett."
 
@@ -238,130 +290,6 @@ msgstr "Læsa með öryggi"
 msgid "Database Not Opening?"
 msgstr "Er gagnagrunnur ekki að opna?"
 
-msgid "Entry Notes"
-msgstr ""
-
-msgid "Note copied to clipboard"
-msgstr ""
-
-msgid "Unable to export attachment."
-msgstr ""
-
-msgid "Entry Attachments"
-msgstr ""
-
-msgid "Export Attachment"
-msgstr ""
-
-msgid "Attachment Not Viewable"
-msgstr ""
-
-msgid "KeePassRX cannot view this %1 attachment, but it can be exported."
-msgstr ""
-
-msgid "KeePassRX cannot view this attachment, but it can be exported."
-msgstr ""
-
-msgid "Export"
-msgstr ""
-
-msgid "%1 ready to export."
-msgstr ""
-
-msgid "%1 exported."
-msgstr ""
-
-msgid "%1 bytes"
-msgstr ""
-
-msgid "Attachment"
-msgstr ""
-
-msgid "Password"
-msgstr ""
-
-msgid "%1 bits"
-msgstr ""
-
-msgid "Password (Entropy: %1)"
-msgstr ""
-
-msgid "%1 copied to clipboard (30 secs)"
-msgstr ""
-
-msgid "Attachments"
-msgstr ""
-
-msgid "Notes"
-msgstr "Athugasemdir"
-
-msgid "Tap to hide"
-msgstr ""
-
-msgid "Tap to reveal"
-msgstr ""
-
-msgid "Tap reveal to view notes"
-msgstr ""
-
-msgid "Main"
-msgstr ""
-
-msgid "Username"
-msgstr ""
-
-msgid "Loading…"
-msgstr ""
-
-msgid "URL"
-msgstr ""
-
-msgid "TOTP (Valid for %1)"
-msgstr ""
-
-msgid "TOTP"
-msgstr ""
-
-msgid "Other Fields"
-msgstr ""
-
-msgid "KeePassRX: Clipboard cleared."
-msgstr ""
-
-msgid "Version %1"
-msgstr ""
-
-msgid ""
-"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
-"Touch. It is licensed under the GNU AGPL v3 license."
-msgstr ""
-
-msgid ""
-"The built-in KeePass icon images are licensed under a variety of licenses as "
-"detailed in assets/COPYING."
-msgstr ""
-
-msgid "Manual"
-msgstr ""
-
-msgid ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-
-msgid ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-
-msgid "Source Code"
-msgstr ""
-
-msgid ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
-msgstr ""
-
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
@@ -373,22 +301,6 @@ msgstr ""
 
 msgctxt "A database managed by external file sync"
 msgid "Synced"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Poor"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Weak"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Good"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Excellent"
 msgstr ""
 
 msgid "All Templates"
@@ -405,13 +317,6 @@ msgstr ""
 msgctxt "List of entries with tags"
 msgid "Tags"
 msgstr ""
-
-msgctxt "Saved database searches"
-msgid "Saved Searches"
-msgstr ""
-
-#~ msgid "Tap to copy"
-#~ msgstr "Ýtið á til að afrita"
 
 #~ msgid ""
 #~ "Change settings based on your preferences. Any change to the settings "

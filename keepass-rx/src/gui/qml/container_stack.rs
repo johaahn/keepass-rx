@@ -1,13 +1,12 @@
 use std::str::FromStr;
 
 use actor_macro::observing_model;
-use log::{debug, warn};
 use qmetaobject::prelude::*;
 use uuid::Uuid;
 
 use crate::app::AppState;
 use crate::gui::RxViewMode;
-use crate::rx::virtual_hierarchy::{VirtualHierarchy, VirtualHierarchyType};
+use crate::rx::virtual_hierarchy::VirtualHierarchy;
 
 use crate::gui::instructions::get_instructions;
 
@@ -50,7 +49,7 @@ pub struct RxUiContainerStack {
 impl RxUiContainerStack {
     pub fn init_from_state(&mut self, _: &AppState) {}
 
-    pub fn init_from_view(&mut self, view: &VirtualHierarchyType) {
+    pub fn init_from_view(&mut self, view: &dyn VirtualHierarchy) {
         self.container_stack.clear();
         self.container_stack.push(view.root().uuid());
 
@@ -85,7 +84,7 @@ impl RxUiContainerStack {
         let at_root_single_check = || {
             let app_state = self._app.as_pinned().expect("No app state");
             let app_state = app_state.borrow();
-            let view = app_state.curr_view_ref().expect("No view?");
+            let view = app_state.curr_view().expect("No view?");
 
             self.container_stack.len() == 1
                 && view.root().uuid() == *self.container_stack.first().unwrap()
@@ -112,14 +111,14 @@ impl RxUiContainerStack {
         let new_uuid = Uuid::from_str(&container_uuid.to_string()).expect("Invalid UUID");
         let app_state = self._app.as_pinned().expect("No app state");
         let app_state = app_state.borrow();
-        let view = app_state.curr_view_ref().expect("No view?");
+        let view = app_state.curr_view().expect("No view?");
         let was_at_root = self.is_at_root();
 
         if let Some(container) = view.get(new_uuid) {
             self.container_stack.push(container.uuid());
             self.containerChanged(container_uuid);
 
-            let container_name = QString::from(container.name().as_ref());
+            let container_name = QString::from(container.name());
 
             if self.containerName != container_name {
                 self.containerName = container_name;
@@ -138,14 +137,14 @@ impl RxUiContainerStack {
                 }
             }
         } else {
-            warn!("Could not find container in view: {}", container_uuid);
+            println!("Could not find container in view: {}", container_uuid);
         }
     }
 
     pub fn popContainer(&mut self) {
         let app_state = self._app.as_pinned().expect("No app state");
         let app_state = app_state.borrow();
-        let view = app_state.curr_view_ref().expect("No view?");
+        let view = app_state.curr_view().expect("No view?");
         let was_at_root = self.is_at_root();
 
         if let Some(prev_container_uuid) = self.container_stack.pop() {
@@ -161,7 +160,8 @@ impl RxUiContainerStack {
 
             let container_name = QString::from(
                 new_container
-                    .map(|c| QString::from(c.name().as_ref()))
+                    .map(|c| c.name())
+                    .map(QString::from)
                     .unwrap_or_else(|| QString::from("Unknown Container".to_string())),
             );
 
@@ -182,7 +182,7 @@ impl RxUiContainerStack {
                 }
             }
         } else {
-            debug!("Can't go above root!");
+            println!("Can't go above root!");
         }
     }
 }

@@ -95,12 +95,11 @@ export PATH=/usr/bin:/bin:/usr/sbin:/sbin:$PATH
 # package is a BuildRequires.
 export GETTEXT_SYSTEM=1
 
-# Cap cargo's parallelism. Under parallel rustc, scratchbox2's fork/exec
-# emulation intermittently fails to reap child processes, leaving zombies and
-# deadlocking the build (most reproducible on the cross targets). Only a single
-# job reliably avoids the race, so build serially by default. Override with
-# --define "cargo_jobs N".
-export CARGO_BUILD_JOBS=%{?cargo_jobs}%{!?cargo_jobs:1}
+# Cap cargo's parallelism. At full parallelism, scratchbox2's fork/exec
+# emulation intermittently fails to reap rustc child processes, leaving zombies
+# and deadlocking the build (most reproducible on the cross targets). A low job
+# count avoids the race. Override with --define "cargo_jobs N".
+export CARGO_BUILD_JOBS=%{?cargo_jobs}%{!?cargo_jobs:4}
 
 export PKG_CONFIG_ALLOW_CROSS_i686_unknown_linux_gnu=1
 export PKG_CONFIG_ALLOW_CROSS_armv7_unknown_linux_gnueabihf=1

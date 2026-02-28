@@ -15,22 +15,14 @@ Page {
     property bool busy
     property string errorMsg
 
-    function formatLastModified(lastModified) {
-        return Qt.formatDateTime(
-            lastModified,
-            Qt.locale().dateTimeFormat(Locale.ShortFormat)
-        );
-    }
-
     Connections {
         target: keepassrx
 
-        function onDatabaseImported(databaseName, databaseType, lastModified) {
+        function onDatabaseImported(databaseName, databaseType) {
             dbListModel.append({
                 databaseName,
                 databaseType,
-                databaseTypeString: databaseType.toString(),
-                lastModified
+                databaseTypeString: databaseType.toString()
             });
         }
 
@@ -212,16 +204,18 @@ Page {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: header.bottom
-        anchors.bottom: parent.bottom
+        height: parent.height
+        width: parent.width
 
         LomiriListView {
-            id: dbList
-            anchors.fill: parent
-            clip: true
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            height: parent.height
+            width: parent.width
 
+            id: dbList
             model: ListModel {
                 id: dbListModel
-                dynamicRoles: true
             }
 
             delegate: ListItem {
@@ -230,9 +224,15 @@ Page {
                 ListItemLayout {
                     id: layout
                     title.text: databaseName
-                    subtitle.text: i18n.tr("Last Modified: %1").arg(
-                        formatLastModified(lastModified)
-                    )
+                    subtitle.text: databaseTypeString == 'Imported'
+                        ? i18n.ctr(
+                            "When an imported DB is loaded from the app's data folder",
+                            "Imported"
+                        )
+                        : i18n.ctr(
+                            "When DB is loaded via external managed folder (e.g. Syncthing)",
+                            "Synced"
+                        )
 
                     Icon {
                         name: "next"

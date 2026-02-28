@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 12:02+0000\n"
-"PO-Revision-Date: 2026-04-24 10:09+0000\n"
+"POT-Creation-Date: 2025-12-01 20:39+0000\n"
+"PO-Revision-Date: 2026-01-26 18:01+0000\n"
 "Last-Translator: Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/ubports/"
 "keepassrx/et/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17.1-dev\n"
+"X-Generator: Weblate 5.16-dev\n"
 
 msgid "Copy Username"
 msgstr "Kopeeri kasutajanimi"
@@ -37,14 +37,61 @@ msgstr "Vaata kirjet"
 msgid "Tap to copy 2FA code"
 msgstr "2FA-koodi kopeerimiseks puuduta"
 
+msgid "About"
+msgstr "Rakenduse teave"
+
+msgid ""
+"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
+"Touch. It is licensed under the GNU AGPL v3 license."
+msgstr ""
+"KeePassRX on Ubuntu Touchi jaoks mõeldud salasõnahaldur, mis kasutab KeePass-"
+"vormingus andmebaasi. Rakendus on litsentseeritud GNU AGPL v3 alusel."
+
+msgid ""
+"The built-in KeePass icon images are licensed under a variety of licenses as "
+"detailed in assets/COPYING."
+msgstr ""
+"Rakendusega kaasas olevad KeePassi ikoonifailid on litsentseeritud erinevate "
+"litsentside alusel, mis üksikasjalikult on kirjas failis „assets/COPYING“."
+
+msgid "Manual"
+msgstr "Juhend"
+
+msgid ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+
+msgid ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+"• Veeb: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+
+msgid "Source Code"
+msgstr "Lähtekood"
+
+msgid ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
+msgstr ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
+
+msgid "Open Source Licenses"
+msgstr "Avatud lähtekoodiga tarkvara litsentsid"
+
+msgid "Website"
+msgstr "Veebisait"
+
 msgid "Add Database"
 msgstr "Lisa andmebaas"
 
 msgid "Settings"
 msgstr "Seadistused"
-
-msgid "About"
-msgstr "Rakenduse teave"
 
 msgid "Loading last database."
 msgstr "Laadin viimast andmebaasi."
@@ -55,17 +102,8 @@ msgstr "Vali andmebaas"
 msgid "Tap + to import a database."
 msgstr "Andmebaasi importimiseks klõpsa + ikooni."
 
-msgid "Last Modified: %1"
-msgstr "Viimati muudetud: %1"
-
 msgid "It will only be removed from the app, not your device."
 msgstr "Ta eemaldatakse rakendusest, mitte aga seadmest."
-
-msgid "Open Source Licenses"
-msgstr "Avatud lähtekoodiga tarkvara litsentsid"
-
-msgid "Website"
-msgstr "Veebisait"
 
 msgid "Cancel Search"
 msgstr "Katkesta otsing"
@@ -127,12 +165,6 @@ msgstr "Sildid"
 msgid "Entries grouped by tag."
 msgstr "Sildi alusel rühmitatud kirjed."
 
-msgid "Saved Searches"
-msgstr "Salvestatud otsingud"
-
-msgid "Entries matching search queries."
-msgstr "Kirjed, mis vastavad otsingupäringutele."
-
 msgid "Select View"
 msgstr "Vali vaade"
 
@@ -141,6 +173,42 @@ msgstr "Vali"
 
 msgid "Cancel"
 msgstr "Katkesta"
+
+msgid "Key Loaded"
+msgstr "Võti on laaditud"
+
+msgid "Remove Key"
+msgstr "Eemalda võti"
+
+msgid "Use Key"
+msgstr "Kasuta võtit"
+
+msgid "Automatically detected a key file for this database."
+msgstr "Tuvastasin selle andmebaasi võtmefaili automaatselt."
+
+msgid "A key file will be used to open this database."
+msgstr "Võtmefail, mida kasutatakse selle andmebaasi avamiseks."
+
+msgid "Select Key File"
+msgstr "Vali võtmefail"
+
+msgid "Enter the database master password"
+msgstr "Sisesta andmebaasi üldsalasõna"
+
+msgid "Master Password"
+msgstr "Üldsalasõna"
+
+msgid "Open"
+msgstr "Avatud"
+
+msgid "Hide Password"
+msgstr "Peida salasõna"
+
+msgid "Show Password"
+msgstr "Näita salasõna"
+
+msgid "Opening"
+msgstr "Avamisel"
 
 msgid "Change settings based on your preferences."
 msgstr "Muuda seadistusi vastavalt oma eelistustele."
@@ -181,41 +249,35 @@ msgstr ""
 "Hägusa otsinguga saad kirjeid mugavamat otsida. Kui eelistus pole kasutusel, "
 "siis otsing otsib täpset tõstutundetut vastet."
 
-msgid "Key Loaded"
-msgstr "Võti on laaditud"
+msgid "%1 copied to clipboard (30 secs)"
+msgstr "%1 on kopeeritud lõikelauale (30 sek)"
 
-msgid "Remove Key"
-msgstr "Eemalda võti"
+msgid "Notes"
+msgstr "Märkmed"
 
-msgid "Use Key"
-msgstr "Kasuta võtit"
+msgid "Tap to copy"
+msgstr "Kopeerimiseks klõpsa"
 
-msgid "Automatically detected a key file for this database."
-msgstr "Tuvastasin selle andmebaasi võtmefaili automaatselt."
+msgid "Notes copied to clipboard (30 secs)"
+msgstr "Märkmed on kopeeritud lõikelauale (30-ks sekundiks)"
 
-msgid "A key file will be used to open this database."
-msgstr "Võtmefail, mida kasutatakse selle andmebaasi avamiseks."
+msgid "Main"
+msgstr "Peamine"
 
-msgid "Select Key File"
-msgstr "Vali võtmefail"
+msgid "Username"
+msgstr "Kasutajanimi"
 
-msgid "Enter the database master password"
-msgstr "Sisesta andmebaasi üldsalasõna"
+msgid "Password"
+msgstr "Salasõna"
 
-msgid "Master Password"
-msgstr "Üldsalasõna"
+msgid "URL"
+msgstr "Võrguaadress"
 
-msgid "Open"
-msgstr "Avatud"
+msgid "Other Fields"
+msgstr "Muud väljad"
 
-msgid "Hide Password"
-msgstr "Peida salasõna"
-
-msgid "Show Password"
-msgstr "Näita salasõna"
-
-msgid "Opening"
-msgstr "Avamisel"
+msgid "KeePassRX: Clipboard cleared."
+msgstr "KeePassRX: lõikelaud on tühjendatud."
 
 msgid "Manual path set."
 msgstr "Käsitsi määratud asukoht on seadistatud."
@@ -242,140 +304,6 @@ msgstr "Turvaline lukustamine"
 msgid "Database Not Opening?"
 msgstr "Kas andmebaas ei avane?"
 
-msgid "Entry Notes"
-msgstr "Kirje märked"
-
-msgid "Note copied to clipboard"
-msgstr "Märge on kopeeritud lõikelauale"
-
-msgid "Unable to export attachment."
-msgstr "Faili eksportimine ei õnnestunud."
-
-msgid "Entry Attachments"
-msgstr "Kirje failid/manused"
-
-msgid "Export Attachment"
-msgstr "Ekspordi fail/manus"
-
-msgid "Attachment Not Viewable"
-msgstr "Fail/manus pole vaadatav"
-
-msgid "KeePassRX cannot view this %1 attachment, but it can be exported."
-msgstr "KeePassRX ei saa „%1“ faili kuvada, aga ta on eksporditav."
-
-msgid "KeePassRX cannot view this attachment, but it can be exported."
-msgstr "KeePassRX ei saa seda faili kuvada, aga ta on eksporditav."
-
-msgid "Export"
-msgstr "Ekspordi"
-
-msgid "%1 ready to export."
-msgstr "„%1“ on eksportimiseks valmis."
-
-msgid "%1 exported."
-msgstr "„%1“ on eksporditud."
-
-msgid "%1 bytes"
-msgstr "%1 baiti"
-
-msgid "Attachment"
-msgstr "Manus/fail"
-
-msgid "Password"
-msgstr "Salasõna"
-
-msgid "%1 bits"
-msgstr "%1 bitti"
-
-msgid "Password (Entropy: %1)"
-msgstr "Salasõna (entroopia: %1)"
-
-msgid "%1 copied to clipboard (30 secs)"
-msgstr "%1 on kopeeritud lõikelauale (30 sek)"
-
-msgid "Attachments"
-msgstr "Failid/manused"
-
-msgid "Notes"
-msgstr "Märkmed"
-
-msgid "Tap to hide"
-msgstr "Peitmiseks klõpsa"
-
-msgid "Tap to reveal"
-msgstr "Näitamiseks klõpsa"
-
-msgid "Tap reveal to view notes"
-msgstr "Klõpsa märkmete vaatamiseks"
-
-msgid "Main"
-msgstr "Peamine"
-
-msgid "Username"
-msgstr "Kasutajanimi"
-
-msgid "Loading…"
-msgstr "Laadin andmeid…"
-
-msgid "URL"
-msgstr "Võrguaadress"
-
-msgid "TOTP (Valid for %1)"
-msgstr "TOTP ehk ajapõhine ühekordne salasõna (kehtivus: %1)"
-
-msgid "TOTP"
-msgstr "TOTP ehk ajapõhine ühekordne salasõna"
-
-msgid "Other Fields"
-msgstr "Muud väljad"
-
-msgid "KeePassRX: Clipboard cleared."
-msgstr "KeePassRX: lõikelaud on tühjendatud."
-
-msgid "Version %1"
-msgstr "Versioon %1"
-
-msgid ""
-"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
-"Touch. It is licensed under the GNU AGPL v3 license."
-msgstr ""
-"KeePassRX on Ubuntu Touchi jaoks mõeldud salasõnahaldur, mis kasutab KeePass-"
-"vormingus andmebaasi. Rakendus on litsentseeritud GNU AGPL v3 alusel."
-
-msgid ""
-"The built-in KeePass icon images are licensed under a variety of licenses as "
-"detailed in assets/COPYING."
-msgstr ""
-"Rakendusega kaasas olevad KeePassi ikoonifailid on litsentseeritud erinevate "
-"litsentside alusel, mis üksikasjalikult on kirjas failis „assets/COPYING“."
-
-msgid "Manual"
-msgstr "Juhend"
-
-msgid ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
-
-msgid ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-"• Veeb: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
-
-msgid "Source Code"
-msgstr "Lähtekood"
-
-msgid ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
-msgstr ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
-
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
@@ -391,22 +319,6 @@ msgctxt "A database managed by external file sync"
 msgid "Synced"
 msgstr "Sünkroonitud"
 
-msgctxt "Password strength"
-msgid "Poor"
-msgstr "Kehv"
-
-msgctxt "Password strength"
-msgid "Weak"
-msgstr "Nõrk"
-
-msgctxt "Password strength"
-msgid "Good"
-msgstr "Hea"
-
-msgctxt "Password strength"
-msgid "Excellent"
-msgstr "Suurepärane"
-
 msgid "All Templates"
 msgstr "Kõik mallid"
 
@@ -421,16 +333,6 @@ msgstr "2FA-koodid"
 msgctxt "List of entries with tags"
 msgid "Tags"
 msgstr "Sildid"
-
-msgctxt "Saved database searches"
-msgid "Saved Searches"
-msgstr "Salvestatud otsingud"
-
-#~ msgid "Tap to copy"
-#~ msgstr "Kopeerimiseks klõpsa"
-
-#~ msgid "Notes copied to clipboard (30 secs)"
-#~ msgstr "Märkmed on kopeeritud lõikelauale (30-ks sekundiks)"
 
 #~ msgid ""
 #~ "Change settings based on your preferences. Any change to the settings "

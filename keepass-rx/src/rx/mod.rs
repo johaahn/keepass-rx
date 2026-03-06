@@ -1,4 +1,5 @@
 pub(crate) mod icons;
+mod keepass_query;
 mod rx_container;
 mod rx_db;
 mod rx_entry;

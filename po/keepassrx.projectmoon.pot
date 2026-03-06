@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-01 20:39+0000\n"
+"POT-Creation-Date: 2026-03-06 20:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,27 +17,27 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: qml/components/EntryItem.qml:86
+#: qml/components/EntryItem.qml:95
 msgid "Copy Username"
 msgstr ""
 
-#: qml/components/EntryItem.qml:94
+#: qml/components/EntryItem.qml:103
 msgid "Copy Password"
 msgstr ""
 
-#: qml/components/EntryItem.qml:103
+#: qml/components/EntryItem.qml:112
 msgid "Open URL"
 msgstr ""
 
-#: qml/components/EntryItem.qml:110
+#: qml/components/EntryItem.qml:119
 msgid "Copy 2FA Code"
 msgstr ""
 
-#: qml/components/EntryItem.qml:122
+#: qml/components/EntryItem.qml:131
 msgid "View Entry"
 msgstr ""
 
-#: qml/components/EntryItem.qml:235
+#: qml/components/EntryItem.qml:244
 msgid "Tap to copy 2FA code"
 msgstr ""
 
@@ -176,7 +176,7 @@ msgstr ""
 msgid "All groups and entries."
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:266 src/rx/virtual_hierarchy.rs:71
+#: qml/pages/EntriesPage.qml:266 src/rx/virtual_hierarchy.rs:74
 msgid "Special Categories"
 msgstr ""
 
@@ -192,7 +192,7 @@ msgstr ""
 msgid "Entries with 2FA codes."
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:278 src/rx/virtual_hierarchy.rs:242
+#: qml/pages/EntriesPage.qml:278 src/rx/virtual_hierarchy.rs:245
 msgid "Tags"
 msgstr ""
 
@@ -200,15 +200,23 @@ msgstr ""
 msgid "Entries grouped by tag."
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:292
+#: qml/pages/EntriesPage.qml:284
+msgid "Saved Searches"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:286
+msgid "Entries grouped by saved query."
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:298
 msgid "Select View"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:311
+#: qml/pages/EntriesPage.qml:317
 msgid "Select"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:321
+#: qml/pages/EntriesPage.qml:327
 msgid "Cancel"
 msgstr ""
 
@@ -388,21 +396,26 @@ msgctxt "A database managed by external file sync"
 msgid "Synced"
 msgstr ""
 
-#: src/rx/virtual_hierarchy.rs:79
+#: src/rx/virtual_hierarchy.rs:82
 msgid "All Templates"
 msgstr ""
 
-#: src/rx/virtual_hierarchy.rs:131
+#: src/rx/virtual_hierarchy.rs:134
 msgctxt "Default view of the password database (all entries)"
 msgid "Default View"
 msgstr ""
 
-#: src/rx/virtual_hierarchy.rs:175 src/rx/virtual_hierarchy.rs:188
+#: src/rx/virtual_hierarchy.rs:178 src/rx/virtual_hierarchy.rs:191
 msgctxt "Two-factor/OTP codes (keep phrase short as possible)"
 msgid "2FA Codes"
 msgstr ""
 
-#: src/rx/virtual_hierarchy.rs:234
+#: src/rx/virtual_hierarchy.rs:237
 msgctxt "List of entries with tags"
 msgid "Tags"
+msgstr ""
+
+#: src/rx/virtual_hierarchy.rs:285 src/rx/virtual_hierarchy.rs:293
+msgctxt "Saved database searches"
+msgid "Saved Searches"
 msgstr ""

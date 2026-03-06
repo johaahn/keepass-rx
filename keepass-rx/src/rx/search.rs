@@ -6,7 +6,7 @@ use std::{cmp::Ordering, ops::Deref, rc::Rc};
 use unicase::UniCase;
 use uuid::Uuid;
 
-use super::{RxContainedRef, RxDatabase, RxEntry, RxGroup, RxTag, RxTemplate};
+use super::{RxContainedRef, RxDatabase, RxEntry, RxGroup, RxSavedSearch, RxTag, RxTemplate};
 
 #[cfg(feature = "gui")]
 use qmetaobject::{QEnum, QMetaType, QString};
@@ -74,6 +74,20 @@ pub(super) trait Search {
 impl Search for CaseInsensitiveSearch<&RxTag> {
     fn matches(&self, term: &str) -> bool {
         UniCase::new(&self.name).to_folded_case().contains(term)
+    }
+}
+
+impl Search for CaseInsensitiveSearch<&RxSavedSearch> {
+    fn matches(&self, term: &str) -> bool {
+        UniCase::new(&self.name).to_folded_case().contains(term)
+    }
+}
+
+impl Search for FuzzySearch<&RxSavedSearch> {
+    fn matches(&self, term: &str) -> bool {
+        SkimMatcherV2::default()
+            .fuzzy_match(&self.name, term)
+            .is_some()
     }
 }
 
@@ -196,6 +210,7 @@ impl Search for CaseInsensitiveSearch<&RxContainedRef> {
                 CaseInsensitiveSearch(template.as_ref()).matches(term)
             }
             RxContainedRef::Tag(tag) => CaseInsensitiveSearch(tag).matches(term),
+            RxContainedRef::SavedSearch(search) => CaseInsensitiveSearch(search).matches(term),
             RxContainedRef::VirtualRoot(_) => true,
         }
     }
@@ -208,6 +223,7 @@ impl Search for FuzzySearch<&RxContainedRef> {
             RxContainedRef::Group(group) => FuzzySearch(group.as_ref()).matches(term),
             RxContainedRef::Template(template) => FuzzySearch(template.as_ref()).matches(term),
             RxContainedRef::Tag(tag) => FuzzySearch(tag).matches(term),
+            RxContainedRef::SavedSearch(search) => FuzzySearch(search).matches(term),
             RxContainedRef::VirtualRoot(_) => true,
         }
     }

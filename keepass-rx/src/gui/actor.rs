@@ -18,7 +18,7 @@ use crate::app::AppState;
 use crate::crypto::{EncryptedPassword, MasterKey};
 use crate::gui::utils::synced_databases_path;
 use crate::rx::virtual_hierarchy::{
-    AllTags, AllTemplates, DefaultView, TotpEntries, VirtualHierarchy,
+    AllTags, AllTemplates, DefaultView, SavedSearches, TotpEntries, VirtualHierarchy,
 };
 use crate::{
     gui::{RxViewMode, utils::imported_databases_path},
@@ -221,6 +221,7 @@ impl Handler<SetViewMode> for KeepassRxActor {
             RxViewMode::Templates => Box::new(AllTemplates::new(&db)),
             RxViewMode::Totp => Box::new(TotpEntries::new(&db)),
             RxViewMode::Tags => Box::new(AllTags::new(&db)),
+            RxViewMode::SavedSearches => Box::new(SavedSearches::new(&db)),
         };
 
         app_state.set_curr_view(view);
@@ -465,7 +466,11 @@ impl Handler<GetEntries> for KeepassRxActor {
         let binding = binding.pinned();
         let gui = binding.borrow();
 
-        let search_term = msg.search_term.as_deref().map(|term| term.trim());
+        let search_term = msg
+            .search_term
+            .as_deref()
+            .map(|term| term.trim())
+            .filter(|term| !term.is_empty());
         let viewable = app_state
             .curr_view()
             .expect("GetEntries: Viewable not set.");

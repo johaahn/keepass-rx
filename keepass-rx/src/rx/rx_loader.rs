@@ -1,9 +1,10 @@
 use crate::crypto::MasterKey;
 
-use super::{RxEntry, RxGroup, RxMetadata, RxTemplate, ZeroableDatabase};
+use super::{RxEntry, RxGroup, RxMetadata, RxSavedSearchDef, RxTemplate, ZeroableDatabase};
 use anyhow::Result;
 use indexmap::IndexMap;
-use keepass::db::{Group, Icon, Node};
+use keepass::db::{Group, Icon, Meta as KeePassMeta, Node, Value};
+use serde_json::Value as JsonValue;
 use std::collections::HashMap;
 use std::mem;
 use std::rc::Rc;
@@ -21,7 +22,36 @@ pub struct Loaded {
     pub root_uuid: Uuid,
     pub state: LoadState,
     pub metadata: RxMetadata,
+    pub saved_searches: Vec<RxSavedSearchDef>,
     pub master_key: Rc<MasterKey>,
+}
+
+fn parse_saved_searches(meta: &KeePassMeta) -> Vec<RxSavedSearchDef> {
+    let raw_json = meta
+        .custom_data
+        .items
+        .get("KPXC_SavedSearch")
+        .and_then(|item| item.value.as_ref())
+        .and_then(|value| match value {
+            Value::Unprotected(value) => Some(value.to_string()),
+            Value::Protected(value) => {
+                Some(String::from_utf8_lossy(value.unsecure()).to_string())
+            }
+            Value::Bytes(_) => None,
+        })
+        .and_then(|decoded| serde_json::from_str::<JsonValue>(&decoded).ok())
+        .and_then(|json| json.as_object().cloned())
+        .unwrap_or_default();
+
+    raw_json
+        .into_iter()
+        .filter_map(|(name, value)| {
+            value.as_str().map(|query| RxSavedSearchDef {
+                name,
+                query: query.to_string(),
+            })
+        })
+        .collect()
 }
 
 impl RxLoader {
@@ -63,10 +93,10 @@ impl RxLoader {
             .all_groups
             .insert(root_group.uuid, Rc::new(root_group));
 
-        let rx_metadata = RxMetadata::new(
-            mem::take(&mut self.db().config),
-            mem::take(&mut self.db().meta),
-        );
+        let config = mem::take(&mut self.db().config);
+        let meta = mem::take(&mut self.db().meta);
+        let saved_searches = parse_saved_searches(&meta);
+        let rx_metadata = RxMetadata::new(config, meta);
 
         self.db.zeroize();
 
@@ -74,6 +104,7 @@ impl RxLoader {
             master_key: self.master_key.unwrap(),
             state: self.state,
             metadata: rx_metadata,
+            saved_searches,
             root_uuid: root_uuid,
         })
     }

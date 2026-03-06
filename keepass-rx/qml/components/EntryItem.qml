@@ -33,9 +33,18 @@ ListItem {
             return 'folder';
         } else if (theEntry.itemType == 'Tag') {
             return 'tag';
+        } else if (theEntry.itemType == 'SavedSearch') {
+            return 'search';
         } else {
             return 'up';
         }
+    }
+
+    function isGroupingItem() {
+        return theEntry.itemType == 'Group'
+            || theEntry.itemType == 'Template'
+            || theEntry.itemType == 'Tag'
+            || theEntry.itemType == 'SavedSearch';
     }
 
     function resolveImagePath() {
@@ -147,7 +156,7 @@ ListItem {
             id: imgLoader
             width: units.gu(5)
             height: parent.height
-            sourceComponent: theEntry.itemType == 'Group' || theEntry.itemType == 'Tag' ? folderImgComponent : entryImgComponent
+            sourceComponent: isGroupingItem() ? folderImgComponent : entryImgComponent
 
             Component {
                 id: folderImgComponent

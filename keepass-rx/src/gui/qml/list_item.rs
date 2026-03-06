@@ -8,7 +8,7 @@ use uuid::Uuid;
 
 use crate::app::AppState;
 use crate::rx::virtual_hierarchy::{RxViewFeature, VirtualHierarchy};
-use crate::rx::{RxContainedRef, RxEntry, RxGroup, RxTag, RxTemplate};
+use crate::rx::{RxContainedRef, RxEntry, RxGroup, RxSavedSearch, RxTag, RxTemplate};
 
 #[derive(QEnum, Clone, Default, Copy, PartialEq, Eq)]
 #[repr(C)]
@@ -18,6 +18,7 @@ pub enum RxItemType {
     Group,
     Template,
     Tag,
+    SavedSearch,
 }
 
 fn entry_type_from_string(qval: &QString) -> RxItemType {
@@ -26,6 +27,7 @@ fn entry_type_from_string(qval: &QString) -> RxItemType {
         "Entry" => RxItemType::Entry,
         "Template" => RxItemType::Template,
         "Tag" => RxItemType::Tag,
+        "SavedSearch" => RxItemType::SavedSearch,
         _ => panic!("Invalid entry type: {}", qval),
     }
 }
@@ -36,6 +38,7 @@ fn entry_type_to_string(entry_type: &RxItemType) -> QString {
         RxItemType::Entry => "Entry",
         RxItemType::Template => "Template",
         RxItemType::Tag => "Tag",
+        RxItemType::SavedSearch => "SavedSearch",
     }
     .into()
 }
@@ -184,6 +187,7 @@ impl InitFrom<RxContainedRef> for RxListItem {
             RxContainedRef::Group(group) => self.init_from(group.as_ref()),
             RxContainedRef::Template(template) => self.init_from(template.as_ref()),
             RxContainedRef::Tag(tag) => self.init_from(&tag),
+            RxContainedRef::SavedSearch(saved_search) => self.init_from(&saved_search),
             RxContainedRef::VirtualRoot(root_name) => self.init_from_virtual_root(root_name),
         }
     }
@@ -233,6 +237,26 @@ impl InitFrom<&RxTemplate> for RxListItem {
         set_value!(self.iconBuiltin, value.icon.is_builtin());
         set_value!(self.title, QString::from(value.name.as_ref()));
         set_value!(self.subtitle, QString::from("Template"));
+        set_value!(self.description, entry_count(&value.entry_uuids));
+    }
+}
+
+impl InitFrom<&RxSavedSearch> for RxListItem {
+    fn init_from(&mut self, value: &RxSavedSearch) {
+        set_value!(self.itemType, RxItemType::SavedSearch);
+        set_value!(self.entryUuid, QString::from(value.uuid.to_string()));
+        set_value!(self.parentUuid, QString::default());
+        set_value!(self.feature, RxViewFeature::None);
+
+        set_value!(self.hasUsername, false);
+        set_value!(self.hasPassword, false);
+        set_value!(self.hasURL, false);
+        set_value!(self.hasTOTP, false);
+
+        set_value!(self.iconPath, QString::default());
+        set_value!(self.iconBuiltin, false);
+        set_value!(self.title, QString::from(value.name.as_ref()));
+        set_value!(self.subtitle, QString::from("Saved Search"));
         set_value!(self.description, entry_count(&value.entry_uuids));
     }
 }

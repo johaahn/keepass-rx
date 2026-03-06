@@ -7,7 +7,7 @@ use unicase::UniCase;
 use uuid::Uuid;
 
 use super::{
-    RxDatabase, RxEntry, RxGroup, RxSearchType, RxTag, RxTemplate,
+    RxDatabase, RxEntry, RxGroup, RxSavedSearch, RxSearchType, RxTag, RxTemplate,
     search::{CaseInsensitiveSearch, Search, search_contained_ref},
 };
 
@@ -66,6 +66,7 @@ pub enum RxContainedType {
     Group,
     Template,
     Tag,
+    SavedSearch,
     VirtualRoot,
 }
 
@@ -103,7 +104,10 @@ impl RxContainer {
 
     pub fn get_ref(&self) -> Option<RxContainedRef> {
         match self.contained_type {
-            RxContainedType::Group | RxContainedType::Template | RxContainedType::Tag => {
+            RxContainedType::Group
+            | RxContainedType::Template
+            | RxContainedType::Tag
+            | RxContainedType::SavedSearch => {
                 self.item().grouping().and_then(|g| g.contained_ref())
             }
             RxContainedType::Entry => self.item().entry().map(|e| RxContainedRef::Entry(e)),
@@ -297,6 +301,26 @@ impl IntoContainer for RxTag {
     }
 }
 
+impl IntoContainer for RxSavedSearch {
+    fn into_container(&self, db: &RxDatabase) -> RxContainer {
+        let entries: Vec<_> = self
+            .entry_uuids
+            .as_slice()
+            .into_iter()
+            .flat_map(|id| db.get_entry(*id).map(|entry| RxContainer::from(entry, db)))
+            .collect();
+
+        RxContainer {
+            is_root: false,
+            contained_type: RxContainedType::SavedSearch,
+            item: RxContainerItem::Grouping(RxContainerGrouping {
+                children: entries,
+                grouping: RxGrouping::SavedSearch(self.clone()),
+            }),
+        }
+    }
+}
+
 impl IntoContainer for Rc<RxGroup> {
     fn into_container(&self, db: &RxDatabase) -> RxContainer {
         let mut subgroups: Vec<_> = self
@@ -361,6 +385,7 @@ impl IntoContainer for Rc<RxEntry> {
 pub enum RxGrouping {
     Template(Rc<RxTemplate>),
     Tag(RxTag),
+    SavedSearch(RxSavedSearch),
     Group(Rc<RxGroup>),
     VirtualRoot,
 }
@@ -371,6 +396,7 @@ impl RxGrouping {
             RxGrouping::Group(group) => Some(RxContainedRef::Group(group.clone())),
             RxGrouping::Template(template) => Some(RxContainedRef::Template(template.clone())),
             RxGrouping::Tag(tag) => Some(RxContainedRef::Tag(tag.clone())),
+            RxGrouping::SavedSearch(search) => Some(RxContainedRef::SavedSearch(search.clone())),
             RxGrouping::VirtualRoot => None,
         }
     }
@@ -389,6 +415,7 @@ impl RxContainerGrouping {
             RxGrouping::Group(group) => group.uuid,
             RxGrouping::Template(template) => template.uuid,
             RxGrouping::Tag(tag) => tag.uuid,
+            RxGrouping::SavedSearch(search) => search.uuid,
             RxGrouping::VirtualRoot => Uuid::default(),
         }
     }
@@ -405,6 +432,7 @@ pub enum RxContainedRef {
     Group(Rc<RxGroup>),
     Template(Rc<RxTemplate>),
     Tag(RxTag),
+    SavedSearch(RxSavedSearch),
     Entry(Rc<RxEntry>),
 }
 
@@ -436,7 +464,8 @@ impl RxContainedRef {
             RxContainedRef::Group(_) => 1,
             RxContainedRef::Template(_) => 2,
             RxContainedRef::Tag(_) => 3,
-            RxContainedRef::Entry(_) => 4,
+            RxContainedRef::SavedSearch(_) => 4,
+            RxContainedRef::Entry(_) => 5,
         }
     }
 
@@ -446,6 +475,7 @@ impl RxContainedRef {
             RxContainedRef::Group(group) => group.uuid,
             RxContainedRef::Template(template) => template.uuid,
             RxContainedRef::Tag(tag) => tag.uuid,
+            RxContainedRef::SavedSearch(search) => search.uuid,
             RxContainedRef::VirtualRoot(_) => Uuid::default(),
         }
     }
@@ -459,6 +489,7 @@ impl RxContainedRef {
             RxContainedRef::Group(group) => group.name.clone(),
             RxContainedRef::Template(template) => template.name.clone(),
             RxContainedRef::Tag(tag) => tag.name.clone(),
+            RxContainedRef::SavedSearch(search) => search.name.clone(),
             RxContainedRef::VirtualRoot(name) => name.clone(),
         }
     }
@@ -467,7 +498,9 @@ impl RxContainedRef {
         match self {
             RxContainedRef::Entry(entry) => Some(entry.parent_group),
             RxContainedRef::Group(group) => group.parent,
-            RxContainedRef::Template(_) | RxContainedRef::Tag(_) => Some(Uuid::default()), //virtual root
+            RxContainedRef::Template(_) | RxContainedRef::Tag(_) | RxContainedRef::SavedSearch(_) => {
+                Some(Uuid::default())
+            } //virtual root
             RxContainedRef::VirtualRoot(_) => None,
         }
     }

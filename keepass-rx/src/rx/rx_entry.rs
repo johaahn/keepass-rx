@@ -93,6 +93,7 @@ pub struct RxEntry {
 
     pub(super) url: Option<RxValue>,
     pub(super) raw_otp_value: Option<RxValue>,
+    pub(super) is_expired: bool,
 
     #[zeroize(skip)]
     pub icon: RxIcon,
@@ -173,6 +174,10 @@ impl RxEntry {
         let mut remaining_fields = RxCustomFields::from_vec(&master_key, remaining_fields);
         let mut custom_fields = RxCustomFields::from_custom_data(&master_key, custom_data);
         custom_fields.append(&mut remaining_fields);
+        let is_expired = entry
+            .get_expiry_time()
+            .map(|expiry| entry.times.expires && *expiry <= keepass::db::Times::now())
+            .unwrap_or(false);
 
         Self {
             uuid: entry.uuid,
@@ -186,6 +191,7 @@ impl RxEntry {
             custom_fields: custom_fields,
             url: url,
             raw_otp_value: raw_otp_value,
+            is_expired,
             icon: rx_icon,
             tags: mem::take(&mut entry.tags),
         }
@@ -213,6 +219,16 @@ impl RxEntry {
         self.url
             .as_ref()
             .map(|u| RxValueKeyRef::new(u, &self.master_key))
+    }
+
+    pub fn notes(&self) -> Option<RxValueKeyRef<'_>> {
+        self.notes
+            .as_ref()
+            .map(|n| RxValueKeyRef::new(n, &self.master_key))
+    }
+
+    pub fn tags(&self) -> &[String] {
+        self.tags.as_slice()
     }
 
     pub fn raw_otp_value(&self) -> Option<RxValueKeyRef<'_>> {
@@ -257,6 +273,15 @@ impl RxEntry {
 
     pub fn has_tags(&self) -> bool {
         self.tags.len() > 0
+    }
+
+    pub fn is_expired(&self) -> bool {
+        self.is_expired
+    }
+
+    pub fn password_is_weak(&self) -> bool {
+        let maybe_pw = self.password().and_then(|val| val.value().map(|v| v.to_string()));
+        maybe_pw.map(|pw| pw.len() < 10).unwrap_or(false)
     }
 
     pub fn has_otp(&self) -> bool {

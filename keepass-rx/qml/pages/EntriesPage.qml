@@ -279,6 +279,12 @@ Page {
                         // TRANSLATORS: Lists of tagged entries. Keep sentence as short as possible.
                         description: QT_TR_NOOP("Entries grouped by tag.")
                     }
+                    ListElement {
+                        name: "SavedSearches";
+                        menuText: QT_TR_NOOP("Saved Searches")
+                        // TRANSLATORS: Keep sentence as short as possible.
+                        description: QT_TR_NOOP("Entries grouped by saved query.")
+                    }
                 }
 
                 Component {

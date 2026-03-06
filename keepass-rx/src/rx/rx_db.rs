@@ -47,8 +47,13 @@ pub struct RxMetadata {
     pub color: Option<String>,
     pub name: Option<String>,
     pub icon: Option<i32>,
-
     pub recycle_bin_uuid: Option<Uuid>,
+}
+
+#[derive(Default, Clone)]
+pub struct RxSavedSearchDef {
+    pub name: String,
+    pub query: String,
 }
 
 impl RxMetadata {
@@ -74,6 +79,7 @@ pub struct RxDatabase {
     templates: HashMap<Uuid, Rc<RxTemplate>>,
     all_groups: IndexMap<Uuid, Rc<RxGroup>>,
     all_entries: IndexMap<Uuid, Rc<RxEntry>>,
+    saved_searches: Vec<RxSavedSearchDef>,
 }
 
 impl Zeroize for RxDatabase {
@@ -142,6 +148,7 @@ impl RxDatabase {
             templates: Default::default(),
             all_groups: loaded.state.all_groups,
             all_entries: loaded.state.all_entries,
+            saved_searches: loaded.saved_searches,
             metadata: loaded.metadata,
         };
 
@@ -224,11 +231,20 @@ impl RxDatabase {
 
         Ok(entry.totp()?)
     }
+
+    pub fn saved_searches_iter(&self) -> impl Iterator<Item = &RxSavedSearchDef> {
+        self.saved_searches.iter()
+    }
 }
 
 #[cfg(test)]
 mod tests {
+    use std::fs::File;
+
+    use keepass::{Database, DatabaseKey};
     use keyring::set_default_credential_builder;
+
+    use crate::rx::keepass_query::evaluate_saved_search;
 
     use super::*;
     use crate::rx::{RxCustomFields, RxValue, TEMPLATE_FIELD_NAME};
@@ -291,6 +307,35 @@ mod tests {
 
         assert_eq!(rx_subgroup.uuid, subgroup_id);
         assert_eq!(rx_subgroup.entries, vec![sub_entry_id]);
+    }
+
+    #[test]
+    fn parses_saved_searches_from_test_db() {
+        set_default_credential_builder(keyring::mock::default_credential_builder());
+
+        let mut file = File::open("test.kdbx").expect("open test.kdbx");
+        let db = Database::open(
+            &mut file,
+            DatabaseKey::new().with_password("somePassw0rd"),
+        )
+        .expect("open keepass db");
+
+        let rx_db = RxDatabase::new(Zeroizing::new(ZeroableDatabase(db)));
+        let saved: Vec<_> = rx_db.saved_searches_iter().collect();
+        assert!(!saved.is_empty(), "expected at least one saved search");
+
+        let account_search = saved
+            .iter()
+            .find(|search| search.name == "a saved search")
+            .expect("missing expected saved search");
+
+        assert_eq!(account_search.query, "account");
+
+        let results = evaluate_saved_search(&rx_db, &account_search.query);
+        assert!(
+            !results.is_empty(),
+            "saved search query should match at least one entry"
+        );
     }
 
     // TODO move to rx_containers

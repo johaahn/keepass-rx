@@ -2,7 +2,10 @@ use gettextrs::{gettext, pgettext};
 use std::{collections::HashMap, rc::Rc};
 use uuid::Uuid;
 
-use super::{RxContainedRef, RxContainer, RxDatabase, RxRoot, RxSearchType, RxTag};
+use super::{
+    RxContainedRef, RxContainer, RxDatabase, RxRoot, RxSavedSearch, RxSearchType, RxTag,
+    keepass_query::evaluate_saved_search,
+};
 
 /// A setting that controls how an RxListItem is rendered in the UI.
 /// Note that the UI container of the list item must also have the
@@ -240,6 +243,54 @@ impl AllTags {
 impl VirtualHierarchy for AllTags {
     fn name(&self) -> String {
         gettext("Tags")
+    }
+
+    fn root(&self) -> &RxRoot {
+        &self.0
+    }
+
+    fn search(
+        &self,
+        search_type: RxSearchType,
+        container_uuid: Uuid,
+        search_term: Option<&str>,
+    ) -> Vec<RxContainedRef> {
+        self.root()
+            .get_container(container_uuid)
+            .map(|container| container.search_children_immediate(search_type, search_term))
+            .unwrap_or_default()
+    }
+}
+
+pub struct SavedSearches(RxRoot);
+
+impl SavedSearches {
+    pub fn new(db: &RxDatabase) -> Self {
+        let children: Vec<_> = db
+            .saved_searches_iter()
+            .map(|search| {
+                let matched_entries = evaluate_saved_search(db, &search.query);
+                RxContainer::from(
+                    RxSavedSearch::new(
+                        search.name.to_string(),
+                        search.query.to_string(),
+                        matched_entries,
+                    ),
+                    db,
+                )
+            })
+            .collect();
+
+        SavedSearches(RxRoot::virtual_root(
+            &pgettext("Saved database searches", "Saved Searches"),
+            children,
+        ))
+    }
+}
+
+impl VirtualHierarchy for SavedSearches {
+    fn name(&self) -> String {
+        pgettext("Saved database searches", "Saved Searches")
     }
 
     fn root(&self) -> &RxRoot {

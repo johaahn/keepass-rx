@@ -1,3 +1,4 @@
+use deunicode::{deunicode, deunicode_with_tofu_cow};
 use fuzzy_matcher::FuzzyMatcher;
 use fuzzy_matcher::skim::SkimMatcherV2;
 use indexmap::{IndexMap, IndexSet};
@@ -114,24 +115,29 @@ impl Search for FuzzySearch<&RxTemplate> {
 
 impl Search for CaseInsensitiveSearch<&RxEntry> {
     fn matches(&self, term: &str) -> bool {
+        let term = deunicode_with_tofu_cow(term, "u{FFFD}");
+
         let username = self.username().and_then(|u| {
-            u.value()
-                .map(|secret| UniCase::new(secret).to_folded_case())
+            u.value().map(|secret| {
+                UniCase::new(deunicode_with_tofu_cow(&secret, "u{FFFD}")).to_folded_case()
+            })
         });
 
         let url = self.url().and_then(|u| {
-            u.value()
-                .map(|secret| UniCase::new(secret).to_folded_case())
+            u.value().map(|secret| {
+                UniCase::new(deunicode_with_tofu_cow(&secret, "u{FFFD}")).to_folded_case()
+            })
         });
 
         let title = self.title().and_then(|u| {
-            u.value()
-                .map(|secret| UniCase::new(secret).to_folded_case())
+            u.value().map(|secret| {
+                UniCase::new(deunicode_with_tofu_cow(&secret, "u{FFFD}")).to_folded_case()
+            })
         });
 
-        let contains_username = username.map(|u| u.contains(term)).unwrap_or(false);
-        let contains_url = url.map(|u| u.contains(term)).unwrap_or(false);
-        let contains_title = title.map(|t| t.contains(term)).unwrap_or(false);
+        let contains_username = username.map(|u| u.contains(&*term)).unwrap_or(false);
+        let contains_url = url.map(|u| u.contains(&*term)).unwrap_or(false);
+        let contains_title = title.map(|t| t.contains(&*term)).unwrap_or(false);
 
         contains_username || contains_url || contains_title
     }
@@ -139,33 +145,38 @@ impl Search for CaseInsensitiveSearch<&RxEntry> {
 
 impl Search for FuzzySearch<&RxEntry> {
     fn matches(&self, term: &str) -> bool {
+        let term = deunicode_with_tofu_cow(term, "u{FFFD}");
+
         let username = self.username().and_then(|u| {
-            u.value()
-                .map(|secret| UniCase::new(secret).to_folded_case())
+            u.value().map(|secret| {
+                UniCase::new(deunicode_with_tofu_cow(&secret, "u{FFFD}")).to_folded_case()
+            })
         });
 
         let url = self.url().and_then(|u| {
-            u.value()
-                .map(|secret| UniCase::new(secret).to_folded_case())
+            u.value().map(|secret| {
+                UniCase::new(deunicode_with_tofu_cow(&secret, "u{FFFD}")).to_folded_case()
+            })
         });
 
         let title = self.title().and_then(|u| {
-            u.value()
-                .map(|secret| UniCase::new(secret).to_folded_case())
+            u.value().map(|secret| {
+                UniCase::new(deunicode_with_tofu_cow(&secret, "u{FFFD}")).to_folded_case()
+            })
         });
 
         let matcher = SkimMatcherV2::default();
 
         let username_matches = username
-            .map(|ref u| matcher.fuzzy_match(u, term).is_some())
+            .map(|ref u| matcher.fuzzy_match(u, &term).is_some())
             .unwrap_or(false);
 
         let url_matches = url
-            .map(|ref u| matcher.fuzzy_match(u, term).is_some())
+            .map(|ref u| matcher.fuzzy_match(u, &term).is_some())
             .unwrap_or(false);
 
         let title_matches = title
-            .map(|ref t| matcher.fuzzy_match(t, term).is_some())
+            .map(|ref t| matcher.fuzzy_match(t, &term).is_some())
             .unwrap_or(false);
 
         username_matches || url_matches || title_matches

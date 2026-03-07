@@ -4,7 +4,7 @@ use uuid::Uuid;
 
 use super::{
     RxContainedRef, RxContainer, RxDatabase, RxRoot, RxSavedSearch, RxSearchType, RxTag,
-    keepass_query::evaluate_saved_search,
+    kxpc_search::evaluate_saved_search,
 };
 
 /// A setting that controls how an RxListItem is rendered in the UI.

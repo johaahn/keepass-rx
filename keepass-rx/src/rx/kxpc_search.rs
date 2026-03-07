@@ -8,9 +8,14 @@ use super::{RxDatabase, RxEntry};
 #[derive(Debug, Clone)]
 struct QueryToken {
     field: Option<String>,
-    term: String,
-    is_regex: bool,
-    is_negated: bool,
+    term: QueryTokenTerm,
+}
+
+#[derive(Debug, Clone)]
+enum QueryTokenTerm {
+    Basic(String),
+    Regex(String),
+    Negated(String),
 }
 
 fn normalized(value: &str) -> String {
@@ -101,16 +106,20 @@ fn parse_token(token: &str) -> Option<QueryToken> {
         return None;
     }
 
+    let token_term = match term {
+        term if is_regex => QueryTokenTerm::Regex(term),
+        term if is_negated => QueryTokenTerm::Negated(term),
+        term => QueryTokenTerm::Basic(term),
+    };
+
     Some(QueryToken {
         field,
-        term,
-        is_regex,
-        is_negated,
+        term: token_term,
     })
 }
 
 fn entry_field(entry: &RxEntry, field: &str, db: &RxDatabase) -> Vec<String> {
-    match field {
+    match field.to_lowercase().as_str() {
         "title" => entry
             .title()
             .and_then(|v| v.value().map(|v| v.to_string()))
@@ -156,40 +165,34 @@ fn entry_field(entry: &RxEntry, field: &str, db: &RxDatabase) -> Vec<String> {
 }
 
 fn entry_default_fields(entry: &RxEntry, db: &RxDatabase) -> Vec<String> {
-    let mut fields = vec![];
-
-    if let Some(title) = entry.title().and_then(|v| v.value().map(|v| v.to_string())) {
-        fields.push(title);
-    }
-    if let Some(user) = entry
+    let title = entry.title().and_then(|v| v.value().map(|v| v.to_string()));
+    let username = entry
         .username()
-        .and_then(|v| v.value().map(|v| v.to_string()))
-    {
-        fields.push(user);
-    }
-    if let Some(url) = entry.url().and_then(|v| v.value().map(|v| v.to_string())) {
-        fields.push(url);
-    }
-    if let Some(notes) = entry.notes().and_then(|v| v.value().map(|v| v.to_string())) {
-        fields.push(notes);
-    }
-    if let Some(group) = db.get_group(entry.parent_group) {
-        fields.push(group.name.to_string());
-    }
-    fields.extend(entry.tags().iter().map(|t| t.to_string()));
+        .and_then(|v| v.value().map(|v| v.to_string()));
+    let url = entry.url().and_then(|v| v.value().map(|v| v.to_string()));
+    let notes = entry.notes().and_then(|v| v.value().map(|v| v.to_string()));
+    let group_name = db
+        .get_group(entry.parent_group)
+        .map(|group| group.name.clone());
 
+    let mut fields: Vec<String> = vec![title, username, url, notes, group_name]
+        .into_iter()
+        .flatten()
+        .collect();
+
+    fields.extend(entry.tags().iter().map(|t| t.to_string()));
     fields
 }
 
 fn term_matches(token: &QueryToken, value: &str) -> bool {
-    if token.is_regex {
-        RegexBuilder::new(&token.term)
+    match token.term {
+        QueryTokenTerm::Regex(ref regex) => RegexBuilder::new(regex)
             .case_insensitive(true)
             .build()
             .map(|regex| regex.is_match(value))
-            .unwrap_or(false)
-    } else {
-        normalized(value).contains(&normalized(&token.term))
+            .unwrap_or(false),
+        QueryTokenTerm::Negated(ref term) => !normalized(value).contains(&normalized(term)),
+        QueryTokenTerm::Basic(ref term) => normalized(value).contains(&normalized(term)),
     }
 }
 
@@ -200,13 +203,7 @@ fn entry_matches(db: &RxDatabase, entry: &RxEntry, tokens: &[QueryToken]) -> boo
             None => entry_default_fields(entry, db),
         };
 
-        let does_match = haystack.iter().any(|field| term_matches(token, field));
-
-        if token.is_negated {
-            !does_match
-        } else {
-            does_match
-        }
+        haystack.iter().any(|field| term_matches(token, field))
     })
 }
 
@@ -221,8 +218,10 @@ pub fn evaluate_saved_search(db: &RxDatabase, query: &str) -> Vec<Uuid> {
     }
 
     db.all_entries_iter()
-        .filter(|entry| entry_matches(db, entry.as_ref(), &tokens))
-        .map(|entry| entry.uuid)
+        .filter_map(|entry| match entry_matches(db, entry.as_ref(), &tokens) {
+            true => Some(entry.uuid),
+            false => None,
+        })
         .collect()
 }
 
@@ -244,23 +243,28 @@ mod tests {
         let mut child = keepass::db::Group::new("Email");
 
         let mut entry1 = keepass::db::Entry::new();
-        entry1
-            .fields
-            .insert("Title".into(), keepass::db::Value::Unprotected("Gmail".into()));
-        entry1
-            .fields
-            .insert("UserName".into(), keepass::db::Value::Unprotected("alice".into()));
-        entry1
-            .fields
-            .insert("URL".into(), keepass::db::Value::Unprotected("gmail.com".into()));
+        entry1.fields.insert(
+            "Title".into(),
+            keepass::db::Value::Unprotected("Gmail".into()),
+        );
+        entry1.fields.insert(
+            "UserName".into(),
+            keepass::db::Value::Unprotected("alice".into()),
+        );
+        entry1.fields.insert(
+            "URL".into(),
+            keepass::db::Value::Unprotected("gmail.com".into()),
+        );
 
         let mut entry2 = keepass::db::Entry::new();
-        entry2
-            .fields
-            .insert("Title".into(), keepass::db::Value::Unprotected("GitLab".into()));
-        entry2
-            .fields
-            .insert("UserName".into(), keepass::db::Value::Unprotected("bob".into()));
+        entry2.fields.insert(
+            "Title".into(),
+            keepass::db::Value::Unprotected("GitLab".into()),
+        );
+        entry2.fields.insert(
+            "UserName".into(),
+            keepass::db::Value::Unprotected("bob".into()),
+        );
 
         child.add_child(Node::Entry(entry1));
         root.add_child(Node::Group(child));

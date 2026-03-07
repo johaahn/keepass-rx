@@ -280,7 +280,9 @@ impl RxEntry {
     }
 
     pub fn password_is_weak(&self) -> bool {
-        let maybe_pw = self.password().and_then(|val| val.value().map(|v| v.to_string()));
+        let maybe_pw = self
+            .password()
+            .and_then(|val| val.value().map(|v| v.to_string()));
         maybe_pw.map(|pw| pw.len() < 10).unwrap_or(false)
     }
 

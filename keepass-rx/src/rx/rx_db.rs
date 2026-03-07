@@ -244,7 +244,7 @@ mod tests {
     use keepass::{Database, DatabaseKey};
     use keyring::set_default_credential_builder;
 
-    use crate::rx::keepass_query::evaluate_saved_search;
+    use crate::rx::kxpc_search::evaluate_saved_search;
 
     use super::*;
     use crate::rx::{RxCustomFields, RxValue, TEMPLATE_FIELD_NAME};
@@ -314,11 +314,8 @@ mod tests {
         set_default_credential_builder(keyring::mock::default_credential_builder());
 
         let mut file = File::open("test.kdbx").expect("open test.kdbx");
-        let db = Database::open(
-            &mut file,
-            DatabaseKey::new().with_password("somePassw0rd"),
-        )
-        .expect("open keepass db");
+        let db = Database::open(&mut file, DatabaseKey::new().with_password("somePassw0rd"))
+            .expect("open keepass db");
 
         let rx_db = RxDatabase::new(Zeroizing::new(ZeroableDatabase(db)));
         let saved: Vec<_> = rx_db.saved_searches_iter().collect();

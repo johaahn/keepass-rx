@@ -193,7 +193,7 @@ fn term_matches(token: &QueryToken, value: &str) -> bool {
 
 fn entry_matches(db: &RxDatabase, entry: &RxEntry, tokens: &[QueryToken]) -> bool {
     tokens.iter().all(|token| {
-        let haystack: Vec<Zeroizing<String>> = match token.operator.as_deref() {
+        let haystack = match token.operator.as_deref() {
             Some(op) => operator_field(entry, op, db),
             None => entry_default_fields(entry, db),
         };

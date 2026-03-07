@@ -257,7 +257,7 @@ impl InitFrom<&RxSavedSearch> for RxListItem {
         set_value!(self.iconBuiltin, false);
         set_value!(self.title, QString::from(value.name.as_ref()));
         set_value!(self.subtitle, QString::from("Saved Search"));
-        set_value!(self.description, entry_count(&value.entry_uuids));
+        set_value!(self.description, QString::from(value.query.as_ref()));
     }
 }
 
@@ -379,5 +379,29 @@ impl InitFrom<&RxGroup> for RxListItem {
 impl InitFrom<RxGroup> for RxListItem {
     fn init_from(&mut self, value: RxGroup) {
         self.init_from(&value);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{InitFrom, RxItemType, RxListItem};
+    use crate::rx::RxSavedSearch;
+    use uuid::Uuid;
+
+    #[test]
+    fn saved_search_item_description_uses_query() {
+        let search = RxSavedSearch::new(
+            "My Search".to_string(),
+            "title:github user:jeff".to_string(),
+            vec![Uuid::new_v4(), Uuid::new_v4()],
+        );
+
+        let mut item = RxListItem::default();
+        item.init_from(&search);
+
+        assert!(item.itemType == RxItemType::SavedSearch);
+        assert_eq!(item.title.to_string(), "My Search");
+        assert_eq!(item.subtitle.to_string(), "Saved Search");
+        assert_eq!(item.description.to_string(), "title:github user:jeff");
     }
 }

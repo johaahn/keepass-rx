@@ -167,17 +167,16 @@ fn entry_default_fields(entry: &RxEntry, db: &RxDatabase) -> Vec<Zeroizing<Strin
     let username = entry.username().and_then(|v| v.value());
     let url = entry.url().and_then(|v| v.value());
     let notes = entry.notes().and_then(|v| v.value());
+    let tags = entry.tags().iter().map(|t| Zeroizing::new(t.to_string()));
     let group_name = db
         .get_group(entry.parent_group)
         .map(|group| Zeroizing::new(group.name.clone()));
 
-    let mut fields: Vec<Zeroizing<String>> = vec![title, username, url, notes, group_name]
+    vec![title, username, url, notes, group_name]
         .into_iter()
         .flatten()
-        .collect();
-
-    fields.extend(entry.tags().iter().map(|t| Zeroizing::new(t.to_string())));
-    fields
+        .chain(tags)
+        .collect()
 }
 
 fn term_matches(token: &QueryToken, value: &str) -> bool {

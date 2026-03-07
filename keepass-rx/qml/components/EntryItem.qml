@@ -234,13 +234,16 @@ ListItem {
             Text {
                 width: parent.width
                 elide: Text.ElideRight
-                color: theme.palette.normal.backgroundTertiaryText
+                color: theme.palette.normal.backgroundSecondaryText
                 text: theEntry.subtitle
             }
 
             Text {
                 elide: Text.ElideRight
-                color: theme.palette.normal.activity
+                width: parent.width
+                color: hasFeature('DisplayTwoFactorAuth')
+                    ? theme.palette.normal.activity
+                    : theme.palette.normal.backgroundTertiaryText
                 text: hasFeature('DisplayTwoFactorAuth')
                     ? i18n.tr("Tap to copy 2FA code")
                     : (theEntry.description)

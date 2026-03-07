@@ -5,11 +5,16 @@ use indexmap::{IndexMap, IndexSet};
 use std::{cmp::Ordering, ops::Deref, rc::Rc};
 use unicase::UniCase;
 use uuid::Uuid;
+use zeroize::Zeroizing;
 
 use super::{RxContainedRef, RxDatabase, RxEntry, RxGroup, RxSavedSearch, RxTag, RxTemplate};
 
 macro_rules! decode {
-    ($term:expr) => {{ deunicode_with_tofu_cow($term, "u{FFFD}") }};
+    ($term:expr) => {{
+        Zeroizing::new(
+            UniCase::new(deunicode_with_tofu_cow($term, "u{FFFD}")).to_folded_case(),
+        )
+    }};
 }
 
 #[cfg(feature = "gui")]
@@ -135,20 +140,17 @@ impl Search for CaseInsensitiveSearch<&RxEntry> {
     fn matches(&self, term: &str) -> bool {
         let term = decode!(term);
 
-        let username = self.username().and_then(|u| {
-            u.value()
-                .map(|secret| UniCase::new(decode!(&secret)).to_folded_case())
-        });
+        let username = self
+            .username()
+            .and_then(|u| u.value().map(|secret| decode!(&secret)));
 
-        let url = self.url().and_then(|u| {
-            u.value()
-                .map(|secret| UniCase::new(decode!(&secret)).to_folded_case())
-        });
+        let url = self
+            .url()
+            .and_then(|u| u.value().map(|secret| decode!(&secret)));
 
-        let title = self.title().and_then(|u| {
-            u.value()
-                .map(|secret| UniCase::new(decode!(&secret)).to_folded_case())
-        });
+        let title = self
+            .title()
+            .and_then(|u| u.value().map(|secret| decode!(&secret)));
 
         let contains_username = username.map(|u| u.contains(&*term)).unwrap_or(false);
         let contains_url = url.map(|u| u.contains(&*term)).unwrap_or(false);
@@ -162,20 +164,17 @@ impl Search for FuzzySearch<&RxEntry> {
     fn matches(&self, term: &str) -> bool {
         let term = decode!(term);
 
-        let username = self.username().and_then(|u| {
-            u.value()
-                .map(|secret| UniCase::new(decode!(&secret)).to_folded_case())
-        });
+        let username = self
+            .username()
+            .and_then(|u| u.value().map(|secret| decode!(&secret)));
 
-        let url = self.url().and_then(|u| {
-            u.value()
-                .map(|secret| UniCase::new(decode!(&secret)).to_folded_case())
-        });
+        let url = self
+            .url()
+            .and_then(|u| u.value().map(|secret| decode!(&secret)));
 
-        let title = self.title().and_then(|u| {
-            u.value()
-                .map(|secret| UniCase::new(decode!(&secret)).to_folded_case())
-        });
+        let title = self
+            .title()
+            .and_then(|u| u.value().map(|secret| decode!(&secret)));
 
         let matcher = SkimMatcherV2::default();
 

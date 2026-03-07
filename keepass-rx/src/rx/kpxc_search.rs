@@ -2,6 +2,7 @@ use deunicode::deunicode_with_tofu_cow;
 use regex::RegexBuilder;
 use unicase::UniCase;
 use uuid::Uuid;
+use zeroize::Zeroizing;
 
 use super::{RxDatabase, RxEntry};
 
@@ -118,50 +119,42 @@ fn parse_token(token: &str) -> Option<QueryToken> {
     })
 }
 
-fn operator_field(entry: &RxEntry, op: &str, db: &RxDatabase) -> Vec<String> {
+fn operator_field(entry: &RxEntry, op: &str, db: &RxDatabase) -> Vec<Zeroizing<String>> {
     match op.to_lowercase().as_str() {
-        "title" | "t" => entry
-            .title()
-            .and_then(|v| v.value().map(|v| v.to_string()))
-            .into_iter()
-            .collect(),
+        "title" | "t" => entry.title().and_then(|v| v.value()).into_iter().collect(),
         "user" | "u" => entry
             .username()
-            .and_then(|v| v.value().map(|v| v.to_string()))
+            .and_then(|v| v.value())
             .into_iter()
             .collect(),
-        "url" => entry
-            .url()
-            .and_then(|v| v.value().map(|v| v.to_string()))
-            .into_iter()
-            .collect(),
-        "notes" | "n" => entry
-            .notes()
-            .and_then(|v| v.value().map(|v| v.to_string()))
-            .into_iter()
-            .collect(),
+        "url" => entry.url().and_then(|v| v.value()).into_iter().collect(),
+        "notes" | "n" => entry.notes().and_then(|v| v.value()).into_iter().collect(),
         "password" | "p" | "pw" => entry
             .password()
-            .and_then(|v| v.value().map(|v| v.to_string()))
+            .and_then(|v| v.value())
             .into_iter()
             .collect(),
         "group" | "g" => db
             .get_group(entry.parent_group)
-            .map(|g| g.name.to_string())
+            .map(|g| Zeroizing::new(g.name.to_string()))
             .into_iter()
             .collect(),
-        "tag" | "tags" => entry.tags().iter().map(|t| t.to_string()).collect(),
-        "uuid" => vec![entry.uuid.to_string()],
+        "tag" | "tags" => entry
+            .tags()
+            .iter()
+            .map(|t| Zeroizing::new(t.to_string()))
+            .collect(),
+        "uuid" => vec![Zeroizing::new(entry.uuid.to_string())],
         "is" => {
             let is_expired = entry.is_expired();
             let is_weak = entry.is_password_weak();
 
             let mut vals = vec![];
             if is_expired {
-                vals.push("expired".to_string());
+                vals.push(Zeroizing::new("expired".to_string()));
             }
             if is_weak {
-                vals.push("weak".to_string());
+                vals.push(Zeroizing::new("weak".to_string()));
             }
             vals
         }
@@ -169,23 +162,21 @@ fn operator_field(entry: &RxEntry, op: &str, db: &RxDatabase) -> Vec<String> {
     }
 }
 
-fn entry_default_fields(entry: &RxEntry, db: &RxDatabase) -> Vec<String> {
-    let title = entry.title().and_then(|v| v.value().map(|v| v.to_string()));
-    let username = entry
-        .username()
-        .and_then(|v| v.value().map(|v| v.to_string()));
-    let url = entry.url().and_then(|v| v.value().map(|v| v.to_string()));
-    let notes = entry.notes().and_then(|v| v.value().map(|v| v.to_string()));
+fn entry_default_fields(entry: &RxEntry, db: &RxDatabase) -> Vec<Zeroizing<String>> {
+    let title = entry.title().and_then(|v| v.value());
+    let username = entry.username().and_then(|v| v.value());
+    let url = entry.url().and_then(|v| v.value());
+    let notes = entry.notes().and_then(|v| v.value());
     let group_name = db
         .get_group(entry.parent_group)
-        .map(|group| group.name.clone());
+        .map(|group| Zeroizing::new(group.name.clone()));
 
-    let mut fields: Vec<String> = vec![title, username, url, notes, group_name]
+    let mut fields: Vec<Zeroizing<String>> = vec![title, username, url, notes, group_name]
         .into_iter()
         .flatten()
         .collect();
 
-    fields.extend(entry.tags().iter().map(|t| t.to_string()));
+    fields.extend(entry.tags().iter().map(|t| Zeroizing::new(t.to_string())));
     fields
 }
 
@@ -203,7 +194,7 @@ fn term_matches(token: &QueryToken, value: &str) -> bool {
 
 fn entry_matches(db: &RxDatabase, entry: &RxEntry, tokens: &[QueryToken]) -> bool {
     tokens.iter().all(|token| {
-        let haystack: Vec<String> = match token.operator.as_deref() {
+        let haystack: Vec<Zeroizing<String>> = match token.operator.as_deref() {
             Some(op) => operator_field(entry, op, db),
             None => entry_default_fields(entry, db),
         };

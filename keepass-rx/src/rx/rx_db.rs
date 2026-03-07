@@ -244,7 +244,7 @@ mod tests {
     use keepass::{Database, DatabaseKey};
     use keyring::set_default_credential_builder;
 
-    use crate::rx::kxpc_search::evaluate_saved_search;
+    use crate::rx::kpxc_search::evaluate_saved_search;
 
     use super::*;
     use crate::rx::{RxCustomFields, RxValue, TEMPLATE_FIELD_NAME};

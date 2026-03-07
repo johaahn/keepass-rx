@@ -283,7 +283,7 @@ Page {
                         name: "SavedSearches";
                         menuText: QT_TR_NOOP("Saved Searches")
                         // TRANSLATORS: Keep sentence as short as possible.
-                        description: QT_TR_NOOP("Entries grouped by saved query.")
+                        description: QT_TR_NOOP("Entries matching search queries.")
                     }
                 }
 

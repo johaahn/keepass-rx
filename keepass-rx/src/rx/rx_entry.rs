@@ -11,6 +11,7 @@ use libsodium_rs::utils::{SecureVec, vec_utils};
 use querystring::querify;
 use secstr::SecStr;
 use std::borrow::Cow;
+use std::cell::OnceCell;
 use std::rc::Rc;
 use std::str::FromStr;
 use std::sync::atomic::Ordering;
@@ -68,7 +69,40 @@ fn should_hide_field(field_name: &str) -> bool {
             .any(|wildcard| field_name.starts_with(wildcard))
 }
 
+pub fn calculate_password_entropy(password: &str) -> f64 {
+    if password.is_empty() {
+        return 0.0;
+    }
+
+    let mut pool_size = 0usize;
+
+    if password.chars().any(|c| c.is_ascii_lowercase()) {
+        pool_size += 26;
+    }
+    if password.chars().any(|c| c.is_ascii_uppercase()) {
+        pool_size += 26;
+    }
+    if password.chars().any(|c| c.is_ascii_digit()) {
+        pool_size += 10;
+    }
+    if password.chars().any(|c| c.is_ascii_punctuation()) {
+        pool_size += 32;
+    }
+
+    // Add one bucket for non-ASCII characters as a simple approximation.
+    if password.chars().any(|c| !c.is_ascii()) {
+        pool_size += 100;
+    }
+
+    if pool_size == 0 {
+        return 0.0;
+    }
+
+    (password.chars().count() as f64) * (pool_size as f64).log2()
+}
+
 #[derive(Clone, Zeroize, ZeroizeOnDrop)]
+#[allow(dead_code)]
 pub struct RxEntry {
     #[zeroize(skip)]
     pub uuid: Uuid,
@@ -97,6 +131,9 @@ pub struct RxEntry {
 
     #[zeroize(skip)]
     pub icon: RxIcon,
+
+    #[zeroize(skip)]
+    pub(super) entropy: OnceCell<f64>,
 }
 
 fn extract_remaining_fields(
@@ -161,12 +198,18 @@ impl RxEntry {
                     .and_then(|uuid_str| Uuid::from_str(&uuid_str).ok())
             });
 
-        // Icon: Can eiher be the custom one (provided), or the
+        // Icon: Can either be the custom one (provided), or the
         // built-in one, or nothing.
         let rx_icon = icon
             .map(|i| RxIcon::Image(i.data))
             .or_else(|| entry.icon_id.map(|id| RxIcon::Builtin(id)))
             .unwrap_or(RxIcon::None);
+
+        // Expiration: self-explanatory.
+        let is_expired = entry
+            .get_expiry_time()
+            .map(|expiry| entry.times.expires && *expiry <= keepass::db::Times::now())
+            .unwrap_or(false);
 
         // Has to come after the above, otherwise those fields end up
         // in the custom fields.
@@ -174,10 +217,6 @@ impl RxEntry {
         let mut remaining_fields = RxCustomFields::from_vec(&master_key, remaining_fields);
         let mut custom_fields = RxCustomFields::from_custom_data(&master_key, custom_data);
         custom_fields.append(&mut remaining_fields);
-        let is_expired = entry
-            .get_expiry_time()
-            .map(|expiry| entry.times.expires && *expiry <= keepass::db::Times::now())
-            .unwrap_or(false);
 
         Self {
             uuid: entry.uuid,
@@ -194,6 +233,7 @@ impl RxEntry {
             is_expired,
             icon: rx_icon,
             tags: mem::take(&mut entry.tags),
+            entropy: OnceCell::new(),
         }
     }
 
@@ -279,11 +319,20 @@ impl RxEntry {
         self.is_expired
     }
 
-    pub fn password_is_weak(&self) -> bool {
-        let maybe_pw = self
-            .password()
-            .and_then(|val| val.value().map(|v| v.to_string()));
-        maybe_pw.map(|pw| pw.len() < 10).unwrap_or(false)
+    pub fn entropy(&self) -> f64 {
+        *self.entropy.get_or_init(|| {
+            let maybe_pw = self
+                .password()
+                .and_then(|val| val.value().map(|v| v.to_string()));
+
+            maybe_pw
+                .map(|ref pw| calculate_password_entropy(pw))
+                .unwrap_or(0.0)
+        })
+    }
+
+    pub fn is_password_weak(&self) -> bool {
+        self.password().is_some() && self.entropy() < 75.0
     }
 
     pub fn has_otp(&self) -> bool {

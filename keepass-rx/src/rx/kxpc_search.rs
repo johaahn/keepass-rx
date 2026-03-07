@@ -7,7 +7,7 @@ use super::{RxDatabase, RxEntry};
 
 #[derive(Debug, Clone)]
 struct QueryToken {
-    field: Option<String>,
+    operator: Option<String>,
     term: QueryTokenTerm,
 }
 
@@ -113,19 +113,19 @@ fn parse_token(token: &str) -> Option<QueryToken> {
     };
 
     Some(QueryToken {
-        field,
+        operator: field,
         term: token_term,
     })
 }
 
-fn entry_field(entry: &RxEntry, field: &str, db: &RxDatabase) -> Vec<String> {
-    match field.to_lowercase().as_str() {
-        "title" => entry
+fn operator_field(entry: &RxEntry, op: &str, db: &RxDatabase) -> Vec<String> {
+    match op.to_lowercase().as_str() {
+        "title" | "t" => entry
             .title()
             .and_then(|v| v.value().map(|v| v.to_string()))
             .into_iter()
             .collect(),
-        "user" | "username" => entry
+        "user" | "u" => entry
             .username()
             .and_then(|v| v.value().map(|v| v.to_string()))
             .into_iter()
@@ -135,12 +135,17 @@ fn entry_field(entry: &RxEntry, field: &str, db: &RxDatabase) -> Vec<String> {
             .and_then(|v| v.value().map(|v| v.to_string()))
             .into_iter()
             .collect(),
-        "notes" => entry
+        "notes" | "n" => entry
             .notes()
             .and_then(|v| v.value().map(|v| v.to_string()))
             .into_iter()
             .collect(),
-        "group" => db
+        "password" | "p" | "pw" => entry
+            .password()
+            .and_then(|v| v.value().map(|v| v.to_string()))
+            .into_iter()
+            .collect(),
+        "group" | "g" => db
             .get_group(entry.parent_group)
             .map(|g| g.name.to_string())
             .into_iter()
@@ -149,7 +154,7 @@ fn entry_field(entry: &RxEntry, field: &str, db: &RxDatabase) -> Vec<String> {
         "uuid" => vec![entry.uuid.to_string()],
         "is" => {
             let is_expired = entry.is_expired();
-            let is_weak = entry.password_is_weak();
+            let is_weak = entry.is_password_weak();
 
             let mut vals = vec![];
             if is_expired {
@@ -198,8 +203,8 @@ fn term_matches(token: &QueryToken, value: &str) -> bool {
 
 fn entry_matches(db: &RxDatabase, entry: &RxEntry, tokens: &[QueryToken]) -> bool {
     tokens.iter().all(|token| {
-        let haystack: Vec<String> = match token.field.as_deref() {
-            Some(field) => entry_field(entry, field, db),
+        let haystack: Vec<String> = match token.operator.as_deref() {
+            Some(op) => operator_field(entry, op, db),
             None => entry_default_fields(entry, db),
         };
 

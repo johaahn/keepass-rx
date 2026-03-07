@@ -34,7 +34,7 @@ ListItem {
         } else if (theEntry.itemType == 'Tag') {
             return 'tag';
         } else if (theEntry.itemType == 'SavedSearch') {
-            return 'search';
+            return 'find';
         } else {
             return 'up';
         }
@@ -176,7 +176,8 @@ ListItem {
                     // Icon of the group/folder, if it has one.
                     Image {
                         id: groupEntryImg
-                        visible: theEntry.itemType !== 'Tag' // no tiny images for tags.
+                        // no tiny images for tags or searches. the != instead of !== is intentional.
+                        visible: theEntry.itemType != 'Tag' && theEntry.itemType != 'SavedSearch'
                         fillMode: Image.PreserveAspectFit
                         source: '../../assets/placeholder.png'
                         width: units.gu(2.75)

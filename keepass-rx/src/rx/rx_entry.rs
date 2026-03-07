@@ -1,5 +1,6 @@
 use crate::crypto::{EncryptedValue, MasterKey};
 
+use super::entropy::calculate_entropy;
 use super::icons::RxIcon;
 use anyhow::{Result, anyhow};
 use base64::{Engine, prelude::BASE64_STANDARD};
@@ -67,38 +68,6 @@ fn should_hide_field(field_name: &str) -> bool {
         || WILDCARD_FIELDS_TO_HIDE
             .iter()
             .any(|wildcard| field_name.starts_with(wildcard))
-}
-
-pub fn calculate_password_entropy(password: &str) -> f64 {
-    if password.is_empty() {
-        return 0.0;
-    }
-
-    let mut pool_size = 0usize;
-
-    if password.chars().any(|c| c.is_ascii_lowercase()) {
-        pool_size += 26;
-    }
-    if password.chars().any(|c| c.is_ascii_uppercase()) {
-        pool_size += 26;
-    }
-    if password.chars().any(|c| c.is_ascii_digit()) {
-        pool_size += 10;
-    }
-    if password.chars().any(|c| c.is_ascii_punctuation()) {
-        pool_size += 32;
-    }
-
-    // Add one bucket for non-ASCII characters as a simple approximation.
-    if password.chars().any(|c| !c.is_ascii()) {
-        pool_size += 100;
-    }
-
-    if pool_size == 0 {
-        return 0.0;
-    }
-
-    (password.chars().count() as f64) * (pool_size as f64).log2()
 }
 
 #[derive(Clone, Zeroize, ZeroizeOnDrop)]
@@ -325,9 +294,7 @@ impl RxEntry {
                 .password()
                 .and_then(|val| val.value().map(|v| v.to_string()));
 
-            maybe_pw
-                .map(|ref pw| calculate_password_entropy(pw))
-                .unwrap_or(0.0)
+            maybe_pw.map(|ref pw| calculate_entropy(pw)).unwrap_or(0.0)
         })
     }
 

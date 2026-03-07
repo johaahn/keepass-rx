@@ -71,12 +71,16 @@ ListItem {
                     entriesPage,
                     Qt.resolvedUrl("../pages/SingleEntry.qml"),
                     {
+                        entryUuid: entry.uuid ? entry.uuid : null,
                         entryTitle: entry.title ? entry.title : null,
                         entryUsername: entry.username ? entry.username : null,
                         entryPassword: entry.password ? entry.password : null,
                         entryUrl: entry.url ? entry.url : null,
                         entryNotes: entry.notes ? entry.notes : null,
-                        entryCustomFields: entry.customFields ? entry.customFields : null
+                        entryCustomFields: entry.customFields ? entry.customFields : null,
+                        entryHasTotp: !!entry.hasTotp,
+                        entryEntropy: entry.entropy !== undefined ? entry.entropy : null,
+                        entryEntropyQuality: entry.entropyQuality ? entry.entropyQuality : null
                     }
                 )
             }

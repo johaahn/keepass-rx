@@ -90,6 +90,7 @@ Item {
 
         Label {
             text: detailField.title
+            textFormat: Text.RichText
             fontSize: "small"
             color: theme.palette.normal.backgroundTertiaryText
         }

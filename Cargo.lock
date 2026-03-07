@@ -1124,6 +1124,7 @@ dependencies = [
  "aes-gcm",
  "anyhow",
  "base64",
+ "cc",
  "cpp",
  "cpp_build",
  "cstr",

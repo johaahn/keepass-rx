@@ -1,7 +1,8 @@
+use gettextrs::{gettext, pgettext};
 use qmetaobject::{QMetaType, QString, QVariant, QVariantMap};
 use std::collections::HashMap;
 
-use crate::rx::{RxCustomFields, RxEntry, RxFieldName, RxValue};
+use crate::rx::{RxCustomFields, RxEntry, RxFieldName, RxValue, entropy::PasswordQuality};
 
 use super::{RxMetadata, RxValueKeyRef, virtual_hierarchy::RxViewFeature};
 
@@ -84,6 +85,14 @@ impl From<&RxEntry> for QVariantMap {
         maybe_insert(&mut map, "title", ValueType::Rx(&value.title));
         maybe_insert(&mut map, "password", ValueType::Rx(&value.password));
         maybe_insert(&mut map, "notes", ValueType::Rx(&value.notes));
+        if value.password().is_some() {
+            let entropy = value.entropy();
+            map.insert("entropy".to_string(), QVariant::from(entropy));
+            map.insert(
+                "entropyQuality".to_string(),
+                QString::from(PasswordQuality::from(entropy).to_string()).into(),
+            );
+        }
 
         map.insert("iconPath".to_string(), icon_data_url.into());
         map.insert(
@@ -98,6 +107,22 @@ impl From<&RxEntry> for QVariantMap {
         }
 
         map.into()
+    }
+}
+
+impl std::fmt::Display for PasswordQuality {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            // KeePassXC's password widget groups Bad and Poor as "Poor".
+            PasswordQuality::Bad | PasswordQuality::Poor => {
+                write!(f, "{}", pgettext("Password strength", "Poor"))
+            }
+            PasswordQuality::Weak => write!(f, "{}", pgettext("Password strength", "Weak")),
+            PasswordQuality::Good => write!(f, "{}", pgettext("Password strength", "Good")),
+            PasswordQuality::Excellent => {
+                write!(f, "{}", pgettext("Password strength", "Excellent"))
+            }
+        }
     }
 }
 

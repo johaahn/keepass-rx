@@ -2,20 +2,62 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.3
 import Lomiri.Components 1.3
+import keepassrx 1.0
 
 import "../components"
 
 Page {
+    id: singleEntryPage
+    property string entryUuid
     property string entryTitle
     property string entryUsername
     property string entryPassword
     property string entryUrl
     property string entryNotes
     property var entryCustomFields
+    property bool entryHasTotp: false
+    property var entryEntropy: null
+    property string entryEntropyQuality
     property var colorWashout
 
     function valueIsDefined(value) {
         return value !== undefined && value !== null && value !== ''
+    }
+
+    function hasTotpSection() {
+        return entryHasTotp && valueIsDefined(entryUuid)
+    }
+
+    function hasEntropySection() {
+        return valueIsDefined(entryPassword)
+            && entryEntropy !== undefined
+            && entryEntropy !== null
+            && !Number.isNaN(Number(entryEntropy))
+    }
+
+    function entropyBitsColor(bits) {
+        if (bits < 40) {
+            return LomiriColors.red
+        } else if (bits < 75) {
+            return LomiriColors.orange
+        } else if (bits < 100) {
+            return Theme.name == "Lomiri.Components.Themes.Ambiance"
+                ? LomiriColors.green
+                : LomiriColors.lightGreen
+        }
+        return LomiriColors.green
+    }
+
+    function passwordFieldTitle() {
+        if (!hasEntropySection()) {
+            return i18n.tr("Password")
+        }
+
+        const bits = Number(entryEntropy).toFixed(1);
+        const coloredBits = "<font color=\"" + entropyBitsColor(Number(entryEntropy)) + "\">"
+              + i18n.tr('%1 bits').arg(bits)
+              + "</font>";
+        return i18n.tr("Password (Entropy: %1)").arg(coloredBits);
     }
 
     function copyToClipboard(fieldName, fieldValue) {
@@ -31,13 +73,15 @@ Page {
             colorWashout = keepassrx.washOutColor(metadata.publicColor);
         }
 
-        // value is { value: string, isHiddenByDefault: bool }
-        for (const [key, field] of Object.entries(entryCustomFields)) {
-            otherFieldsModel.append({
-                fieldName: key,
-                fieldValue: field.value,
-                fieldShown: !field.isHiddenByDefault
-            });
+        if (entryCustomFields) {
+            // value is { value: string, isHiddenByDefault: bool }
+            for (const [key, field] of Object.entries(entryCustomFields)) {
+                otherFieldsModel.append({
+                    fieldName: key,
+                    fieldValue: field.value,
+                    fieldShown: !field.isHiddenByDefault
+                });
+            }
         }
     }
 
@@ -87,6 +131,25 @@ Page {
 
     ListModel {
         id: otherFieldsModel
+    }
+
+    RxUiEntry {
+        id: totpEntry
+        entryUuid: singleEntryPage.entryUuid
+        app: AppState
+    }
+
+    Timer {
+        id: currentTotpTimer
+        repeat: true
+        interval: 1000
+        running: hasTotpSection()
+        triggeredOnStart: true
+        onTriggered: {
+            if (hasTotpSection()) {
+                totpEntry.updateTotp();
+            }
+        }
     }
 
     Rectangle {
@@ -191,17 +254,19 @@ Page {
                 visible: valueIsDefined(entryUsername)
                 subtitle: entryUsername
                 onCopyClicked: copyToClipboard(i18n.tr("Username"), entryUsername)
-                showDivider: valueIsDefined(entryPassword) || valueIsDefined(entryUrl)
+                showDivider: valueIsDefined(entryPassword)
+                    || valueIsDefined(entryUrl)
+                    || hasTotpSection()
             }
 
             DetailField {
-                title: i18n.tr("Password")
+                title: passwordFieldTitle()
                 visible: valueIsDefined(entryPassword)
                 visibleContent: entryPassword
                 showVisibilityToggle: true
                 isContentVisible: false
                 onCopyClicked: copyToClipboard(i18n.tr("Password"), entryPassword)
-                showDivider: valueIsDefined(entryUrl)
+                showDivider: valueIsDefined(entryUrl) || hasTotpSection()
             }
 
             DetailField {
@@ -209,7 +274,19 @@ Page {
                 title: i18n.tr("URL")
                 subtitle: entryUrl
                 onCopyClicked: copyToClipboard(i18n.tr('URL'), entryUrl)
+                showDivider: hasTotpSection()
             }
+
+            DetailField {
+                title: valueIsDefined(totpEntry.currentTotpValidFor)
+                    ? i18n.tr("TOTP (Valid for %1)").arg(totpEntry.currentTotpValidFor)
+                    : i18n.tr("TOTP")
+                visible: hasTotpSection()
+                subtitle: totpEntry.currentTotp
+                showCopyButton: valueIsDefined(totpEntry.currentTotp)
+                onCopyClicked: copyToClipboard(i18n.tr("TOTP"), totpEntry.currentTotp)
+            }
+
         }
     }
 
@@ -228,7 +305,7 @@ Page {
 
         ConfigurationGroup {
             id: otherFields
-            visible: Object.entries(entryCustomFields).length > 0
+            visible: entryCustomFields && Object.entries(entryCustomFields).length > 0
             title: i18n.tr("Other Fields")
 
             Repeater {

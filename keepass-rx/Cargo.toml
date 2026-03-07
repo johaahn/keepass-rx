@@ -49,6 +49,7 @@ deunicode = "1.6.2"
 [build-dependencies]
 cpp_build = "0.5"
 walkdir = "2.5.0"
+cc = "1.2.43"
 
 [features]
 # Compile the GUI portion of the application (link QT etc).

@@ -129,11 +129,6 @@ fn operator_field(entry: &RxEntry, op: &str, db: &RxDatabase) -> Vec<Zeroizing<S
             .collect(),
         "url" => entry.url().and_then(|v| v.value()).into_iter().collect(),
         "notes" | "n" => entry.notes().and_then(|v| v.value()).into_iter().collect(),
-        "password" | "p" | "pw" => entry
-            .password()
-            .and_then(|v| v.value())
-            .into_iter()
-            .collect(),
         "group" | "g" => db
             .get_group(entry.parent_group)
             .map(|g| Zeroizing::new(g.name.to_string()))
@@ -191,15 +186,61 @@ fn term_matches(token: &QueryToken, value: &str) -> bool {
     }
 }
 
-fn entry_matches(db: &RxDatabase, entry: &RxEntry, tokens: &[QueryToken]) -> bool {
-    tokens.iter().all(|token| {
-        let haystack = match token.operator.as_deref() {
-            Some(op) => operator_field(entry, op, db),
-            None => entry_default_fields(entry, db),
-        };
+fn is_password_operator(op: &str) -> bool {
+    matches!(op, "password" | "p" | "pw")
+}
 
-        haystack.iter().any(|field| term_matches(token, field))
-    })
+fn contains_ascii_case_insensitive(haystack: &[u8], needle: &[u8]) -> bool {
+    if needle.is_empty() {
+        return true;
+    }
+
+    if haystack.len() < needle.len() {
+        return false;
+    }
+
+    haystack
+        .windows(needle.len())
+        .any(|window| window.eq_ignore_ascii_case(needle))
+}
+
+fn password_term_matches(token: &QueryToken, password: &[u8]) -> bool {
+    match token.term {
+        QueryTokenTerm::Regex(ref regex) => std::str::from_utf8(password)
+            .ok()
+            .and_then(|password| {
+                RegexBuilder::new(regex)
+                    .case_insensitive(true)
+                    .build()
+                    .ok()
+                    .map(|regex| regex.is_match(password))
+            })
+            .unwrap_or(false),
+        QueryTokenTerm::Negated(ref term) => {
+            !contains_ascii_case_insensitive(password, term.as_bytes())
+        }
+        QueryTokenTerm::Basic(ref term) => {
+            contains_ascii_case_insensitive(password, term.as_bytes())
+        }
+    }
+}
+
+fn entry_matches(db: &RxDatabase, entry: &RxEntry, tokens: &[QueryToken]) -> bool {
+    tokens
+        .iter()
+        .all(|token| match token.operator.as_deref() {
+            Some(op) if is_password_operator(op) => entry
+                .password()
+                .and_then(|value| value.value_secure())
+                .as_deref()
+                .is_some_and(|password| password_term_matches(token, password)),
+            Some(op) => operator_field(entry, op, db)
+                .iter()
+                .any(|field| term_matches(token, field)),
+            None => entry_default_fields(entry, db)
+                .iter()
+                .any(|field| term_matches(token, field)),
+        })
 }
 
 pub fn evaluate_saved_search(db: &RxDatabase, query: &str) -> Vec<Uuid> {
@@ -250,6 +291,10 @@ mod tests {
             "URL".into(),
             keepass::db::Value::Unprotected("gmail.com".into()),
         );
+        entry1.fields.insert(
+            "Password".into(),
+            keepass::db::Value::Unprotected("Alic3Pass!".into()),
+        );
 
         let mut entry2 = keepass::db::Entry::new();
         entry2.fields.insert(
@@ -259,6 +304,10 @@ mod tests {
         entry2.fields.insert(
             "UserName".into(),
             keepass::db::Value::Unprotected("bob".into()),
+        );
+        entry2.fields.insert(
+            "Password".into(),
+            keepass::db::Value::Unprotected("BobSecret1".into()),
         );
 
         child.add_child(Node::Entry(entry1));
@@ -281,5 +330,19 @@ mod tests {
         let db = test_db();
         let results = evaluate_saved_search(&db, "title:Git -user:bob");
         assert_eq!(results.len(), 0);
+    }
+
+    #[test]
+    fn password_field_query_matches_expected_entry() {
+        let db = test_db();
+        let results = evaluate_saved_search(&db, "password:alic3");
+        assert_eq!(results.len(), 1);
+    }
+
+    #[test]
+    fn password_regex_query_matches_expected_entry() {
+        let db = test_db();
+        let results = evaluate_saved_search(&db, "*password:^bob.*1$");
+        assert_eq!(results.len(), 1);
     }
 }

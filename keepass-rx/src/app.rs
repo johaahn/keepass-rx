@@ -77,7 +77,6 @@ impl KeyFile {
     pub fn bytes_unencrypted(&self) -> Option<SecureVec<u8>> {
         match self {
             KeyFile::Unencrypted(bytes) => {
-                let bytes = bytes.clone();
                 let mut bytes_buf = vec_utils::secure_vec::<u8>(bytes.len()).ok()?;
                 bytes_buf.copy_from_slice(bytes.as_slice());
                 Some(bytes_buf)
@@ -89,7 +88,6 @@ impl KeyFile {
     pub fn bytes(&self, master_key: &MasterKey) -> Result<SecureVec<u8>> {
         let value = match self {
             KeyFile::Unencrypted(bytes) => {
-                let bytes = bytes.clone();
                 let mut bytes_buf = vec_utils::secure_vec::<u8>(bytes.len())?;
                 bytes_buf.copy_from_slice(bytes.as_slice());
                 bytes_buf

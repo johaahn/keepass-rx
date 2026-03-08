@@ -10,7 +10,7 @@ use paste::paste;
 use regex::Regex;
 use std::rc::Rc;
 use std::sync::LazyLock;
-use std::{collections::HashMap, str::FromStr};
+use std::{collections::HashMap, mem, str::FromStr};
 use uuid::Uuid;
 use zeroize::{Zeroize, Zeroizing};
 
@@ -164,7 +164,7 @@ impl RxDatabase {
             let template_name = template_entry
                 .as_ref()
                 .and_then(|t| t.title().and_then(|v| v.value()))
-                .map(|template_name| template_name.to_string())
+                .map(|mut template_name| mem::take(&mut *template_name))
                 .unwrap_or_else(|| "Unknown Template".to_string());
 
             let template_icon = template_entry

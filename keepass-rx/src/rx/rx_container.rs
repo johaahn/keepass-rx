@@ -277,7 +277,7 @@ impl RxContainerItem {
 
 impl From<Rc<RxEntry>> for RxContainerItem {
     fn from(value: Rc<RxEntry>) -> Self {
-        Self::Entry(value.clone())
+        Self::Entry(value)
     }
 }
 
@@ -396,7 +396,9 @@ impl RxGrouping {
             RxGrouping::Group(group) => Some(RxContainedRef::Group(group.clone())),
             RxGrouping::Template(template) => Some(RxContainedRef::Template(template.clone())),
             RxGrouping::Tag(tag) => Some(RxContainedRef::Tag(tag.clone())),
-            RxGrouping::SavedSearch(search) => Some(RxContainedRef::SavedSearch(search.clone())),
+            RxGrouping::SavedSearch(search) => {
+                Some(RxContainedRef::SavedSearch(search.clone()))
+            }
             RxGrouping::VirtualRoot => None,
         }
     }
@@ -498,9 +500,9 @@ impl RxContainedRef {
         match self {
             RxContainedRef::Entry(entry) => Some(entry.parent_group),
             RxContainedRef::Group(group) => group.parent,
-            RxContainedRef::Template(_) | RxContainedRef::Tag(_) | RxContainedRef::SavedSearch(_) => {
-                Some(Uuid::default())
-            } //virtual root
+            RxContainedRef::Template(_)
+            | RxContainedRef::Tag(_)
+            | RxContainedRef::SavedSearch(_) => Some(Uuid::default()), //virtual root
             RxContainedRef::VirtualRoot(_) => None,
         }
     }

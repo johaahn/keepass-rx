@@ -26,7 +26,7 @@ macro_rules! expose {
     ($masterkey:expr, $secret:expr) => {{
         $secret
             .as_ref()
-            .and_then(|secret| secret.value($masterkey).map(|value| value.to_string()))
+            .and_then(|secret| secret.value($masterkey))
             .unwrap_or_default()
     }};
 }

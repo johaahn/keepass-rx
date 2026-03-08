@@ -298,8 +298,8 @@ impl InitFrom<&RxEntry> for RxListItem {
             self.url,
             value
                 .url()
-                .and_then(|url| url.value().map(|u| u.to_string()))
-                .map(QString::from)
+                .and_then(|url| url.value())
+                .map(|url| QString::from(url.as_str()))
                 .unwrap_or_default()
         );
 

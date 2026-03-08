@@ -194,40 +194,44 @@ impl Search for FuzzySearch<&RxEntry> {
     }
 }
 
-impl Search for CaseInsensitiveSearch<&RxContainedRef> {
+impl Search for CaseInsensitiveSearch<&RxContainedRef<'_>> {
     fn matches(&self, term: &str) -> bool {
         match self.deref() {
             RxContainedRef::Entry(entry) => {
-                CaseInsensitiveSearch(entry.as_ref()).matches(term)
+                CaseInsensitiveSearch(entry.as_ref().as_ref()).matches(term)
             }
             RxContainedRef::Group(group) => {
-                CaseInsensitiveSearch(group.as_ref()).matches(term)
+                CaseInsensitiveSearch(group.as_ref().as_ref()).matches(term)
             }
             RxContainedRef::Template(template) => {
-                CaseInsensitiveSearch(template.as_ref()).matches(term)
+                CaseInsensitiveSearch(template.as_ref().as_ref()).matches(term)
             }
-            RxContainedRef::Tag(tag) => CaseInsensitiveSearch(tag).matches(term),
-            RxContainedRef::SavedSearch(search) => CaseInsensitiveSearch(search).matches(term),
+            RxContainedRef::Tag(tag) => CaseInsensitiveSearch(tag.as_ref()).matches(term),
+            RxContainedRef::SavedSearch(search) => {
+                CaseInsensitiveSearch(search.as_ref()).matches(term)
+            }
             RxContainedRef::VirtualRoot(_) => true,
         }
     }
 }
 
-impl Search for FuzzySearch<&RxContainedRef> {
+impl Search for FuzzySearch<&RxContainedRef<'_>> {
     fn matches(&self, term: &str) -> bool {
         match self.deref() {
-            RxContainedRef::Entry(entry) => FuzzySearch(entry.as_ref()).matches(term),
-            RxContainedRef::Group(group) => FuzzySearch(group.as_ref()).matches(term),
-            RxContainedRef::Template(template) => FuzzySearch(template.as_ref()).matches(term),
-            RxContainedRef::Tag(tag) => FuzzySearch(tag).matches(term),
-            RxContainedRef::SavedSearch(search) => FuzzySearch(search).matches(term),
+            RxContainedRef::Entry(entry) => FuzzySearch(entry.as_ref().as_ref()).matches(term),
+            RxContainedRef::Group(group) => FuzzySearch(group.as_ref().as_ref()).matches(term),
+            RxContainedRef::Template(template) => {
+                FuzzySearch(template.as_ref().as_ref()).matches(term)
+            }
+            RxContainedRef::Tag(tag) => FuzzySearch(tag.as_ref()).matches(term),
+            RxContainedRef::SavedSearch(search) => FuzzySearch(search.as_ref()).matches(term),
             RxContainedRef::VirtualRoot(_) => true,
         }
     }
 }
 
 pub fn search_contained_ref(
-    contained_ref: &RxContainedRef,
+    contained_ref: &RxContainedRef<'_>,
     search_type: RxSearchType,
     term: &str,
 ) -> bool {

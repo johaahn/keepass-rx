@@ -118,7 +118,7 @@ impl RxUiContainerStack {
             self.container_stack.push(container.uuid());
             self.containerChanged(container_uuid);
 
-            let container_name = QString::from(container.name());
+            let container_name = QString::from(container.name().as_ref());
 
             if self.containerName != container_name {
                 self.containerName = container_name;
@@ -160,8 +160,7 @@ impl RxUiContainerStack {
 
             let container_name = QString::from(
                 new_container
-                    .map(|c| c.name())
-                    .map(QString::from)
+                    .map(|c| QString::from(c.name().as_ref()))
                     .unwrap_or_else(|| QString::from("Unknown Container".to_string())),
             );
 

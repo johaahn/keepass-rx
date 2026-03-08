@@ -45,7 +45,7 @@ pub trait VirtualHierarchy {
         RxViewFeature::None
     }
 
-    fn get(&self, container_uuid: Uuid) -> Option<RxContainedRef> {
+    fn get(&self, container_uuid: Uuid) -> Option<RxContainedRef<'_>> {
         self.root()
             .get_container(container_uuid)
             .and_then(|c| c.get_ref())
@@ -57,7 +57,7 @@ pub trait VirtualHierarchy {
         search_type: RxSearchType,
         container_uuid: Uuid,
         search_term: Option<&str>,
-    ) -> Vec<RxContainedRef>;
+    ) -> Vec<RxContainedRef<'_>>;
 }
 
 #[derive(Clone)]
@@ -91,7 +91,7 @@ impl VirtualHierarchy for AllTemplates {
         search_type: RxSearchType,
         container_uuid: Uuid,
         search_term: Option<&str>,
-    ) -> Vec<RxContainedRef> {
+    ) -> Vec<RxContainedRef<'_>> {
         if container_uuid == self.root().uuid() {
             // searching from the (non existant) "root template"
             // means we should search all templates instead.
@@ -140,7 +140,7 @@ impl VirtualHierarchy for DefaultView {
         search_type: RxSearchType,
         container_uuid: Uuid,
         search_term: Option<&str>,
-    ) -> Vec<RxContainedRef> {
+    ) -> Vec<RxContainedRef<'_>> {
         let mut results = self
             .root()
             .get_container(container_uuid)
@@ -205,7 +205,7 @@ impl VirtualHierarchy for TotpEntries {
         search_type: RxSearchType,
         container_uuid: Uuid,
         search_term: Option<&str>,
-    ) -> Vec<RxContainedRef> {
+    ) -> Vec<RxContainedRef<'_>> {
         self.root()
             .get_container(container_uuid)
             .map(|container| container.search_children_immediate(search_type, search_term))
@@ -254,7 +254,7 @@ impl VirtualHierarchy for AllTags {
         search_type: RxSearchType,
         container_uuid: Uuid,
         search_term: Option<&str>,
-    ) -> Vec<RxContainedRef> {
+    ) -> Vec<RxContainedRef<'_>> {
         self.root()
             .get_container(container_uuid)
             .map(|container| container.search_children_immediate(search_type, search_term))
@@ -302,7 +302,7 @@ impl VirtualHierarchy for SavedSearches {
         search_type: RxSearchType,
         container_uuid: Uuid,
         search_term: Option<&str>,
-    ) -> Vec<RxContainedRef> {
+    ) -> Vec<RxContainedRef<'_>> {
         self.root()
             .get_container(container_uuid)
             .map(|container| container.search_children_immediate(search_type, search_term))

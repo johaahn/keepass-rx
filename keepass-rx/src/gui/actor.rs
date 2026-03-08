@@ -445,7 +445,7 @@ impl Handler<GetContainer> for KeepassRxActor {
             .get_ref();
 
         let this_container_name = maybe_container
-            .map(|container| QString::from(container.name()))
+            .map(|container| QString::from(container.name().as_ref()))
             .unwrap_or_default();
 
         let this_container_uuid = QString::from(container_uuid.to_string());

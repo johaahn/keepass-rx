@@ -161,7 +161,7 @@ impl RxListItem {
         loader().expect("Unable to load from current view");
     }
 
-    pub fn init_from_virtual_root(&mut self, root_name: String) {
+    pub fn init_from_virtual_root(&mut self, root_name: &str) {
         set_value!(self.itemType, RxItemType::Group);
         set_value!(self.entryUuid, QString::from(Uuid::default().to_string()));
         set_value!(self.parentUuid, QString::default());
@@ -175,20 +175,20 @@ impl RxListItem {
 
         set_value!(self.iconPath, QString::default());
         set_value!(self.iconBuiltin, false);
-        set_value!(self.title, QString::from(root_name.as_ref()));
+        set_value!(self.title, QString::from(root_name));
         set_value!(self.subtitle, QString::from(""));
     }
 }
 
-impl InitFrom<RxContainedRef> for RxListItem {
-    fn init_from(&mut self, value: RxContainedRef) {
+impl InitFrom<RxContainedRef<'_>> for RxListItem {
+    fn init_from(&mut self, value: RxContainedRef<'_>) {
         match value {
-            RxContainedRef::Entry(entry) => self.init_from(entry.as_ref()),
-            RxContainedRef::Group(group) => self.init_from(group.as_ref()),
-            RxContainedRef::Template(template) => self.init_from(template.as_ref()),
-            RxContainedRef::Tag(tag) => self.init_from(&tag),
-            RxContainedRef::SavedSearch(saved_search) => self.init_from(&saved_search),
-            RxContainedRef::VirtualRoot(root_name) => self.init_from_virtual_root(root_name),
+            RxContainedRef::Entry(entry) => self.init_from(entry.as_ref().as_ref()),
+            RxContainedRef::Group(group) => self.init_from(group.as_ref().as_ref()),
+            RxContainedRef::Template(template) => self.init_from(template.as_ref().as_ref()),
+            RxContainedRef::Tag(tag) => self.init_from(tag.as_ref()),
+            RxContainedRef::SavedSearch(saved_search) => self.init_from(saved_search.as_ref()),
+            RxContainedRef::VirtualRoot(root_name) => self.init_from_virtual_root(root_name.as_ref()),
         }
     }
 }

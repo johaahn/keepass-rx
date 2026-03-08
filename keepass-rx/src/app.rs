@@ -14,7 +14,7 @@ use crate::gui::actor::KeepassRxActor;
 use crate::gui::settings::SettingsBridge;
 use crate::rx::RxDatabase;
 use crate::rx::RxSearchType;
-use crate::rx::virtual_hierarchy::VirtualHierarchy;
+use crate::rx::virtual_hierarchy::VirtualHierarchyType;
 
 /// Hackity hack hack hack. Instead of having a running actor system
 /// via qmeta_async and using Actix's registry, we'll just keep a
@@ -122,9 +122,9 @@ pub struct AppState {
     base: qt_base_class!(trait QObject),
     settings: Option<Rc<QObjectBox<SettingsBridge>>>,
 
-    deferred_views: RefCell<Vec<Box<dyn FnOnce(&dyn VirtualHierarchy)>>>,
+    deferred_views: RefCell<Vec<Box<dyn FnOnce(&VirtualHierarchyType)>>>,
 
-    current_view: Option<Rc<Box<dyn VirtualHierarchy>>>,
+    current_view: Option<Rc<VirtualHierarchyType>>,
     curr_db: Option<Rc<Zeroizing<RxDatabase>>>,
 
     master_key: Option<MasterKey>,
@@ -174,7 +174,7 @@ impl AppState {
         self.db_key = key;
     }
 
-    pub fn curr_view(&self) -> Option<Rc<Box<dyn VirtualHierarchy>>> {
+    pub fn curr_view(&self) -> Option<Rc<VirtualHierarchyType>> {
         self.current_view.clone()
     }
 
@@ -198,24 +198,24 @@ impl AppState {
         self.curr_db.replace(Rc::new(db));
     }
 
-    pub fn set_curr_view(&mut self, view: Box<dyn VirtualHierarchy>) {
+    pub fn set_curr_view(&mut self, view: VirtualHierarchyType) {
         let view = Rc::new(view);
         for cb in self.deferred_views.take() {
             let view_ref = view.clone();
             // Reason for actix::spawn, see below
-            actix::spawn(async move { cb(view_ref.as_ref().as_ref()) });
+            actix::spawn(async move { cb(view_ref.as_ref()) });
         }
 
         self.current_view.replace(view);
     }
 
-    pub fn deferred_with_view(&self, cb: impl FnOnce(&dyn VirtualHierarchy) + 'static) {
+    pub fn deferred_with_view(&self, cb: impl FnOnce(&VirtualHierarchyType) + 'static) {
         // Calling the callback from within AppState means we have the
         // RefCells that AppState is encapsulated in potentially
         // panic. Spawn the closure on actix, this ensures the borrow
         // of self will have ended.
         if let Some(view) = self.curr_view() {
-            actix::spawn(async move { cb(view.as_ref().as_ref()) });
+            actix::spawn(async move { cb(view.as_ref()) });
         } else {
             self.deferred_views.borrow_mut().push(Box::new(cb));
         }

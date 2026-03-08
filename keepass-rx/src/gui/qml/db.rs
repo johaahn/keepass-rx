@@ -14,7 +14,7 @@ use crate::{
         actor::OpenDatabase,
         utils::{app_data_path, db_path_for_type},
     },
-    rx::virtual_hierarchy::VirtualHierarchy,
+    rx::virtual_hierarchy::VirtualHierarchyType,
 };
 
 #[derive(Message)]
@@ -210,7 +210,7 @@ impl RxUiDatabase {
         self.detectKeyFile();
     }
 
-    fn init_from_view(&mut self, _: &dyn VirtualHierarchy) {}
+    fn init_from_view(&mut self, _: &VirtualHierarchyType) {}
 
     fn app_state_cell(&self) -> QObjectPinned<'_, crate::app::AppState> {
         self._app.as_pinned().expect("No app state")

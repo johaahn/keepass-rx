@@ -6,7 +6,7 @@ use uuid::Uuid;
 
 use crate::app::AppState;
 use crate::gui::RxViewMode;
-use crate::rx::virtual_hierarchy::VirtualHierarchy;
+use crate::rx::virtual_hierarchy::{VirtualHierarchy, VirtualHierarchyType};
 
 use crate::gui::instructions::get_instructions;
 
@@ -49,7 +49,7 @@ pub struct RxUiContainerStack {
 impl RxUiContainerStack {
     pub fn init_from_state(&mut self, _: &AppState) {}
 
-    pub fn init_from_view(&mut self, view: &dyn VirtualHierarchy) {
+    pub fn init_from_view(&mut self, view: &VirtualHierarchyType) {
         self.container_stack.clear();
         self.container_stack.push(view.root().uuid());
 

@@ -4,7 +4,9 @@ use qmeta_async::with_executor;
 use qmetaobject::prelude::*;
 
 use crate::{
-    actor::ConnectedModelActor, app::AppState, rx::virtual_hierarchy::VirtualHierarchy,
+    actor::ConnectedModelActor,
+    app::AppState,
+    rx::virtual_hierarchy::VirtualHierarchyType,
 };
 
 /// A QObject that is wired to interact with a database entry via the
@@ -28,7 +30,7 @@ pub struct RxUiEntry {
 #[allow(dead_code, non_snake_case)]
 impl RxUiEntry {
     fn init_from_state(&mut self, _: &AppState) {}
-    fn init_from_view(&mut self, _: &dyn VirtualHierarchy) {}
+    fn init_from_view(&mut self, _: &VirtualHierarchyType) {}
 
     fn self_actor(&self) -> Option<Addr<ConnectedModelActor<Self>>> {
         self._connected_model_registration

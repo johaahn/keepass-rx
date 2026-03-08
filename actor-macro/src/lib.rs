@@ -463,7 +463,7 @@ fn generate_methods(
 
             }
 
-            fn reinit_with(&mut self, view: &dyn VirtualHierarchy) {
+            fn reinit_with(&mut self, view: &crate::rx::virtual_hierarchy::VirtualHierarchyType) {
                 use actix::prelude::*;
                 use crate::actor::*;
 
@@ -481,18 +481,10 @@ fn generate_methods(
                 let maybe_view = app_state.curr_view();
 
                 if let Some(view) = maybe_view {
-                    self.init_from_view(view.as_ref().as_ref());
+                    self.init_from_view(view.as_ref());
                     self._ready = true;
                     self._readyChanged();
                 }
-            }
-
-            fn view(&self) -> std::rc::Rc<Box<dyn crate::rx::virtual_hierarchy::VirtualHierarchy>> {
-                self._app.as_pinned()
-                    .expect("app set by QML")
-                    .borrow()
-                    .curr_view()
-                    .expect("view was not initialized")
             }
         }
     }

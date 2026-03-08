@@ -7,7 +7,7 @@ use qmetaobject::{QMetaType, QObject, QPointer, QString};
 use uuid::Uuid;
 
 use crate::app::AppState;
-use crate::rx::virtual_hierarchy::{RxViewFeature, VirtualHierarchy};
+use crate::rx::virtual_hierarchy::{RxViewFeature, VirtualHierarchy, VirtualHierarchyType};
 use crate::rx::{RxContainedRef, RxEntry, RxGroup, RxSavedSearch, RxTag, RxTemplate};
 
 #[derive(QEnum, Clone, Default, Copy, PartialEq, Eq)]
@@ -139,7 +139,7 @@ macro_rules! set_value {
 
 impl RxListItem {
     fn init_from_state(&mut self, _: &AppState) {}
-    fn init_from_view(&mut self, view: &dyn VirtualHierarchy) {
+    fn init_from_view(&mut self, view: &VirtualHierarchyType) {
         let mut loader = || -> anyhow::Result<()> {
             let uuid = Uuid::from_str(&self.entryUuid.to_string())?;
 

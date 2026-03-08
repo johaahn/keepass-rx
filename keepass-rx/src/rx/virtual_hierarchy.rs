@@ -1,3 +1,4 @@
+use enum_dispatch::enum_dispatch;
 use gettextrs::{gettext, pgettext};
 use std::{collections::HashMap, rc::Rc};
 use uuid::Uuid;
@@ -36,6 +37,7 @@ impl std::fmt::Display for RxViewFeature {
 /// VirtualHierarchy manages two lifetimes when searching: the
 /// lifetime of the RxContainer ('cnt) and the lifetime of the
 /// RxDatabase ('db).
+#[enum_dispatch]
 pub trait VirtualHierarchy {
     fn root(&self) -> &RxRoot;
 
@@ -58,6 +60,16 @@ pub trait VirtualHierarchy {
         container_uuid: Uuid,
         search_term: Option<&str>,
     ) -> Vec<RxContainedRef<'_>>;
+}
+
+#[enum_dispatch(VirtualHierarchy)]
+#[derive(Clone)]
+pub enum VirtualHierarchyType {
+    AllTemplates,
+    DefaultView,
+    TotpEntries,
+    AllTags,
+    SavedSearches,
 }
 
 #[derive(Clone)]
@@ -110,6 +122,7 @@ impl VirtualHierarchy for AllTemplates {
     }
 }
 
+#[derive(Clone)]
 pub struct DefaultView(RxRoot);
 
 impl DefaultView {
@@ -161,6 +174,7 @@ impl VirtualHierarchy for DefaultView {
     }
 }
 
+#[derive(Clone)]
 pub struct TotpEntries(RxRoot);
 
 impl TotpEntries {
@@ -213,6 +227,7 @@ impl VirtualHierarchy for TotpEntries {
     }
 }
 
+#[derive(Clone)]
 pub struct AllTags(RxRoot);
 
 impl AllTags {
@@ -262,6 +277,7 @@ impl VirtualHierarchy for AllTags {
     }
 }
 
+#[derive(Clone)]
 pub struct SavedSearches(RxRoot);
 
 impl SavedSearches {

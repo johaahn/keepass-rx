@@ -19,6 +19,7 @@ use crate::crypto::{EncryptedPassword, MasterKey};
 use crate::gui::utils::synced_databases_path;
 use crate::rx::virtual_hierarchy::{
     AllTags, AllTemplates, DefaultView, SavedSearches, TotpEntries, VirtualHierarchy,
+    VirtualHierarchyType,
 };
 use crate::{
     gui::{RxViewMode, utils::imported_databases_path},
@@ -216,12 +217,14 @@ impl Handler<SetViewMode> for KeepassRxActor {
             Err(err) => return gui.errorReceived(format!("{}", err)),
         };
 
-        let view: Box<dyn VirtualHierarchy> = match mode {
-            RxViewMode::All => Box::new(DefaultView::new(&db)),
-            RxViewMode::Templates => Box::new(AllTemplates::new(&db)),
-            RxViewMode::Totp => Box::new(TotpEntries::new(&db)),
-            RxViewMode::Tags => Box::new(AllTags::new(&db)),
-            RxViewMode::SavedSearches => Box::new(SavedSearches::new(&db)),
+        let view = match mode {
+            RxViewMode::All => VirtualHierarchyType::DefaultView(DefaultView::new(&db)),
+            RxViewMode::Templates => VirtualHierarchyType::AllTemplates(AllTemplates::new(&db)),
+            RxViewMode::Totp => VirtualHierarchyType::TotpEntries(TotpEntries::new(&db)),
+            RxViewMode::Tags => VirtualHierarchyType::AllTags(AllTags::new(&db)),
+            RxViewMode::SavedSearches => {
+                VirtualHierarchyType::SavedSearches(SavedSearches::new(&db))
+            }
         };
 
         app_state.set_curr_view(view);
@@ -230,7 +233,7 @@ impl Handler<SetViewMode> for KeepassRxActor {
 
         println!(
             "Set view to: {}",
-            app_state.curr_view().as_ref().unwrap().name()
+            app_state.curr_view().unwrap().name()
         );
     }
 }
@@ -307,7 +310,7 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                     Ok(keepass_db) => {
                         let wrapped_db = Zeroizing::new(ZeroableDatabase(keepass_db));
                         let rx_db = RxDatabase::new(wrapped_db);
-                        let view = Box::new(DefaultView::new(&rx_db));
+                        let view = VirtualHierarchyType::DefaultView(DefaultView::new(&rx_db));
 
                         let app_state = this.app_state.pinned();
                         let mut app_state = app_state.borrow_mut();

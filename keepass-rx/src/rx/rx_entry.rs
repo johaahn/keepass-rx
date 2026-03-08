@@ -290,11 +290,26 @@ impl RxEntry {
 
     pub fn entropy(&self) -> f64 {
         *self.entropy.get_or_init(|| {
-            let maybe_pw = self
-                .password()
-                .and_then(|val| val.value().map(|v| v.to_string()));
+            let mut maybe_pw = self.password().and_then(|val| val.value_secure());
 
-            maybe_pw.map(|ref pw| calculate_entropy(pw)).unwrap_or(0.0)
+            let entropy = maybe_pw
+                .as_ref()
+                .map(|pw| calculate_entropy(pw))
+                .transpose()
+                .map(|res| res.unwrap_or(0.0));
+
+            if let Some(pw) = maybe_pw.as_mut() {
+                pw.zeroize();
+            }
+
+            match entropy {
+                Ok(ent) => ent,
+                Err(err) => {
+                    println!("[WARN] Could not calculate entropy: {}", err);
+                    println!("[WARN] Defaulting to 0.0 bits");
+                    0.0
+                }
+            }
         })
     }
 
@@ -387,6 +402,10 @@ impl<'a> RxValueKeyRef<'a> {
         self.0.value(self.1).map(Zeroizing::new)
     }
 
+    pub fn value_secure(&self) -> Option<SecureVec<u8>> {
+        self.0.value_secure(self.1)
+    }
+
     pub fn is_hidden_by_default(&self) -> bool {
         self.0.is_hidden_by_default()
     }
@@ -475,6 +494,22 @@ impl RxValue {
                 .flatten(),
             Sensitive(val) => std::str::from_utf8(&val).ok().map(|v| v.to_string()),
             Unprotected(value) => Some(value.clone()),
+            _ => None,
+        }
+    }
+
+    pub fn value_secure(&self, master_key: &MasterKey) -> Option<SecureVec<u8>> {
+        use RxValue::*;
+        match self {
+            Protected(val) => val.expose(master_key).ok(),
+            Sensitive(val) => Some(val.clone()),
+            Unprotected(value) => match vec_utils::secure_vec::<u8>(value.len()).ok() {
+                Some(mut buf) => {
+                    buf.copy_from_slice(value.as_bytes());
+                    Some(buf)
+                }
+                None => None,
+            },
             _ => None,
         }
     }

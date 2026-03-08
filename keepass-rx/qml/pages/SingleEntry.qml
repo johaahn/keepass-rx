@@ -53,7 +53,7 @@ Page {
             return i18n.tr("Password")
         }
 
-        const bits = Number(entryEntropy).toFixed(1);
+        const bits = Number(entryEntropy).toFixed(2);
         const coloredBits = "<font color=\"" + entropyBitsColor(Number(entryEntropy)) + "\">"
               + i18n.tr('%1 bits').arg(bits)
               + "</font>";

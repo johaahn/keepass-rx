@@ -97,8 +97,11 @@ Item {
 
         Label {
             width: parent.width
-            text: detailField.showVisibilityToggle ? (detailField.isContentVisible ? detailField.visibleContent : detailField.hiddenContent) : detailField.subtitle
-            wrapMode: Text.WordWrap
+            text: detailField.showVisibilityToggle
+                ? (detailField.isContentVisible
+                   ? detailField.visibleContent
+                   : detailField.hiddenContent)
+                : detailField.subtitle
             fontSize: "medium"
             elide: Text.ElideRight
         }

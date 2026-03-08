@@ -26,7 +26,7 @@ impl RxRoot {
 
     pub fn root_name(&self) -> String {
         self.root_container
-            .get_ref()
+            .contained_ref()
             .map(|r| r.name().into_owned())
             .unwrap_or_else(|| "No Name".to_string())
     }
@@ -102,17 +102,13 @@ impl RxContainer {
         self.item.children()
     }
 
-    pub fn get_ref(&self) -> Option<RxContainedRef<'_>> {
-        self.as_contained_ref()
-    }
-
-    pub fn as_contained_ref(&self) -> Option<RxContainedRef<'_>> {
+    pub fn contained_ref(&self) -> Option<RxContainedRef<'_>> {
         match self.contained_type {
             RxContainedType::Group
             | RxContainedType::Template
             | RxContainedType::Tag
             | RxContainedType::SavedSearch => {
-                self.item().grouping().and_then(|g| g.as_contained_ref())
+                self.item().grouping().and_then(|g| g.contained_ref())
             }
             RxContainedType::Entry => self
                 .item()
@@ -181,7 +177,7 @@ impl RxContainer {
         self.children()
             .iter()
             .filter_map(|child| {
-                let contained_ref = child.as_contained_ref()?;
+                let contained_ref = child.contained_ref()?;
                 let is_match = search_term.as_ref().is_none_or(|term| {
                     search_contained_ref(&contained_ref, search_type, term)
                 });
@@ -193,7 +189,7 @@ impl RxContainer {
     pub fn child_groupings_immedate(&self) -> Vec<RxContainedRef<'_>> {
         self.child_groupings()
             .into_iter()
-            .filter_map(|child| child.as_contained_ref())
+            .filter_map(|child| child.contained_ref())
             .collect()
     }
 
@@ -213,7 +209,7 @@ impl RxContainer {
         let filtered_by_search = containers_in_tree.map(|containers_iter| {
             containers_iter
                 .filter_map(|container| {
-                    let contained_ref = container.as_contained_ref()?;
+                    let contained_ref = container.contained_ref()?;
                     let is_match = search_term.as_ref().is_none_or(|term| {
                         search_contained_ref(&contained_ref, search_type, term)
                     });
@@ -394,10 +390,6 @@ pub enum RxGrouping {
 
 impl RxGrouping {
     pub fn contained_ref(&self) -> Option<RxContainedRef<'_>> {
-        self.as_contained_ref()
-    }
-
-    pub fn as_contained_ref(&self) -> Option<RxContainedRef<'_>> {
         match &self {
             RxGrouping::Group(group) => Some(RxContainedRef::Group(Cow::Borrowed(group))),
             RxGrouping::Template(template) => {

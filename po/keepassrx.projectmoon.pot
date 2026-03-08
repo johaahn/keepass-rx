@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-08 18:11+0100\n"
+"POT-Creation-Date: 2026-03-08 19:47+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,8 +42,8 @@ msgid "Tap to copy 2FA code"
 msgstr ""
 
 #: qml/pages/AboutPage.qml:12 qml/pages/DBList.qml:76
-#: qml/pages/EntriesPage.qml:212 qml/pages/OpenDBPage.qml:112
-#: qml/pages/UnlockPage.qml:41
+#: qml/pages/OpenDBPage.qml:112 qml/pages/UnlockPage.qml:41
+#: qml/pages/EntriesPage.qml:212
 msgid "About"
 msgstr ""
 
@@ -97,9 +97,9 @@ msgstr ""
 msgid "Add Database"
 msgstr ""
 
-#: qml/pages/DBList.qml:69 qml/pages/EntriesPage.qml:203
-#: qml/pages/OpenDBPage.qml:105 qml/pages/SettingsPage.qml:10
-#: qml/pages/UnlockPage.qml:34
+#: qml/pages/DBList.qml:69 qml/pages/OpenDBPage.qml:105
+#: qml/pages/SettingsPage.qml:10 qml/pages/UnlockPage.qml:34
+#: qml/pages/EntriesPage.qml:203
 msgid "Settings"
 msgstr ""
 
@@ -117,6 +117,131 @@ msgstr ""
 
 #: qml/pages/DBList.qml:283
 msgid "It will only be removed from the app, not your device."
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:26
+msgid "Key Loaded"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:27
+msgid "Remove Key"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:29
+msgid "Use Key"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:36
+msgid "Automatically detected a key file for this database."
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:38
+msgid "A key file will be used to open this database."
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:50
+msgid "Select Key File"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:92 qml/pages/EntriesPage.qml:167
+#: qml/pages/SingleEntry.qml:120
+msgid "Back"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:222
+msgid "Enter the database master password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:235
+msgid "Master Password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:261
+msgid "Open"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:282
+msgid "Hide Password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:282
+msgid "Show Password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:339
+msgid "Opening"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:34
+msgid "Change settings based on your preferences."
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:39
+msgid "Enable database locking"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:42
+msgid ""
+"Securely lock and unlock database with a short passcode. Requires restart to "
+"take effect."
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:55
+msgid "Enable Accents"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:57
+msgid ""
+"Set header color and name according to database settings. Compatible with "
+"KeePassXC."
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:72
+msgid "Show the \"Recycle bin\" group"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:74
+msgid "This group contains all the deleted entries"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:87
+msgid "Fuzzy Search"
+msgstr ""
+
+#: qml/pages/SettingsPage.qml:90
+msgid ""
+"Use fuzzy search to find entries. If disabled, search only matches exact "
+"case insensitive text."
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:137
+msgid "Manual path set."
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:154
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:170
+msgid "Passcode"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:201
+msgid "Unlock"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:220
+msgid "Securely Unlocking"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:221
+msgid "Securely Locking"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:232
+msgid "Database Not Opening?"
 msgstr ""
 
 #: qml/pages/EntriesPage.qml:96
@@ -141,11 +266,6 @@ msgstr ""
 
 #: qml/pages/EntriesPage.qml:155
 msgid "Close"
-msgstr ""
-
-#: qml/pages/EntriesPage.qml:167 qml/pages/OpenDBPage.qml:92
-#: qml/pages/SingleEntry.qml:120
-msgid "Back"
 msgstr ""
 
 #: qml/pages/EntriesPage.qml:180
@@ -220,96 +340,6 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:26
-msgid "Key Loaded"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:27
-msgid "Remove Key"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:29
-msgid "Use Key"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:36
-msgid "Automatically detected a key file for this database."
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:38
-msgid "A key file will be used to open this database."
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:50
-msgid "Select Key File"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:222
-msgid "Enter the database master password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:235
-msgid "Master Password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:261
-msgid "Open"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:282
-msgid "Hide Password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:282
-msgid "Show Password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:339
-msgid "Opening"
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:34
-msgid "Change settings based on your preferences."
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:39
-msgid "Enable database locking"
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:42
-msgid ""
-"Securely lock and unlock database with a short passcode. Requires restart to "
-"take effect."
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:55
-msgid "Enable Accents"
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:57
-msgid ""
-"Set header color and name according to database settings. Compatible with "
-"KeePassXC."
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:72
-msgid "Show the \"Recycle bin\" group"
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:74
-msgid "This group contains all the deleted entries"
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:87
-msgid "Fuzzy Search"
-msgstr ""
-
-#: qml/pages/SettingsPage.qml:90
-msgid ""
-"Use fuzzy search to find entries. If disabled, search only matches exact "
-"case insensitive text."
-msgstr ""
-
 #: qml/pages/SingleEntry.qml:53 qml/pages/SingleEntry.qml:268
 msgid "Password"
 msgstr ""
@@ -364,36 +394,6 @@ msgstr ""
 
 #: qml/pages/SingleEntry.qml:335 qml/Main.qml:225
 msgid "KeePassRX: Clipboard cleared."
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:137
-msgid "Manual path set."
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:154
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:170
-msgid "Passcode"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:201
-msgid "Unlock"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:220
-msgid "Securely Unlocking"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:221
-msgid "Securely Locking"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:232
-msgid "Database Not Opening?"
 msgstr ""
 
 #: src/gui/instructions.rs:9

@@ -50,7 +50,7 @@ pub trait VirtualHierarchy {
     fn get(&self, container_uuid: Uuid) -> Option<RxContainedRef<'_>> {
         self.root()
             .get_container(container_uuid)
-            .and_then(|c| c.get_ref())
+            .and_then(|c| c.contained_ref())
     }
 
     /// Search for child containers in the virtual hierarchy.

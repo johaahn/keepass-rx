@@ -219,7 +219,9 @@ impl Handler<SetViewMode> for KeepassRxActor {
 
         let view = match mode {
             RxViewMode::All => VirtualHierarchyType::DefaultView(DefaultView::new(&db)),
-            RxViewMode::Templates => VirtualHierarchyType::AllTemplates(AllTemplates::new(&db)),
+            RxViewMode::Templates => {
+                VirtualHierarchyType::AllTemplates(AllTemplates::new(&db))
+            }
             RxViewMode::Totp => VirtualHierarchyType::TotpEntries(TotpEntries::new(&db)),
             RxViewMode::Tags => VirtualHierarchyType::AllTags(AllTags::new(&db)),
             RxViewMode::SavedSearches => {
@@ -231,10 +233,7 @@ impl Handler<SetViewMode> for KeepassRxActor {
         gui.viewMode = mode;
         gui.viewModeChanged(mode);
 
-        println!(
-            "Set view to: {}",
-            app_state.curr_view().unwrap().name()
-        );
+        println!("Set view to: {}", app_state.curr_view().unwrap().name());
     }
 }
 
@@ -445,7 +444,7 @@ impl Handler<GetContainer> for KeepassRxActor {
             .root()
             .get_container(container_uuid)
             .expect("GetContainer: No container found")
-            .get_ref();
+            .contained_ref();
 
         let this_container_name = maybe_container
             .map(|container| QString::from(container.name().as_ref()))

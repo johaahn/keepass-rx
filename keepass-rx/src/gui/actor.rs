@@ -204,8 +204,7 @@ impl Handler<SetViewMode> for KeepassRxActor {
     fn handle(&mut self, msg: SetViewMode, _: &mut Self::Context) -> Self::Result {
         let SetViewMode(mode) = msg;
 
-        let binding = self.gui.clone();
-        let binding = binding.pinned();
+        let binding = self.gui.pinned();
         let mut gui = binding.borrow_mut();
 
         let app_state = self.app_state.pinned();
@@ -294,8 +293,7 @@ impl Handler<OpenDatabase> for KeepassRxActor {
             }
             .into_actor(self)
             .map(|result: Result<Database>, this, _| {
-                let binding = this.gui.clone();
-                let binding = binding.pinned();
+                let binding = this.gui.pinned();
                 let mut gui = binding.borrow_mut();
 
                 match result {
@@ -360,8 +358,7 @@ impl Handler<CloseDatabase> for KeepassRxActor {
             }
             .into_actor(self)
             .map(|result: Result<()>, this, _| {
-                let binding = this.gui.clone();
-                let binding = binding.pinned();
+                let binding = this.gui.pinned();
                 let mut gui = binding.borrow_mut();
 
                 match result {
@@ -381,8 +378,7 @@ impl Handler<DeleteDatabase> for KeepassRxActor {
 
     fn handle(&mut self, msg: DeleteDatabase, _: &mut Self::Context) -> Self::Result {
         println!("Deleting db {}", msg.db_name);
-        let binding = self.gui.clone();
-        let binding = binding.pinned();
+        let binding = self.gui.pinned();
         let gui = binding.borrow();
 
         let db_path = imported_databases_path().join(&msg.db_name);
@@ -400,8 +396,7 @@ impl Handler<GetMetadata> for KeepassRxActor {
     type Result = ();
 
     fn handle(&mut self, _: GetMetadata, _: &mut Self::Context) -> Self::Result {
-        let binding = self.gui.clone();
-        let binding = binding.pinned();
+        let binding = self.gui.pinned();
         let gui = binding.borrow();
 
         let app_state = self.app_state.pinned();
@@ -424,8 +419,7 @@ impl Handler<GetContainer> for KeepassRxActor {
         let app_state = self.app_state.pinned();
         let app_state = app_state.borrow();
 
-        let binding = self.gui.clone();
-        let binding = binding.pinned();
+        let binding = self.gui.pinned();
         let gui = binding.borrow();
 
         let view = app_state.curr_view_ref().expect("GetGroup: No view set.");
@@ -459,8 +453,7 @@ impl Handler<GetEntries> for KeepassRxActor {
 
         let search_type = app_state.search_type();
 
-        let binding = self.gui.clone();
-        let binding = binding.pinned();
+        let binding = self.gui.pinned();
         let gui = binding.borrow();
 
         let search_term = msg
@@ -490,8 +483,7 @@ impl Handler<GetEntries> for KeepassRxActor {
 impl Handler<GetSingleEntry> for KeepassRxActor {
     type Result = ();
     fn handle(&mut self, msg: GetSingleEntry, _: &mut Self::Context) -> Self::Result {
-        let binding = self.gui.clone();
-        let binding = binding.pinned();
+        let binding = self.gui.pinned();
         let gui = binding.borrow();
 
         let app_state = self.app_state.pinned();
@@ -529,8 +521,7 @@ fn get_value(db: &RxDatabase, entry_uuid: Uuid, field_name: &RxFieldName) -> QSt
 impl Handler<GetFieldValue> for KeepassRxActor {
     type Result = ();
     fn handle(&mut self, msg: GetFieldValue, _: &mut Self::Context) -> Self::Result {
-        let binding = self.gui.clone();
-        let binding = binding.pinned();
+        let binding = self.gui.pinned();
         let gui = binding.borrow();
 
         let app_state = self.app_state.pinned();
@@ -556,8 +547,7 @@ impl Handler<GetFieldValue> for KeepassRxActor {
 impl Handler<GetTotp> for KeepassRxActor {
     type Result = ();
     fn handle(&mut self, msg: GetTotp, _: &mut Self::Context) -> Self::Result {
-        let binding = self.gui.clone();
-        let binding = binding.pinned();
+        let binding = self.gui.pinned();
         let gui = binding.borrow();
 
         let app_state = self.app_state.pinned();
@@ -595,8 +585,7 @@ impl Handler<GetTotp> for KeepassRxActor {
 impl Handler<StoreMasterPassword> for KeepassRxActor {
     type Result = ();
     fn handle(&mut self, msg: StoreMasterPassword, _: &mut Self::Context) -> Self::Result {
-        let binding = self.gui.clone();
-        let binding = binding.pinned();
+        let binding = self.gui.pinned();
         let gui = binding.borrow();
 
         self.stored_master_password
@@ -611,8 +600,7 @@ impl Handler<InvalidateMasterPassword> for KeepassRxActor {
     fn handle(&mut self, _: InvalidateMasterPassword, _: &mut Self::Context) -> Self::Result {
         self.abort_ongoing_operations();
 
-        let binding = self.gui.clone();
-        let binding = binding.pinned();
+        let binding = self.gui.pinned();
         let mut gui = binding.borrow_mut();
 
         if let Some(pw) = self.stored_master_password.take() {
@@ -633,8 +621,7 @@ impl Handler<InvalidateMasterPassword> for KeepassRxActor {
 impl Handler<CheckLockingStatus> for KeepassRxActor {
     type Result = ();
     fn handle(&mut self, _: CheckLockingStatus, _: &mut Self::Context) -> Self::Result {
-        let binding = self.gui.clone();
-        let binding = binding.pinned();
+        let binding = self.gui.pinned();
         let gui = binding.borrow_mut();
 
         let current_master_pw = self.curr_master_pw.borrow();

@@ -43,8 +43,8 @@ pub struct ModelContext<T: QObject + 'static> {
 
 #[allow(dead_code)]
 impl<T: QObject + 'static> ModelContext<T> {
-    pub fn addr(&self) -> Addr<ConnectedModelActor<T>> {
-        self.addr.clone()
+    pub fn addr(&self) -> &Addr<ConnectedModelActor<T>> {
+        &self.addr
     }
 }
 

@@ -57,6 +57,15 @@ pub trait IntoContainer {
     fn into_container(&self, db: &RxDatabase) -> RxContainer;
 }
 
+impl<T> IntoContainer for &T
+where
+    T: IntoContainer,
+{
+    fn into_container(&self, db: &RxDatabase) -> RxContainer {
+        (*self).into_container(db)
+    }
+}
+
 /// What exactly this container points to. The actual resource, as
 /// opposed to its function (e.g. a Grouping can be a Group or a
 /// Template or a Tag).

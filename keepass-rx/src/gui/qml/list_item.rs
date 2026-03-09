@@ -351,7 +351,7 @@ impl InitFrom<&RxGroup> for RxListItem {
                 .unwrap_or_default()
         );
 
-        set_value!(self.title, value.name.clone().into());
+        set_value!(self.title, QString::from(value.name.as_str()));
         set_value!(self.subtitle, QString::from("Group"));
         set_value!(
             self.description,

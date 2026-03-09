@@ -121,8 +121,8 @@ fn load_gui() -> Result<()> {
             let global_app_actor = KeepassRxActor::new(&gui, &app_state).start();
 
             let app = Rc::new(KeepassRxApp {
-                app_state: app_state.clone(),
-                settings_bridge: settings_bridge.clone(),
+                app_state,
+                settings_bridge,
             });
 
             RxActors::set_app_actor(global_app_actor);

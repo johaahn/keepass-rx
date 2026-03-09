@@ -14,7 +14,7 @@ use uuid::Uuid;
 use zeroize::{Zeroize, Zeroizing};
 
 use super::{KeepassRx, RxDbType};
-use crate::app::AppState;
+use crate::app::{AppState, KeyFile};
 use crate::crypto::{EncryptedPassword, MasterKey};
 use crate::gui::utils::synced_databases_path;
 use crate::rx::virtual_hierarchy::{
@@ -65,7 +65,7 @@ impl KeepassRxActor {
     pub fn key_file_bytes(&self) -> Result<Option<SecureVec<u8>>> {
         let app_state = self.app_state.pinned();
         let app_state = app_state.borrow();
-        let key_file = app_state.db_key();
+        let key_file = app_state.db_key_ref();
         let master_key = app_state.master_key();
 
         match master_key {

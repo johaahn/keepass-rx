@@ -71,10 +71,8 @@ pub fn move_old_dirs_and_files() -> Result<()> {
             let entry = entry?;
             let src = std::fs::canonicalize(entry.path())?;
             let dest = parent.join(&entry.file_name());
-            let abs_dst = parent
-                .join(&src)
-                .canonicalize()
-                .unwrap_or_else(|_| dest.clone());
+            let abs_dst = parent.join(&src).canonicalize();
+            let abs_dst = abs_dst.as_ref().unwrap_or(&dest);
 
             println!("Moving '{}' to: '{}'", src.display(), abs_dst.display());
 

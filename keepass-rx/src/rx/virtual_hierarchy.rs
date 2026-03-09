@@ -79,7 +79,7 @@ impl AllTemplates {
     pub fn new(db: &RxDatabase) -> Self {
         let children: Vec<_> = db
             .templates_iter()
-            .map(|t| RxContainer::from(t.clone(), db))
+            .map(|t| RxContainer::from(t, db))
             .collect();
 
         AllTemplates(RxRoot::virtual_root(
@@ -127,7 +127,7 @@ pub struct DefaultView(RxRoot);
 
 impl DefaultView {
     pub fn new(db: &RxDatabase) -> Self {
-        let root = RxContainer::from(db.root_group().clone(), db);
+        let root = RxContainer::from(db.root_group(), db);
 
         DefaultView(RxRoot {
             all_containers: root.child_uuids_recursive(),

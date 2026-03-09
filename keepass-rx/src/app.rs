@@ -27,9 +27,7 @@ pub struct RxActors {
 impl RxActors {
     pub fn set_app_actor(actor: Addr<KeepassRxActor>) {
         ACTORS
-            .set(RxActors {
-                gui_actor: actor.clone(),
-            })
+            .set(RxActors { gui_actor: actor })
             .expect("Actor addresses already set");
     }
 
@@ -150,6 +148,10 @@ impl AppState {
 
     pub fn db_key(&self) -> Option<KeyFile> {
         self.db_key.clone()
+    }
+
+    pub fn db_key_ref(&self) -> Option<&KeyFile> {
+        self.db_key.as_ref()
     }
 
     pub fn search_type(&self) -> RxSearchType {

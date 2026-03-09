@@ -240,10 +240,10 @@ impl Handler<SetViewMode> for KeepassRxActor {
 impl Handler<OpenDatabase> for KeepassRxActor {
     type Result = AtomicResponse<Self, anyhow::Result<()>>;
     fn handle(&mut self, msg: OpenDatabase, _: &mut Self::Context) -> Self::Result {
-        // Extract key file if needed.
+        // Determine if key file is set and extract key bytes if needed.
         let app_state = self.app_state.pinned();
         let app_state = app_state.borrow();
-        let maybe_key_file = app_state.db_key();
+        let has_key_file = app_state.db_key_ref().is_some();
 
         let db_path = match msg.db_type {
             RxDbType::Imported => imported_databases_path().join(msg.db_name),
@@ -267,8 +267,7 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                 let mut db_file = File::open(db_path)?;
 
                 let db_key = DatabaseKey::new().with_password(pw_binding.unsecure());
-                let db_key = match maybe_key_file.as_ref() {
-                    Some(_) => {
+                let db_key = if has_key_file {
                         let key_bytes = maybe_key_file_bytes?;
                         match key_bytes {
                             Some(bytes) => {
@@ -280,8 +279,8 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                             }
                             _ => db_key,
                         }
-                    }
-                    None => db_key,
+                } else {
+                    db_key
                 };
 
                 // Opening the database is synchronous I/O, which means it
@@ -291,11 +290,6 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                     Ok(db)
                 })
                 .await??;
-
-                // Remove imported key file if necessary.
-                if let Some(mut key) = maybe_key_file {
-                    key.zeroize();
-                }
 
                 Ok(open_result)
             }

@@ -31,8 +31,8 @@ impl RxActors {
             .expect("Actor addresses already set");
     }
 
-    pub fn app_actor() -> Option<Addr<KeepassRxActor>> {
-        ACTORS.get().map(|actors| actors.gui_actor.clone())
+    pub fn app_actor() -> Option<&'static Addr<KeepassRxActor>> {
+        ACTORS.get().map(|actors| &actors.gui_actor)
     }
 }
 

@@ -32,7 +32,7 @@ impl RxUiEntry {
         let app_state = self._app.as_pinned().expect("No app state");
         let app_state = app_state.borrow();
 
-        let maybe_db = app_state.curr_db();
+        let maybe_db = app_state.curr_db_ref();
 
         let totp = maybe_db.and_then(|db| db.get_totp(&self.entryUuid.to_string()));
 

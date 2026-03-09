@@ -210,7 +210,7 @@ impl Handler<SetViewMode> for KeepassRxActor {
 
         let app_state = self.app_state.pinned();
         let mut app_state = app_state.borrow_mut();
-        let db_binding = app_state.curr_db();
+        let db_binding = app_state.curr_db_ref();
 
         let db = match db_binding {
             Ok(db) => db,
@@ -233,7 +233,7 @@ impl Handler<SetViewMode> for KeepassRxActor {
         gui.viewMode = mode;
         gui.viewModeChanged(mode);
 
-        println!("Set view to: {}", app_state.curr_view().unwrap().name());
+        println!("Set view to: {}", app_state.curr_view_ref().unwrap().name());
     }
 }
 
@@ -268,17 +268,16 @@ impl Handler<OpenDatabase> for KeepassRxActor {
 
                 let db_key = DatabaseKey::new().with_password(pw_binding.unsecure());
                 let db_key = if has_key_file {
-                        let key_bytes = maybe_key_file_bytes?;
-                        match key_bytes {
-                            Some(bytes) => {
-                                println!(
-                                    "Opening database with a key file of {} bytes.",
-                                    bytes.len()
-                                );
-                                db_key.with_keyfile(&mut bytes.as_ref())?
-                            }
-                            _ => db_key,
+                    match maybe_key_file_bytes? {
+                        Some(bytes) => {
+                            println!(
+                                "Opening database with a key file of {} bytes.",
+                                bytes.len()
+                            );
+                            db_key.with_keyfile(&mut bytes.as_ref())?
                         }
+                        _ => db_key,
+                    }
                 } else {
                     db_key
                 };
@@ -309,15 +308,17 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                         let mut app_state = app_state.borrow_mut();
 
                         // Encrypt key file
-                        if let Some(kf) = app_state.db_key()
-                            && kf.is_unencrypted()
-                        {
-                            let mk = MasterKey::new()
-                                .expect("Could not create key file master key");
-                            let kf = kf.encrypt(&mk).expect("Could not encrypt key file");
+                        if let Some(kf) = app_state.take_db_key() {
+                            if kf.is_unencrypted() {
+                                let mk = MasterKey::new()
+                                    .expect("Could not create key file master key");
+                                let kf = kf.encrypt(&mk).expect("Could not encrypt key file");
 
-                            app_state.set_master_key(Some(mk));
-                            app_state.set_db_key(Some(kf));
+                                app_state.set_master_key(Some(mk));
+                                app_state.set_db_key(Some(kf));
+                            } else {
+                                app_state.set_db_key(Some(kf));
+                            }
                         }
 
                         gui.rootGroupUuid = QString::from(rx_db.root_group().uuid.to_string());
@@ -405,7 +406,7 @@ impl Handler<GetMetadata> for KeepassRxActor {
 
         let app_state = self.app_state.pinned();
         let app_state = app_state.borrow();
-        let db_binding = app_state.curr_db();
+        let db_binding = app_state.curr_db_ref();
 
         let db = match db_binding {
             Ok(db) => db,
@@ -427,7 +428,7 @@ impl Handler<GetContainer> for KeepassRxActor {
         let binding = binding.pinned();
         let gui = binding.borrow();
 
-        let view = app_state.curr_view().expect("GetGroup: No view set.");
+        let view = app_state.curr_view_ref().expect("GetGroup: No view set.");
 
         let container_uuid = match msg.container_uuid {
             Some(id) => id,
@@ -468,7 +469,7 @@ impl Handler<GetEntries> for KeepassRxActor {
             .map(|term| term.trim())
             .filter(|term| !term.is_empty());
         let viewable = app_state
-            .curr_view()
+            .curr_view_ref()
             .expect("GetEntries: Viewable not set.");
 
         let container_uuid = match msg.container_uuid {
@@ -495,7 +496,7 @@ impl Handler<GetSingleEntry> for KeepassRxActor {
 
         let app_state = self.app_state.pinned();
         let app_state = app_state.borrow();
-        let db_binding = app_state.curr_db();
+        let db_binding = app_state.curr_db_ref();
 
         let db = match db_binding {
             Ok(db) => db,
@@ -534,8 +535,7 @@ impl Handler<GetFieldValue> for KeepassRxActor {
 
         let app_state = self.app_state.pinned();
         let app_state = app_state.borrow();
-        let db_binding = app_state.curr_db();
-        let db_binding = db_binding.as_deref();
+        let db_binding = app_state.curr_db_ref();
 
         let db = match db_binding {
             Ok(db) => db,
@@ -562,8 +562,7 @@ impl Handler<GetTotp> for KeepassRxActor {
 
         let app_state = self.app_state.pinned();
         let app_state = app_state.borrow();
-        let db_binding = app_state.curr_db();
-        let db_binding = db_binding.as_deref();
+        let db_binding = app_state.curr_db_ref();
 
         let db = match db_binding {
             Ok(db) => db,

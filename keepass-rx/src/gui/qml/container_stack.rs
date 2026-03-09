@@ -84,7 +84,7 @@ impl RxUiContainerStack {
         let at_root_single_check = || {
             let app_state = self._app.as_pinned().expect("No app state");
             let app_state = app_state.borrow();
-            let view = app_state.curr_view().expect("No view?");
+            let view = app_state.curr_view_ref().expect("No view?");
 
             self.container_stack.len() == 1
                 && view.root().uuid() == *self.container_stack.first().unwrap()
@@ -111,7 +111,7 @@ impl RxUiContainerStack {
         let new_uuid = Uuid::from_str(&container_uuid.to_string()).expect("Invalid UUID");
         let app_state = self._app.as_pinned().expect("No app state");
         let app_state = app_state.borrow();
-        let view = app_state.curr_view().expect("No view?");
+        let view = app_state.curr_view_ref().expect("No view?");
         let was_at_root = self.is_at_root();
 
         if let Some(container) = view.get(new_uuid) {
@@ -144,7 +144,7 @@ impl RxUiContainerStack {
     pub fn popContainer(&mut self) {
         let app_state = self._app.as_pinned().expect("No app state");
         let app_state = app_state.borrow();
-        let view = app_state.curr_view().expect("No view?");
+        let view = app_state.curr_view_ref().expect("No view?");
         let was_at_root = self.is_at_root();
 
         if let Some(prev_container_uuid) = self.container_stack.pop() {

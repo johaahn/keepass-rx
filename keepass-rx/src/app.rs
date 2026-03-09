@@ -176,12 +176,25 @@ impl AppState {
         self.db_key = key;
     }
 
+    pub fn take_db_key(&mut self) -> Option<KeyFile> {
+        self.db_key.take()
+    }
+
     pub fn curr_view(&self) -> Option<Rc<VirtualHierarchyType>> {
         self.current_view.clone()
     }
 
+    pub fn curr_view_ref(&self) -> Option<&VirtualHierarchyType> {
+        self.current_view.as_deref()
+    }
+
     pub fn curr_db(&self) -> Result<Rc<Zeroizing<RxDatabase>>> {
         let db = self.curr_db.clone().ok_or(anyhow!("No database set"))?;
+        Ok(db)
+    }
+
+    pub fn curr_db_ref(&self) -> Result<&Zeroizing<RxDatabase>> {
+        let db = self.curr_db.as_deref().ok_or(anyhow!("No database set"))?;
         Ok(db)
     }
 

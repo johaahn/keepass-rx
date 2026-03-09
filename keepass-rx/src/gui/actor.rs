@@ -657,7 +657,7 @@ impl Handler<EncryptMasterPassword> for KeepassRxActor {
                         this.curr_master_pw.replace(Some(encrypted_pw));
                         gui.isMasterPasswordEncrypted = true;
                         gui.masterPasswordStateChanged(true);
-                        println!("Master password encrypted.");
+                        info!("Master password encrypted.");
                     }
                     Err(err) => {
                         gui.errorReceived(format!("{}", err));
@@ -706,7 +706,7 @@ impl Handler<DecryptMasterPassword> for KeepassRxActor {
                         gui.isMasterPasswordEncrypted = false;
                         gui.masterPasswordStateChanged(false);
                         gui.masterPasswordDecrypted();
-                        println!("Master password decrypted.");
+                        info!("Master password decrypted.");
                     }
                     Err(err) => {
                         // Put the encrypted password back on failure.

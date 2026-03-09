@@ -29,7 +29,8 @@ use actix::Actor;
 use anyhow::Result;
 use cpp::cpp;
 use gettextrs::{bindtextdomain, textdomain};
-use log::{error, info};
+use log::{LevelFilter, error, info};
+use pretty_env_logger::env_logger::Builder;
 use qmeta_async::with_executor;
 use qmetaobject::{QObjectBox, QQuickStyle, QQuickView, qml_register_enum, qml_register_type};
 use std::env;
@@ -164,7 +165,12 @@ fn init_gettext() {
 }
 
 fn main() -> Result<()> {
-    let _ = pretty_env_logger::try_init();
+    // Logging
+    let mut builder = Builder::new();
+
+    builder.filter_level(LevelFilter::Error);
+    builder.filter_module("keepassrx", LevelFilter::Info);
+    builder.init();
 
     libsodium_rs::ensure_init()?;
 

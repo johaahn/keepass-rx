@@ -9,7 +9,7 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::rc::Rc;
 use std::sync::Arc;
-use tokio::task::{AbortHandle, spawn_blocking};
+use tokio::task::AbortHandle;
 use uuid::Uuid;
 use zeroize::{Zeroize, Zeroizing};
 
@@ -237,7 +237,7 @@ impl Handler<SetViewMode> for KeepassRxActor {
 }
 
 impl Handler<OpenDatabase> for KeepassRxActor {
-    type Result = AtomicResponse<Self, anyhow::Result<()>>;
+    type Result = ResponseActFuture<Self, anyhow::Result<()>>;
     fn handle(&mut self, msg: OpenDatabase, _: &mut Self::Context) -> Self::Result {
         // Determine if key file is set and extract key bytes if needed.
         let app_state = self.app_state.pinned();
@@ -255,7 +255,7 @@ impl Handler<OpenDatabase> for KeepassRxActor {
 
         println!("Opening {} DB: {}", msg.db_type, db_path.display());
 
-        AtomicResponse::new(Box::pin(
+        Box::pin(
             async move {
                 let pw_binding = stored_pw.borrow();
                 let pw_binding = pw_binding.as_ref();
@@ -283,11 +283,11 @@ impl Handler<OpenDatabase> for KeepassRxActor {
 
                 // Opening the database is synchronous I/O, which means it
                 // must be done on a separate thread.
-                let open_result = spawn_blocking(move || -> Result<Database> {
-                    let db = Database::open(&mut db_file, db_key)?;
-                    Ok(db)
+                let open_result = actix_rt::task::spawn_blocking(move || -> Result<Database> {
+                    Database::open(&mut db_file, db_key).map_err(Into::into)
                 })
-                .await??;
+                .await
+                .map_err(|err| anyhow!(err))??;
 
                 Ok(open_result)
             }
@@ -336,7 +336,7 @@ impl Handler<OpenDatabase> for KeepassRxActor {
 
                 Ok(())
             }),
-        ))
+        )
     }
 }
 

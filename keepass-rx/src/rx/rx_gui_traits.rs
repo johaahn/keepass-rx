@@ -97,7 +97,7 @@ impl From<&RxEntry> for QVariantMap {
         map.insert("iconPath".to_string(), icon_data_url.into());
         map.insert(
             "customFields".to_string(),
-            value.custom_fields.clone().into(),
+            QVariantMap::from(&value.custom_fields).into(),
         );
 
         if let Ok(_) = totp {
@@ -159,8 +159,8 @@ impl From<RxValueKeyRef<'_>> for QVariantMap {
     }
 }
 
-impl From<RxCustomFields> for QVariantMap {
-    fn from(value: RxCustomFields) -> QVariantMap {
+impl From<&RxCustomFields> for QVariantMap {
+    fn from(value: &RxCustomFields) -> QVariantMap {
         let mut map: HashMap<String, QVariant> = HashMap::new();
 
         for (key, value) in value.iter() {
@@ -172,9 +172,15 @@ impl From<RxCustomFields> for QVariantMap {
     }
 }
 
+impl From<RxCustomFields> for QVariantMap {
+    fn from(value: RxCustomFields) -> QVariantMap {
+        QVariantMap::from(&value)
+    }
+}
+
 impl From<RxCustomFields> for QVariant {
     fn from(value: RxCustomFields) -> QVariant {
-        QVariantMap::from(value).into()
+        QVariantMap::from(&value).into()
     }
 }
 

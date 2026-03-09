@@ -216,10 +216,10 @@ impl RxUiDatabase {
         self._app.as_pinned().expect("No app state")
     }
 
-    fn connected_actor(&self) -> Option<Addr<ConnectedModelActor<Self>>> {
+    fn connected_actor(&self) -> Option<&Addr<ConnectedModelActor<Self>>> {
         self._connected_model_registration
             .as_ref()
-            .map(|reg| reg.actor.clone())
+            .map(|reg| &reg.actor)
     }
 
     fn set_key_file(&mut self, key_file_path: impl AsRef<Path>) {

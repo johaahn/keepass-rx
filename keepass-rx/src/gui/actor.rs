@@ -8,7 +8,6 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 use std::fs::File;
 use std::rc::Rc;
-use std::sync::Arc;
 use tokio::task::AbortHandle;
 use uuid::Uuid;
 use zeroize::{Zeroize, Zeroizing};
@@ -29,10 +28,10 @@ use crate::{
 #[derive(Default)]
 pub struct KeepassRxActor {
     app_state: Rc<QObjectBox<AppState>>,
-    gui: Arc<QObjectBox<KeepassRx>>,
+    gui: Rc<QObjectBox<KeepassRx>>,
     //curr_db: RefCell<Option<Zeroizing<RxDatabase>>>,
-    curr_master_pw: Arc<RefCell<Option<EncryptedPassword>>>,
-    stored_master_password: Arc<RefCell<Option<SecUtf8>>>,
+    curr_master_pw: Rc<RefCell<Option<EncryptedPassword>>>,
+    stored_master_password: Rc<RefCell<Option<SecUtf8>>>,
 
     // any in-progress operation on another thread pool that might
     // need to be aborted.
@@ -41,7 +40,7 @@ pub struct KeepassRxActor {
 
 impl KeepassRxActor {
     pub fn new(
-        gui: &Arc<QObjectBox<KeepassRx>>,
+        gui: &Rc<QObjectBox<KeepassRx>>,
         app_state: &Rc<QObjectBox<AppState>>,
     ) -> Self {
         Self {

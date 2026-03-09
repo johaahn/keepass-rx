@@ -34,7 +34,6 @@ use qmetaobject::{QObjectBox, QQuickStyle, QQuickView, qml_register_enum, qml_re
 use std::env;
 use std::path::PathBuf;
 use std::rc::Rc;
-use std::sync::Arc;
 
 mod crypto;
 mod license;
@@ -116,7 +115,7 @@ fn load_gui() -> Result<()> {
 
             let settings_bridge = Rc::new(QObjectBox::new(SettingsBridge::default()));
             let app_state = Rc::new(QObjectBox::new(AppState::new(&settings_bridge)));
-            let gui = Arc::new(QObjectBox::new(KeepassRx::new()));
+            let gui = Rc::new(QObjectBox::new(KeepassRx::new()));
 
             let global_app_actor = KeepassRxActor::new(&gui, &app_state).start();
 

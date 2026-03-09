@@ -146,6 +146,7 @@ impl AppState {
         self.master_key = master_key;
     }
 
+    #[allow(dead_code)]
     pub fn db_key(&self) -> Option<KeyFile> {
         self.db_key.clone()
     }
@@ -180,6 +181,7 @@ impl AppState {
         self.db_key.take()
     }
 
+    #[allow(dead_code)]
     pub fn curr_view(&self) -> Option<Rc<VirtualHierarchyType>> {
         self.current_view.clone()
     }
@@ -188,6 +190,7 @@ impl AppState {
         self.current_view.as_deref()
     }
 
+    #[allow(dead_code)]
     pub fn curr_db(&self) -> Result<Rc<Zeroizing<RxDatabase>>> {
         let db = self.curr_db.clone().ok_or(anyhow!("No database set"))?;
         Ok(db)

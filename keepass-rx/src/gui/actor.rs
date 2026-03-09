@@ -283,11 +283,12 @@ impl Handler<OpenDatabase> for KeepassRxActor {
 
                 // Opening the database is synchronous I/O, which means it
                 // must be done on a separate thread.
-                let open_result = actix_rt::task::spawn_blocking(move || -> Result<Database> {
-                    Database::open(&mut db_file, db_key).map_err(Into::into)
-                })
-                .await
-                .map_err(|err| anyhow!(err))??;
+                let open_result =
+                    actix_rt::task::spawn_blocking(move || -> Result<Database> {
+                        Database::open(&mut db_file, db_key).map_err(Into::into)
+                    })
+                    .await
+                    .map_err(|err| anyhow!(err))??;
 
                 Ok(open_result)
             }
@@ -641,8 +642,6 @@ impl Handler<EncryptMasterPassword> for KeepassRxActor {
     fn handle(&mut self, _: EncryptMasterPassword, _: &mut Self::Context) -> Self::Result {
         self.abort_ongoing_operations();
         let stored_pw = self.stored_master_password.take();
-        let gui_binding = self.gui.clone();
-        let ez_open = self.curr_master_pw.clone();
 
         let handle = actix_rt::task::spawn_blocking(move || -> Result<EncryptedPassword> {
             let stored_pw = stored_pw.ok_or(anyhow!("[Encrypt] No master password stored"))?;
@@ -651,21 +650,14 @@ impl Handler<EncryptMasterPassword> for KeepassRxActor {
 
         self.current_operation = Some(handle.abort_handle());
 
-        Box::pin(
-            async move {
-                match handle.await {
-                    Ok(result) => result,
-                    Err(err) => Err(anyhow!(err)),
-                }
-            }
-            .into_actor(self)
-            .map(move |result: Result<EncryptedPassword>, this, _| {
-                let binding = gui_binding.pinned();
+        Box::pin(async move { handle.await? }.into_actor(self).map(
+            move |result: Result<EncryptedPassword>, this, _| {
+                let binding = this.gui.pinned();
                 let mut gui = binding.borrow_mut();
 
                 match result {
                     Ok(encrypted_pw) => {
-                        ez_open.replace(Some(encrypted_pw));
+                        this.curr_master_pw.replace(Some(encrypted_pw));
                         gui.isMasterPasswordEncrypted = true;
                         gui.masterPasswordStateChanged(true);
                         println!("Master password encrypted.");
@@ -680,8 +672,8 @@ impl Handler<EncryptMasterPassword> for KeepassRxActor {
                 {
                     this.current_operation = None;
                 }
-            }),
-        )
+            },
+        ))
     }
 }
 
@@ -689,14 +681,11 @@ impl Handler<DecryptMasterPassword> for KeepassRxActor {
     type Result = ResponseActFuture<Self, ()>;
     fn handle(&mut self, msg: DecryptMasterPassword, _: &mut Self::Context) -> Self::Result {
         let short_pw = msg.short_password;
-        let gui_binding = self.gui.clone();
-        let encrypted_master_pw = self.curr_master_pw.clone();
-        let stored_master_pw = self.stored_master_password.clone();
 
         self.abort_ongoing_operations();
 
         // Remove from RefCell and keep a backup in case decryption fails.
-        let mut maybe_master_pw = encrypted_master_pw.take();
+        let mut maybe_master_pw = self.curr_master_pw.take();
         let backup = maybe_master_pw.clone();
         let master_pw = maybe_master_pw
             .take()
@@ -705,23 +694,18 @@ impl Handler<DecryptMasterPassword> for KeepassRxActor {
         let handle = actix_rt::task::spawn_blocking(move || -> Result<SecUtf8> {
             master_pw.and_then(|pw| pw.decrypt(short_pw))
         });
+
         self.current_operation = Some(handle.abort_handle());
 
-        Box::pin(
-            async move {
-                match handle.await {
-                    Ok(result) => result,
-                    Err(err) => Err(anyhow!(err)),
-                }
-            }
-            .into_actor(self)
-            .map(move |result: Result<SecUtf8>, this: &mut KeepassRxActor, _| {
-                let gui_binding = gui_binding.pinned();
-                let mut gui = gui_binding.borrow_mut();
+        Box::pin(async move { handle.await? }.into_actor(self).map(
+            move |result: Result<SecUtf8>, this: &mut KeepassRxActor, _| {
+                let binding = this.gui.pinned();
+                let mut gui = binding.borrow_mut();
 
                 match result {
                     Ok(secure_decrypted_password) => {
-                        stored_master_pw.replace(Some(secure_decrypted_password));
+                        this.stored_master_password
+                            .replace(Some(secure_decrypted_password));
                         gui.isMasterPasswordEncrypted = false;
                         gui.masterPasswordStateChanged(false);
                         gui.masterPasswordDecrypted();
@@ -729,7 +713,7 @@ impl Handler<DecryptMasterPassword> for KeepassRxActor {
                     }
                     Err(err) => {
                         // Put the encrypted password back on failure.
-                        encrypted_master_pw.replace(backup);
+                        this.curr_master_pw.replace(backup);
                         gui.decryptionFailed(QString::from(format!("{}", err)));
                     }
                 }
@@ -739,7 +723,7 @@ impl Handler<DecryptMasterPassword> for KeepassRxActor {
                 {
                     this.current_operation = None;
                 }
-            }),
-        )
+            },
+        ))
     }
 }

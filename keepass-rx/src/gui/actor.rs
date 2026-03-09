@@ -9,7 +9,7 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::rc::Rc;
 use std::sync::Arc;
-use tokio::task::{JoinHandle, spawn_blocking};
+use tokio::task::{AbortHandle, spawn_blocking};
 use uuid::Uuid;
 use zeroize::{Zeroize, Zeroizing};
 
@@ -36,7 +36,7 @@ pub struct KeepassRxActor {
 
     // any in-progress operation on another thread pool that might
     // need to be aborted.
-    current_operation: Option<JoinHandle<Result<()>>>,
+    current_operation: Option<AbortHandle>,
 }
 
 impl KeepassRxActor {
@@ -634,62 +634,59 @@ impl Handler<CheckLockingStatus> for KeepassRxActor {
 }
 
 impl Handler<EncryptMasterPassword> for KeepassRxActor {
-    type Result = ();
+    type Result = ResponseActFuture<Self, ()>;
 
     // TODO do not bother with this if database locking is disabled in
     // settings.
     fn handle(&mut self, _: EncryptMasterPassword, _: &mut Self::Context) -> Self::Result {
         self.abort_ongoing_operations();
         let stored_pw = self.stored_master_password.take();
-        let binding = self.gui.clone();
+        let gui_binding = self.gui.clone();
         let ez_open = self.curr_master_pw.clone();
 
-        // Encrypting the password is CPU-intensive and can block the
-        // UI. It is run on a separate fire-and-forget async call,
-        // which itself spawns a separate thread pool to actually
-        // encrypt the password. If we were to wait for the
-        // actix::spawn to complete, the UI would still block.
-        let handle: JoinHandle<Result<_>> = actix::spawn(async move {
-            let stored_pw = stored_pw.ok_or(anyhow!("[Encrypt] No master password stored"));
-
-            let (tx, rx) = tokio::sync::oneshot::channel();
-            rayon::spawn(move || {
-                if let Err(_) = tx.send(stored_pw.map(|pw| EncryptedPassword::new(pw))) {
-                    println!("Receiver dropped before receiving encrypted password.");
-                }
-            });
-
-            // Very nested errors.
-            let result = rx
-                .await
-                .map_err(Box::<dyn std::error::Error>::from)
-                .and_then(|res2| res2.map_err(Into::into))
-                .and_then(|res3| res3.map_err(Into::into));
-
-            let binding = binding.pinned();
-            let mut gui = binding.borrow_mut();
-
-            match result {
-                Ok(encrypted_pw) => {
-                    ez_open.replace(Some(encrypted_pw));
-                    gui.isMasterPasswordEncrypted = true;
-                    gui.masterPasswordStateChanged(true);
-                    println!("Master password encrypted.");
-                }
-                Err(err) => {
-                    gui.errorReceived(format!("{}", err));
-                }
-            }
-
-            Ok(())
+        let handle = actix_rt::task::spawn_blocking(move || -> Result<EncryptedPassword> {
+            let stored_pw = stored_pw.ok_or(anyhow!("[Encrypt] No master password stored"))?;
+            EncryptedPassword::new(stored_pw)
         });
 
-        self.current_operation = Some(handle);
+        self.current_operation = Some(handle.abort_handle());
+
+        Box::pin(
+            async move {
+                match handle.await {
+                    Ok(result) => result,
+                    Err(err) => Err(anyhow!(err)),
+                }
+            }
+            .into_actor(self)
+            .map(move |result: Result<EncryptedPassword>, this, _| {
+                let binding = gui_binding.pinned();
+                let mut gui = binding.borrow_mut();
+
+                match result {
+                    Ok(encrypted_pw) => {
+                        ez_open.replace(Some(encrypted_pw));
+                        gui.isMasterPasswordEncrypted = true;
+                        gui.masterPasswordStateChanged(true);
+                        println!("Master password encrypted.");
+                    }
+                    Err(err) => {
+                        gui.errorReceived(format!("{}", err));
+                    }
+                }
+
+                if let Some(op) = this.current_operation.as_ref()
+                    && op.is_finished()
+                {
+                    this.current_operation = None;
+                }
+            }),
+        )
     }
 }
 
 impl Handler<DecryptMasterPassword> for KeepassRxActor {
-    type Result = ();
+    type Result = ResponseActFuture<Self, ()>;
     fn handle(&mut self, msg: DecryptMasterPassword, _: &mut Self::Context) -> Self::Result {
         let short_pw = msg.short_password;
         let gui_binding = self.gui.clone();
@@ -698,53 +695,51 @@ impl Handler<DecryptMasterPassword> for KeepassRxActor {
 
         self.abort_ongoing_operations();
 
-        let handle: JoinHandle<Result<_>> = actix::spawn(async move {
-            // Remove from RefCell.
-            let mut maybe_master_pw = encrypted_master_pw.take();
+        // Remove from RefCell and keep a backup in case decryption fails.
+        let mut maybe_master_pw = encrypted_master_pw.take();
+        let backup = maybe_master_pw.clone();
+        let master_pw = maybe_master_pw
+            .take()
+            .ok_or(anyhow!("[Decrypt] No master password stored"));
 
-            // In case we need to retain it because of error.
-            let backup = maybe_master_pw.clone();
+        let handle = actix_rt::task::spawn_blocking(move || -> Result<SecUtf8> {
+            master_pw.and_then(|pw| pw.decrypt(short_pw))
+        });
+        self.current_operation = Some(handle.abort_handle());
 
-            // Extract from inner option.
-            let master_pw = maybe_master_pw
-                .take()
-                .ok_or(anyhow!("[Decrypt] No master password stored"));
-
-            let gui_binding = gui_binding.pinned();
-            let mut gui = gui_binding.borrow_mut();
-
-            let (tx, rx) = tokio::sync::oneshot::channel();
-            rayon::spawn(move || {
-                if let Err(_) = tx.send(master_pw.map(|pw| pw.decrypt(short_pw))) {
-                    println!("Receiver dropped before receiving decrypted password.");
-                }
-            });
-
-            // Very nested result
-            let result = rx
-                .await
-                .map_err(Box::<dyn std::error::Error>::from)
-                .and_then(|res2| res2.map_err(Into::into))
-                .and_then(|res3| res3.map_err(Into::into));
-
-            match result {
-                Ok(secure_decrypted_password) => {
-                    stored_master_pw.replace(Some(secure_decrypted_password));
-                    gui.isMasterPasswordEncrypted = false;
-                    gui.masterPasswordStateChanged(false);
-                    gui.masterPasswordDecrypted();
-                    println!("Master password decrypted.");
-                }
-                Err(err) => {
-                    // Here, we put the encrypted pw back into the secret.
-                    encrypted_master_pw.replace(backup);
-                    gui.decryptionFailed(QString::from(format!("{}", err)));
+        Box::pin(
+            async move {
+                match handle.await {
+                    Ok(result) => result,
+                    Err(err) => Err(anyhow!(err)),
                 }
             }
+            .into_actor(self)
+            .map(move |result: Result<SecUtf8>, this: &mut KeepassRxActor, _| {
+                let gui_binding = gui_binding.pinned();
+                let mut gui = gui_binding.borrow_mut();
 
-            Ok(())
-        });
+                match result {
+                    Ok(secure_decrypted_password) => {
+                        stored_master_pw.replace(Some(secure_decrypted_password));
+                        gui.isMasterPasswordEncrypted = false;
+                        gui.masterPasswordStateChanged(false);
+                        gui.masterPasswordDecrypted();
+                        println!("Master password decrypted.");
+                    }
+                    Err(err) => {
+                        // Put the encrypted password back on failure.
+                        encrypted_master_pw.replace(backup);
+                        gui.decryptionFailed(QString::from(format!("{}", err)));
+                    }
+                }
 
-        self.current_operation = Some(handle);
+                if let Some(op) = this.current_operation.as_ref()
+                    && op.is_finished()
+                {
+                    this.current_operation = None;
+                }
+            }),
+        )
     }
 }

@@ -2,8 +2,9 @@ use actix::prelude::*;
 use anyhow::{Result, anyhow};
 use colors::wash_out_by_blending;
 use gettextrs::pgettext;
+use log::{debug, info, warn};
 use qmeta_async::with_executor;
-use qmetaobject::*;
+use qmetaobject::{QMetaType, QStringList, QVariantMap, prelude::*};
 use secstr::SecUtf8;
 use std::fs::{create_dir_all, remove_dir_all};
 use std::path::Path;
@@ -338,10 +339,10 @@ impl KeepassRx {
                 return Err(anyhow!("Trying to copy source to the same destination"));
             }
 
-            println!("Making directory: {}", dest_dir.display());
+            debug!("Making directory: {}", dest_dir.display());
             create_dir_all(&dest_dir)?;
 
-            println!(
+            info!(
                 "Copying database from {} to {}",
                 source.display(),
                 dest.display()
@@ -350,7 +351,7 @@ impl KeepassRx {
             // Nuke db.kdbx if it exists and is a directory for some
             // reason. Can result from corruption or weirdness.
             if dest.exists() && dest.is_dir() {
-                println!(
+                warn!(
                     "{} is a directory for some reason. Removing.",
                     dest.display()
                 );
@@ -358,7 +359,7 @@ impl KeepassRx {
             }
 
             let bytes_copied = std::fs::copy(&source, &dest)?;
-            println!("Copied {} bytes", bytes_copied);
+            info!("Copied {} bytes", bytes_copied);
             Ok(db_name)
         };
 

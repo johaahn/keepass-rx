@@ -17,6 +17,7 @@
  * <https://www.gnu.org/licenses/>.
  */
 use actix::prelude::*;
+use log::warn;
 use qmeta_async::with_executor;
 use qmetaobject::QObject;
 use qmetaobject::QPointer;
@@ -82,7 +83,7 @@ where
                 // when the model got dropped, because the actor's
                 // only strong reference is contained in the
                 // ObservingModel.
-                println!("Model got dropped, stopping actor execution.");
+                warn!("Model got dropped, stopping actor execution.");
                 // XXX What is the difference between stop and terminate?
                 ctx.stop();
             }

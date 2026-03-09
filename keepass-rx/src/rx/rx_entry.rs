@@ -9,6 +9,7 @@ use humanize_duration::prelude::DurationExt;
 use infer;
 use keepass::db::{CustomData, Entry, Icon, TOTP as KeePassTOTP, Value};
 use libsodium_rs::utils::{SecureVec, vec_utils};
+use log::warn;
 use querystring::querify;
 use secstr::SecStr;
 use std::borrow::Cow;
@@ -305,8 +306,8 @@ impl RxEntry {
             match entropy {
                 Ok(ent) => ent,
                 Err(err) => {
-                    println!("[WARN] Could not calculate entropy: {}", err);
-                    println!("[WARN] Defaulting to 0.0 bits");
+                    warn!("Could not calculate entropy: {}", err);
+                    warn!("Defaulting to 0.0 bits");
                     0.0
                 }
             }

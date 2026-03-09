@@ -1,6 +1,7 @@
 use std::str::FromStr;
 
 use actor_macro::observing_model;
+use log::{debug, warn};
 use qmetaobject::prelude::*;
 use uuid::Uuid;
 
@@ -137,7 +138,7 @@ impl RxUiContainerStack {
                 }
             }
         } else {
-            println!("Could not find container in view: {}", container_uuid);
+            warn!("Could not find container in view: {}", container_uuid);
         }
     }
 
@@ -181,7 +182,7 @@ impl RxUiContainerStack {
                 }
             }
         } else {
-            println!("Can't go above root!");
+            debug!("Can't go above root!");
         }
     }
 }

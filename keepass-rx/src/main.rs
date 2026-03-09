@@ -29,6 +29,7 @@ use actix::Actor;
 use anyhow::Result;
 use cpp::cpp;
 use gettextrs::{bindtextdomain, textdomain};
+use log::{error, info};
 use qmeta_async::with_executor;
 use qmetaobject::{QObjectBox, QQuickStyle, QQuickView, qml_register_enum, qml_register_type};
 use std::env;
@@ -101,7 +102,7 @@ fn load_gui() -> Result<()> {
 
     // "Data migration": Move any db.kdbx from the data directory to imported.
     if let Err(err) = move_old_dirs_and_files() {
-        println!("Error during old app data migration: {}", err);
+        error!("Error during old app data migration: {}", err);
     }
 
     qmeta_async::run(|| {
@@ -163,6 +164,8 @@ fn init_gettext() {
 }
 
 fn main() -> Result<()> {
+    let _ = pretty_env_logger::try_init();
+
     libsodium_rs::ensure_init()?;
 
     match () {
@@ -170,7 +173,7 @@ fn main() -> Result<()> {
         () => load_gui()?,
 
         #[cfg(not(feature = "gui"))]
-        () => println!("GUI not enabled."),
+        () => info!("GUI not enabled."),
     }
 
     Ok(())

@@ -1,6 +1,7 @@
 use actix::prelude::*;
 use actor_macro::observing_model;
 use anyhow::Result;
+use log::{error, info, warn};
 use qmeta_async::with_executor;
 use qmetaobject::{QObjectPinned, prelude::*};
 use regex::Regex;
@@ -76,7 +77,7 @@ impl ActorConnected<UseKeyFileCommand> for RxUiDatabase {
         // in data dir.
         if message.delete_key {
             if let Err(err) = std::fs::remove_file(&key_file_path) {
-                println!("Could not remove imported key file: {}", err);
+                warn!("Could not remove imported key file: {}", err);
             }
         }
     }
@@ -140,7 +141,7 @@ fn load_last_db() -> Result<(Option<String>, Option<String>)> {
         }
         (db, db_type) if db.exists() && !db_type.exists() => {
             // only db file recorded (from old app versions)
-            println!("No last DB type. Assuming last DB is Imported");
+            warn!("No last DB type. Assuming last DB is Imported");
             (Some(read_to_string(db)?), None)
         }
         _ => {
@@ -240,7 +241,7 @@ impl RxUiDatabase {
                 self.key_file_set = true;
             }
             Err(err) => {
-                println!("Error setting key file: {}", err);
+                error!("Error setting key file: {}", err);
                 self.key_file_set = false;
             }
         }
@@ -291,13 +292,13 @@ impl RxUiDatabase {
             let res = write_last_db(self.databaseName.to_string(), self.databaseType);
 
             if let Err(err) = res {
-                println!("{}", err);
+                error!("{}", err);
             }
         } else {
             // Nuke the settings files if we are explicitly un-setting
             // last db.
             if let Err(err) = clear_last_db() {
-                println!("{}", err);
+                error!("{}", err);
             }
         }
     }
@@ -330,7 +331,7 @@ impl RxUiDatabase {
         if let Some(key_file) = maybe_key_path.as_ref()
             && key_file.exists()
         {
-            println!(
+            info!(
                 "Found a companion key file for: {}",
                 self.databaseName.to_string()
             );
@@ -358,7 +359,7 @@ impl RxUiDatabase {
     /// hub from deleting the file on finalize() before we copy it.
     #[with_executor]
     pub fn useKeyFile(&mut self, key_file_path: QString) {
-        println!("Attempting to use key file: {:?}", key_file_path);
+        info!("Attempting to use key file: {:?}", key_file_path);
         let key_file_path = key_file_path.to_string();
         self.set_key_file(&key_file_path);
 
@@ -366,7 +367,7 @@ impl RxUiDatabase {
         // from ContentHub; we don't want to keep the key file on disk
         // in data dir.
         if let Err(err) = std::fs::remove_file(&key_file_path) {
-            println!("Could not remove imported key file: {}", err);
+            warn!("Could not remove imported key file: {}", err);
         }
     }
 
@@ -399,7 +400,7 @@ impl RxUiDatabase {
         if let Some(actor) = self.connected_actor() {
             actix::spawn(actor.send(OpenCommand));
         } else {
-            println!("No actor connection active?");
+            warn!("No actor connection active?");
         }
     }
 

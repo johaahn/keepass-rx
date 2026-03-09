@@ -1,4 +1,5 @@
 use anyhow::Result;
+use log::{debug, error, info, warn};
 use std::path::PathBuf;
 
 use dirs::data_dir;
@@ -41,12 +42,12 @@ pub fn move_old_dirs_and_files() -> Result<()> {
         let dest = imported_databases_path().join("db.kdbx");
         match std::fs::copy(&old_db_path, dest) {
             Ok(_) => {
-                println!("Copied old db.kdbx to imported directory");
+                info!("Copied old db.kdbx to imported directory");
                 if let Err(err) = std::fs::remove_file(old_db_path) {
-                    println!("Failed to remove old db.kdbx: {}", err);
+                    warn!("Failed to remove old db.kdbx: {}", err);
                 }
             }
-            Err(err) => println!("Failed to copy old db.kdbx: {}", err),
+            Err(err) => error!("Failed to copy old db.kdbx: {}", err),
         }
     }
 
@@ -61,29 +62,29 @@ pub fn move_old_dirs_and_files() -> Result<()> {
             .parent()
             .expect("Old data directory has no parent?");
 
-        println!(
+        info!(
             "Moving data from incorrect data directory: {:?}",
             std::fs::canonicalize(&incorrect_data_dir)?
         );
 
         for entry in std::fs::read_dir(&incorrect_data_dir)? {
-            println!("Processing entry: {:?}", entry);
+            debug!("Processing entry: {:?}", entry);
             let entry = entry?;
             let src = std::fs::canonicalize(entry.path())?;
             let dest = parent.join(&entry.file_name());
             let abs_dst = parent.join(&src).canonicalize();
             let abs_dst = abs_dst.as_ref().unwrap_or(&dest);
 
-            println!("Moving '{}' to: '{}'", src.display(), abs_dst.display());
+            info!("Moving '{}' to: '{}'", src.display(), abs_dst.display());
 
             // If destination already exists, nuke it.
             match dest {
                 ref dir if dir.exists() && dir.is_dir() => {
-                    println!("Removing existing directory: {}", dir.display());
+                    warn!("Removing existing directory: {}", dir.display());
                     std::fs::remove_dir_all(dir)?;
                 }
                 ref file if file.exists() => {
-                    println!("Removing existing file: {}", file.display());
+                    warn!("Removing existing file: {}", file.display());
                     std::fs::remove_file(&file)?;
                 }
                 _ => (),

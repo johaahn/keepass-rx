@@ -430,6 +430,7 @@ fn generate_methods(
             fn set_app(&mut self, app: QPointer<crate::app::AppState>) {
                 use actix::prelude::*;
                 use crate::actor::*;
+                use log::warn;
 
                 self._app = app.clone();
                 let this = qmetaobject::QPointer::from(&*self);
@@ -454,7 +455,7 @@ fn generate_methods(
                 // Deferred view init
                 app.deferred_with_view(move |view| {
                     let Some(this) = this.as_pinned() else {
-                        println!("Object destroyed before being initialized");
+                        warn!("Object destroyed before being initialized");
                         return;
                     };
 

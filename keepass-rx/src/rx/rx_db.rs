@@ -6,6 +6,7 @@ use anyhow::{Result, anyhow};
 use indexmap::IndexMap;
 use keepass::config::DatabaseConfig;
 use keepass::db::Meta;
+use log::info;
 use paste::paste;
 use regex::Regex;
 use std::rc::Rc;
@@ -186,7 +187,7 @@ impl RxDatabase {
     }
 
     pub fn close(&mut self) {
-        println!("Closing database.");
+        info!("Closing database.");
         self.zeroize();
     }
 

@@ -2,7 +2,8 @@ use actix::prelude::*;
 use anyhow::{Result, anyhow};
 use keepass::{Database, DatabaseKey};
 use libsodium_rs::utils::SecureVec;
-use qmetaobject::*;
+use log::{debug, info, warn};
+use qmetaobject::{QMetaType, QStringList, QVariantMap, prelude::*};
 use secstr::SecUtf8;
 use std::cell::RefCell;
 use std::collections::HashMap;
@@ -39,10 +40,7 @@ pub struct KeepassRxActor {
 }
 
 impl KeepassRxActor {
-    pub fn new(
-        gui: &Rc<QObjectBox<KeepassRx>>,
-        app_state: &Rc<QObjectBox<AppState>>,
-    ) -> Self {
+    pub fn new(gui: &Rc<QObjectBox<KeepassRx>>, app_state: &Rc<QObjectBox<AppState>>) -> Self {
         Self {
             gui: gui.clone(),
             app_state: app_state.clone(),
@@ -55,7 +53,7 @@ impl KeepassRxActor {
         if let Some(ref in_progress) = self.current_operation {
             if !in_progress.is_finished() {
                 in_progress.abort();
-                println!("Aborting ongoing encryption/decryption operation.");
+                info!("Aborting ongoing encryption/decryption operation.");
             }
         }
     }
@@ -78,7 +76,7 @@ impl Supervised for KeepassRxActor {}
 
 impl SystemService for KeepassRxActor {
     fn service_started(&mut self, ctx: &mut Context<Self>) {
-        println!("service started");
+        debug!("service started");
         self.gui.pinned().borrow_mut().actor = Some(ctx.address());
     }
 }
@@ -231,7 +229,7 @@ impl Handler<SetViewMode> for KeepassRxActor {
         gui.viewMode = mode;
         gui.viewModeChanged(mode);
 
-        println!("Set view to: {}", app_state.curr_view_ref().unwrap().name());
+        debug!("Set view to: {}", app_state.curr_view_ref().unwrap().name());
     }
 }
 
@@ -252,7 +250,7 @@ impl Handler<OpenDatabase> for KeepassRxActor {
         let stored_pw = self.stored_master_password.clone();
         let maybe_key_file_bytes = self.key_file_bytes();
 
-        println!("Opening {} DB: {}", msg.db_type, db_path.display());
+        info!("Opening {} DB: {}", msg.db_type, db_path.display());
 
         Box::pin(
             async move {
@@ -377,7 +375,7 @@ impl Handler<DeleteDatabase> for KeepassRxActor {
     type Result = Result<()>;
 
     fn handle(&mut self, msg: DeleteDatabase, _: &mut Self::Context) -> Self::Result {
-        println!("Deleting db {}", msg.db_name);
+        info!("Deleting db {}", msg.db_name);
         let binding = self.gui.pinned();
         let gui = binding.borrow();
 
@@ -614,7 +612,7 @@ impl Handler<InvalidateMasterPassword> for KeepassRxActor {
         gui.isMasterPasswordEncrypted = false;
         gui.masterPasswordInvalidated();
         gui.masterPasswordStateChanged(false);
-        println!("Master password invalidated.");
+        info!("Master password invalidated.");
     }
 }
 
@@ -697,7 +695,7 @@ impl Handler<DecryptMasterPassword> for KeepassRxActor {
         self.current_operation = Some(handle.abort_handle());
 
         Box::pin(async move { handle.await? }.into_actor(self).map(
-            move |result: Result<SecUtf8>, this: &mut KeepassRxActor, _| {
+            move |result: Result<SecUtf8>, this, _| {
                 let binding = this.gui.pinned();
                 let mut gui = binding.borrow_mut();
 

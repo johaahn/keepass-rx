@@ -151,7 +151,7 @@ impl RxListItem {
             // Only allow available feature of list item if the
             // current UI container has it enabled.
             if view.feature() != self.feature {
-                //println!("WARN: Disabling unavailable UI feature in current container");
+                // warn!("Disabling unavailable UI feature in current container");
                 self.feature = RxViewFeature::None;
                 self.featureChanged();
             }

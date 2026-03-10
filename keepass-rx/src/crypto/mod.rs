@@ -97,7 +97,6 @@ impl KernelBackedSecret {
         let keyring_entry = Self::entry_for(service_guard.as_str())?;
 
         keyring_entry.delete_credential()?;
-        Poison::recover(service_guard);
         Ok(())
     }
 

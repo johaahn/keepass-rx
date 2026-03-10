@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-01 20:39+0000\n"
+"POT-Creation-Date: 2026-03-10 07:41+0000\n"
 "PO-Revision-Date: 2025-12-04 16:00+0000\n"
 "Last-Translator: Serhii Horichenko <serhii@horichenko.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/ubports/"
@@ -82,12 +82,6 @@ msgstr ""
 "<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
 "projectmoon/keepass-rx</a>"
 
-msgid "Open Source Licenses"
-msgstr "Ліцензії вихідного коду"
-
-msgid "Website"
-msgstr "Вебсайт"
-
 msgid "Add Database"
 msgstr "Додати базу даних"
 
@@ -106,6 +100,76 @@ msgstr "Імпортуйте базу даних через +."
 msgid "It will only be removed from the app, not your device."
 msgstr "Це буде вилучене лише з програми, але залишиться на пристрої."
 
+msgid "Open Source Licenses"
+msgstr "Ліцензії вихідного коду"
+
+msgid "Website"
+msgstr "Вебсайт"
+
+msgid "Key Loaded"
+msgstr "Завантажені ключі"
+
+msgid "Remove Key"
+msgstr "Вилучити ключ"
+
+msgid "Use Key"
+msgstr "Використати ключ"
+
+msgid "Automatically detected a key file for this database."
+msgstr "Автоматично визначений ключовий файл для цієї бази даних."
+
+msgid "A key file will be used to open this database."
+msgstr "Ключовий файл буде використаний для відкриття цієї бази даних."
+
+msgid "Select Key File"
+msgstr "Виберіть ключовий файл"
+
+msgid "Back"
+msgstr "Назад"
+
+msgid "Enter the database master password"
+msgstr "Вкажіть майстер-пароль бази даних"
+
+msgid "Master Password"
+msgstr "Майстер-пароль"
+
+msgid "Open"
+msgstr "Відкрити"
+
+msgid "Hide Password"
+msgstr "Приховати пароль"
+
+msgid "Show Password"
+msgstr "Показати пароль"
+
+msgid "Opening"
+msgstr "Відкривається"
+
+msgid "Manual path set."
+msgstr "Шлях встановлений вручну."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"Код доступу — це перші п’ять символів пароля бази даних (або весь пароль, "
+"якщо він менш як п'ять символів)."
+
+msgid "Passcode"
+msgstr "Код доступу"
+
+msgid "Unlock"
+msgstr "Розблокувати"
+
+msgid "Securely Unlocking"
+msgstr "Безпечне розблокування"
+
+msgid "Securely Locking"
+msgstr "Безпечне блокування"
+
+msgid "Database Not Opening?"
+msgstr "База даних не відкривається?"
+
 msgid "Cancel Search"
 msgstr "Скасувати пошук"
 
@@ -123,9 +187,6 @@ msgstr "Блокувати"
 
 msgid "Close"
 msgstr "Закрити"
-
-msgid "Back"
-msgstr "Назад"
 
 msgid "View Mode"
 msgstr "Режим перегляду"
@@ -166,6 +227,12 @@ msgstr "Теги"
 msgid "Entries grouped by tag."
 msgstr "Записи згруповані за тегами."
 
+msgid "Saved Searches"
+msgstr ""
+
+msgid "Entries matching search queries."
+msgstr ""
+
 msgid "Select View"
 msgstr "Оберіть вигляд"
 
@@ -174,42 +241,6 @@ msgstr "Вибрати"
 
 msgid "Cancel"
 msgstr "Скасувати"
-
-msgid "Key Loaded"
-msgstr "Завантажені ключі"
-
-msgid "Remove Key"
-msgstr "Вилучити ключ"
-
-msgid "Use Key"
-msgstr "Використати ключ"
-
-msgid "Automatically detected a key file for this database."
-msgstr "Автоматично визначений ключовий файл для цієї бази даних."
-
-msgid "A key file will be used to open this database."
-msgstr "Ключовий файл буде використаний для відкриття цієї бази даних."
-
-msgid "Select Key File"
-msgstr "Виберіть ключовий файл"
-
-msgid "Enter the database master password"
-msgstr "Вкажіть майстер-пароль бази даних"
-
-msgid "Master Password"
-msgstr "Майстер-пароль"
-
-msgid "Open"
-msgstr "Відкрити"
-
-msgid "Hide Password"
-msgstr "Приховати пароль"
-
-msgid "Show Password"
-msgstr "Показати пароль"
-
-msgid "Opening"
-msgstr "Відкривається"
 
 msgid "Change settings based on your preferences."
 msgstr "Змінити налаштування згідно з Вашими уподобаннями."
@@ -250,6 +281,15 @@ msgstr ""
 "Використовувати нечіткий пошук для пошуку записів. Якщо вимкнено, пошук "
 "відбувається лише за точним текстом без урахування регістру."
 
+msgid "Password"
+msgstr "Пароль"
+
+msgid "%1 bits"
+msgstr ""
+
+msgid "Password (Entropy: %1)"
+msgstr ""
+
 msgid "%1 copied to clipboard (30 secs)"
 msgstr "%1 скопійовано до буфера обміну (30 сек)"
 
@@ -268,42 +308,20 @@ msgstr "Головне"
 msgid "Username"
 msgstr "Ім'я користувача"
 
-msgid "Password"
-msgstr "Пароль"
-
 msgid "URL"
 msgstr "URL"
+
+msgid "TOTP (Valid for %1)"
+msgstr ""
+
+msgid "TOTP"
+msgstr ""
 
 msgid "Other Fields"
 msgstr "Інші поля"
 
 msgid "KeePassRX: Clipboard cleared."
 msgstr "KeePassRX: Буфер обміну очищений."
-
-msgid "Manual path set."
-msgstr "Шлях встановлений вручну."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"Код доступу — це перші п’ять символів пароля бази даних (або весь пароль, "
-"якщо він менш як п'ять символів)."
-
-msgid "Passcode"
-msgstr "Код доступу"
-
-msgid "Unlock"
-msgstr "Розблокувати"
-
-msgid "Securely Unlocking"
-msgstr "Безпечне розблокування"
-
-msgid "Securely Locking"
-msgstr "Безпечне блокування"
-
-msgid "Database Not Opening?"
-msgstr "База даних не відкривається?"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
@@ -320,6 +338,22 @@ msgctxt "A database managed by external file sync"
 msgid "Synced"
 msgstr "Синхронізовано"
 
+msgctxt "Password strength"
+msgid "Poor"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Weak"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Good"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Excellent"
+msgstr ""
+
 msgid "All Templates"
 msgstr "Усі шаблони"
 
@@ -334,6 +368,10 @@ msgstr "Коди 2FA"
 msgctxt "List of entries with tags"
 msgid "Tags"
 msgstr "Теги"
+
+msgctxt "Saved database searches"
+msgid "Saved Searches"
+msgstr ""
 
 #~ msgid ""
 #~ "Change settings based on your preferences. Any change to the settings "

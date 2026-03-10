@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-01 20:39+0000\n"
+"POT-Creation-Date: 2026-03-10 07:41+0000\n"
 "PO-Revision-Date: 2026-01-26 18:01+0000\n"
 "Last-Translator: BoneNI <bounkirdni@gmail.com>\n"
-"Language-Team: Lao <https://hosted.weblate.org/projects/ubports/keepassrx/"
-"lo/>\n"
+"Language-Team: Lao <https://hosted.weblate.org/projects/ubports/keepassrx/lo/"
+">\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -80,12 +80,6 @@ msgstr ""
 "<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
 "projectmoon/keepass-rx</a>"
 
-msgid "Open Source Licenses"
-msgstr "ໃບອະນຸຍາດໂອເພນຊອດ"
-
-msgid "Website"
-msgstr "ເວັບໄຊ"
-
 msgid "Add Database"
 msgstr "ເພີ່ມຖານຂໍ້ມູນ"
 
@@ -104,6 +98,76 @@ msgstr "ແຕະ + ເພື່ອນຳເຂົ້າຖານຂໍ້ມູ
 msgid "It will only be removed from the app, not your device."
 msgstr "ມັນຈະຖືກລຶບອອກຈາກແອັບເທົ່ານັ້ນ, ບໍ່ແມ່ນຈາກອຸປະກອນຂອງທ່ານ."
 
+msgid "Open Source Licenses"
+msgstr "ໃບອະນຸຍາດໂອເພນຊອດ"
+
+msgid "Website"
+msgstr "ເວັບໄຊ"
+
+msgid "Key Loaded"
+msgstr "ໂຫຼດກະແຈແລ້ວ"
+
+msgid "Remove Key"
+msgstr "ລຶບກະແຈອອກ"
+
+msgid "Use Key"
+msgstr "ໃຊ້ກະແຈ"
+
+msgid "Automatically detected a key file for this database."
+msgstr "ກວດພົບໄຟລ໌ກະແຈສຳລັບຖານຂໍ້ມູນນີ້ໂດຍອັດຕະໂນມັດ."
+
+msgid "A key file will be used to open this database."
+msgstr "ໄຟລ໌ກະແຈຈະຖືກນຳໃຊ້ເພື່ອເປີດຖານຂໍ້ມູນນີ້."
+
+msgid "Select Key File"
+msgstr "ເລືອກໄຟລ໌ກະແຈ"
+
+msgid "Back"
+msgstr "ກັບຄືນ"
+
+msgid "Enter the database master password"
+msgstr "ປ້ອນລະຫັດຜ່ານຫຼັກຂອງຖານຂໍ້ມູນ"
+
+msgid "Master Password"
+msgstr "ລະຫັດຜ່ານຫຼັກ"
+
+msgid "Open"
+msgstr "ເປີດ"
+
+msgid "Hide Password"
+msgstr "ເຊື່ອງລະຫັດຜ່ານ"
+
+msgid "Show Password"
+msgstr "ສະແດງລະຫັດຜ່ານ"
+
+msgid "Opening"
+msgstr "ກຳລັງເປີດ"
+
+msgid "Manual path set."
+msgstr "ກຳນົດເສັ້ນທາງເອງແລ້ວ."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"ລະຫັດຜ່ານສັ້ນແມ່ນ 5 ຕົວອັກສອນທຳອິດຂອງລະຫັດຜ່ານຖານຂໍ້ມູນ (ຫຼື ລະຫັດຜ່ານທັງໝົດ ຖ້າໜ້ອຍກວ່າ 5 "
+"ຕົວອັກສອນ)."
+
+msgid "Passcode"
+msgstr "ລະຫັດຜ່ານສັ້ນ"
+
+msgid "Unlock"
+msgstr "ປົດລັອກ"
+
+msgid "Securely Unlocking"
+msgstr "ກຳລັງປົດລັອກຢ່າງປອດໄພ"
+
+msgid "Securely Locking"
+msgstr "ກຳລັງລັອກຢ່າງປອດໄພ"
+
+msgid "Database Not Opening?"
+msgstr "ຖານຂໍ້ມູນເປີດບໍ່ໄດ້ບໍ?"
+
 msgid "Cancel Search"
 msgstr "ຍົກເລີກການຄົ້ນຫາ"
 
@@ -121,9 +185,6 @@ msgstr "ລັອກ"
 
 msgid "Close"
 msgstr "ປິດ"
-
-msgid "Back"
-msgstr "ກັບຄືນ"
 
 msgid "View Mode"
 msgstr "ຮູບແບບການເບິ່ງ"
@@ -164,6 +225,12 @@ msgstr "ແທັກ"
 msgid "Entries grouped by tag."
 msgstr "ຂໍ້ມູນຖືກຈັດກຸ່ມຕາມແທັກ."
 
+msgid "Saved Searches"
+msgstr ""
+
+msgid "Entries matching search queries."
+msgstr ""
+
 msgid "Select View"
 msgstr "ເລືອກມຸມມອງ"
 
@@ -172,42 +239,6 @@ msgstr "ເລືອກ"
 
 msgid "Cancel"
 msgstr "ຍົກເລີກ"
-
-msgid "Key Loaded"
-msgstr "ໂຫຼດກະແຈແລ້ວ"
-
-msgid "Remove Key"
-msgstr "ລຶບກະແຈອອກ"
-
-msgid "Use Key"
-msgstr "ໃຊ້ກະແຈ"
-
-msgid "Automatically detected a key file for this database."
-msgstr "ກວດພົບໄຟລ໌ກະແຈສຳລັບຖານຂໍ້ມູນນີ້ໂດຍອັດຕະໂນມັດ."
-
-msgid "A key file will be used to open this database."
-msgstr "ໄຟລ໌ກະແຈຈະຖືກນຳໃຊ້ເພື່ອເປີດຖານຂໍ້ມູນນີ້."
-
-msgid "Select Key File"
-msgstr "ເລືອກໄຟລ໌ກະແຈ"
-
-msgid "Enter the database master password"
-msgstr "ປ້ອນລະຫັດຜ່ານຫຼັກຂອງຖານຂໍ້ມູນ"
-
-msgid "Master Password"
-msgstr "ລະຫັດຜ່ານຫຼັກ"
-
-msgid "Open"
-msgstr "ເປີດ"
-
-msgid "Hide Password"
-msgstr "ເຊື່ອງລະຫັດຜ່ານ"
-
-msgid "Show Password"
-msgstr "ສະແດງລະຫັດຜ່ານ"
-
-msgid "Opening"
-msgstr "ກຳລັງເປີດ"
 
 msgid "Change settings based on your preferences."
 msgstr "ປ່ຽນການຕັ້ງຄ່າຕາມຄວາມຕ້ອງການຂອງທ່ານ."
@@ -241,8 +272,17 @@ msgid ""
 "Use fuzzy search to find entries. If disabled, search only matches exact "
 "case insensitive text."
 msgstr ""
-"ໃຊ້ການຄົ້ນຫາແບບຄຸມເຄືອເພື່ອຊອກຫາຂໍ້ມູນ. ຫາກປິດໄວ້, ການຄົ້ນຫາຈະກົງກັບຂໍ້ຄວາມທີ່ຖືກຕ້ອງທຸກຕົວອັກສອນ (ບໍ່ຈຳ"
-"ແນກຕົວພິມໃຫຍ່-ນ້ອຍ)."
+"ໃຊ້ການຄົ້ນຫາແບບຄຸມເຄືອເພື່ອຊອກຫາຂໍ້ມູນ. ຫາກປິດໄວ້, ການຄົ້ນຫາຈະກົງກັບຂໍ້ຄວາມທີ່ຖືກຕ້ອງທຸກຕົວອັກສອນ "
+"(ບໍ່ຈຳແນກຕົວພິມໃຫຍ່-ນ້ອຍ)."
+
+msgid "Password"
+msgstr "ລະຫັດຜ່ານ"
+
+msgid "%1 bits"
+msgstr ""
+
+msgid "Password (Entropy: %1)"
+msgstr ""
 
 msgid "%1 copied to clipboard (30 secs)"
 msgstr "ຄັດລອກ %1 ໃສ່ຄລິບບອດແລ້ວ (30 ວິນາທີ)"
@@ -262,42 +302,20 @@ msgstr "ຫຼັກ"
 msgid "Username"
 msgstr "ຊື່ຜູ້ໃຊ້"
 
-msgid "Password"
-msgstr "ລະຫັດຜ່ານ"
-
 msgid "URL"
 msgstr "URL"
+
+msgid "TOTP (Valid for %1)"
+msgstr ""
+
+msgid "TOTP"
+msgstr ""
 
 msgid "Other Fields"
 msgstr "ຊ່ອງຂໍ້ມູນອື່ນໆ"
 
 msgid "KeePassRX: Clipboard cleared."
 msgstr "KeePassRX: ລ້າງຂໍ້ມູນໃນຄລິບບອດແລ້ວ."
-
-msgid "Manual path set."
-msgstr "ກຳນົດເສັ້ນທາງເອງແລ້ວ."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"ລະຫັດຜ່ານສັ້ນແມ່ນ 5 ຕົວອັກສອນທຳອິດຂອງລະຫັດຜ່ານຖານຂໍ້ມູນ (ຫຼື ລະຫັດຜ່ານທັງໝົດ ຖ້າໜ້ອຍກວ່າ 5 "
-"ຕົວອັກສອນ)."
-
-msgid "Passcode"
-msgstr "ລະຫັດຜ່ານສັ້ນ"
-
-msgid "Unlock"
-msgstr "ປົດລັອກ"
-
-msgid "Securely Unlocking"
-msgstr "ກຳລັງປົດລັອກຢ່າງປອດໄພ"
-
-msgid "Securely Locking"
-msgstr "ກຳລັງລັອກຢ່າງປອດໄພ"
-
-msgid "Database Not Opening?"
-msgstr "ຖານຂໍ້ມູນເປີດບໍ່ໄດ້ບໍ?"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
@@ -311,6 +329,22 @@ msgstr "ນຳເຂົ້າແລ້ວ"
 msgctxt "A database managed by external file sync"
 msgid "Synced"
 msgstr "ຊິງຄ໌ແລ້ວ"
+
+msgctxt "Password strength"
+msgid "Poor"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Weak"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Good"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Excellent"
+msgstr ""
 
 msgid "All Templates"
 msgstr "ແມ່ແບບທັງໝົດ"
@@ -326,6 +360,10 @@ msgstr "ລະຫັດ 2FA"
 msgctxt "List of entries with tags"
 msgid "Tags"
 msgstr "ແທັກ"
+
+msgctxt "Saved database searches"
+msgid "Saved Searches"
+msgstr ""
 
 #~ msgid ""
 #~ "Change settings based on your preferences. Any change to the settings "

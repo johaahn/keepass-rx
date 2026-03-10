@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-01 20:39+0000\n"
+"POT-Creation-Date: 2026-03-10 07:41+0000\n"
 "PO-Revision-Date: 2026-02-07 23:09+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -81,12 +81,6 @@ msgstr ""
 "<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
 "projectmoon/keepass-rx</a>"
 
-msgid "Open Source Licenses"
-msgstr "Opensourcelicenties"
-
-msgid "Website"
-msgstr "Website"
-
 msgid "Add Database"
 msgstr "Databank toevoegen"
 
@@ -106,6 +100,76 @@ msgid "It will only be removed from the app, not your device."
 msgstr ""
 "Let op: de databank wordt alleen verwijderd uit de app, niet van je apparaat."
 
+msgid "Open Source Licenses"
+msgstr "Opensourcelicenties"
+
+msgid "Website"
+msgstr "Website"
+
+msgid "Key Loaded"
+msgstr "De sleutel is ingelezen"
+
+msgid "Remove Key"
+msgstr "Sleutel verwijderen"
+
+msgid "Use Key"
+msgstr "Sleutel gebruiken"
+
+msgid "Automatically detected a key file for this database."
+msgstr "Het sleutelbestand van deze databank is automatisch vastgesteld."
+
+msgid "A key file will be used to open this database."
+msgstr "Er wordt een sleutelbestand gebruikt om deze databank te openen."
+
+msgid "Select Key File"
+msgstr "Sleutelbestand kiezen"
+
+msgid "Back"
+msgstr "Terug"
+
+msgid "Enter the database master password"
+msgstr "Voer het hoofdwachtwoord in"
+
+msgid "Master Password"
+msgstr "Hoofdwachtwoord"
+
+msgid "Open"
+msgstr "Openen"
+
+msgid "Hide Password"
+msgstr "Wachtwoord verbergen"
+
+msgid "Show Password"
+msgstr "Wachtwoord tonen"
+
+msgid "Opening"
+msgstr "Bezig met openen…"
+
+msgid "Manual path set."
+msgstr "Stel de locatie handmatig in."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"De toegangscode bestaat uit de eerste vijf tekens van het databankwachtwoord "
+"(of het gehele wachtwoord, indien minder dan vijf tekens)."
+
+msgid "Passcode"
+msgstr "Toegangscode"
+
+msgid "Unlock"
+msgstr "Ontgrendelen"
+
+msgid "Securely Unlocking"
+msgstr "Veilig ontgrendelen"
+
+msgid "Securely Locking"
+msgstr "Veilig vergrendelen"
+
+msgid "Database Not Opening?"
+msgstr "Wordt de databank niet geopend?"
+
 msgid "Cancel Search"
 msgstr "Zoeken afbreken"
 
@@ -123,9 +187,6 @@ msgstr "Vergrendelen"
 
 msgid "Close"
 msgstr "Sluiten"
-
-msgid "Back"
-msgstr "Terug"
 
 msgid "View Mode"
 msgstr "Weergavemodus"
@@ -166,6 +227,12 @@ msgstr "Labels"
 msgid "Entries grouped by tag."
 msgstr "Items gegroepeerd op label."
 
+msgid "Saved Searches"
+msgstr ""
+
+msgid "Entries matching search queries."
+msgstr ""
+
 msgid "Select View"
 msgstr "Kies een weergave"
 
@@ -174,42 +241,6 @@ msgstr "Kiezen"
 
 msgid "Cancel"
 msgstr "Annuleren"
-
-msgid "Key Loaded"
-msgstr "De sleutel is ingelezen"
-
-msgid "Remove Key"
-msgstr "Sleutel verwijderen"
-
-msgid "Use Key"
-msgstr "Sleutel gebruiken"
-
-msgid "Automatically detected a key file for this database."
-msgstr "Het sleutelbestand van deze databank is automatisch vastgesteld."
-
-msgid "A key file will be used to open this database."
-msgstr "Er wordt een sleutelbestand gebruikt om deze databank te openen."
-
-msgid "Select Key File"
-msgstr "Sleutelbestand kiezen"
-
-msgid "Enter the database master password"
-msgstr "Voer het hoofdwachtwoord in"
-
-msgid "Master Password"
-msgstr "Hoofdwachtwoord"
-
-msgid "Open"
-msgstr "Openen"
-
-msgid "Hide Password"
-msgstr "Wachtwoord verbergen"
-
-msgid "Show Password"
-msgstr "Wachtwoord tonen"
-
-msgid "Opening"
-msgstr "Bezig met openen…"
 
 msgid "Change settings based on your preferences."
 msgstr "Zet de instellingen naar eigen hand."
@@ -248,6 +279,15 @@ msgid ""
 "case insensitive text."
 msgstr "Schakel uit om alleen te zoeken naar items die precies overeenkomen."
 
+msgid "Password"
+msgstr "Wachtwoord"
+
+msgid "%1 bits"
+msgstr ""
+
+msgid "Password (Entropy: %1)"
+msgstr ""
+
 msgid "%1 copied to clipboard (30 secs)"
 msgstr "%1 is gekopieerd naar het klembord (30 sec.)"
 
@@ -266,42 +306,20 @@ msgstr "Algemeen"
 msgid "Username"
 msgstr "Gebruikersnaam"
 
-msgid "Password"
-msgstr "Wachtwoord"
-
 msgid "URL"
 msgstr "Url"
+
+msgid "TOTP (Valid for %1)"
+msgstr ""
+
+msgid "TOTP"
+msgstr ""
 
 msgid "Other Fields"
 msgstr "Overige velden"
 
 msgid "KeePassRX: Clipboard cleared."
 msgstr "KeePassRX: klembord gewist."
-
-msgid "Manual path set."
-msgstr "Stel de locatie handmatig in."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"De toegangscode bestaat uit de eerste vijf tekens van het databankwachtwoord "
-"(of het gehele wachtwoord, indien minder dan vijf tekens)."
-
-msgid "Passcode"
-msgstr "Toegangscode"
-
-msgid "Unlock"
-msgstr "Ontgrendelen"
-
-msgid "Securely Unlocking"
-msgstr "Veilig ontgrendelen"
-
-msgid "Securely Locking"
-msgstr "Veilig vergrendelen"
-
-msgid "Database Not Opening?"
-msgstr "Wordt de databank niet geopend?"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
@@ -318,6 +336,22 @@ msgctxt "A database managed by external file sync"
 msgid "Synced"
 msgstr "Gesynchroniseerd"
 
+msgctxt "Password strength"
+msgid "Poor"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Weak"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Good"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Excellent"
+msgstr ""
+
 msgid "All Templates"
 msgstr "Alle sjablonen"
 
@@ -332,6 +366,10 @@ msgstr "2FA-codes"
 msgctxt "List of entries with tags"
 msgid "Tags"
 msgstr "Labels"
+
+msgctxt "Saved database searches"
+msgid "Saved Searches"
+msgstr ""
 
 #~ msgid ""
 #~ "Change settings based on your preferences. Any change to the settings "

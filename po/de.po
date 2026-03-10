@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-01 20:39+0000\n"
+"POT-Creation-Date: 2026-03-10 07:41+0000\n"
 "PO-Revision-Date: 2026-02-28 00:09+0000\n"
 "Last-Translator: Daniel Frost <one@frostinfo.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -81,12 +81,6 @@ msgstr ""
 "<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
 "projectmoon/keepass-rx</a>"
 
-msgid "Open Source Licenses"
-msgstr "Open Source Lizenzen"
-
-msgid "Website"
-msgstr "Webseite"
-
 msgid "Add Database"
 msgstr "Datenbank hinzufügen"
 
@@ -105,6 +99,76 @@ msgstr "Mit + eine Datenbank importieren."
 msgid "It will only be removed from the app, not your device."
 msgstr "Diese wird nur aus der App entfernt, aber nicht vom Gerät gelöscht."
 
+msgid "Open Source Licenses"
+msgstr "Open Source Lizenzen"
+
+msgid "Website"
+msgstr "Webseite"
+
+msgid "Key Loaded"
+msgstr "Schlüssel geladen"
+
+msgid "Remove Key"
+msgstr "Schlüssel entfernen"
+
+msgid "Use Key"
+msgstr "Schlüssel verwenden"
+
+msgid "Automatically detected a key file for this database."
+msgstr "Für diese Datenbank wurde ein Schlüssel automatisch erkannt."
+
+msgid "A key file will be used to open this database."
+msgstr "Eine Schlüsseldatei wird zum Öffnen dieser Datenbank verwendet."
+
+msgid "Select Key File"
+msgstr "Wähle Schlüsseldatei"
+
+msgid "Back"
+msgstr "Zurück"
+
+msgid "Enter the database master password"
+msgstr "Datenbankpasswort eingeben"
+
+msgid "Master Password"
+msgstr "Datenbankpasswort"
+
+msgid "Open"
+msgstr "Öffnen"
+
+msgid "Hide Password"
+msgstr "Passwort ausblenden"
+
+msgid "Show Password"
+msgstr "Passwort anzeigen"
+
+msgid "Opening"
+msgstr "Öffne"
+
+msgid "Manual path set."
+msgstr "Manueller Pfad gesetzt."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"Der Passcode sind die ersten fünf Zeichen des Datenbankpassworts (oder das "
+"gesamte Passwort, falls es weniger als 5 Zeichen hat)."
+
+msgid "Passcode"
+msgstr "Passcode"
+
+msgid "Unlock"
+msgstr "Entsperren"
+
+msgid "Securely Unlocking"
+msgstr "Sicheres entsperren"
+
+msgid "Securely Locking"
+msgstr "Sicheres Sperren"
+
+msgid "Database Not Opening?"
+msgstr "Datenbank öffnet sich nicht?"
+
 msgid "Cancel Search"
 msgstr "Suche abbrechen"
 
@@ -122,9 +186,6 @@ msgstr "Sperren"
 
 msgid "Close"
 msgstr "Schließen"
-
-msgid "Back"
-msgstr "Zurück"
 
 msgid "View Mode"
 msgstr "Ansichtsmodus"
@@ -165,6 +226,12 @@ msgstr "Schlagwörter"
 msgid "Entries grouped by tag."
 msgstr "Einträge gruppiert nach Tags."
 
+msgid "Saved Searches"
+msgstr ""
+
+msgid "Entries matching search queries."
+msgstr ""
+
 msgid "Select View"
 msgstr "Wähle Ansicht"
 
@@ -173,42 +240,6 @@ msgstr "Auswählen"
 
 msgid "Cancel"
 msgstr "Abbrechen"
-
-msgid "Key Loaded"
-msgstr "Schlüssel geladen"
-
-msgid "Remove Key"
-msgstr "Schlüssel entfernen"
-
-msgid "Use Key"
-msgstr "Schlüssel verwenden"
-
-msgid "Automatically detected a key file for this database."
-msgstr "Für diese Datenbank wurde ein Schlüssel automatisch erkannt."
-
-msgid "A key file will be used to open this database."
-msgstr "Eine Schlüsseldatei wird zum Öffnen dieser Datenbank verwendet."
-
-msgid "Select Key File"
-msgstr "Wähle Schlüsseldatei"
-
-msgid "Enter the database master password"
-msgstr "Datenbankpasswort eingeben"
-
-msgid "Master Password"
-msgstr "Datenbankpasswort"
-
-msgid "Open"
-msgstr "Öffnen"
-
-msgid "Hide Password"
-msgstr "Passwort ausblenden"
-
-msgid "Show Password"
-msgstr "Passwort anzeigen"
-
-msgid "Opening"
-msgstr "Öffne"
 
 msgid "Change settings based on your preferences."
 msgstr "Einstellungen ändern basierend auf deinen Vorlieben."
@@ -250,6 +281,15 @@ msgstr ""
 "nur exakte Treffer ohne Berücksichtigung von Groß- und Kleinschreibung "
 "zurückgegeben."
 
+msgid "Password"
+msgstr "Passwort"
+
+msgid "%1 bits"
+msgstr ""
+
+msgid "Password (Entropy: %1)"
+msgstr ""
+
 msgid "%1 copied to clipboard (30 secs)"
 msgstr "%1 in die Zwischenablage kopiert (für 30 Sek.)"
 
@@ -268,42 +308,20 @@ msgstr ""
 msgid "Username"
 msgstr "Nutzername"
 
-msgid "Password"
-msgstr "Passwort"
-
 msgid "URL"
 msgstr "URL"
+
+msgid "TOTP (Valid for %1)"
+msgstr ""
+
+msgid "TOTP"
+msgstr ""
 
 msgid "Other Fields"
 msgstr "Andere Felder"
 
 msgid "KeePassRX: Clipboard cleared."
 msgstr "KeePassRX: Zwischenablage geleert."
-
-msgid "Manual path set."
-msgstr "Manueller Pfad gesetzt."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"Der Passcode sind die ersten fünf Zeichen des Datenbankpassworts (oder das "
-"gesamte Passwort, falls es weniger als 5 Zeichen hat)."
-
-msgid "Passcode"
-msgstr "Passcode"
-
-msgid "Unlock"
-msgstr "Entsperren"
-
-msgid "Securely Unlocking"
-msgstr "Sicheres entsperren"
-
-msgid "Securely Locking"
-msgstr "Sicheres Sperren"
-
-msgid "Database Not Opening?"
-msgstr "Datenbank öffnet sich nicht?"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
@@ -320,6 +338,22 @@ msgctxt "A database managed by external file sync"
 msgid "Synced"
 msgstr "Synchronisiert"
 
+msgctxt "Password strength"
+msgid "Poor"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Weak"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Good"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Excellent"
+msgstr ""
+
 msgid "All Templates"
 msgstr "Alle Vorlagen"
 
@@ -334,6 +368,10 @@ msgstr "2FA-Codes"
 msgctxt "List of entries with tags"
 msgid "Tags"
 msgstr "Schlagwörter"
+
+msgctxt "Saved database searches"
+msgid "Saved Searches"
+msgstr ""
 
 #~ msgid ""
 #~ "Change settings based on your preferences. Any change to the settings "

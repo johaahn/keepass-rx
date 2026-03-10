@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-01 20:39+0000\n"
+"POT-Creation-Date: 2026-03-10 07:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -70,12 +70,6 @@ msgid ""
 "projectmoon/keepass-rx</a>"
 msgstr ""
 
-msgid "Open Source Licenses"
-msgstr ""
-
-msgid "Website"
-msgstr ""
-
 msgid "Add Database"
 msgstr ""
 
@@ -94,6 +88,74 @@ msgstr ""
 msgid "It will only be removed from the app, not your device."
 msgstr ""
 
+msgid "Open Source Licenses"
+msgstr ""
+
+msgid "Website"
+msgstr ""
+
+msgid "Key Loaded"
+msgstr ""
+
+msgid "Remove Key"
+msgstr ""
+
+msgid "Use Key"
+msgstr ""
+
+msgid "Automatically detected a key file for this database."
+msgstr ""
+
+msgid "A key file will be used to open this database."
+msgstr ""
+
+msgid "Select Key File"
+msgstr ""
+
+msgid "Back"
+msgstr ""
+
+msgid "Enter the database master password"
+msgstr ""
+
+msgid "Master Password"
+msgstr ""
+
+msgid "Open"
+msgstr ""
+
+msgid "Hide Password"
+msgstr ""
+
+msgid "Show Password"
+msgstr ""
+
+msgid "Opening"
+msgstr ""
+
+msgid "Manual path set."
+msgstr ""
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+
+msgid "Passcode"
+msgstr ""
+
+msgid "Unlock"
+msgstr ""
+
+msgid "Securely Unlocking"
+msgstr ""
+
+msgid "Securely Locking"
+msgstr ""
+
+msgid "Database Not Opening?"
+msgstr ""
+
 msgid "Cancel Search"
 msgstr ""
 
@@ -110,9 +172,6 @@ msgid "Lock"
 msgstr ""
 
 msgid "Close"
-msgstr ""
-
-msgid "Back"
 msgstr ""
 
 msgid "View Mode"
@@ -154,6 +213,12 @@ msgstr ""
 msgid "Entries grouped by tag."
 msgstr ""
 
+msgid "Saved Searches"
+msgstr ""
+
+msgid "Entries matching search queries."
+msgstr ""
+
 msgid "Select View"
 msgstr ""
 
@@ -161,42 +226,6 @@ msgid "Select"
 msgstr ""
 
 msgid "Cancel"
-msgstr ""
-
-msgid "Key Loaded"
-msgstr ""
-
-msgid "Remove Key"
-msgstr ""
-
-msgid "Use Key"
-msgstr ""
-
-msgid "Automatically detected a key file for this database."
-msgstr ""
-
-msgid "A key file will be used to open this database."
-msgstr ""
-
-msgid "Select Key File"
-msgstr ""
-
-msgid "Enter the database master password"
-msgstr ""
-
-msgid "Master Password"
-msgstr ""
-
-msgid "Open"
-msgstr ""
-
-msgid "Hide Password"
-msgstr ""
-
-msgid "Show Password"
-msgstr ""
-
-msgid "Opening"
 msgstr ""
 
 msgid "Change settings based on your preferences."
@@ -232,6 +261,15 @@ msgid ""
 "case insensitive text."
 msgstr ""
 
+msgid "Password"
+msgstr ""
+
+msgid "%1 bits"
+msgstr ""
+
+msgid "Password (Entropy: %1)"
+msgstr ""
+
 msgid "%1 copied to clipboard (30 secs)"
 msgstr ""
 
@@ -250,39 +288,19 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-msgid "Password"
+msgid "URL"
 msgstr ""
 
-msgid "URL"
+msgid "TOTP (Valid for %1)"
+msgstr ""
+
+msgid "TOTP"
 msgstr ""
 
 msgid "Other Fields"
 msgstr ""
 
 msgid "KeePassRX: Clipboard cleared."
-msgstr ""
-
-msgid "Manual path set."
-msgstr ""
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-
-msgid "Passcode"
-msgstr ""
-
-msgid "Unlock"
-msgstr ""
-
-msgid "Securely Unlocking"
-msgstr ""
-
-msgid "Securely Locking"
-msgstr ""
-
-msgid "Database Not Opening?"
 msgstr ""
 
 msgid ""
@@ -298,6 +316,22 @@ msgctxt "A database managed by external file sync"
 msgid "Synced"
 msgstr ""
 
+msgctxt "Password strength"
+msgid "Poor"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Weak"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Good"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Excellent"
+msgstr ""
+
 msgid "All Templates"
 msgstr ""
 
@@ -311,4 +345,8 @@ msgstr ""
 
 msgctxt "List of entries with tags"
 msgid "Tags"
+msgstr ""
+
+msgctxt "Saved database searches"
+msgid "Saved Searches"
 msgstr ""

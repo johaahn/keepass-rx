@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-01 20:39+0000\n"
+"POT-Creation-Date: 2026-03-10 07:41+0000\n"
 "PO-Revision-Date: 2026-01-26 18:01+0000\n"
 "Last-Translator: Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/ubports/"
@@ -81,12 +81,6 @@ msgstr ""
 "<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
 "projectmoon/keepass-rx</a>"
 
-msgid "Open Source Licenses"
-msgstr "Avatud lähtekoodiga tarkvara litsentsid"
-
-msgid "Website"
-msgstr "Veebisait"
-
 msgid "Add Database"
 msgstr "Lisa andmebaas"
 
@@ -105,6 +99,76 @@ msgstr "Andmebaasi importimiseks klõpsa + ikooni."
 msgid "It will only be removed from the app, not your device."
 msgstr "Ta eemaldatakse rakendusest, mitte aga seadmest."
 
+msgid "Open Source Licenses"
+msgstr "Avatud lähtekoodiga tarkvara litsentsid"
+
+msgid "Website"
+msgstr "Veebisait"
+
+msgid "Key Loaded"
+msgstr "Võti on laaditud"
+
+msgid "Remove Key"
+msgstr "Eemalda võti"
+
+msgid "Use Key"
+msgstr "Kasuta võtit"
+
+msgid "Automatically detected a key file for this database."
+msgstr "Tuvastasin selle andmebaasi võtmefaili automaatselt."
+
+msgid "A key file will be used to open this database."
+msgstr "Võtmefail, mida kasutatakse selle andmebaasi avamiseks."
+
+msgid "Select Key File"
+msgstr "Vali võtmefail"
+
+msgid "Back"
+msgstr "Tagasi"
+
+msgid "Enter the database master password"
+msgstr "Sisesta andmebaasi üldsalasõna"
+
+msgid "Master Password"
+msgstr "Üldsalasõna"
+
+msgid "Open"
+msgstr "Avatud"
+
+msgid "Hide Password"
+msgstr "Peida salasõna"
+
+msgid "Show Password"
+msgstr "Näita salasõna"
+
+msgid "Opening"
+msgstr "Avamisel"
+
+msgid "Manual path set."
+msgstr "Käsitsi määratud asukoht on seadistatud."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"Salakood on andmebaasi salasõna viis esimest tähemärki (või kogu salasõna, "
+"kui ta on alla viie tähemärgi pikk)."
+
+msgid "Passcode"
+msgstr "Salakood"
+
+msgid "Unlock"
+msgstr "Eemalda lukustus"
+
+msgid "Securely Unlocking"
+msgstr "Turvaline lukustuse eemaldamine"
+
+msgid "Securely Locking"
+msgstr "Turvaline lukustamine"
+
+msgid "Database Not Opening?"
+msgstr "Kas andmebaas ei avane?"
+
 msgid "Cancel Search"
 msgstr "Katkesta otsing"
 
@@ -122,9 +186,6 @@ msgstr "Lukusta"
 
 msgid "Close"
 msgstr "Sulge"
-
-msgid "Back"
-msgstr "Tagasi"
 
 msgid "View Mode"
 msgstr "Vaaterežiim"
@@ -165,6 +226,12 @@ msgstr "Sildid"
 msgid "Entries grouped by tag."
 msgstr "Sildi alusel rühmitatud kirjed."
 
+msgid "Saved Searches"
+msgstr ""
+
+msgid "Entries matching search queries."
+msgstr ""
+
 msgid "Select View"
 msgstr "Vali vaade"
 
@@ -173,42 +240,6 @@ msgstr "Vali"
 
 msgid "Cancel"
 msgstr "Katkesta"
-
-msgid "Key Loaded"
-msgstr "Võti on laaditud"
-
-msgid "Remove Key"
-msgstr "Eemalda võti"
-
-msgid "Use Key"
-msgstr "Kasuta võtit"
-
-msgid "Automatically detected a key file for this database."
-msgstr "Tuvastasin selle andmebaasi võtmefaili automaatselt."
-
-msgid "A key file will be used to open this database."
-msgstr "Võtmefail, mida kasutatakse selle andmebaasi avamiseks."
-
-msgid "Select Key File"
-msgstr "Vali võtmefail"
-
-msgid "Enter the database master password"
-msgstr "Sisesta andmebaasi üldsalasõna"
-
-msgid "Master Password"
-msgstr "Üldsalasõna"
-
-msgid "Open"
-msgstr "Avatud"
-
-msgid "Hide Password"
-msgstr "Peida salasõna"
-
-msgid "Show Password"
-msgstr "Näita salasõna"
-
-msgid "Opening"
-msgstr "Avamisel"
 
 msgid "Change settings based on your preferences."
 msgstr "Muuda seadistusi vastavalt oma eelistustele."
@@ -249,6 +280,15 @@ msgstr ""
 "Hägusa otsinguga saad kirjeid mugavamat otsida. Kui eelistus pole kasutusel, "
 "siis otsing otsib täpset tõstutundetut vastet."
 
+msgid "Password"
+msgstr "Salasõna"
+
+msgid "%1 bits"
+msgstr ""
+
+msgid "Password (Entropy: %1)"
+msgstr ""
+
 msgid "%1 copied to clipboard (30 secs)"
 msgstr "%1 on kopeeritud lõikelauale (30 sek)"
 
@@ -267,42 +307,20 @@ msgstr "Peamine"
 msgid "Username"
 msgstr "Kasutajanimi"
 
-msgid "Password"
-msgstr "Salasõna"
-
 msgid "URL"
 msgstr "Võrguaadress"
+
+msgid "TOTP (Valid for %1)"
+msgstr ""
+
+msgid "TOTP"
+msgstr ""
 
 msgid "Other Fields"
 msgstr "Muud väljad"
 
 msgid "KeePassRX: Clipboard cleared."
 msgstr "KeePassRX: lõikelaud on tühjendatud."
-
-msgid "Manual path set."
-msgstr "Käsitsi määratud asukoht on seadistatud."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"Salakood on andmebaasi salasõna viis esimest tähemärki (või kogu salasõna, "
-"kui ta on alla viie tähemärgi pikk)."
-
-msgid "Passcode"
-msgstr "Salakood"
-
-msgid "Unlock"
-msgstr "Eemalda lukustus"
-
-msgid "Securely Unlocking"
-msgstr "Turvaline lukustuse eemaldamine"
-
-msgid "Securely Locking"
-msgstr "Turvaline lukustamine"
-
-msgid "Database Not Opening?"
-msgstr "Kas andmebaas ei avane?"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
@@ -319,6 +337,22 @@ msgctxt "A database managed by external file sync"
 msgid "Synced"
 msgstr "Sünkroonitud"
 
+msgctxt "Password strength"
+msgid "Poor"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Weak"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Good"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Excellent"
+msgstr ""
+
 msgid "All Templates"
 msgstr "Kõik mallid"
 
@@ -333,6 +367,10 @@ msgstr "2FA-koodid"
 msgctxt "List of entries with tags"
 msgid "Tags"
 msgstr "Sildid"
+
+msgctxt "Saved database searches"
+msgid "Saved Searches"
+msgstr ""
 
 #~ msgid ""
 #~ "Change settings based on your preferences. Any change to the settings "

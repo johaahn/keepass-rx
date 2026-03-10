@@ -11,6 +11,7 @@ use std::path::Path;
 use std::str::FromStr;
 use unicase::UniCase;
 use uuid::Uuid;
+use zeroize::Zeroize;
 
 pub(crate) mod actor;
 pub(crate) mod colors;
@@ -449,7 +450,7 @@ impl KeepassRx {
     pub fn storeMasterPassword(&self, master_password: QString) {
         let actor = self.actor_ref();
         actix::spawn(actor.send(StoreMasterPassword {
-            master_password: SecUtf8::from(master_password.to_string()),
+            master_password: qstring_to_secure_utf8(&master_password),
         }));
     }
 
@@ -463,7 +464,7 @@ impl KeepassRx {
     pub fn decryptMasterPassword(&self, short_password: QString) {
         let actor = self.actor_ref();
         actix::spawn(actor.send(DecryptMasterPassword {
-            short_password: SecUtf8::from(short_password.to_string()),
+            short_password: qstring_to_secure_utf8(&short_password),
         }));
     }
 
@@ -511,4 +512,23 @@ impl KeepassRx {
             .expect("No color generated")
             .into()
     }
+}
+
+fn qstring_to_secure_utf8(value: &QString) -> SecUtf8 {
+    let utf16 = value.to_slice();
+    let mut utf8 = Vec::with_capacity(utf16.len());
+
+    for ch in char::decode_utf16(utf16.iter().copied()) {
+        let ch = ch.unwrap_or(char::REPLACEMENT_CHARACTER);
+        let mut buf = [0u8; 4];
+        utf8.extend_from_slice(ch.encode_utf8(&mut buf).as_bytes());
+    }
+
+    let secure = std::str::from_utf8(&utf8)
+        .ok()
+        .and_then(|s| SecUtf8::from_str(s).ok())
+        .unwrap_or_else(|| SecUtf8::from(""));
+
+    utf8.zeroize();
+    secure
 }

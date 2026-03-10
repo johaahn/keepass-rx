@@ -75,8 +75,15 @@ MainView {
         }
 
         function onMasterPasswordDecrypted() {
-            console.log('Re-opening database from locked state.');
             uiDatabase.open();
+        }
+
+        function onMasterPasswordInvalidated() {
+            clearSensitiveUiState();
+        }
+
+        function onDatabaseClosed() {
+            clearSensitiveUiState();
         }
 
         // When the UI requests getting a single value from an entry.
@@ -121,12 +128,19 @@ MainView {
         reload();
     }
 
+    function clearSensitiveUiState() {
+        clearClipboardTimer.stop();
+        Clipboard.clear();
+    }
+
     function lockUI() {
+        clearSensitiveUiState();
         keepassrx.guiState = 'Locked';
         reload();
     }
 
     function closeUI() {
+        clearSensitiveUiState();
         keepassrx.guiState = 'NotOpen';
         uiDatabase.databaseName = null;
         reload();

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-10 09:42+0100\n"
+"POT-Creation-Date: 2026-03-10 08:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,7 +42,7 @@ msgid "Tap to copy 2FA code"
 msgstr ""
 
 #: qml/pages/AboutPage.qml:12 qml/pages/DBList.qml:76
-#: qml/pages/OpenDBPage.qml:112 qml/pages/UnlockPage.qml:41
+#: qml/pages/OpenDBPage.qml:118 qml/pages/UnlockPage.qml:53
 #: qml/pages/EntriesPage.qml:212
 msgid "About"
 msgstr ""
@@ -89,8 +89,8 @@ msgstr ""
 msgid "Add Database"
 msgstr ""
 
-#: qml/pages/DBList.qml:69 qml/pages/OpenDBPage.qml:105
-#: qml/pages/UnlockPage.qml:34 qml/pages/EntriesPage.qml:203
+#: qml/pages/DBList.qml:69 qml/pages/OpenDBPage.qml:111
+#: qml/pages/UnlockPage.qml:46 qml/pages/EntriesPage.qml:203
 #: qml/pages/SettingsPage.qml:10
 msgid "Settings"
 msgstr ""
@@ -119,86 +119,86 @@ msgstr ""
 msgid "Website"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:26
+#: qml/pages/OpenDBPage.qml:32
 msgid "Key Loaded"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:27
+#: qml/pages/OpenDBPage.qml:33
 msgid "Remove Key"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:29
+#: qml/pages/OpenDBPage.qml:35
 msgid "Use Key"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:36
+#: qml/pages/OpenDBPage.qml:42
 msgid "Automatically detected a key file for this database."
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:38
+#: qml/pages/OpenDBPage.qml:44
 msgid "A key file will be used to open this database."
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:50
+#: qml/pages/OpenDBPage.qml:56
 msgid "Select Key File"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:92 qml/pages/EntriesPage.qml:167
-#: qml/pages/SingleEntry.qml:284
+#: qml/pages/OpenDBPage.qml:98 qml/pages/EntriesPage.qml:167
+#: qml/pages/SingleEntry.qml:287
 msgid "Back"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:222
+#: qml/pages/OpenDBPage.qml:237
 msgid "Enter the database master password"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:235
+#: qml/pages/OpenDBPage.qml:250
 msgid "Master Password"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:261
+#: qml/pages/OpenDBPage.qml:276
 msgid "Open"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:282
+#: qml/pages/OpenDBPage.qml:297
 msgid "Hide Password"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:282
+#: qml/pages/OpenDBPage.qml:297
 msgid "Show Password"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:339
+#: qml/pages/OpenDBPage.qml:354
 msgid "Opening"
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:137
+#: qml/pages/UnlockPage.qml:151
 msgid "Manual path set."
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:154
+#: qml/pages/UnlockPage.qml:168
 msgid ""
 "The passcode is the first five characters of the database password (or the "
 "whole password if less than five characters)."
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:170
+#: qml/pages/UnlockPage.qml:184
 msgid "Passcode"
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:201
+#: qml/pages/UnlockPage.qml:215
 msgid "Unlock"
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:220
+#: qml/pages/UnlockPage.qml:234
 msgid "Securely Unlocking"
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:221
+#: qml/pages/UnlockPage.qml:235
 msgid "Securely Locking"
 msgstr ""
 
-#: qml/pages/UnlockPage.qml:232
+#: qml/pages/UnlockPage.qml:246
 msgid "Database Not Opening?"
 msgstr ""
 
@@ -352,61 +352,61 @@ msgstr ""
 msgid "Password (Entropy: %1)"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:75 qml/Main.qml:99
+#: qml/pages/SingleEntry.qml:75 qml/Main.qml:106
 msgid "%1 copied to clipboard (30 secs)"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:341
+#: qml/pages/SingleEntry.qml:345
 msgid "Notes"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:349
+#: qml/pages/SingleEntry.qml:353
 msgid "Tap to hide"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:349 qml/pages/SingleEntry.qml:441
-#: qml/pages/SingleEntry.qml:485 qml/pages/SingleEntry.qml:538
+#: qml/pages/SingleEntry.qml:353 qml/pages/SingleEntry.qml:445
+#: qml/pages/SingleEntry.qml:489 qml/pages/SingleEntry.qml:542
 msgid "Tap to reveal"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:370
+#: qml/pages/SingleEntry.qml:374
 msgid "Tap to copy"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:397
+#: qml/pages/SingleEntry.qml:401
 msgid "Tap reveal to view notes"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:426
+#: qml/pages/SingleEntry.qml:430
 msgid "Main"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:436
+#: qml/pages/SingleEntry.qml:440
 msgid "Username"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:440 qml/pages/SingleEntry.qml:463
-#: qml/pages/SingleEntry.qml:484 qml/pages/SingleEntry.qml:537
+#: qml/pages/SingleEntry.qml:444 qml/pages/SingleEntry.qml:467
+#: qml/pages/SingleEntry.qml:488 qml/pages/SingleEntry.qml:541
 msgid "Loading…"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:481
+#: qml/pages/SingleEntry.qml:485
 msgid "URL"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:501
+#: qml/pages/SingleEntry.qml:505
 msgid "TOTP (Valid for %1)"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:502 qml/pages/SingleEntry.qml:506
+#: qml/pages/SingleEntry.qml:506 qml/pages/SingleEntry.qml:510
 msgid "TOTP"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:528
+#: qml/pages/SingleEntry.qml:532
 msgid "Other Fields"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:569 qml/Main.qml:227
+#: qml/pages/SingleEntry.qml:573 qml/Main.qml:241
 msgid "KeePassRX: Clipboard cleared."
 msgstr ""
 
@@ -416,12 +416,12 @@ msgid ""
 "using its action bar."
 msgstr ""
 
-#: src/gui/mod.rs:68
+#: src/gui/mod.rs:69
 msgctxt "A database imported via ContentHub"
 msgid "Imported"
 msgstr ""
 
-#: src/gui/mod.rs:69
+#: src/gui/mod.rs:70
 msgctxt "A database managed by external file sync"
 msgid "Synced"
 msgstr ""

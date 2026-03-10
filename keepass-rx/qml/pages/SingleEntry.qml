@@ -10,15 +10,25 @@ Page {
     id: singleEntryPage
     property string entryUuid
     property string entryTitle
-    property string entryUsername
-    property string entryPassword
-    property string entryUrl
-    property string entryNotes
+    property string entryUsername: ""
+    property string entryPassword: ""
+    property string entryUrl: ""
+    property string entryNotes: ""
+    property bool entryHasUsername: false
+    property bool entryHasPassword: false
+    property bool entryHasUrl: false
+    property bool entryHasNotes: false
     property var entryCustomFields
     property bool entryHasTotp: false
     property var entryEntropy: null
     property string entryEntropyQuality
     property var colorWashout
+
+    property string entryUsernameValue: ""
+    property string entryPasswordValue: ""
+    property string entryUrlValue: ""
+    property string entryNotesValue: ""
+    property bool notesShown: false
 
     function valueIsDefined(value) {
         return value !== undefined && value !== null && value !== ''
@@ -29,7 +39,7 @@ Page {
     }
 
     function hasEntropySection() {
-        return valueIsDefined(entryPassword)
+        return (entryHasPassword || valueIsDefined(entryPassword))
             && entryEntropy !== undefined
             && entryEntropy !== null
             && !Number.isNaN(Number(entryEntropy))
@@ -62,8 +72,104 @@ Page {
 
     function copyToClipboard(fieldName, fieldValue) {
         Clipboard.push(fieldValue);
-        toast.show(i18n.tr(`%1 copied to clipboard (30 secs)`).arg(fieldName));
+        toast.show(i18n.tr('%1 copied to clipboard (30 secs)').arg(fieldName));
         clearClipboardTimer.start();
+    }
+
+    function revealedValue(fieldName) {
+        switch (fieldName) {
+        case "Username":
+            return valueIsDefined(entryUsernameValue) ? entryUsernameValue : entryUsername;
+        case "Password":
+            return valueIsDefined(entryPasswordValue) ? entryPasswordValue : entryPassword;
+        case "URL":
+            return valueIsDefined(entryUrlValue) ? entryUrlValue : entryUrl;
+        case "Notes":
+            return valueIsDefined(entryNotesValue) ? entryNotesValue : entryNotes;
+        default:
+            return "";
+        }
+    }
+
+    function clearFieldValue(fieldName) {
+        switch (fieldName) {
+        case "Username":
+            entryUsernameValue = "";
+            break;
+        case "Password":
+            entryPasswordValue = "";
+            break;
+        case "URL":
+            entryUrlValue = "";
+            break;
+        case "Notes":
+            entryNotesValue = "";
+            notesShown = false;
+            break;
+        default:
+            clearCustomFieldValue(fieldName);
+            break;
+        }
+    }
+
+    function revealFieldValue(fieldName) {
+        if (valueIsDefined(entryUuid)) {
+            keepassrx.revealFieldValue(entryUuid, fieldName);
+        }
+    }
+
+    function copyFieldValue(fieldName) {
+        const fieldValue = revealedValue(fieldName);
+        if (valueIsDefined(fieldValue)) {
+            copyToClipboard(fieldName, fieldValue);
+        } else if (valueIsDefined(entryUuid)) {
+            keepassrx.getFieldValue(entryUuid, fieldName);
+        }
+    }
+
+    function findCustomFieldIndex(fieldName) {
+        for (let i = 0; i < otherFieldsModel.count; i++) {
+            if (otherFieldsModel.get(i).fieldName === fieldName) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    function setCustomFieldValue(fieldName, fieldValue) {
+        const index = findCustomFieldIndex(fieldName);
+        if (index !== -1) {
+            otherFieldsModel.setProperty(index, "fieldValue", fieldValue);
+        }
+    }
+
+    function setCustomFieldShown(fieldName, isShown) {
+        const index = findCustomFieldIndex(fieldName);
+        if (index !== -1) {
+            otherFieldsModel.setProperty(index, "fieldShown", isShown);
+        }
+    }
+
+    function clearCustomFieldValue(fieldName) {
+        const index = findCustomFieldIndex(fieldName);
+        if (index !== -1) {
+            otherFieldsModel.setProperty(index, "fieldValue", "");
+            otherFieldsModel.setProperty(index, "fieldShown", false);
+        }
+    }
+
+    function clearTransientValues() {
+        entryUsernameValue = "";
+        entryPasswordValue = "";
+        entryUrlValue = "";
+        entryNotesValue = "";
+        notesShown = false;
+
+        for (let i = 0; i < otherFieldsModel.count; i++) {
+            otherFieldsModel.setProperty(i, "fieldValue", "");
+            otherFieldsModel.setProperty(i, "fieldShown", false);
+        }
     }
 
     Component.onCompleted: {
@@ -74,14 +180,21 @@ Page {
         }
 
         if (entryCustomFields) {
-            // value is { value: string, isHiddenByDefault: bool }
             for (const [key, field] of Object.entries(entryCustomFields)) {
                 otherFieldsModel.append({
                     fieldName: key,
-                    fieldValue: field.value,
-                    fieldShown: !field.isHiddenByDefault
+                    fieldValue: field.value ? field.value : "",
+                    fieldShown: field.isHiddenByDefault !== true,
+                    fieldHiddenByDefault: field.isHiddenByDefault === true
                 });
             }
+        }
+    }
+
+    Component.onDestruction: clearTransientValues()
+    onVisibleChanged: {
+        if (!visible) {
+            clearTransientValues();
         }
     }
 
@@ -104,6 +217,60 @@ Page {
         }
     }
 
+    Connections {
+        target: keepassrx
+
+        function onFieldValueReceived(entryUuid, fieldName, fieldValue, fieldExtra) {
+            if (fieldExtra !== "reveal" || entryUuid !== singleEntryPage.entryUuid) {
+                return;
+            }
+
+            switch (fieldName) {
+            case "Username":
+                if (usernameField.isContentVisible) {
+                    entryUsernameValue = fieldValue;
+                }
+                break;
+            case "Password":
+                if (passwordField.isContentVisible) {
+                    entryPasswordValue = fieldValue;
+                }
+                break;
+            case "URL":
+                if (urlField.isContentVisible) {
+                    entryUrlValue = fieldValue;
+                }
+                break;
+            case "Notes":
+                if (notesShown) {
+                    entryNotesValue = fieldValue;
+                }
+                break;
+            default: {
+                const index = findCustomFieldIndex(fieldName);
+                if (index !== -1 && otherFieldsModel.get(index).fieldShown) {
+                    setCustomFieldValue(fieldName, fieldValue);
+                }
+                break;
+            }
+            }
+        }
+
+        function onDatabaseClosed() {
+            clearTransientValues();
+        }
+
+        function onMasterPasswordInvalidated() {
+            clearTransientValues();
+        }
+
+        function onMasterPasswordStateChanged(encrypted) {
+            if (encrypted) {
+                clearTransientValues();
+            }
+        }
+    }
+
     header: PageHeader {
         title: entryTitle || i18n.ctr('Page header for single entry', 'Untitled Entry')
 
@@ -120,9 +287,7 @@ Page {
                 text: i18n.tr("Back")
                 iconName: "previous"
                 onTriggered: {
-                    // If we remove primary page, only child pages
-                    // (i.e. THIS page) are removed. So, this sends us
-                    // back to entries list.
+                    clearTransientValues();
                     pageStack.removePages(pageStack.primaryPage);
                 }
             }
@@ -154,7 +319,7 @@ Page {
 
     Rectangle {
         color: Theme.name == "Lomiri.Components.Themes.Ambiance" ? LomiriColors.porcelain : LomiriColors.inkstone
-        visible: entryNotes && entryNotes.length > 0
+        visible: entryHasNotes
         id: notesComponent
         anchors.top: header.bottom
         anchors.left: parent.left
@@ -184,20 +349,37 @@ Page {
 
             Label {
                 Layout.preferredHeight: notesLabel.height
-                // TRANSLATORS: Pressing this will copy the Notes field of the entry.
+                visible: entryHasNotes && !valueIsDefined(entryNotes)
+                text: valueIsDefined(entryNotesValue) ? i18n.tr("Tap to hide") : i18n.tr("Tap to reveal")
+                color: LomiriColors.slate
+                textSize: Label.Small
+                Layout.alignment: Qt.AlignRight
+
+                MouseArea {
+                    z: 10
+                    anchors.fill: parent
+                    onClicked: {
+                        if (valueIsDefined(entryNotesValue)) {
+                            clearFieldValue("Notes");
+                        } else {
+                            notesShown = true;
+                            revealFieldValue("Notes");
+                        }
+                    }
+                }
+            }
+
+            Label {
+                Layout.preferredHeight: notesLabel.height
                 text: i18n.tr("Tap to copy")
                 color: LomiriColors.slate
                 textSize: Label.Small
                 Layout.alignment: Qt.AlignRight
 
                 MouseArea {
-                    z: 10 // to make sure anywhere in the box is copyable
+                    z: 10
                     anchors.fill: parent
-                    onClicked: {
-                        Clipboard.push(entryNotes);
-                        toast.show(i18n.tr('Notes copied to clipboard (30 secs)'));
-                        clearClipboardTimer.start();
-                    }
+                    onClicked: copyFieldValue("Notes")
                 }
             }
         }
@@ -215,7 +397,8 @@ Page {
 
             Text {
                 width: notesContentRow.width
-                text: entryNotes ? entryNotes : ''
+                text: valueIsDefined(entryNotes) ? entryNotes
+                    : (valueIsDefined(entryNotesValue) ? entryNotesValue : i18n.tr("Tap reveal to view notes"))
                 wrapMode: Text.WordWrap
                 color: LomiriColors.ash
                 verticalAlignment: Text.AlignTop
@@ -245,35 +428,75 @@ Page {
 
         ConfigurationGroup {
             title: i18n.tr("Main")
-            visible: valueIsDefined(entryUsername)
+            visible: entryHasUsername
+                || entryHasPassword
+                || entryHasUrl
+                || valueIsDefined(entryUsername)
                 || valueIsDefined(entryPassword)
                 || valueIsDefined(entryUrl)
 
             DetailField {
+                id: usernameField
                 title: i18n.tr("Username")
-                visible: valueIsDefined(entryUsername)
-                subtitle: entryUsername
-                onCopyClicked: copyToClipboard(i18n.tr("Username"), entryUsername)
-                showDivider: valueIsDefined(entryPassword)
-                    || valueIsDefined(entryUrl)
+                visible: entryHasUsername
+                subtitle: valueIsDefined(entryUsername) ? entryUsername : entryUsernameValue
+                visibleContent: valueIsDefined(entryUsername) ? entryUsername
+                    : (valueIsDefined(entryUsernameValue) ? entryUsernameValue : i18n.tr("Loading…"))
+                hiddenContent: i18n.tr("Tap to reveal")
+                showVisibilityToggle: !valueIsDefined(entryUsername)
+                isContentVisible: valueIsDefined(entryUsername)
+                onVisibilityToggled: {
+                    if (isContentVisible) {
+                        revealFieldValue("Username")
+                    } else {
+                        clearFieldValue("Username")
+                    }
+                }
+                onCopyClicked: copyFieldValue("Username")
+                showDivider: entryHasPassword
+                    || entryHasUrl
                     || hasTotpSection()
             }
 
             DetailField {
+                id: passwordField
                 title: passwordFieldTitle()
-                visible: valueIsDefined(entryPassword)
-                visibleContent: entryPassword
-                showVisibilityToggle: true
-                isContentVisible: false
-                onCopyClicked: copyToClipboard(i18n.tr("Password"), entryPassword)
-                showDivider: valueIsDefined(entryUrl) || hasTotpSection()
+                visible: entryHasPassword
+                subtitle: valueIsDefined(entryPassword) ? entryPassword : entryPasswordValue
+                visibleContent: valueIsDefined(entryPassword) ? entryPassword
+                    : (valueIsDefined(entryPasswordValue) ? entryPasswordValue : i18n.tr("Loading…"))
+                hiddenContent: "••••••••••••"
+                showVisibilityToggle: !valueIsDefined(entryPassword)
+                isContentVisible: valueIsDefined(entryPassword)
+                onVisibilityToggled: {
+                    if (isContentVisible) {
+                        revealFieldValue("Password")
+                    } else {
+                        clearFieldValue("Password")
+                    }
+                }
+                onCopyClicked: copyFieldValue("Password")
+                showDivider: entryHasUrl || hasTotpSection()
             }
 
             DetailField {
-                visible: valueIsDefined(entryUrl)
+                id: urlField
+                visible: entryHasUrl
                 title: i18n.tr("URL")
-                subtitle: entryUrl
-                onCopyClicked: copyToClipboard(i18n.tr('URL'), entryUrl)
+                subtitle: valueIsDefined(entryUrl) ? entryUrl : entryUrlValue
+                visibleContent: valueIsDefined(entryUrl) ? entryUrl
+                    : (valueIsDefined(entryUrlValue) ? entryUrlValue : i18n.tr("Loading…"))
+                hiddenContent: i18n.tr("Tap to reveal")
+                showVisibilityToggle: !valueIsDefined(entryUrl)
+                isContentVisible: valueIsDefined(entryUrl)
+                onVisibilityToggled: {
+                    if (isContentVisible) {
+                        revealFieldValue("URL")
+                    } else {
+                        clearFieldValue("URL")
+                    }
+                }
+                onCopyClicked: copyFieldValue("URL")
                 showDivider: hasTotpSection()
             }
 
@@ -315,11 +538,26 @@ Page {
                 DetailField {
                     title: fieldName
                     subtitle: fieldValue
-                    visibleContent: fieldValue
-                    showVisibilityToggle: !fieldShown
+                    visibleContent: valueIsDefined(fieldValue) ? fieldValue : i18n.tr("Loading…")
+                    hiddenContent: fieldHiddenByDefault ? "••••••••••••" : i18n.tr("Tap to reveal")
+                    showVisibilityToggle: fieldHiddenByDefault
                     isContentVisible: fieldShown
                     showDivider: index < otherFieldsRepeater.count - 1
-                    onCopyClicked: copyToClipboard(fieldName, fieldValue)
+                    onVisibilityToggled: {
+                        if (isContentVisible) {
+                            setCustomFieldShown(fieldName, true)
+                            revealFieldValue(fieldName)
+                        } else {
+                            clearCustomFieldValue(fieldName)
+                        }
+                    }
+                    onCopyClicked: {
+                        if (valueIsDefined(fieldValue)) {
+                            copyToClipboard(fieldName, fieldValue)
+                        } else if (valueIsDefined(entryUuid)) {
+                            keepassrx.getFieldValue(entryUuid, fieldName)
+                        }
+                    }
                 }
             }
         }

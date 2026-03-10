@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-10 07:41+0000\n"
+"POT-Creation-Date: 2026-03-10 09:42+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,27 +17,27 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: qml/components/EntryItem.qml:99
+#: qml/components/EntryItem.qml:103
 msgid "Copy Username"
 msgstr ""
 
-#: qml/components/EntryItem.qml:107
+#: qml/components/EntryItem.qml:111
 msgid "Copy Password"
 msgstr ""
 
-#: qml/components/EntryItem.qml:116
+#: qml/components/EntryItem.qml:120
 msgid "Open URL"
 msgstr ""
 
-#: qml/components/EntryItem.qml:123
+#: qml/components/EntryItem.qml:127
 msgid "Copy 2FA Code"
 msgstr ""
 
-#: qml/components/EntryItem.qml:135
+#: qml/components/EntryItem.qml:139
 msgid "View Entry"
 msgstr ""
 
-#: qml/components/EntryItem.qml:252
+#: qml/components/EntryItem.qml:256
 msgid "Tap to copy 2FA code"
 msgstr ""
 
@@ -144,7 +144,7 @@ msgid "Select Key File"
 msgstr ""
 
 #: qml/pages/OpenDBPage.qml:92 qml/pages/EntriesPage.qml:167
-#: qml/pages/SingleEntry.qml:120
+#: qml/pages/SingleEntry.qml:284
 msgid "Back"
 msgstr ""
 
@@ -340,59 +340,73 @@ msgid ""
 "case insensitive text."
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:53 qml/pages/SingleEntry.qml:268
+#: qml/pages/SingleEntry.qml:63
 msgid "Password"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:58
+#: qml/pages/SingleEntry.qml:68
 msgid "%1 bits"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:60
+#: qml/pages/SingleEntry.qml:70
 msgid "Password (Entropy: %1)"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:65 qml/Main.qml:96
+#: qml/pages/SingleEntry.qml:75 qml/Main.qml:99
 msgid "%1 copied to clipboard (30 secs)"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:180
+#: qml/pages/SingleEntry.qml:341
 msgid "Notes"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:188
+#: qml/pages/SingleEntry.qml:349
+msgid "Tap to hide"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:349 qml/pages/SingleEntry.qml:441
+#: qml/pages/SingleEntry.qml:485 qml/pages/SingleEntry.qml:538
+msgid "Tap to reveal"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:370
 msgid "Tap to copy"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:198
-msgid "Notes copied to clipboard (30 secs)"
+#: qml/pages/SingleEntry.qml:397
+msgid "Tap reveal to view notes"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:247
+#: qml/pages/SingleEntry.qml:426
 msgid "Main"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:253 qml/pages/SingleEntry.qml:256
+#: qml/pages/SingleEntry.qml:436
 msgid "Username"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:274 qml/pages/SingleEntry.qml:276
+#: qml/pages/SingleEntry.qml:440 qml/pages/SingleEntry.qml:463
+#: qml/pages/SingleEntry.qml:484 qml/pages/SingleEntry.qml:537
+msgid "Loading…"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:481
 msgid "URL"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:282
+#: qml/pages/SingleEntry.qml:501
 msgid "TOTP (Valid for %1)"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:283 qml/pages/SingleEntry.qml:287
+#: qml/pages/SingleEntry.qml:502 qml/pages/SingleEntry.qml:506
 msgid "TOTP"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:309
+#: qml/pages/SingleEntry.qml:528
 msgid "Other Fields"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:335 qml/Main.qml:225
+#: qml/pages/SingleEntry.qml:569 qml/Main.qml:227
 msgid "KeePassRX: Clipboard cleared."
 msgstr ""
 
@@ -412,22 +426,22 @@ msgctxt "A database managed by external file sync"
 msgid "Synced"
 msgstr ""
 
-#: src/rx/rx_gui_traits.rs:118
+#: src/rx/rx_gui_traits.rs:111
 msgctxt "Password strength"
 msgid "Poor"
 msgstr ""
 
-#: src/rx/rx_gui_traits.rs:120
+#: src/rx/rx_gui_traits.rs:113
 msgctxt "Password strength"
 msgid "Weak"
 msgstr ""
 
-#: src/rx/rx_gui_traits.rs:121
+#: src/rx/rx_gui_traits.rs:114
 msgctxt "Password strength"
 msgid "Good"
 msgstr ""
 
-#: src/rx/rx_gui_traits.rs:123
+#: src/rx/rx_gui_traits.rs:116
 msgctxt "Password strength"
 msgid "Excellent"
 msgstr ""

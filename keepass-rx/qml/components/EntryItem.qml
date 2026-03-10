@@ -73,12 +73,16 @@ ListItem {
                     {
                         entryUuid: entry.uuid ? entry.uuid : null,
                         entryTitle: entry.title ? entry.title : null,
-                        entryUsername: entry.username ? entry.username : null,
-                        entryPassword: entry.password ? entry.password : null,
-                        entryUrl: entry.url ? entry.url : null,
-                        entryNotes: entry.notes ? entry.notes : null,
+                        entryUsername: entry.username ? entry.username : "",
+                        entryPassword: entry.password ? entry.password : "",
+                        entryUrl: entry.url ? entry.url : "",
+                        entryNotes: entry.notes ? entry.notes : "",
+                        entryHasUsername: entry.hasUsername === true,
+                        entryHasPassword: entry.hasPassword === true,
+                        entryHasUrl: entry.hasUrl === true,
+                        entryHasNotes: entry.hasNotes === true,
                         entryCustomFields: entry.customFields ? entry.customFields : null,
-                        entryHasTotp: !!entry.hasTotp,
+                        entryHasTotp: entry.hasTotp === true,
                         entryEntropy: entry.entropy !== undefined ? entry.entropy : null,
                         entryEntropyQuality: entry.entropyQuality ? entry.entropyQuality : null
                     }

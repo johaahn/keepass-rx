@@ -480,7 +480,7 @@ impl RxValue {
 
     pub fn is_hidden_by_default(&self) -> bool {
         match self {
-            RxValue::Protected(_) => true,
+            RxValue::Protected(_) | RxValue::Sensitive(_) => true,
             _ => false,
         }
     }
@@ -557,9 +557,7 @@ impl std::fmt::Debug for RxValue {
 impl TryFrom<String> for RxValue {
     type Error = anyhow::Error;
     fn try_from(value: String) -> std::result::Result<Self, Self::Error> {
-        let mut secure_vec = vec_utils::secure_vec::<u8>(value.len())?;
-        secure_vec.copy_from_slice(value.as_ref());
-        Ok(RxValue::Sensitive(secure_vec))
+        Ok(RxValue::Unprotected(value))
     }
 }
 

@@ -81,21 +81,23 @@ MainView {
 
         // When the UI requests getting a single value from an entry.
         function onFieldValueReceived(entryUuid, fieldName, fieldValue, fieldExtra) {
-            if (fieldValue) {
-                // TODO Add some better URL handling, for fields that
-                // are not marked specifically with title "URL".
-                if (fieldName.toLowerCase() == "url") {
-                    if (fieldValue.indexOf('//') === -1) {
-                        Qt.openUrlExternally('http://' + fieldValue);
-                        return;
-                    }ng
+            if (fieldExtra !== "copy" || !fieldValue) {
+                return;
+            }
 
-                    Qt.openUrlExternally(fieldValue);
-                } else {
-                    Clipboard.push(fieldValue);
-                    toast.show(i18n.tr('%1 copied to clipboard (30 secs)').arg(fieldName));
-                    clearClipboardTimer.start();
+            // TODO Add some better URL handling, for fields that
+            // are not marked specifically with title "URL".
+            if (fieldName.toLowerCase() == "url") {
+                if (fieldValue.indexOf('//') === -1) {
+                    Qt.openUrlExternally('http://' + fieldValue);
+                    return;
                 }
+
+                Qt.openUrlExternally(fieldValue);
+            } else {
+                Clipboard.push(fieldValue);
+                toast.show(i18n.tr('%1 copied to clipboard (30 secs)').arg(fieldName));
+                clearClipboardTimer.start();
             }
         }
 

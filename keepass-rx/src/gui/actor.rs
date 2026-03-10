@@ -133,6 +133,7 @@ pub struct GetSingleEntry {
 pub struct GetFieldValue {
     pub entry_uuid: Uuid,
     pub field_name: RxFieldName,
+    pub purpose: String,
 }
 
 impl GetEntries {
@@ -537,7 +538,7 @@ impl Handler<GetFieldValue> for KeepassRxActor {
             QString::from(msg.entry_uuid.to_string()),
             QString::from(msg.field_name.to_string()),
             value,
-            QString::default(), // Extra info for this field.
+            QString::from(msg.purpose),
         );
     }
 }

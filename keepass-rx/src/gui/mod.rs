@@ -198,6 +198,7 @@ pub struct KeepassRx {
     getSingleEntry: qt_method!(fn(&self, entry_uuid: QString)),
     getTotp: qt_method!(fn(&self, entry_uuid: QString)),
     getFieldValue: qt_method!(fn(&self, entry_uuid: QString, field_name: QString)),
+    revealFieldValue: qt_method!(fn(&self, entry_uuid: QString, field_name: QString)),
 
     // easy-open management
     storeMasterPassword: qt_method!(fn(&self, master_password: QString)),
@@ -480,6 +481,15 @@ impl KeepassRx {
 
     #[with_executor]
     pub fn getFieldValue(&self, entry_uuid: QString, field_name: QString) {
+        self.request_field_value(entry_uuid, field_name, "copy");
+    }
+
+    #[with_executor]
+    pub fn revealFieldValue(&self, entry_uuid: QString, field_name: QString) {
+        self.request_field_value(entry_uuid, field_name, "reveal");
+    }
+
+    fn request_field_value(&self, entry_uuid: QString, field_name: QString, purpose: &str) {
         let maybe_uuid = Uuid::from_str(&entry_uuid.to_string());
         let actor = self.actor_ref();
 
@@ -488,6 +498,7 @@ impl KeepassRx {
                 actix::spawn(actor.send(GetFieldValue {
                     entry_uuid,
                     field_name: field_name.into(),
+                    purpose: purpose.to_string(),
                 }));
             }
             Err(err) => self.errorReceived(format!("{}", err)),

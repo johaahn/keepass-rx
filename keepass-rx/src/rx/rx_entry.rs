@@ -103,6 +103,9 @@ pub struct RxEntry {
     pub icon: RxIcon,
 
     #[zeroize(skip)]
+    icon_data_url: OnceCell<Option<String>>,
+
+    #[zeroize(skip)]
     pub(super) entropy: OnceCell<f64>,
 }
 
@@ -202,6 +205,7 @@ impl RxEntry {
             raw_otp_value: raw_otp_value,
             is_expired,
             icon: rx_icon,
+            icon_data_url: OnceCell::new(),
             tags: mem::take(&mut entry.tags),
             entropy: OnceCell::new(),
         }
@@ -373,15 +377,19 @@ impl RxEntry {
         })
     }
 
-    pub fn icon_data_url(&self) -> Option<String> {
+    pub fn icon_data_url(&self) -> Option<&str> {
         if let RxIcon::Image(ref data) = self.icon {
-            infer::get(data).map(|k| {
-                format!(
-                    "data:{};base64,{}",
-                    k.mime_type(),
-                    BASE64_STANDARD.encode(data)
-                )
-            })
+            self.icon_data_url
+                .get_or_init(|| {
+                    infer::get(data).map(|k| {
+                        format!(
+                            "data:{};base64,{}",
+                            k.mime_type(),
+                            BASE64_STANDARD.encode(data)
+                        )
+                    })
+                })
+                .as_deref()
         } else {
             None
         }
@@ -399,20 +407,30 @@ impl<'a> RxValueKeyRef<'a> {
         Self(value.into(), key)
     }
 
+    #[inline]
+    fn inner_ref(&self) -> &RxValue {
+        self.0.as_ref()
+    }
+
+    #[inline]
+    fn key_ref(&self) -> &'a MasterKey {
+        self.1
+    }
+
     pub fn value(&self) -> Option<Zeroizing<String>> {
-        self.0.value(self.1).map(Zeroizing::new)
+        self.inner_ref().value(self.key_ref()).map(Zeroizing::new)
     }
 
     pub fn value_secure(&self) -> Option<SecureVec<u8>> {
-        self.0.value_secure(self.1)
+        self.inner_ref().value_secure(self.key_ref())
     }
 
     pub fn is_hidden_by_default(&self) -> bool {
-        self.0.is_hidden_by_default()
+        self.inner_ref().is_hidden_by_default()
     }
 
     pub fn totp_value(&self) -> Option<&RxTotp> {
-        self.0.totp_value()
+        self.inner_ref().totp_value()
     }
 }
 

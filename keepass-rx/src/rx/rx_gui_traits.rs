@@ -49,17 +49,21 @@ impl From<QString> for RxFieldName {
 
 impl From<&RxEntry> for QVariantMap {
     fn from(value: &RxEntry) -> Self {
+        let maybe_insert = |map: &mut HashMap<String, QVariant>,
+                            field_name: &str,
+                            value: Option<RxValueKeyRef<'_>>| {
+            if let Some(rx_val) = value
+                && !rx_val.is_hidden_by_default()
+            {
+                if let Some(rx_val_str) = rx_val.value() {
+                    let qval = QString::from(rx_val_str.as_str());
+                    map.insert(field_name.into(), qval.into());
+                }
+            }
+        };
+
         let icon_data_url: QString =
             value.icon_data_url().map(QString::from).unwrap_or_default();
-        let maybe_insert_plaintext =
-            |map: &mut HashMap<String, QVariant>, field_name: &str, value: Option<RxValueKeyRef<'_>>| {
-                if let Some(rx_val) = value
-                    && !rx_val.is_hidden_by_default()
-                    && let Some(rx_val_str) = rx_val.value()
-                {
-                    map.insert(field_name.into(), QString::from(rx_val_str.as_str()).into());
-                }
-            };
 
         let totp = value.totp();
         let mut map: HashMap<String, QVariant> = HashMap::new();
@@ -74,10 +78,10 @@ impl From<&RxEntry> for QVariantMap {
         map.insert("hasPassword".into(), value.password().is_some().into());
         map.insert("hasUrl".into(), value.url().is_some().into());
         map.insert("hasNotes".into(), value.notes().is_some().into());
-        maybe_insert_plaintext(&mut map, "username", value.username());
-        maybe_insert_plaintext(&mut map, "password", value.password());
-        maybe_insert_plaintext(&mut map, "url", value.url());
-        maybe_insert_plaintext(&mut map, "notes", value.notes());
+        maybe_insert(&mut map, "username", value.username());
+        maybe_insert(&mut map, "password", value.password());
+        maybe_insert(&mut map, "url", value.url());
+        maybe_insert(&mut map, "notes", value.notes());
         if value.password().is_some() {
             let entropy = value.entropy();
             map.insert("entropy".to_string(), QVariant::from(entropy));

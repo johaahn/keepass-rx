@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-10 08:55+0000\n"
+"POT-Creation-Date: 2026-03-11 14:27+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,8 +42,8 @@ msgid "Tap to copy 2FA code"
 msgstr ""
 
 #: qml/pages/AboutPage.qml:12 qml/pages/DBList.qml:76
-#: qml/pages/OpenDBPage.qml:118 qml/pages/UnlockPage.qml:53
-#: qml/pages/EntriesPage.qml:212
+#: qml/pages/EntriesPage.qml:212 qml/pages/OpenDBPage.qml:118
+#: qml/pages/UnlockPage.qml:53
 msgid "About"
 msgstr ""
 
@@ -89,9 +89,9 @@ msgstr ""
 msgid "Add Database"
 msgstr ""
 
-#: qml/pages/DBList.qml:69 qml/pages/OpenDBPage.qml:111
-#: qml/pages/UnlockPage.qml:46 qml/pages/EntriesPage.qml:203
-#: qml/pages/SettingsPage.qml:10
+#: qml/pages/DBList.qml:69 qml/pages/EntriesPage.qml:203
+#: qml/pages/SettingsPage.qml:10 qml/pages/OpenDBPage.qml:111
+#: qml/pages/UnlockPage.qml:46
 msgid "Settings"
 msgstr ""
 
@@ -119,89 +119,6 @@ msgstr ""
 msgid "Website"
 msgstr ""
 
-#: qml/pages/OpenDBPage.qml:32
-msgid "Key Loaded"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:33
-msgid "Remove Key"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:35
-msgid "Use Key"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:42
-msgid "Automatically detected a key file for this database."
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:44
-msgid "A key file will be used to open this database."
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:56
-msgid "Select Key File"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:98 qml/pages/EntriesPage.qml:167
-#: qml/pages/SingleEntry.qml:287
-msgid "Back"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:237
-msgid "Enter the database master password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:250
-msgid "Master Password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:276
-msgid "Open"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:297
-msgid "Hide Password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:297
-msgid "Show Password"
-msgstr ""
-
-#: qml/pages/OpenDBPage.qml:354
-msgid "Opening"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:151
-msgid "Manual path set."
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:168
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:184
-msgid "Passcode"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:215
-msgid "Unlock"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:234
-msgid "Securely Unlocking"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:235
-msgid "Securely Locking"
-msgstr ""
-
-#: qml/pages/UnlockPage.qml:246
-msgid "Database Not Opening?"
-msgstr ""
-
 #: qml/pages/EntriesPage.qml:96
 msgid "Cancel Search"
 msgstr ""
@@ -224,6 +141,11 @@ msgstr ""
 
 #: qml/pages/EntriesPage.qml:155
 msgid "Close"
+msgstr ""
+
+#: qml/pages/EntriesPage.qml:167 qml/pages/SingleEntry.qml:287
+#: qml/pages/OpenDBPage.qml:98
+msgid "Back"
 msgstr ""
 
 #: qml/pages/EntriesPage.qml:180
@@ -410,6 +332,84 @@ msgstr ""
 msgid "KeePassRX: Clipboard cleared."
 msgstr ""
 
+#: qml/pages/OpenDBPage.qml:32
+msgid "Key Loaded"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:33
+msgid "Remove Key"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:35
+msgid "Use Key"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:42
+msgid "Automatically detected a key file for this database."
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:44
+msgid "A key file will be used to open this database."
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:56
+msgid "Select Key File"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:237
+msgid "Enter the database master password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:250
+msgid "Master Password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:276
+msgid "Open"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:297
+msgid "Hide Password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:297
+msgid "Show Password"
+msgstr ""
+
+#: qml/pages/OpenDBPage.qml:354
+msgid "Opening"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:151
+msgid "Manual path set."
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:168
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:184
+msgid "Passcode"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:215
+msgid "Unlock"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:234
+msgid "Securely Unlocking"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:235
+msgid "Securely Locking"
+msgstr ""
+
+#: qml/pages/UnlockPage.qml:246
+msgid "Database Not Opening?"
+msgstr ""
+
 #: src/gui/instructions.rs:9
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
@@ -424,26 +424,6 @@ msgstr ""
 #: src/gui/mod.rs:70
 msgctxt "A database managed by external file sync"
 msgid "Synced"
-msgstr ""
-
-#: src/rx/rx_gui_traits.rs:111
-msgctxt "Password strength"
-msgid "Poor"
-msgstr ""
-
-#: src/rx/rx_gui_traits.rs:113
-msgctxt "Password strength"
-msgid "Weak"
-msgstr ""
-
-#: src/rx/rx_gui_traits.rs:114
-msgctxt "Password strength"
-msgid "Good"
-msgstr ""
-
-#: src/rx/rx_gui_traits.rs:116
-msgctxt "Password strength"
-msgid "Excellent"
 msgstr ""
 
 #: src/rx/virtual_hierarchy.rs:94
@@ -468,4 +448,24 @@ msgstr ""
 #: src/rx/virtual_hierarchy.rs:301 src/rx/virtual_hierarchy.rs:309
 msgctxt "Saved database searches"
 msgid "Saved Searches"
+msgstr ""
+
+#: src/rx/rx_gui_traits.rs:115
+msgctxt "Password strength"
+msgid "Poor"
+msgstr ""
+
+#: src/rx/rx_gui_traits.rs:117
+msgctxt "Password strength"
+msgid "Weak"
+msgstr ""
+
+#: src/rx/rx_gui_traits.rs:118
+msgctxt "Password strength"
+msgid "Good"
+msgstr ""
+
+#: src/rx/rx_gui_traits.rs:120
+msgctxt "Password strength"
+msgid "Excellent"
 msgstr ""

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-11 14:27+0000\n"
-"PO-Revision-Date: 2026-03-15 08:09+0000\n"
+"PO-Revision-Date: 2026-03-15 16:09+0000\n"
 "Last-Translator: Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/ubports/"
 "keepassrx/et/>\n"
@@ -235,16 +235,16 @@ msgid "Notes"
 msgstr "Märkmed"
 
 msgid "Tap to hide"
-msgstr ""
+msgstr "Peitmiseks klõpsa"
 
 msgid "Tap to reveal"
-msgstr ""
+msgstr "Näitamiseks klõpsa"
 
 msgid "Tap to copy"
 msgstr "Kopeerimiseks klõpsa"
 
 msgid "Tap reveal to view notes"
-msgstr ""
+msgstr "Klõpsa märkmete vaatamiseks"
 
 msgid "Main"
 msgstr "Peamine"
@@ -253,7 +253,7 @@ msgid "Username"
 msgstr "Kasutajanimi"
 
 msgid "Loading…"
-msgstr ""
+msgstr "Laadin andmeid…"
 
 msgid "URL"
 msgstr "Võrguaadress"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-10 07:41+0000\n"
+"POT-Creation-Date: 2026-03-11 14:27+0000\n"
 "PO-Revision-Date: 2026-02-16 05:09+0000\n"
 "Last-Translator: Arif Budiman <arifpedia@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/ubports/"
@@ -106,70 +106,6 @@ msgstr "Lisensi Sumber Terbuka"
 msgid "Website"
 msgstr "Situs Web"
 
-msgid "Key Loaded"
-msgstr "Kunci Dimuat"
-
-msgid "Remove Key"
-msgstr "Hapus Kunci"
-
-msgid "Use Key"
-msgstr "Gunakan Kunci"
-
-msgid "Automatically detected a key file for this database."
-msgstr "Secara otomatis mendeteksi file kunci untuk basis data ini."
-
-msgid "A key file will be used to open this database."
-msgstr "File kunci akan digunakan untuk membuka basis data ini."
-
-msgid "Select Key File"
-msgstr "Pilih File Kunci"
-
-msgid "Back"
-msgstr "Kembali"
-
-msgid "Enter the database master password"
-msgstr "Masukkan kata sandi master basis data"
-
-msgid "Master Password"
-msgstr "Kata Sandi Master"
-
-msgid "Open"
-msgstr "Buka"
-
-msgid "Hide Password"
-msgstr "Sembunyikan Kata Sandi"
-
-msgid "Show Password"
-msgstr "Tampilkan Kata Sandi"
-
-msgid "Opening"
-msgstr "Membuka"
-
-msgid "Manual path set."
-msgstr "Jalur manual telah diatur."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"Kode sandi adalah lima karakter pertama dari kata sandi basis data (atau "
-"seluruh kata sandi jika kurang dari lima karakter)."
-
-msgid "Passcode"
-msgstr "Kode Sandi"
-
-msgid "Unlock"
-msgstr "Buka Kunci"
-
-msgid "Securely Unlocking"
-msgstr "Membuka Kunci dengan Aman"
-
-msgid "Securely Locking"
-msgstr "Mengunci dengan Aman"
-
-msgid "Database Not Opening?"
-msgstr "Basis Data Tidak Terbuka?"
-
 msgid "Cancel Search"
 msgstr "Batal Cari"
 
@@ -187,6 +123,9 @@ msgstr "Kunci"
 
 msgid "Close"
 msgstr "Tutup"
+
+msgid "Back"
+msgstr "Kembali"
 
 msgid "View Mode"
 msgstr "Mode Tampilan"
@@ -296,17 +235,26 @@ msgstr "%1 disalin ke papan klip (30 detik)"
 msgid "Notes"
 msgstr "Catatan"
 
+msgid "Tap to hide"
+msgstr ""
+
+msgid "Tap to reveal"
+msgstr ""
+
 msgid "Tap to copy"
 msgstr "Ketuk untuk menyalin"
 
-msgid "Notes copied to clipboard (30 secs)"
-msgstr "Catatan disalin ke papan klip (30 detik)"
+msgid "Tap reveal to view notes"
+msgstr ""
 
 msgid "Main"
 msgstr "Utama"
 
 msgid "Username"
 msgstr "Nama Pengguna"
+
+msgid "Loading…"
+msgstr ""
 
 msgid "URL"
 msgstr "URL"
@@ -323,6 +271,67 @@ msgstr "Bidang Lainnya"
 msgid "KeePassRX: Clipboard cleared."
 msgstr "KeePassRX: Papan klip dikosongkan."
 
+msgid "Key Loaded"
+msgstr "Kunci Dimuat"
+
+msgid "Remove Key"
+msgstr "Hapus Kunci"
+
+msgid "Use Key"
+msgstr "Gunakan Kunci"
+
+msgid "Automatically detected a key file for this database."
+msgstr "Secara otomatis mendeteksi file kunci untuk basis data ini."
+
+msgid "A key file will be used to open this database."
+msgstr "File kunci akan digunakan untuk membuka basis data ini."
+
+msgid "Select Key File"
+msgstr "Pilih File Kunci"
+
+msgid "Enter the database master password"
+msgstr "Masukkan kata sandi master basis data"
+
+msgid "Master Password"
+msgstr "Kata Sandi Master"
+
+msgid "Open"
+msgstr "Buka"
+
+msgid "Hide Password"
+msgstr "Sembunyikan Kata Sandi"
+
+msgid "Show Password"
+msgstr "Tampilkan Kata Sandi"
+
+msgid "Opening"
+msgstr "Membuka"
+
+msgid "Manual path set."
+msgstr "Jalur manual telah diatur."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"Kode sandi adalah lima karakter pertama dari kata sandi basis data (atau "
+"seluruh kata sandi jika kurang dari lima karakter)."
+
+msgid "Passcode"
+msgstr "Kode Sandi"
+
+msgid "Unlock"
+msgstr "Buka Kunci"
+
+msgid "Securely Unlocking"
+msgstr "Membuka Kunci dengan Aman"
+
+msgid "Securely Locking"
+msgstr "Mengunci dengan Aman"
+
+msgid "Database Not Opening?"
+msgstr "Basis Data Tidak Terbuka?"
+
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
@@ -337,22 +346,6 @@ msgstr "Diimpor"
 msgctxt "A database managed by external file sync"
 msgid "Synced"
 msgstr "Disinkronkan"
-
-msgctxt "Password strength"
-msgid "Poor"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Weak"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Good"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Excellent"
-msgstr ""
 
 msgid "All Templates"
 msgstr "Semua Templat"
@@ -372,3 +365,22 @@ msgstr "Tag"
 msgctxt "Saved database searches"
 msgid "Saved Searches"
 msgstr ""
+
+msgctxt "Password strength"
+msgid "Poor"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Weak"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Good"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Excellent"
+msgstr ""
+
+#~ msgid "Notes copied to clipboard (30 secs)"
+#~ msgstr "Catatan disalin ke papan klip (30 detik)"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-10 07:41+0000\n"
+"POT-Creation-Date: 2026-03-11 14:27+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -94,68 +94,6 @@ msgstr ""
 msgid "Website"
 msgstr ""
 
-msgid "Key Loaded"
-msgstr ""
-
-msgid "Remove Key"
-msgstr ""
-
-msgid "Use Key"
-msgstr ""
-
-msgid "Automatically detected a key file for this database."
-msgstr ""
-
-msgid "A key file will be used to open this database."
-msgstr ""
-
-msgid "Select Key File"
-msgstr ""
-
-msgid "Back"
-msgstr ""
-
-msgid "Enter the database master password"
-msgstr ""
-
-msgid "Master Password"
-msgstr ""
-
-msgid "Open"
-msgstr ""
-
-msgid "Hide Password"
-msgstr ""
-
-msgid "Show Password"
-msgstr ""
-
-msgid "Opening"
-msgstr ""
-
-msgid "Manual path set."
-msgstr ""
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-
-msgid "Passcode"
-msgstr ""
-
-msgid "Unlock"
-msgstr ""
-
-msgid "Securely Unlocking"
-msgstr ""
-
-msgid "Securely Locking"
-msgstr ""
-
-msgid "Database Not Opening?"
-msgstr ""
-
 msgid "Cancel Search"
 msgstr ""
 
@@ -172,6 +110,9 @@ msgid "Lock"
 msgstr ""
 
 msgid "Close"
+msgstr ""
+
+msgid "Back"
 msgstr ""
 
 msgid "View Mode"
@@ -276,16 +217,25 @@ msgstr ""
 msgid "Notes"
 msgstr ""
 
+msgid "Tap to hide"
+msgstr ""
+
+msgid "Tap to reveal"
+msgstr ""
+
 msgid "Tap to copy"
 msgstr ""
 
-msgid "Notes copied to clipboard (30 secs)"
+msgid "Tap reveal to view notes"
 msgstr ""
 
 msgid "Main"
 msgstr ""
 
 msgid "Username"
+msgstr ""
+
+msgid "Loading…"
 msgstr ""
 
 msgid "URL"
@@ -303,6 +253,65 @@ msgstr ""
 msgid "KeePassRX: Clipboard cleared."
 msgstr ""
 
+msgid "Key Loaded"
+msgstr ""
+
+msgid "Remove Key"
+msgstr ""
+
+msgid "Use Key"
+msgstr ""
+
+msgid "Automatically detected a key file for this database."
+msgstr ""
+
+msgid "A key file will be used to open this database."
+msgstr ""
+
+msgid "Select Key File"
+msgstr ""
+
+msgid "Enter the database master password"
+msgstr ""
+
+msgid "Master Password"
+msgstr ""
+
+msgid "Open"
+msgstr ""
+
+msgid "Hide Password"
+msgstr ""
+
+msgid "Show Password"
+msgstr ""
+
+msgid "Opening"
+msgstr ""
+
+msgid "Manual path set."
+msgstr ""
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+
+msgid "Passcode"
+msgstr ""
+
+msgid "Unlock"
+msgstr ""
+
+msgid "Securely Unlocking"
+msgstr ""
+
+msgid "Securely Locking"
+msgstr ""
+
+msgid "Database Not Opening?"
+msgstr ""
+
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
@@ -314,22 +323,6 @@ msgstr ""
 
 msgctxt "A database managed by external file sync"
 msgid "Synced"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Poor"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Weak"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Good"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Excellent"
 msgstr ""
 
 msgid "All Templates"
@@ -349,4 +342,20 @@ msgstr ""
 
 msgctxt "Saved database searches"
 msgid "Saved Searches"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Poor"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Weak"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Good"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Excellent"
 msgstr ""

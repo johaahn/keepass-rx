@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-10 07:41+0000\n"
+"POT-Creation-Date: 2026-03-11 14:27+0000\n"
 "PO-Revision-Date: 2025-11-18 09:39+0000\n"
 "Last-Translator: projectmoon <projectmoon@agnos.is>\n"
 "Language-Team: Icelandic <https://hosted.weblate.org/projects/ubports/"
@@ -95,70 +95,6 @@ msgstr ""
 msgid "Website"
 msgstr ""
 
-msgid "Key Loaded"
-msgstr ""
-
-msgid "Remove Key"
-msgstr ""
-
-msgid "Use Key"
-msgstr ""
-
-msgid "Automatically detected a key file for this database."
-msgstr ""
-
-msgid "A key file will be used to open this database."
-msgstr ""
-
-msgid "Select Key File"
-msgstr ""
-
-msgid "Back"
-msgstr "Til baka"
-
-msgid "Enter the database master password"
-msgstr "Sláðu inn aðallykilorð gagnagrunnsins"
-
-msgid "Master Password"
-msgstr "Aðallykilorð"
-
-msgid "Open"
-msgstr "Opna"
-
-msgid "Hide Password"
-msgstr ""
-
-msgid "Show Password"
-msgstr ""
-
-msgid "Opening"
-msgstr "Í vinnslu"
-
-msgid "Manual path set."
-msgstr "Handvirk leið staðsett."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"Stutt lykilorðið er fyrstu fimm stafirnar af lykilorðinu gagnagrunnar (eða "
-"heilt lykilorð ef það er stuttara en fimm stafir)."
-
-msgid "Passcode"
-msgstr "Stutt lykilorð"
-
-msgid "Unlock"
-msgstr "Aflæsa"
-
-msgid "Securely Unlocking"
-msgstr "Að aflæsa með öryggi"
-
-msgid "Securely Locking"
-msgstr "Læsa með öryggi"
-
-msgid "Database Not Opening?"
-msgstr "Er gagnagrunnur ekki að opna?"
-
 msgid "Cancel Search"
 msgstr "Hætta leit"
 
@@ -176,6 +112,9 @@ msgstr "Læsa"
 
 msgid "Close"
 msgstr "Loka"
+
+msgid "Back"
+msgstr "Til baka"
 
 msgid "View Mode"
 msgstr ""
@@ -281,16 +220,25 @@ msgstr ""
 msgid "Notes"
 msgstr "Athugasemdir"
 
+msgid "Tap to hide"
+msgstr ""
+
+msgid "Tap to reveal"
+msgstr ""
+
 msgid "Tap to copy"
 msgstr "Ýtið á til að afrita"
 
-msgid "Notes copied to clipboard (30 secs)"
+msgid "Tap reveal to view notes"
 msgstr ""
 
 msgid "Main"
 msgstr ""
 
 msgid "Username"
+msgstr ""
+
+msgid "Loading…"
 msgstr ""
 
 msgid "URL"
@@ -308,6 +256,67 @@ msgstr ""
 msgid "KeePassRX: Clipboard cleared."
 msgstr ""
 
+msgid "Key Loaded"
+msgstr ""
+
+msgid "Remove Key"
+msgstr ""
+
+msgid "Use Key"
+msgstr ""
+
+msgid "Automatically detected a key file for this database."
+msgstr ""
+
+msgid "A key file will be used to open this database."
+msgstr ""
+
+msgid "Select Key File"
+msgstr ""
+
+msgid "Enter the database master password"
+msgstr "Sláðu inn aðallykilorð gagnagrunnsins"
+
+msgid "Master Password"
+msgstr "Aðallykilorð"
+
+msgid "Open"
+msgstr "Opna"
+
+msgid "Hide Password"
+msgstr ""
+
+msgid "Show Password"
+msgstr ""
+
+msgid "Opening"
+msgstr "Í vinnslu"
+
+msgid "Manual path set."
+msgstr "Handvirk leið staðsett."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"Stutt lykilorðið er fyrstu fimm stafirnar af lykilorðinu gagnagrunnar (eða "
+"heilt lykilorð ef það er stuttara en fimm stafir)."
+
+msgid "Passcode"
+msgstr "Stutt lykilorð"
+
+msgid "Unlock"
+msgstr "Aflæsa"
+
+msgid "Securely Unlocking"
+msgstr "Að aflæsa með öryggi"
+
+msgid "Securely Locking"
+msgstr "Læsa með öryggi"
+
+msgid "Database Not Opening?"
+msgstr "Er gagnagrunnur ekki að opna?"
+
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
@@ -319,22 +328,6 @@ msgstr ""
 
 msgctxt "A database managed by external file sync"
 msgid "Synced"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Poor"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Weak"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Good"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Excellent"
 msgstr ""
 
 msgid "All Templates"
@@ -354,6 +347,22 @@ msgstr ""
 
 msgctxt "Saved database searches"
 msgid "Saved Searches"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Poor"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Weak"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Good"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Excellent"
 msgstr ""
 
 #~ msgid ""

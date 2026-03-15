@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-10 07:41+0000\n"
+"POT-Creation-Date: 2026-03-11 14:27+0000\n"
 "PO-Revision-Date: 2026-02-28 00:09+0000\n"
 "Last-Translator: Daniel Frost <one@frostinfo.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -105,70 +105,6 @@ msgstr "Open Source Lizenzen"
 msgid "Website"
 msgstr "Webseite"
 
-msgid "Key Loaded"
-msgstr "Schlüssel geladen"
-
-msgid "Remove Key"
-msgstr "Schlüssel entfernen"
-
-msgid "Use Key"
-msgstr "Schlüssel verwenden"
-
-msgid "Automatically detected a key file for this database."
-msgstr "Für diese Datenbank wurde ein Schlüssel automatisch erkannt."
-
-msgid "A key file will be used to open this database."
-msgstr "Eine Schlüsseldatei wird zum Öffnen dieser Datenbank verwendet."
-
-msgid "Select Key File"
-msgstr "Wähle Schlüsseldatei"
-
-msgid "Back"
-msgstr "Zurück"
-
-msgid "Enter the database master password"
-msgstr "Datenbankpasswort eingeben"
-
-msgid "Master Password"
-msgstr "Datenbankpasswort"
-
-msgid "Open"
-msgstr "Öffnen"
-
-msgid "Hide Password"
-msgstr "Passwort ausblenden"
-
-msgid "Show Password"
-msgstr "Passwort anzeigen"
-
-msgid "Opening"
-msgstr "Öffne"
-
-msgid "Manual path set."
-msgstr "Manueller Pfad gesetzt."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"Der Passcode sind die ersten fünf Zeichen des Datenbankpassworts (oder das "
-"gesamte Passwort, falls es weniger als 5 Zeichen hat)."
-
-msgid "Passcode"
-msgstr "Passcode"
-
-msgid "Unlock"
-msgstr "Entsperren"
-
-msgid "Securely Unlocking"
-msgstr "Sicheres entsperren"
-
-msgid "Securely Locking"
-msgstr "Sicheres Sperren"
-
-msgid "Database Not Opening?"
-msgstr "Datenbank öffnet sich nicht?"
-
 msgid "Cancel Search"
 msgstr "Suche abbrechen"
 
@@ -186,6 +122,9 @@ msgstr "Sperren"
 
 msgid "Close"
 msgstr "Schließen"
+
+msgid "Back"
+msgstr "Zurück"
 
 msgid "View Mode"
 msgstr "Ansichtsmodus"
@@ -296,17 +235,26 @@ msgstr "%1 in die Zwischenablage kopiert (für 30 Sek.)"
 msgid "Notes"
 msgstr "Notizen"
 
+msgid "Tap to hide"
+msgstr ""
+
+msgid "Tap to reveal"
+msgstr ""
+
 msgid "Tap to copy"
 msgstr "Antippen zum Kopieren"
 
-msgid "Notes copied to clipboard (30 secs)"
-msgstr "Notizen in die Zwischenablage kopiert (für 30 Sek.)"
+msgid "Tap reveal to view notes"
+msgstr ""
 
 msgid "Main"
 msgstr ""
 
 msgid "Username"
 msgstr "Nutzername"
+
+msgid "Loading…"
+msgstr ""
 
 msgid "URL"
 msgstr "URL"
@@ -323,6 +271,67 @@ msgstr "Andere Felder"
 msgid "KeePassRX: Clipboard cleared."
 msgstr "KeePassRX: Zwischenablage geleert."
 
+msgid "Key Loaded"
+msgstr "Schlüssel geladen"
+
+msgid "Remove Key"
+msgstr "Schlüssel entfernen"
+
+msgid "Use Key"
+msgstr "Schlüssel verwenden"
+
+msgid "Automatically detected a key file for this database."
+msgstr "Für diese Datenbank wurde ein Schlüssel automatisch erkannt."
+
+msgid "A key file will be used to open this database."
+msgstr "Eine Schlüsseldatei wird zum Öffnen dieser Datenbank verwendet."
+
+msgid "Select Key File"
+msgstr "Wähle Schlüsseldatei"
+
+msgid "Enter the database master password"
+msgstr "Datenbankpasswort eingeben"
+
+msgid "Master Password"
+msgstr "Datenbankpasswort"
+
+msgid "Open"
+msgstr "Öffnen"
+
+msgid "Hide Password"
+msgstr "Passwort ausblenden"
+
+msgid "Show Password"
+msgstr "Passwort anzeigen"
+
+msgid "Opening"
+msgstr "Öffne"
+
+msgid "Manual path set."
+msgstr "Manueller Pfad gesetzt."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"Der Passcode sind die ersten fünf Zeichen des Datenbankpassworts (oder das "
+"gesamte Passwort, falls es weniger als 5 Zeichen hat)."
+
+msgid "Passcode"
+msgstr "Passcode"
+
+msgid "Unlock"
+msgstr "Entsperren"
+
+msgid "Securely Unlocking"
+msgstr "Sicheres entsperren"
+
+msgid "Securely Locking"
+msgstr "Sicheres Sperren"
+
+msgid "Database Not Opening?"
+msgstr "Datenbank öffnet sich nicht?"
+
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
@@ -337,22 +346,6 @@ msgstr "Importiert"
 msgctxt "A database managed by external file sync"
 msgid "Synced"
 msgstr "Synchronisiert"
-
-msgctxt "Password strength"
-msgid "Poor"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Weak"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Good"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Excellent"
-msgstr ""
 
 msgid "All Templates"
 msgstr "Alle Vorlagen"
@@ -372,6 +365,25 @@ msgstr "Schlagwörter"
 msgctxt "Saved database searches"
 msgid "Saved Searches"
 msgstr ""
+
+msgctxt "Password strength"
+msgid "Poor"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Weak"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Good"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Excellent"
+msgstr ""
+
+#~ msgid "Notes copied to clipboard (30 secs)"
+#~ msgstr "Notizen in die Zwischenablage kopiert (für 30 Sek.)"
 
 #~ msgid ""
 #~ "Change settings based on your preferences. Any change to the settings "

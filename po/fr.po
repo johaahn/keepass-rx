@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-10 07:41+0000\n"
+"POT-Creation-Date: 2026-03-11 14:27+0000\n"
 "PO-Revision-Date: 2026-02-06 20:01+0000\n"
 "Last-Translator: Matthias Dahlmanns <matdahl@gmx.de>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -105,71 +105,6 @@ msgstr "Licences Open Source"
 msgid "Website"
 msgstr "Site web"
 
-msgid "Key Loaded"
-msgstr "Clé chargée"
-
-msgid "Remove Key"
-msgstr "Supprimer la clé"
-
-msgid "Use Key"
-msgstr "Utiliser la clé"
-
-msgid "Automatically detected a key file for this database."
-msgstr "Détection automatique d'un fichier clé pour cette base de données."
-
-msgid "A key file will be used to open this database."
-msgstr "Un fichier clé sera utilisé pour ouvrir cette base de données."
-
-msgid "Select Key File"
-msgstr "Sélectionner le fichier clé"
-
-msgid "Back"
-msgstr "Retour"
-
-msgid "Enter the database master password"
-msgstr "Entrez le mot de passe principal de la base de données"
-
-msgid "Master Password"
-msgstr "Mot de passe principal"
-
-msgid "Open"
-msgstr "Ouvrir"
-
-msgid "Hide Password"
-msgstr "Masquer le mot de passe"
-
-msgid "Show Password"
-msgstr "Afficher le mot de passe"
-
-msgid "Opening"
-msgstr "Ouverture"
-
-msgid "Manual path set."
-msgstr "Chemin défini manuellement."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"Le code d’accès correspond aux cinq premiers caractères du mot de passe de "
-"la base de données (ou au mot de passe complet s’il comporte moins de cinq "
-"caractères)."
-
-msgid "Passcode"
-msgstr "Code d'accès"
-
-msgid "Unlock"
-msgstr "Déverrouiller"
-
-msgid "Securely Unlocking"
-msgstr "Déverrouillage sécurisé"
-
-msgid "Securely Locking"
-msgstr "Verrouillage sécurisé"
-
-msgid "Database Not Opening?"
-msgstr "La base de données ne s'ouvre pas ?"
-
 msgid "Cancel Search"
 msgstr "Annuler la recherche"
 
@@ -187,6 +122,9 @@ msgstr "Verrouiller"
 
 msgid "Close"
 msgstr "Fermer"
+
+msgid "Back"
+msgstr "Retour"
 
 msgid "View Mode"
 msgstr "Mode d'affichage"
@@ -298,17 +236,26 @@ msgstr "%1 copié dans le presse-papiers (30 secondes)"
 msgid "Notes"
 msgstr "Notes"
 
+msgid "Tap to hide"
+msgstr ""
+
+msgid "Tap to reveal"
+msgstr ""
+
 msgid "Tap to copy"
 msgstr "Appuyez pour copier"
 
-msgid "Notes copied to clipboard (30 secs)"
-msgstr "Notes copiées dans le presse-papiers (30 secondes)"
+msgid "Tap reveal to view notes"
+msgstr ""
 
 msgid "Main"
 msgstr "Principal"
 
 msgid "Username"
 msgstr "Nom d'utilisateur"
+
+msgid "Loading…"
+msgstr ""
 
 msgid "URL"
 msgstr "URL"
@@ -325,6 +272,68 @@ msgstr "Autres champs"
 msgid "KeePassRX: Clipboard cleared."
 msgstr "KeePassRX : Presse-papiers effacé."
 
+msgid "Key Loaded"
+msgstr "Clé chargée"
+
+msgid "Remove Key"
+msgstr "Supprimer la clé"
+
+msgid "Use Key"
+msgstr "Utiliser la clé"
+
+msgid "Automatically detected a key file for this database."
+msgstr "Détection automatique d'un fichier clé pour cette base de données."
+
+msgid "A key file will be used to open this database."
+msgstr "Un fichier clé sera utilisé pour ouvrir cette base de données."
+
+msgid "Select Key File"
+msgstr "Sélectionner le fichier clé"
+
+msgid "Enter the database master password"
+msgstr "Entrez le mot de passe principal de la base de données"
+
+msgid "Master Password"
+msgstr "Mot de passe principal"
+
+msgid "Open"
+msgstr "Ouvrir"
+
+msgid "Hide Password"
+msgstr "Masquer le mot de passe"
+
+msgid "Show Password"
+msgstr "Afficher le mot de passe"
+
+msgid "Opening"
+msgstr "Ouverture"
+
+msgid "Manual path set."
+msgstr "Chemin défini manuellement."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"Le code d’accès correspond aux cinq premiers caractères du mot de passe de "
+"la base de données (ou au mot de passe complet s’il comporte moins de cinq "
+"caractères)."
+
+msgid "Passcode"
+msgstr "Code d'accès"
+
+msgid "Unlock"
+msgstr "Déverrouiller"
+
+msgid "Securely Unlocking"
+msgstr "Déverrouillage sécurisé"
+
+msgid "Securely Locking"
+msgstr "Verrouillage sécurisé"
+
+msgid "Database Not Opening?"
+msgstr "La base de données ne s'ouvre pas ?"
+
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
@@ -339,22 +348,6 @@ msgstr "Importé"
 msgctxt "A database managed by external file sync"
 msgid "Synced"
 msgstr "Synchronisé"
-
-msgctxt "Password strength"
-msgid "Poor"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Weak"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Good"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Excellent"
-msgstr ""
 
 msgid "All Templates"
 msgstr "Tous les modèles"
@@ -374,6 +367,25 @@ msgstr "Balises"
 msgctxt "Saved database searches"
 msgid "Saved Searches"
 msgstr ""
+
+msgctxt "Password strength"
+msgid "Poor"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Weak"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Good"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Excellent"
+msgstr ""
+
+#~ msgid "Notes copied to clipboard (30 secs)"
+#~ msgstr "Notes copiées dans le presse-papiers (30 secondes)"
 
 #~ msgid ""
 #~ "Change settings based on your preferences. Any change to the settings "

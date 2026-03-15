@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-10 07:41+0000\n"
+"POT-Creation-Date: 2026-03-11 14:27+0000\n"
 "PO-Revision-Date: 2026-01-26 18:01+0000\n"
 "Last-Translator: BoneNI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://hosted.weblate.org/projects/ubports/keepassrx/lo/"
@@ -104,70 +104,6 @@ msgstr "ໃບອະນຸຍາດໂອເພນຊອດ"
 msgid "Website"
 msgstr "ເວັບໄຊ"
 
-msgid "Key Loaded"
-msgstr "ໂຫຼດກະແຈແລ້ວ"
-
-msgid "Remove Key"
-msgstr "ລຶບກະແຈອອກ"
-
-msgid "Use Key"
-msgstr "ໃຊ້ກະແຈ"
-
-msgid "Automatically detected a key file for this database."
-msgstr "ກວດພົບໄຟລ໌ກະແຈສຳລັບຖານຂໍ້ມູນນີ້ໂດຍອັດຕະໂນມັດ."
-
-msgid "A key file will be used to open this database."
-msgstr "ໄຟລ໌ກະແຈຈະຖືກນຳໃຊ້ເພື່ອເປີດຖານຂໍ້ມູນນີ້."
-
-msgid "Select Key File"
-msgstr "ເລືອກໄຟລ໌ກະແຈ"
-
-msgid "Back"
-msgstr "ກັບຄືນ"
-
-msgid "Enter the database master password"
-msgstr "ປ້ອນລະຫັດຜ່ານຫຼັກຂອງຖານຂໍ້ມູນ"
-
-msgid "Master Password"
-msgstr "ລະຫັດຜ່ານຫຼັກ"
-
-msgid "Open"
-msgstr "ເປີດ"
-
-msgid "Hide Password"
-msgstr "ເຊື່ອງລະຫັດຜ່ານ"
-
-msgid "Show Password"
-msgstr "ສະແດງລະຫັດຜ່ານ"
-
-msgid "Opening"
-msgstr "ກຳລັງເປີດ"
-
-msgid "Manual path set."
-msgstr "ກຳນົດເສັ້ນທາງເອງແລ້ວ."
-
-msgid ""
-"The passcode is the first five characters of the database password (or the "
-"whole password if less than five characters)."
-msgstr ""
-"ລະຫັດຜ່ານສັ້ນແມ່ນ 5 ຕົວອັກສອນທຳອິດຂອງລະຫັດຜ່ານຖານຂໍ້ມູນ (ຫຼື ລະຫັດຜ່ານທັງໝົດ ຖ້າໜ້ອຍກວ່າ 5 "
-"ຕົວອັກສອນ)."
-
-msgid "Passcode"
-msgstr "ລະຫັດຜ່ານສັ້ນ"
-
-msgid "Unlock"
-msgstr "ປົດລັອກ"
-
-msgid "Securely Unlocking"
-msgstr "ກຳລັງປົດລັອກຢ່າງປອດໄພ"
-
-msgid "Securely Locking"
-msgstr "ກຳລັງລັອກຢ່າງປອດໄພ"
-
-msgid "Database Not Opening?"
-msgstr "ຖານຂໍ້ມູນເປີດບໍ່ໄດ້ບໍ?"
-
 msgid "Cancel Search"
 msgstr "ຍົກເລີກການຄົ້ນຫາ"
 
@@ -185,6 +121,9 @@ msgstr "ລັອກ"
 
 msgid "Close"
 msgstr "ປິດ"
+
+msgid "Back"
+msgstr "ກັບຄືນ"
 
 msgid "View Mode"
 msgstr "ຮູບແບບການເບິ່ງ"
@@ -290,17 +229,26 @@ msgstr "ຄັດລອກ %1 ໃສ່ຄລິບບອດແລ້ວ (30 ວ
 msgid "Notes"
 msgstr "ບັນທຶກ"
 
+msgid "Tap to hide"
+msgstr ""
+
+msgid "Tap to reveal"
+msgstr ""
+
 msgid "Tap to copy"
 msgstr "ແຕະເພື່ອຄັດລອກ"
 
-msgid "Notes copied to clipboard (30 secs)"
-msgstr "ຄັດລອກບັນທຶກໃສ່ຄລິບບອດແລ້ວ (30 ວິນາທີ)"
+msgid "Tap reveal to view notes"
+msgstr ""
 
 msgid "Main"
 msgstr "ຫຼັກ"
 
 msgid "Username"
 msgstr "ຊື່ຜູ້ໃຊ້"
+
+msgid "Loading…"
+msgstr ""
 
 msgid "URL"
 msgstr "URL"
@@ -317,6 +265,67 @@ msgstr "ຊ່ອງຂໍ້ມູນອື່ນໆ"
 msgid "KeePassRX: Clipboard cleared."
 msgstr "KeePassRX: ລ້າງຂໍ້ມູນໃນຄລິບບອດແລ້ວ."
 
+msgid "Key Loaded"
+msgstr "ໂຫຼດກະແຈແລ້ວ"
+
+msgid "Remove Key"
+msgstr "ລຶບກະແຈອອກ"
+
+msgid "Use Key"
+msgstr "ໃຊ້ກະແຈ"
+
+msgid "Automatically detected a key file for this database."
+msgstr "ກວດພົບໄຟລ໌ກະແຈສຳລັບຖານຂໍ້ມູນນີ້ໂດຍອັດຕະໂນມັດ."
+
+msgid "A key file will be used to open this database."
+msgstr "ໄຟລ໌ກະແຈຈະຖືກນຳໃຊ້ເພື່ອເປີດຖານຂໍ້ມູນນີ້."
+
+msgid "Select Key File"
+msgstr "ເລືອກໄຟລ໌ກະແຈ"
+
+msgid "Enter the database master password"
+msgstr "ປ້ອນລະຫັດຜ່ານຫຼັກຂອງຖານຂໍ້ມູນ"
+
+msgid "Master Password"
+msgstr "ລະຫັດຜ່ານຫຼັກ"
+
+msgid "Open"
+msgstr "ເປີດ"
+
+msgid "Hide Password"
+msgstr "ເຊື່ອງລະຫັດຜ່ານ"
+
+msgid "Show Password"
+msgstr "ສະແດງລະຫັດຜ່ານ"
+
+msgid "Opening"
+msgstr "ກຳລັງເປີດ"
+
+msgid "Manual path set."
+msgstr "ກຳນົດເສັ້ນທາງເອງແລ້ວ."
+
+msgid ""
+"The passcode is the first five characters of the database password (or the "
+"whole password if less than five characters)."
+msgstr ""
+"ລະຫັດຜ່ານສັ້ນແມ່ນ 5 ຕົວອັກສອນທຳອິດຂອງລະຫັດຜ່ານຖານຂໍ້ມູນ (ຫຼື ລະຫັດຜ່ານທັງໝົດ ຖ້າໜ້ອຍກວ່າ 5 "
+"ຕົວອັກສອນ)."
+
+msgid "Passcode"
+msgstr "ລະຫັດຜ່ານສັ້ນ"
+
+msgid "Unlock"
+msgstr "ປົດລັອກ"
+
+msgid "Securely Unlocking"
+msgstr "ກຳລັງປົດລັອກຢ່າງປອດໄພ"
+
+msgid "Securely Locking"
+msgstr "ກຳລັງລັອກຢ່າງປອດໄພ"
+
+msgid "Database Not Opening?"
+msgstr "ຖານຂໍ້ມູນເປີດບໍ່ໄດ້ບໍ?"
+
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
@@ -329,22 +338,6 @@ msgstr "ນຳເຂົ້າແລ້ວ"
 msgctxt "A database managed by external file sync"
 msgid "Synced"
 msgstr "ຊິງຄ໌ແລ້ວ"
-
-msgctxt "Password strength"
-msgid "Poor"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Weak"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Good"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Excellent"
-msgstr ""
 
 msgid "All Templates"
 msgstr "ແມ່ແບບທັງໝົດ"
@@ -364,6 +357,25 @@ msgstr "ແທັກ"
 msgctxt "Saved database searches"
 msgid "Saved Searches"
 msgstr ""
+
+msgctxt "Password strength"
+msgid "Poor"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Weak"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Good"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Excellent"
+msgstr ""
+
+#~ msgid "Notes copied to clipboard (30 secs)"
+#~ msgstr "ຄັດລອກບັນທຶກໃສ່ຄລິບບອດແລ້ວ (30 ວິນາທີ)"
 
 #~ msgid ""
 #~ "Change settings based on your preferences. Any change to the settings "

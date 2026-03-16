@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-11 14:27+0000\n"
-"PO-Revision-Date: 2026-03-11 12:09+0000\n"
+"PO-Revision-Date: 2026-03-16 09:58+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/ubports/keepassrx/"
 "nl/>\n"
@@ -234,16 +234,16 @@ msgid "Notes"
 msgstr "Aantekeningen"
 
 msgid "Tap to hide"
-msgstr ""
+msgstr "Druk om te verbergen"
 
 msgid "Tap to reveal"
-msgstr ""
+msgstr "Druk om te tonen"
 
 msgid "Tap to copy"
 msgstr "Druk om te kopiëren"
 
 msgid "Tap reveal to view notes"
-msgstr ""
+msgstr "Druk om aantekeningen te bekijken"
 
 msgid "Main"
 msgstr "Algemeen"
@@ -252,7 +252,7 @@ msgid "Username"
 msgstr "Gebruikersnaam"
 
 msgid "Loading…"
-msgstr ""
+msgstr "Bezig met laden…"
 
 msgid "URL"
 msgstr "Url"

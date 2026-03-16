@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-11 14:27+0000\n"
-"PO-Revision-Date: 2026-03-16 12:09+0000\n"
+"PO-Revision-Date: 2026-03-16 17:09+0000\n"
 "Last-Translator: Walter Garcia-Fontes <walter.garcia@upf.edu>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/ubports/"
 "keepassrx/ca/>\n"
@@ -162,146 +162,153 @@ msgstr "Endarrere"
 
 #: qml/pages/EntriesPage.qml:180
 msgid "View Mode"
-msgstr ""
+msgstr "Mode de visualització"
 
 #: qml/pages/EntriesPage.qml:190
 msgid "Search"
-msgstr ""
+msgstr "Cerca"
 
 #: qml/pages/EntriesPage.qml:224
 msgid "Lock Database"
-msgstr ""
+msgstr "Bloqueja la base de dades"
 
 #: qml/pages/EntriesPage.qml:234
 msgid "Close Database"
-msgstr ""
+msgstr "Tanca la base de dades"
 
 #: qml/pages/EntriesPage.qml:254
 msgid "Change View"
-msgstr ""
+msgstr "Canvia la visualització"
 
 #: qml/pages/EntriesPage.qml:260
 msgid "All Entries"
-msgstr ""
+msgstr "Totes les entrades"
 
 #: qml/pages/EntriesPage.qml:262
 msgid "All groups and entries."
-msgstr ""
+msgstr "Tots els grups i entrades."
 
 #: qml/pages/EntriesPage.qml:266 src/rx/virtual_hierarchy.rs:86
 msgid "Special Categories"
-msgstr ""
+msgstr "Categories especials"
 
 #: qml/pages/EntriesPage.qml:268
 msgid "Entries grouped by template."
-msgstr ""
+msgstr "Entrades agrupades per plantilla."
 
 #: qml/pages/EntriesPage.qml:272
 msgid "2FA Codes"
-msgstr ""
+msgstr "Codis 2FA"
 
 #: qml/pages/EntriesPage.qml:274
 msgid "Entries with 2FA codes."
-msgstr ""
+msgstr "Entrades amb codis 2FA."
 
 #: qml/pages/EntriesPage.qml:278 src/rx/virtual_hierarchy.rs:260
 msgid "Tags"
-msgstr ""
+msgstr "Etiquetes"
 
 #: qml/pages/EntriesPage.qml:280
 msgid "Entries grouped by tag."
-msgstr ""
+msgstr "Entrades agrupades per etiquetes."
 
 #: qml/pages/EntriesPage.qml:284
 msgid "Saved Searches"
-msgstr ""
+msgstr "Cerques desades"
 
 #: qml/pages/EntriesPage.qml:286
 msgid "Entries matching search queries."
-msgstr ""
+msgstr "Entrades que concorden amb cerques."
 
 #: qml/pages/EntriesPage.qml:298
 msgid "Select View"
-msgstr ""
+msgstr "Selecciona la visualització"
 
 #: qml/pages/EntriesPage.qml:317
 msgid "Select"
-msgstr ""
+msgstr "Selecciona"
 
 #: qml/pages/EntriesPage.qml:327
 msgid "Cancel"
-msgstr ""
+msgstr "Cancel·la"
 
 #: qml/pages/SettingsPage.qml:34
 msgid "Change settings based on your preferences."
-msgstr ""
+msgstr "Canvieu els paràmetres basat en les vostres preferències."
 
 #: qml/pages/SettingsPage.qml:39
 msgid "Enable database locking"
-msgstr ""
+msgstr "Habilita el bloqueig de la base de dades"
 
 #: qml/pages/SettingsPage.qml:42
 msgid ""
 "Securely lock and unlock database with a short passcode. Requires restart to "
 "take effect."
 msgstr ""
+"Bloqueja i desbloqueja la base de dades de manera segura amb un codi d'accés "
+"curt."
 
 #: qml/pages/SettingsPage.qml:55
 msgid "Enable Accents"
-msgstr ""
+msgstr "Habilita els accents"
 
 #: qml/pages/SettingsPage.qml:57
 msgid ""
 "Set header color and name according to database settings. Compatible with "
 "KeePassXC."
 msgstr ""
+"Estableix el color i el nom de la capçalera d'acord amb els paràmetres de la "
+"base de dades. Compatible amb KeePassXC."
 
 #: qml/pages/SettingsPage.qml:72
 msgid "Show the \"Recycle bin\" group"
-msgstr ""
+msgstr "Mostra el grup \"Paperera\""
 
 #: qml/pages/SettingsPage.qml:74
 msgid "This group contains all the deleted entries"
-msgstr ""
+msgstr "Aquest grup conté totes les entrades suprimides"
 
 #: qml/pages/SettingsPage.qml:87
 msgid "Fuzzy Search"
-msgstr ""
+msgstr "Cerca difusa"
 
 #: qml/pages/SettingsPage.qml:90
 msgid ""
 "Use fuzzy search to find entries. If disabled, search only matches exact "
 "case insensitive text."
 msgstr ""
+"Usa la cerca difusa per trobar entrades. Si està desactivat, la cerca sols "
+"troba coincidències exactes de text sense distinció de majúscules i "
+"minúscules."
 
 #: qml/pages/SingleEntry.qml:63
 msgid "Password"
-msgstr ""
+msgstr "Contrasenya"
 
 #: qml/pages/SingleEntry.qml:68
 msgid "%1 bits"
-msgstr ""
+msgstr "%1 bits"
 
 #: qml/pages/SingleEntry.qml:70
 msgid "Password (Entropy: %1)"
-msgstr ""
+msgstr "Contrasenya (Entropia: %1)"
 
 #: qml/pages/SingleEntry.qml:75 qml/Main.qml:106
 msgid "%1 copied to clipboard (30 secs)"
-msgstr ""
+msgstr "S'ha copiat %1 al porta-retalls (30 segons)"
 
 #: qml/pages/SingleEntry.qml:345
 msgid "Notes"
-msgstr ""
+msgstr "Notes"
 
 #: qml/pages/SingleEntry.qml:353
 msgid "Tap to hide"
-msgstr ""
+msgstr "Feu un toc per amagar"
 
 #: qml/pages/SingleEntry.qml:353 qml/pages/SingleEntry.qml:445
 #: qml/pages/SingleEntry.qml:489 qml/pages/SingleEntry.qml:542
 msgid "Tap to reveal"
-msgstr ""
+msgstr "Feu toca per mostrar"
 
 #: qml/pages/SingleEntry.qml:374
 msgid "Tap to copy"

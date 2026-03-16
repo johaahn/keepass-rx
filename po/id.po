@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-11 14:27+0000\n"
-"PO-Revision-Date: 2026-02-16 05:09+0000\n"
+"PO-Revision-Date: 2026-03-16 08:09+0000\n"
 "Last-Translator: Arif Budiman <arifpedia@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/ubports/"
 "keepassrx/id/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16-dev\n"
+"X-Generator: Weblate 5.17-dev\n"
 
 msgid "Copy Username"
 msgstr "Salin Nama Pengguna"
@@ -107,7 +107,7 @@ msgid "Website"
 msgstr "Situs Web"
 
 msgid "Cancel Search"
-msgstr "Batal Cari"
+msgstr "Batalkan Pencarian"
 
 msgid "Search all entries"
 msgstr "Cari semua entri"
@@ -161,16 +161,16 @@ msgid "Entries with 2FA codes."
 msgstr "Entri dengan kode 2FA."
 
 msgid "Tags"
-msgstr "Tag"
+msgstr "Tagar"
 
 msgid "Entries grouped by tag."
 msgstr "Entri dikelompokkan berdasarkan tag."
 
 msgid "Saved Searches"
-msgstr ""
+msgstr "Pencarian Tersimpan"
 
 msgid "Entries matching search queries."
-msgstr ""
+msgstr "Entri yang cocok dengan kueri pencarian."
 
 msgid "Select View"
 msgstr "Pilih Tampilan"
@@ -224,10 +224,10 @@ msgid "Password"
 msgstr "Kata Sandi"
 
 msgid "%1 bits"
-msgstr ""
+msgstr "%1 bit"
 
 msgid "Password (Entropy: %1)"
-msgstr ""
+msgstr "Kata Sandi (Entropi: %1)"
 
 msgid "%1 copied to clipboard (30 secs)"
 msgstr "%1 disalin ke papan klip (30 detik)"
@@ -236,16 +236,16 @@ msgid "Notes"
 msgstr "Catatan"
 
 msgid "Tap to hide"
-msgstr ""
+msgstr "Ketuk untuk menyembunyikan"
 
 msgid "Tap to reveal"
-msgstr ""
+msgstr "Ketuk untuk menampilkan"
 
 msgid "Tap to copy"
 msgstr "Ketuk untuk menyalin"
 
 msgid "Tap reveal to view notes"
-msgstr ""
+msgstr "Ketuk tampilkan untuk melihat catatan"
 
 msgid "Main"
 msgstr "Utama"
@@ -254,16 +254,16 @@ msgid "Username"
 msgstr "Nama Pengguna"
 
 msgid "Loading…"
-msgstr ""
+msgstr "Memuat…"
 
 msgid "URL"
 msgstr "URL"
 
 msgid "TOTP (Valid for %1)"
-msgstr ""
+msgstr "TOTP (Berlaku selama %1)"
 
 msgid "TOTP"
-msgstr ""
+msgstr "TOTP"
 
 msgid "Other Fields"
 msgstr "Bidang Lainnya"
@@ -296,7 +296,7 @@ msgid "Master Password"
 msgstr "Kata Sandi Master"
 
 msgid "Open"
-msgstr "Buka"
+msgstr "Terbuka"
 
 msgid "Hide Password"
 msgstr "Sembunyikan Kata Sandi"
@@ -364,23 +364,23 @@ msgstr "Tag"
 
 msgctxt "Saved database searches"
 msgid "Saved Searches"
-msgstr ""
+msgstr "Pencarian Tersimpan"
 
 msgctxt "Password strength"
 msgid "Poor"
-msgstr ""
+msgstr "Buruk"
 
 msgctxt "Password strength"
 msgid "Weak"
-msgstr ""
+msgstr "Lemah"
 
 msgctxt "Password strength"
 msgid "Good"
-msgstr ""
+msgstr "Baik"
 
 msgctxt "Password strength"
 msgid "Excellent"
-msgstr ""
+msgstr "Sangat Baik"
 
 #~ msgid "Notes copied to clipboard (30 secs)"
 #~ msgstr "Catatan disalin ke papan klip (30 detik)"

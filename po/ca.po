@@ -8,145 +8,157 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-11 14:27+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2026-03-16 12:09+0000\n"
+"Last-Translator: Walter Garcia-Fontes <walter.garcia@upf.edu>\n"
+"Language-Team: Catalan <https://hosted.weblate.org/projects/ubports/"
+"keepassrx/ca/>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.17-dev\n"
 
 #: qml/components/EntryItem.qml:103
 msgid "Copy Username"
-msgstr ""
+msgstr "Copia el nom d'usuari"
 
 #: qml/components/EntryItem.qml:111
 msgid "Copy Password"
-msgstr ""
+msgstr "Copia la contrasenya"
 
 #: qml/components/EntryItem.qml:120
 msgid "Open URL"
-msgstr ""
+msgstr "Obre l'URL"
 
 #: qml/components/EntryItem.qml:127
 msgid "Copy 2FA Code"
-msgstr ""
+msgstr "Copia el codi 2FA"
 
 #: qml/components/EntryItem.qml:139
 msgid "View Entry"
-msgstr ""
+msgstr "Visualitza l'entrada"
 
 #: qml/components/EntryItem.qml:256
 msgid "Tap to copy 2FA code"
-msgstr ""
+msgstr "Feu un toc per copiar el codi 2FA"
 
 #: qml/pages/AboutPage.qml:12 qml/pages/DBList.qml:76
 #: qml/pages/EntriesPage.qml:212 qml/pages/OpenDBPage.qml:118
 #: qml/pages/UnlockPage.qml:53
 msgid "About"
-msgstr ""
+msgstr "Quant a"
 
 #: qml/pages/AboutPage.qml:79
 msgid ""
 "KeePassRX is password manager for KeePass databases, designed for Ubuntu "
 "Touch. It is licensed under the GNU AGPL v3 license."
 msgstr ""
+"El KeePassRX és un gestor de bases de dades KeePass, dissenyat per a "
+"l'Ubuntu Touch. Està llicenciat sota una llicència GNU AGPL v3."
 
 #: qml/pages/AboutPage.qml:90
 msgid ""
 "The built-in KeePass icon images are licensed under a variety of licenses as "
 "detailed in assets/COPYING."
 msgstr ""
+"Les imatges incorporades d'icones KeePass estan llicenciades sota una "
+"varietat de llicències tal com es detalla a assets/COPYING."
 
 #: qml/pages/AboutPage.qml:98
 msgid "Manual"
-msgstr ""
+msgstr "Manual"
 
 #: qml/pages/AboutPage.qml:110
 msgid ""
 "• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
 "projects/keepassrx/</a>"
 msgstr ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
 
 #: qml/pages/AboutPage.qml:123
 msgid ""
 "• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
 "projects/keepassrx/</a>"
 msgstr ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
 
 #: qml/pages/AboutPage.qml:132
 msgid "Source Code"
-msgstr ""
+msgstr "Codi font"
 
 #: qml/pages/AboutPage.qml:141
 msgid ""
 "<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
 "projectmoon/keepass-rx</a>"
 msgstr ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
 
 #: qml/pages/DBList.qml:62
 msgid "Add Database"
-msgstr ""
+msgstr "Afegeix una base de dades"
 
 #: qml/pages/DBList.qml:69 qml/pages/EntriesPage.qml:203
 #: qml/pages/SettingsPage.qml:10 qml/pages/OpenDBPage.qml:111
 #: qml/pages/UnlockPage.qml:46
 msgid "Settings"
-msgstr ""
+msgstr "Paràmetres"
 
 #: qml/pages/DBList.qml:96
 msgid "Loading last database."
-msgstr ""
+msgstr "S'està carregant l'última base de dades."
 
 #: qml/pages/DBList.qml:106
 msgid "Select Database"
-msgstr ""
+msgstr "Selecciona la base de dades"
 
 #: qml/pages/DBList.qml:178
 msgid "Tap + to import a database."
-msgstr ""
+msgstr "Feu un toc sobre + per importar la base de dades."
 
 #: qml/pages/DBList.qml:283
 msgid "It will only be removed from the app, not your device."
-msgstr ""
+msgstr "Sols se suprimirà de l'aplicació, no del dispositiu."
 
 #: qml/pages/LicensesPage.qml:13
 msgid "Open Source Licenses"
-msgstr ""
+msgstr "Llicències de codi obert"
 
 #: qml/pages/LicensesPage.qml:66
 msgid "Website"
-msgstr ""
+msgstr "Lloc web"
 
 #: qml/pages/EntriesPage.qml:96
 msgid "Cancel Search"
-msgstr ""
+msgstr "Cancel·la la cerca"
 
 #: qml/pages/EntriesPage.qml:117
 msgid "Search all entries"
-msgstr ""
+msgstr "Cerca totes les entrades"
 
 #: qml/pages/EntriesPage.qml:117
 msgid "Search all entries under this group"
-msgstr ""
+msgstr "Cerca totes les entrades sota aquest grup"
 
 #: qml/pages/EntriesPage.qml:118
 msgid "Search entries in this group"
-msgstr ""
+msgstr "Cerca entrades a aquest grup"
 
 #: qml/pages/EntriesPage.qml:143
 msgid "Lock"
-msgstr ""
+msgstr "Bloqueja"
 
 #: qml/pages/EntriesPage.qml:155
 msgid "Close"
-msgstr ""
+msgstr "Tanca"
 
 #: qml/pages/EntriesPage.qml:167 qml/pages/SingleEntry.qml:287
 #: qml/pages/OpenDBPage.qml:98
 msgid "Back"
-msgstr ""
+msgstr "Endarrere"
 
 #: qml/pages/EntriesPage.qml:180
 msgid "View Mode"

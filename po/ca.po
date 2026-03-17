@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-11 14:27+0000\n"
-"PO-Revision-Date: 2026-03-16 17:09+0000\n"
+"PO-Revision-Date: 2026-03-17 08:12+0000\n"
 "Last-Translator: Walter Garcia-Fontes <walter.garcia@upf.edu>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/ubports/"
 "keepassrx/ca/>\n"
@@ -312,179 +312,183 @@ msgstr "Feu toca per mostrar"
 
 #: qml/pages/SingleEntry.qml:374
 msgid "Tap to copy"
-msgstr ""
+msgstr "Feu un toc per copiar"
 
 #: qml/pages/SingleEntry.qml:401
 msgid "Tap reveal to view notes"
-msgstr ""
+msgstr "Feu un toc per mostrar notes"
 
 #: qml/pages/SingleEntry.qml:430
 msgid "Main"
-msgstr ""
+msgstr "Principal"
 
 #: qml/pages/SingleEntry.qml:440
 msgid "Username"
-msgstr ""
+msgstr "Nom d'usuari"
 
 #: qml/pages/SingleEntry.qml:444 qml/pages/SingleEntry.qml:467
 #: qml/pages/SingleEntry.qml:488 qml/pages/SingleEntry.qml:541
 msgid "Loading…"
-msgstr ""
+msgstr "S'està carregant…"
 
 #: qml/pages/SingleEntry.qml:485
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: qml/pages/SingleEntry.qml:505
 msgid "TOTP (Valid for %1)"
-msgstr ""
+msgstr "TOTP (Vàlid per a %1)"
 
 #: qml/pages/SingleEntry.qml:506 qml/pages/SingleEntry.qml:510
 msgid "TOTP"
-msgstr ""
+msgstr "TOTP"
 
 #: qml/pages/SingleEntry.qml:532
 msgid "Other Fields"
-msgstr ""
+msgstr "Altres camps"
 
 #: qml/pages/SingleEntry.qml:573 qml/Main.qml:241
 msgid "KeePassRX: Clipboard cleared."
-msgstr ""
+msgstr "KeePassRX: S'ha netejat el porta-retalls."
 
 #: qml/pages/OpenDBPage.qml:32
 msgid "Key Loaded"
-msgstr ""
+msgstr "S'ha carregat la clau"
 
 #: qml/pages/OpenDBPage.qml:33
 msgid "Remove Key"
-msgstr ""
+msgstr "Suprimeix la clau"
 
 #: qml/pages/OpenDBPage.qml:35
 msgid "Use Key"
-msgstr ""
+msgstr "Usa la clau"
 
 #: qml/pages/OpenDBPage.qml:42
 msgid "Automatically detected a key file for this database."
-msgstr ""
+msgstr "Detecta automàticament un fitxer de clau per a aquesta base de dades."
 
 #: qml/pages/OpenDBPage.qml:44
 msgid "A key file will be used to open this database."
-msgstr ""
+msgstr "S'usarà un fitxer de clau per obrir aquesta base de dades."
 
 #: qml/pages/OpenDBPage.qml:56
 msgid "Select Key File"
-msgstr ""
+msgstr "Selecciona un fitxer de clau"
 
 #: qml/pages/OpenDBPage.qml:237
 msgid "Enter the database master password"
-msgstr ""
+msgstr "Entreu la contrasenya mestra de la base de dades"
 
 #: qml/pages/OpenDBPage.qml:250
 msgid "Master Password"
-msgstr ""
+msgstr "Contrasenya mestra"
 
 #: qml/pages/OpenDBPage.qml:276
 msgid "Open"
-msgstr ""
+msgstr "Obre"
 
 #: qml/pages/OpenDBPage.qml:297
 msgid "Hide Password"
-msgstr ""
+msgstr "Amaga la contrasenya"
 
 #: qml/pages/OpenDBPage.qml:297
 msgid "Show Password"
-msgstr ""
+msgstr "Mostra la contrasenya"
 
 #: qml/pages/OpenDBPage.qml:354
 msgid "Opening"
-msgstr ""
+msgstr "S'està obrint"
 
 #: qml/pages/UnlockPage.qml:151
 msgid "Manual path set."
-msgstr ""
+msgstr "S'ha establert el camí manual."
 
 #: qml/pages/UnlockPage.qml:168
 msgid ""
 "The passcode is the first five characters of the database password (or the "
 "whole password if less than five characters)."
 msgstr ""
+"La clau d'accés és els primers cinc caràcters de la contrasenya de la base "
+"de dades (o tota la contrasenya si és de menys de cinc caràcters)."
 
 #: qml/pages/UnlockPage.qml:184
 msgid "Passcode"
-msgstr ""
+msgstr "Clau d'accés"
 
 #: qml/pages/UnlockPage.qml:215
 msgid "Unlock"
-msgstr ""
+msgstr "Debloqueja"
 
 #: qml/pages/UnlockPage.qml:234
 msgid "Securely Unlocking"
-msgstr ""
+msgstr "S'està desbloquejant amb seguretat"
 
 #: qml/pages/UnlockPage.qml:235
 msgid "Securely Locking"
-msgstr ""
+msgstr "S'està bloquejant amb seguretat"
 
 #: qml/pages/UnlockPage.qml:246
 msgid "Database Not Opening?"
-msgstr ""
+msgstr "No s'obre la base de dades?"
 
 #: src/gui/instructions.rs:9
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
 msgstr ""
+"<b>S'estan mostrant tots el codis 2FA a la base de dades.</b><br/>Vegeu els "
+"detalls d'una entrada usant la seva barra d'acció."
 
 #: src/gui/mod.rs:69
 msgctxt "A database imported via ContentHub"
 msgid "Imported"
-msgstr ""
+msgstr "Importat"
 
 #: src/gui/mod.rs:70
 msgctxt "A database managed by external file sync"
 msgid "Synced"
-msgstr ""
+msgstr "Sincronitzat"
 
 #: src/rx/virtual_hierarchy.rs:94
 msgid "All Templates"
-msgstr ""
+msgstr "Totes les plantilles"
 
 #: src/rx/virtual_hierarchy.rs:147
 msgctxt "Default view of the password database (all entries)"
 msgid "Default View"
-msgstr ""
+msgstr "Visualització per defecte"
 
 #: src/rx/virtual_hierarchy.rs:192 src/rx/virtual_hierarchy.rs:205
 msgctxt "Two-factor/OTP codes (keep phrase short as possible)"
 msgid "2FA Codes"
-msgstr ""
+msgstr "Codis 2FA"
 
 #: src/rx/virtual_hierarchy.rs:252
 msgctxt "List of entries with tags"
 msgid "Tags"
-msgstr ""
+msgstr "Etiquetes"
 
 #: src/rx/virtual_hierarchy.rs:301 src/rx/virtual_hierarchy.rs:309
 msgctxt "Saved database searches"
 msgid "Saved Searches"
-msgstr ""
+msgstr "Cerques desades"
 
 #: src/rx/rx_gui_traits.rs:115
 msgctxt "Password strength"
 msgid "Poor"
-msgstr ""
+msgstr "Pobre"
 
 #: src/rx/rx_gui_traits.rs:117
 msgctxt "Password strength"
 msgid "Weak"
-msgstr ""
+msgstr "Feble"
 
 #: src/rx/rx_gui_traits.rs:118
 msgctxt "Password strength"
 msgid "Good"
-msgstr ""
+msgstr "Bo"
 
 #: src/rx/rx_gui_traits.rs:120
 msgctxt "Password strength"
 msgid "Excellent"
-msgstr ""
+msgstr "Excel·lent"

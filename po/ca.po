@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-11 14:27+0000\n"
-"PO-Revision-Date: 2026-03-17 08:12+0000\n"
+"PO-Revision-Date: 2026-03-17 11:09+0000\n"
 "Last-Translator: Walter Garcia-Fontes <walter.garcia@upf.edu>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/ubports/"
 "keepassrx/ca/>\n"
@@ -308,7 +308,7 @@ msgstr "Feu un toc per amagar"
 #: qml/pages/SingleEntry.qml:353 qml/pages/SingleEntry.qml:445
 #: qml/pages/SingleEntry.qml:489 qml/pages/SingleEntry.qml:542
 msgid "Tap to reveal"
-msgstr "Feu toca per mostrar"
+msgstr "Feu un toc per mostrar"
 
 #: qml/pages/SingleEntry.qml:374
 msgid "Tap to copy"

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-11 14:27+0000\n"
-"PO-Revision-Date: 2025-12-04 16:00+0000\n"
+"PO-Revision-Date: 2026-03-20 15:09+0000\n"
 "Last-Translator: Serhii Horichenko <serhii@horichenko.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/ubports/"
 "keepassrx/uk/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.15-dev\n"
+"X-Generator: Weblate 5.17-dev\n"
 
 msgid "Copy Username"
 msgstr "Копіювати Логін"
@@ -167,10 +167,10 @@ msgid "Entries grouped by tag."
 msgstr "Записи згруповані за тегами."
 
 msgid "Saved Searches"
-msgstr ""
+msgstr "Збережені пошуки"
 
 msgid "Entries matching search queries."
-msgstr ""
+msgstr "Записи, які відповідають пошуковим запитам."
 
 msgid "Select View"
 msgstr "Оберіть вигляд"
@@ -224,10 +224,10 @@ msgid "Password"
 msgstr "Пароль"
 
 msgid "%1 bits"
-msgstr ""
+msgstr "%1 біт"
 
 msgid "Password (Entropy: %1)"
-msgstr ""
+msgstr "Пароль (Ентропія: %1)"
 
 msgid "%1 copied to clipboard (30 secs)"
 msgstr "%1 скопійовано до буфера обміну (30 сек)"
@@ -236,16 +236,16 @@ msgid "Notes"
 msgstr "Нотатки"
 
 msgid "Tap to hide"
-msgstr ""
+msgstr "Торкніться, щоб сховати"
 
 msgid "Tap to reveal"
-msgstr ""
+msgstr "Торкніться, щоб показати"
 
 msgid "Tap to copy"
-msgstr "Торкніться для копіювання"
+msgstr "Торкніться, щоб скопіювати"
 
 msgid "Tap reveal to view notes"
-msgstr ""
+msgstr "Торкніться запису, щоб переглянути нотатки"
 
 msgid "Main"
 msgstr "Головне"
@@ -254,16 +254,16 @@ msgid "Username"
 msgstr "Ім'я користувача"
 
 msgid "Loading…"
-msgstr ""
+msgstr "Завантаження…"
 
 msgid "URL"
 msgstr "URL"
 
 msgid "TOTP (Valid for %1)"
-msgstr ""
+msgstr "TOTP (Дійсний для %1)"
 
 msgid "TOTP"
-msgstr ""
+msgstr "TOTP"
 
 msgid "Other Fields"
 msgstr "Інші поля"
@@ -364,23 +364,23 @@ msgstr "Теги"
 
 msgctxt "Saved database searches"
 msgid "Saved Searches"
-msgstr ""
+msgstr "Збережені пошуки"
 
 msgctxt "Password strength"
 msgid "Poor"
-msgstr ""
+msgstr "Поганий"
 
 msgctxt "Password strength"
 msgid "Weak"
-msgstr ""
+msgstr "Слабкий"
 
 msgctxt "Password strength"
 msgid "Good"
-msgstr ""
+msgstr "Гарний"
 
 msgctxt "Password strength"
 msgid "Excellent"
-msgstr ""
+msgstr "Чудовий"
 
 #~ msgid "Notes copied to clipboard (30 secs)"
 #~ msgstr "Нотатки скопійовані до буфера обміну (30 сек)"

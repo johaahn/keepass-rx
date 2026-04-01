@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-11 14:27+0000\n"
-"PO-Revision-Date: 2026-02-28 00:09+0000\n"
+"PO-Revision-Date: 2026-04-01 23:09+0000\n"
 "Last-Translator: Daniel Frost <one@frostinfo.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/ubports/keepassrx/"
 "de/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.1-dev\n"
+"X-Generator: Weblate 5.17-dev\n"
 
 msgid "Copy Username"
 msgstr "Nutzernamen kopieren"
@@ -166,7 +166,7 @@ msgid "Entries grouped by tag."
 msgstr "Einträge gruppiert nach Tags."
 
 msgid "Saved Searches"
-msgstr ""
+msgstr "Gespeicherte Suchen"
 
 msgid "Entries matching search queries."
 msgstr ""
@@ -224,10 +224,10 @@ msgid "Password"
 msgstr "Passwort"
 
 msgid "%1 bits"
-msgstr ""
+msgstr "%1 Bit"
 
 msgid "Password (Entropy: %1)"
-msgstr ""
+msgstr "Passwort (Entropie: %1)"
 
 msgid "%1 copied to clipboard (30 secs)"
 msgstr "%1 in die Zwischenablage kopiert (für 30 Sek.)"
@@ -236,10 +236,10 @@ msgid "Notes"
 msgstr "Notizen"
 
 msgid "Tap to hide"
-msgstr ""
+msgstr "Antippen zum Verstecken"
 
 msgid "Tap to reveal"
-msgstr ""
+msgstr "Antippen zum Anzeigen"
 
 msgid "Tap to copy"
 msgstr "Antippen zum Kopieren"
@@ -254,16 +254,16 @@ msgid "Username"
 msgstr "Nutzername"
 
 msgid "Loading…"
-msgstr ""
+msgstr "Lade…"
 
 msgid "URL"
 msgstr "URL"
 
 msgid "TOTP (Valid for %1)"
-msgstr ""
+msgstr "TOTP (Gültig für %1)"
 
 msgid "TOTP"
-msgstr ""
+msgstr "TOTP"
 
 msgid "Other Fields"
 msgstr "Andere Felder"
@@ -364,23 +364,23 @@ msgstr "Schlagwörter"
 
 msgctxt "Saved database searches"
 msgid "Saved Searches"
-msgstr ""
+msgstr "Gespeicherte Suchen"
 
 msgctxt "Password strength"
 msgid "Poor"
-msgstr ""
+msgstr "Schlecht"
 
 msgctxt "Password strength"
 msgid "Weak"
-msgstr ""
+msgstr "Schwach"
 
 msgctxt "Password strength"
 msgid "Good"
-msgstr ""
+msgstr "Gut"
 
 msgctxt "Password strength"
 msgid "Excellent"
-msgstr ""
+msgstr "Exzellent"
 
 #~ msgid "Notes copied to clipboard (30 secs)"
 #~ msgstr "Notizen in die Zwischenablage kopiert (für 30 Sek.)"

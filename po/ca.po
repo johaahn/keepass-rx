@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-11 14:27+0000\n"
-"PO-Revision-Date: 2026-03-17 16:09+0000\n"
+"PO-Revision-Date: 2026-04-05 19:09+0000\n"
 "Last-Translator: Walter Garcia-Fontes <walter.garcia@upf.edu>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/ubports/"
 "keepassrx/ca/>\n"
@@ -158,7 +158,7 @@ msgstr "Tanca"
 #: qml/pages/EntriesPage.qml:167 qml/pages/SingleEntry.qml:287
 #: qml/pages/OpenDBPage.qml:98
 msgid "Back"
-msgstr "Endarrere"
+msgstr "Enrere"
 
 #: qml/pages/EntriesPage.qml:180
 msgid "View Mode"

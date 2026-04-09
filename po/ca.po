@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-11 14:27+0000\n"
-"PO-Revision-Date: 2026-04-05 19:09+0000\n"
+"PO-Revision-Date: 2026-04-09 18:09+0000\n"
 "Last-Translator: Walter Garcia-Fontes <walter.garcia@upf.edu>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/ubports/"
 "keepassrx/ca/>\n"
@@ -105,7 +105,7 @@ msgstr "Afegeix una base de dades"
 #: qml/pages/SettingsPage.qml:10 qml/pages/OpenDBPage.qml:111
 #: qml/pages/UnlockPage.qml:46
 msgid "Settings"
-msgstr "Paràmetres"
+msgstr "Configuració"
 
 #: qml/pages/DBList.qml:96
 msgid "Loading last database."
@@ -158,7 +158,7 @@ msgstr "Tanca"
 #: qml/pages/EntriesPage.qml:167 qml/pages/SingleEntry.qml:287
 #: qml/pages/OpenDBPage.qml:98
 msgid "Back"
-msgstr "Enrere"
+msgstr "Negre"
 
 #: qml/pages/EntriesPage.qml:180
 msgid "View Mode"

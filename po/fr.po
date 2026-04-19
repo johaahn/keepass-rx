@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-11 14:27+0000\n"
-"PO-Revision-Date: 2026-04-14 23:10+0000\n"
+"PO-Revision-Date: 2026-04-19 17:10+0000\n"
 "Last-Translator: libermax <libremax@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
 "fr/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 5.17.1-dev\n"
 
 msgid "Copy Username"
 msgstr "Copier le nom d'utilisateur"
@@ -166,10 +166,10 @@ msgid "Entries grouped by tag."
 msgstr "Entrées regroupées par balise."
 
 msgid "Saved Searches"
-msgstr ""
+msgstr "Recherches sauvées"
 
 msgid "Entries matching search queries."
-msgstr ""
+msgstr "Résultats correspondant aux requêtes de recherche."
 
 msgid "Select View"
 msgstr "Sélectionner Affichage"
@@ -225,10 +225,10 @@ msgid "Password"
 msgstr "Mot de passe"
 
 msgid "%1 bits"
-msgstr ""
+msgstr "%1 bits"
 
 msgid "Password (Entropy: %1)"
-msgstr ""
+msgstr "Mot de passe (Entropie : %1)"
 
 msgid "%1 copied to clipboard (30 secs)"
 msgstr "%1 copié dans le presse-papiers (30 secondes)"
@@ -237,16 +237,16 @@ msgid "Notes"
 msgstr "Notes"
 
 msgid "Tap to hide"
-msgstr ""
+msgstr "Appuyez pour masquer"
 
 msgid "Tap to reveal"
-msgstr ""
+msgstr "Appuyez pour afficher"
 
 msgid "Tap to copy"
 msgstr "Appuyez pour copier"
 
 msgid "Tap reveal to view notes"
-msgstr ""
+msgstr "Appuyez sur afficher pour voir les notes"
 
 msgid "Main"
 msgstr "Principal"
@@ -255,16 +255,16 @@ msgid "Username"
 msgstr "Nom d'utilisateur"
 
 msgid "Loading…"
-msgstr ""
+msgstr "Chargement…"
 
 msgid "URL"
 msgstr "URL"
 
 msgid "TOTP (Valid for %1)"
-msgstr ""
+msgstr "TOTP (Valide pour %1)"
 
 msgid "TOTP"
-msgstr ""
+msgstr "TOTP"
 
 msgid "Other Fields"
 msgstr "Autres champs"

@@ -118,16 +118,11 @@ fn extract_remaining_fields(
     entry
         .fields
         .drain()
-        .flat_map(|(key, value)| {
-            match value {
-                Value::Protected(val) => RxValue::encrypted(master_key, val)
-                    .ok()
-                    .map(|rx_val| (key, rx_val)),
-                Value::Unprotected(val) => {
-                    RxValue::try_from(val).ok().map(|rx_val| (key, rx_val))
-                }
-                _ => None, // discard binary for now. attachments later?
-            }
+        .flat_map(|(key, value)| match value {
+            Value::Protected(val) => RxValue::encrypted(master_key, val)
+                .ok()
+                .map(|rx_val| (key, rx_val)),
+            Value::Unprotected(val) => RxValue::try_from(val).ok().map(|rx_val| (key, rx_val)),
         })
         .collect()
 }
@@ -137,13 +132,13 @@ fn extract_value(
     entry: &mut Entry,
     field_name: &str,
 ) -> Option<RxValue> {
-    entry.fields.remove(field_name).and_then(|value| {
-        match value {
+    entry
+        .fields
+        .remove(field_name)
+        .and_then(|value| match value {
             Value::Protected(val) => RxValue::encrypted(master_key, val).ok(),
             Value::Unprotected(val) => RxValue::try_from(val).ok(),
-            _ => None, // discard binary for now. attachments later?
-        }
-    })
+        })
 }
 
 #[allow(dead_code)]

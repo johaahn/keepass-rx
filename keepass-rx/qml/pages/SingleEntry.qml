@@ -381,7 +381,7 @@ Page {
                     anchors.fill: parent
                     onClicked: {
                         pageStack.addPageToNextColumn(
-                            adaptiveLayout.primaryPage,
+                            singleEntryPage,
                             Qt.resolvedUrl("NotePage.qml"),
                             {
                                 note: entryNotes

@@ -94,6 +94,7 @@ pub struct RxListItem {
     pub(super) url: qt_property!(QString; NOTIFY urlChanged),
     pub(super) iconPath: qt_property!(QString; NOTIFY iconPathChanged),
     pub(super) iconBuiltin: qt_property!(bool; NOTIFY iconBuiltinChanged),
+    pub(super) attachmentCount: qt_property!(i32; NOTIFY attachmentCountChanged),
 
     // A "feature" that changes how the item is rendered. For example,
     // displaying a 2FA code.
@@ -115,6 +116,7 @@ pub struct RxListItem {
     urlChanged: qt_signal!(),
     iconPathChanged: qt_signal!(),
     iconBuiltinChanged: qt_signal!(),
+    attachmentCountChanged: qt_signal!(),
     featureChanged: qt_signal!(),
     hasUsernameChanged: qt_signal!(),
     hasPasswordChanged: qt_signal!(),
@@ -188,7 +190,9 @@ impl InitFrom<RxContainedRef<'_>> for RxListItem {
             RxContainedRef::Template(template) => self.init_from(template.as_ref().as_ref()),
             RxContainedRef::Tag(tag) => self.init_from(tag.as_ref()),
             RxContainedRef::SavedSearch(saved_search) => self.init_from(saved_search.as_ref()),
-            RxContainedRef::VirtualRoot(root_name) => self.init_from_virtual_root(root_name.as_ref()),
+            RxContainedRef::VirtualRoot(root_name) => {
+                self.init_from_virtual_root(root_name.as_ref())
+            }
         }
     }
 }

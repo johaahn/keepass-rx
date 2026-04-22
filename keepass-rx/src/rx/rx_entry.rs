@@ -7,13 +7,15 @@ use base64::{Engine, prelude::BASE64_STANDARD};
 use humanize_duration::Truncate;
 use humanize_duration::prelude::DurationExt;
 use infer;
-use keepass::db::{CustomData, Entry, Icon, TOTP as KeePassTOTP, Value};
+use keepass::db::{CustomDataItem, CustomDataValue, Entry, TOTP as KeePassTOTP, Value};
 use libsodium_rs::utils::{SecureVec, vec_utils};
 use log::warn;
 use querystring::querify;
+use secrecy::{ExposeSecretMut, SecretBox};
 use secstr::SecStr;
 use std::borrow::Cow;
 use std::cell::OnceCell;
+use std::collections::HashMap;
 use std::rc::Rc;
 use std::str::FromStr;
 use std::sync::atomic::Ordering;
@@ -146,12 +148,7 @@ fn extract_value(
 
 #[allow(dead_code)]
 impl RxEntry {
-    pub fn new(
-        master_key: &Rc<MasterKey>,
-        mut entry: Entry,
-        parent_uuid: Uuid,
-        icon: Option<Icon>,
-    ) -> Self {
+    pub fn new(master_key: &Rc<MasterKey>, mut entry: Entry, parent_uuid: Uuid) -> Self {
         let master_key = master_key.clone();
 
         let custom_data = mem::take(&mut entry.custom_data);
@@ -173,15 +170,18 @@ impl RxEntry {
 
         // Icon: Can either be the custom one (provided), or the
         // built-in one, or nothing.
-        let rx_icon = icon
-            .map(|i| RxIcon::Image(i.data))
+        let rx_icon = entry
+            .custom_icon
+            .as_ref()
+            .map(|(_, data)| RxIcon::Image(data.to_vec()))
             .or_else(|| entry.icon_id.map(|id| RxIcon::Builtin(id)))
             .unwrap_or(RxIcon::None);
 
         // Expiration: self-explanatory.
         let is_expired = entry
-            .get_expiry_time()
-            .map(|expiry| entry.times.expires && *expiry <= keepass::db::Times::now())
+            .times
+            .expiry
+            .map(|expiry| expiry <= keepass::db::Times::now())
             .unwrap_or(false);
 
         // Has to come after the above, otherwise those fields end up
@@ -481,11 +481,13 @@ impl Zeroize for RxValue {
 static ID_COUNTER: AtomicU64 = AtomicU64::new(1);
 
 impl RxValue {
-    pub fn encrypted(master_key: &MasterKey, mut value: SecStr) -> Result<Self> {
-        let value_unsecure = value.unsecure();
+    pub fn encrypted(master_key: &MasterKey, mut value: SecretBox<String>) -> Result<Self> {
+        let value_unsecure = value.expose_secret_mut();
         let mut secure_vec = vec_utils::secure_vec::<u8>(value_unsecure.len())?;
-        secure_vec.copy_from_slice(&value_unsecure);
-        value.zero_out();
+        secure_vec.copy_from_slice(value_unsecure.as_bytes());
+
+        value_unsecure.zeroize();
+        value.zeroize();
 
         let encrypted_value = EncryptedValue::new(
             master_key,
@@ -650,17 +652,16 @@ impl RxCustomFields {
             .map(|(key, value)| (key, RxValueKeyRef::new(value, &self.master_key)))
     }
 
-    fn from_custom_data(master_key: &Rc<MasterKey>, value: CustomData) -> Self {
+    fn from_custom_data(
+        master_key: &Rc<MasterKey>,
+        value: HashMap<String, CustomDataItem>,
+    ) -> Self {
         let custom_fields: Vec<_> = value
-            .items
             .into_iter()
             .flat_map(|(key, item)| {
                 if !should_hide_field(&key.as_ref()) {
                     item.value.and_then(|value| match value {
-                        Value::Protected(val) => RxValue::encrypted(master_key, val)
-                            .ok()
-                            .map(|secret| (key, secret)),
-                        Value::Unprotected(val) => {
+                        CustomDataValue::String(val) => {
                             RxValue::try_from(val).ok().map(|secret| (key, secret))
                         }
                         _ => None,

@@ -1134,9 +1134,8 @@ dependencies = [
 
 [[package]]
 name = "keepass"
-version = "0.8.21"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d6ac2759c844c04f434799e3dffa99805cc383e44585a8195f89977a4b472c84"
+version = "0.0.0-placeholder-version"
+source = "git+https://github.com/decaychain/keepass-rs?branch=master#7528c9db93cc0294a1f36af7ff5956c5ad37c88b"
 dependencies = [
  "aes",
  "base32",
@@ -1153,9 +1152,10 @@ dependencies = [
  "hex-literal",
  "hmac",
  "js-sys",
+ "quick-xml",
  "rust-argon2",
  "salsa20",
- "secstr",
+ "secrecy",
  "serde",
  "serde_json",
  "sha2",
@@ -1164,7 +1164,6 @@ dependencies = [
  "twofish",
  "url",
  "uuid",
- "xml-rs",
  "zeroize",
 ]
 
@@ -1205,6 +1204,7 @@ dependencies = [
  "rayon",
  "regex",
  "scrypt",
+ "secrecy",
  "secstr",
  "serde",
  "serde_json",
@@ -1754,6 +1754,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9318ead08c799aad12a55a3e78b82e0b6167271ffd1f627b758891282f739187"
 
 [[package]]
+name = "quick-xml"
+version = "0.39.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "958f21e8e7ceb5a1aa7fa87fab28e7c75976e0bfe7e23ff069e0a260f894067d"
+dependencies = [
+ "memchr",
+ "serde",
+]
+
+[[package]]
 name = "quote"
 version = "1.0.45"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1935,6 +1945,15 @@ dependencies = [
  "pbkdf2",
  "salsa20",
  "sha2",
+]
+
+[[package]]
+name = "secrecy"
+version = "0.10.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e891af845473308773346dc847b2c23ee78fe442e0472ac50e22a18a93d3ae5a"
+dependencies = [
+ "zeroize",
 ]
 
 [[package]]
@@ -2779,21 +2798,6 @@ checksum = "32e45ad4206f6d2479085147f02bc2ef834ac85886624a23575ae137c8aa8156"
 dependencies = [
  "libc",
  "rustix",
-]
-
-[[package]]
-name = "xml"
-version = "1.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b8aa498d22c9bbaf482329839bc5620c46be275a19a812e9a22a2b07529a642a"
-
-[[package]]
-name = "xml-rs"
-version = "1.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c3a56132a0d6ecbe77352edc10232f788fc4ceefefff4cab784a98e0e16b6b51"
-dependencies = [
- "xml",
 ]
 
 [[package]]

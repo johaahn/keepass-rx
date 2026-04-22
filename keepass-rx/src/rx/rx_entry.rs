@@ -7,7 +7,10 @@ use base64::{Engine, prelude::BASE64_STANDARD};
 use humanize_duration::Truncate;
 use humanize_duration::prelude::DurationExt;
 use infer;
-use keepass::db::{CustomDataItem, CustomDataValue, Entry, TOTP as KeePassTOTP, Value};
+use itertools::Itertools;
+use keepass::db::{
+    Attachment, CustomDataItem, CustomDataValue, Entry, TOTP as KeePassTOTP, Value,
+};
 use libsodium_rs::utils::{SecureVec, vec_utils};
 use log::warn;
 use querystring::querify;
@@ -96,6 +99,7 @@ pub struct RxEntry {
     pub(super) tags: Vec<String>,
 
     pub custom_fields: RxCustomFields,
+    pub attachments: RxAttachments,
 
     pub(super) url: Option<RxValue>,
     pub(super) raw_otp_value: Option<RxValue>,
@@ -145,7 +149,6 @@ fn extract_value(
 impl RxEntry {
     pub fn new(master_key: &Rc<MasterKey>, mut entry: Entry, parent_uuid: Uuid) -> Self {
         let master_key = master_key.clone();
-
         let custom_data = mem::take(&mut entry.custom_data);
 
         let title = extract_value(&master_key, &mut entry, "Title");
@@ -187,6 +190,12 @@ impl RxEntry {
         let mut custom_fields = RxCustomFields::from_custom_data(&master_key, custom_data);
         custom_fields.append(&mut remaining_fields);
 
+        let attachments =
+            RxAttachments::from_entry(&master_key, &mut entry).unwrap_or_else(|err| {
+                warn!("Unable to parse attachments: {}", err);
+                RxAttachments::empty(&master_key)
+            });
+
         Self {
             uuid: entry.uuid,
             master_key: master_key,
@@ -197,6 +206,7 @@ impl RxEntry {
             password: password,
             notes: notes,
             custom_fields: custom_fields,
+            attachments: attachments,
             url: url,
             raw_otp_value: raw_otp_value,
             is_expired,
@@ -476,11 +486,47 @@ impl Zeroize for RxValue {
 
 static ID_COUNTER: AtomicU64 = AtomicU64::new(1);
 
+trait SecretBytes {
+    fn secret_bytes(&self) -> &[u8];
+}
+
+impl SecretBytes for String {
+    fn secret_bytes(&self) -> &[u8] {
+        self.as_bytes()
+    }
+}
+
+impl SecretBytes for Vec<u8> {
+    fn secret_bytes(&self) -> &[u8] {
+        self.as_slice()
+    }
+}
+
 impl RxValue {
-    pub fn encrypted(master_key: &MasterKey, mut value: SecretBox<String>) -> Result<Self> {
+    pub fn from_attachment(
+        master_key: &MasterKey,
+        mut attachment: Attachment,
+    ) -> Result<Self> {
+        match attachment.data {
+            Value::Protected(val) => Self::encrypted(master_key, val),
+            Value::Unprotected(mut val) => {
+                let mut secure_vec = vec_utils::secure_vec::<u8>(val.len())?;
+                secure_vec.copy_from_slice(&val);
+                val.zeroize();
+                Ok(Self::Sensitive(secure_vec))
+            }
+        }
+    }
+
+    pub fn encrypted<V>(master_key: &MasterKey, mut value: SecretBox<V>) -> Result<Self>
+    where
+        V: SecretBytes + Zeroize,
+    {
         let value_unsecure = value.expose_secret_mut();
-        let mut secure_vec = vec_utils::secure_vec::<u8>(value_unsecure.len())?;
-        secure_vec.copy_from_slice(value_unsecure.as_bytes());
+        let bytes = value_unsecure.secret_bytes();
+
+        let mut secure_vec = vec_utils::secure_vec::<u8>(bytes.len())?;
+        secure_vec.copy_from_slice(bytes);
 
         value_unsecure.zeroize();
         value.zeroize();
@@ -613,6 +659,50 @@ impl From<String> for RxFieldName {
             "url" => RxFieldName::Url,
             _ => RxFieldName::CustomField(value),
         }
+    }
+}
+
+#[derive(Clone)]
+pub struct RxAttachments {
+    master_key: Rc<MasterKey>,
+    attachments: HashMap<String, RxValue>,
+}
+
+impl Zeroize for RxAttachments {
+    fn zeroize(&mut self) {
+        let mut keys: Vec<_> = self.attachments.keys().cloned().collect();
+
+        for name in &keys {
+            if let Some((mut key, mut value)) = self.attachments.remove_entry(name) {
+                key.zeroize();
+                value.zeroize();
+            }
+        }
+
+        keys.zeroize();
+    }
+}
+
+impl RxAttachments {
+    fn empty(master_key: &Rc<MasterKey>) -> Self {
+        Self {
+            master_key: master_key.clone(),
+            attachments: HashMap::new(),
+        }
+    }
+
+    fn from_entry(master_key: &Rc<MasterKey>, entry: &mut Entry) -> Result<Self> {
+        let mapped: HashMap<String, RxValue> = mem::take(&mut entry.attachments)
+            .into_iter()
+            .map(|(name, att)| {
+                RxValue::from_attachment(master_key, att).map(|value| (name, value))
+            })
+            .try_collect()?;
+
+        Ok(Self {
+            master_key: master_key.clone(),
+            attachments: mapped,
+        })
     }
 }
 

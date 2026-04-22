@@ -2,7 +2,7 @@ use std::ops::{Deref, DerefMut};
 
 use keepass::{
     Database,
-    db::{Entry, Group, Value},
+    db::{CustomDataValue, Entry, Group, Value},
 };
 use take_mut::take;
 use zeroize::Zeroize;
@@ -41,9 +41,9 @@ fn zero_group(group: &mut Group) {
         zero_group(group);
     }
 
-    for (_, data_item) in group.custom_data.items.iter_mut() {
+    for (_, data_item) in group.custom_data.iter_mut() {
         if let Some(value) = &mut data_item.value {
-            zero_value(value);
+            zero_custom_data_value(value);
         }
     }
 
@@ -56,10 +56,19 @@ fn zero_entry(entry: &mut Entry) {
     }
 }
 
-fn zero_value(value: &mut Value) {
+fn zero_custom_data_value(value: &mut CustomDataValue) {
     match value {
-        Value::Bytes(bytes) => take(bytes, |mut bytes| zero_out!(bytes)),
-        Value::Protected(value) => value.zero_out(),
+        CustomDataValue::Binary(bytes) => take(bytes, |mut bytes| zero_out!(bytes)),
+        CustomDataValue::String(value) => value.zeroize(),
+    }
+}
+
+fn zero_value<T>(value: &mut Value<T>)
+where
+    T: Zeroize,
+{
+    match value {
+        Value::Protected(value) => value.zeroize(),
         Value::Unprotected(value) => take(value, |mut value| zero_out!(value)),
     }
 }

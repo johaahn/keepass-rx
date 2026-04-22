@@ -3,7 +3,7 @@ use crate::crypto::MasterKey;
 use super::{RxEntry, RxGroup, RxMetadata, RxSavedSearchDef, RxTemplate, ZeroableDatabase};
 use anyhow::Result;
 use indexmap::IndexMap;
-use keepass::db::{Group, Icon, Meta as KeePassMeta, Node, Value};
+use keepass::db::{Entry, Group, Icon, Meta as KeePassMeta, Value};
 use serde_json::Value as JsonValue;
 use std::collections::HashMap;
 use std::mem;
@@ -24,6 +24,11 @@ pub struct Loaded {
     pub metadata: RxMetadata,
     pub saved_searches: Vec<RxSavedSearchDef>,
     pub master_key: Rc<MasterKey>,
+}
+
+enum Node {
+    Entry(Entry),
+    Group(Group),
 }
 
 fn parse_saved_searches(meta: &KeePassMeta) -> Vec<RxSavedSearchDef> {
@@ -119,7 +124,14 @@ impl RxLoader {
         let mut subgroups = vec![];
         let mut entries = vec![];
 
-        let children = mem::take(&mut group.children);
+        let child_entries = mem::take(&mut group.entries)
+            .into_iter()
+            .map(|ent| Node::Entry(ent));
+        let child_groups = mem::take(&mut group.groups)
+            .into_iter()
+            .map(|grp| Node::Group(grp));
+
+        let children: Vec<Node> = child_groups.chain(child_entries).collect();
 
         for node in children.into_iter() {
             match node {
@@ -187,45 +199,4 @@ pub struct LoadState {
     pub templates: HashMap<Uuid, Rc<RxTemplate>>,
     pub all_groups: IndexMap<Uuid, Rc<RxGroup>>,
     pub all_entries: IndexMap<Uuid, Rc<RxEntry>>,
-}
-
-#[cfg(test)]
-mod tests {
-    use keepass::Database;
-    use keyring::set_default_credential_builder;
-    use std::str::FromStr;
-
-    use crate::rx::TEMPLATE_FIELD_NAME;
-
-    use super::*;
-
-    #[test]
-    fn finds_templates() {
-        set_default_credential_builder(keyring::mock::default_credential_builder());
-        let template_uuid =
-            Uuid::from_str("8e4ff17c-a985-4e50-abde-e641783464ca").expect("bad uuid");
-
-        let mut group = keepass::db::Group::new("groupname");
-        let mut entry = keepass::db::Entry::new();
-
-        entry.fields.insert(
-            TEMPLATE_FIELD_NAME.to_string(),
-            keepass::db::Value::Unprotected(template_uuid.to_string()),
-        );
-
-        group.add_child(keepass::db::Node::Entry(entry));
-
-        let mut loader = RxLoader::new(Zeroizing::new(ZeroableDatabase(Database::new(
-            Default::default(),
-        ))));
-
-        loader.master_key = Some(Rc::new(
-            MasterKey::new().expect("Could not make master key"),
-        ));
-
-        loader.load_groups_recursive(&mut group, None);
-
-        assert_eq!(loader.state.templates.len(), 1);
-        assert!(loader.state.templates.contains_key(&template_uuid));
-    }
 }

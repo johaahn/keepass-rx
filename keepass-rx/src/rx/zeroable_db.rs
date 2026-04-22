@@ -2,7 +2,7 @@ use std::ops::{Deref, DerefMut};
 
 use keepass::{
     Database,
-    db::{Entry, Group, NodeRefMut, Value},
+    db::{Entry, Group, Value},
 };
 use take_mut::take;
 use zeroize::Zeroize;
@@ -33,11 +33,12 @@ macro_rules! zero_out {
 }
 
 fn zero_group(group: &mut Group) {
-    for node in group.children.iter_mut() {
-        match node.as_mut() {
-            NodeRefMut::Group(group) => zero_group(group),
-            NodeRefMut::Entry(entry) => zero_entry(entry),
-        }
+    for entry in group.entries.iter_mut() {
+        zero_entry(entry);
+    }
+
+    for group in group.groups.iter_mut() {
+        zero_group(group);
     }
 
     for (_, data_item) in group.custom_data.items.iter_mut() {

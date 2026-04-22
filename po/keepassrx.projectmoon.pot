@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-11 14:27+0000\n"
+"POT-Creation-Date: 2026-04-22 08:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -139,12 +139,12 @@ msgstr ""
 msgid "Lock"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:155
+#: qml/pages/EntriesPage.qml:155 qml/pages/NotePage.qml:17
 msgid "Close"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:167 qml/pages/SingleEntry.qml:287
-#: qml/pages/OpenDBPage.qml:98
+#: qml/pages/EntriesPage.qml:167 qml/pages/OpenDBPage.qml:98
+#: qml/pages/SingleEntry.qml:287
 msgid "Back"
 msgstr ""
 
@@ -262,76 +262,6 @@ msgid ""
 "case insensitive text."
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:63
-msgid "Password"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:68
-msgid "%1 bits"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:70
-msgid "Password (Entropy: %1)"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:75 qml/Main.qml:106
-msgid "%1 copied to clipboard (30 secs)"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:345
-msgid "Notes"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:353
-msgid "Tap to hide"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:353 qml/pages/SingleEntry.qml:445
-#: qml/pages/SingleEntry.qml:489 qml/pages/SingleEntry.qml:542
-msgid "Tap to reveal"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:374
-msgid "Tap to copy"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:401
-msgid "Tap reveal to view notes"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:430
-msgid "Main"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:440
-msgid "Username"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:444 qml/pages/SingleEntry.qml:467
-#: qml/pages/SingleEntry.qml:488 qml/pages/SingleEntry.qml:541
-msgid "Loading…"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:485
-msgid "URL"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:505
-msgid "TOTP (Valid for %1)"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:506 qml/pages/SingleEntry.qml:510
-msgid "TOTP"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:532
-msgid "Other Fields"
-msgstr ""
-
-#: qml/pages/SingleEntry.qml:573 qml/Main.qml:241
-msgid "KeePassRX: Clipboard cleared."
-msgstr ""
-
 #: qml/pages/OpenDBPage.qml:32
 msgid "Key Loaded"
 msgstr ""
@@ -408,6 +338,80 @@ msgstr ""
 
 #: qml/pages/UnlockPage.qml:246
 msgid "Database Not Opening?"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:63
+msgid "Password"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:68
+msgid "%1 bits"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:70
+msgid "Password (Entropy: %1)"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:75 qml/Main.qml:106
+msgid "%1 copied to clipboard (30 secs)"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:345
+msgid "Notes"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:353
+msgid "Tap to hide"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:353 qml/pages/SingleEntry.qml:453
+#: qml/pages/SingleEntry.qml:497 qml/pages/SingleEntry.qml:550
+msgid "Tap to reveal"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:409
+msgid "Tap reveal to view notes"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:438
+msgid "Main"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:448
+msgid "Username"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:452 qml/pages/SingleEntry.qml:475
+#: qml/pages/SingleEntry.qml:496 qml/pages/SingleEntry.qml:549
+msgid "Loading…"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:493
+msgid "URL"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:513
+msgid "TOTP (Valid for %1)"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:514 qml/pages/SingleEntry.qml:518
+msgid "TOTP"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:540
+msgid "Other Fields"
+msgstr ""
+
+#: qml/pages/SingleEntry.qml:581 qml/Main.qml:241
+msgid "KeePassRX: Clipboard cleared."
+msgstr ""
+
+#: qml/pages/NotePage.qml:12
+msgid "Entry Notes"
+msgstr ""
+
+#: qml/pages/NotePage.qml:31
+msgid "Note copied to clipboard"
 msgstr ""
 
 #: src/gui/instructions.rs:9

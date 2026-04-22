@@ -369,17 +369,25 @@ Page {
                 }
             }
 
-            Label {
-                Layout.preferredHeight: notesLabel.height
-                text: i18n.tr("Tap to copy")
-                color: LomiriColors.slate
-                textSize: Label.Small
+            Icon {
                 Layout.alignment: Qt.AlignRight
+                name: "view-fullscreen"
+                color: theme.palette.normal.foregroundText
+                height: units.gu(3)
+                width: units.gu(3)
 
                 MouseArea {
                     z: 10
                     anchors.fill: parent
-                    onClicked: copyFieldValue("Notes")
+                    onClicked: {
+                        pageStack.addPageToNextColumn(
+                            adaptiveLayout.primaryPage,
+                            Qt.resolvedUrl("NotePage.qml"),
+                            {
+                                note: entryNotes
+                            }
+                        )
+                    }
                 }
             }
         }

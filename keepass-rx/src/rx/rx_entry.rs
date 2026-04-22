@@ -684,14 +684,18 @@ impl Zeroize for RxAttachments {
 }
 
 impl RxAttachments {
-    fn empty(master_key: &Rc<MasterKey>) -> Self {
+    pub fn empty(master_key: &Rc<MasterKey>) -> Self {
         Self {
             master_key: master_key.clone(),
             attachments: HashMap::new(),
         }
     }
 
-    fn from_entry(master_key: &Rc<MasterKey>, entry: &mut Entry) -> Result<Self> {
+    pub fn iter(&self) -> impl Iterator<Item = (&String, &RxValue)> {
+        self.attachments.iter()
+    }
+
+    pub fn from_entry(master_key: &Rc<MasterKey>, entry: &mut Entry) -> Result<Self> {
         let mapped: HashMap<String, RxValue> = mem::take(&mut entry.attachments)
             .into_iter()
             .map(|(name, att)| {

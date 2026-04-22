@@ -22,6 +22,7 @@ Page {
     property bool entryHasTotp: false
     property var entryEntropy: null
     property string entryEntropyQuality
+    property int entryAttachmentCount: 0
     property var colorWashout
 
     property string entryUsernameValue: ""
@@ -289,6 +290,24 @@ Page {
                 onTriggered: {
                     clearTransientValues();
                     pageStack.removePages(pageStack.primaryPage);
+                }
+            }
+        ]
+
+        trailingActionBar.actions: [
+            Action {
+                name: "Attachments"
+                text: i18n.tr("Attachments")
+                iconName: "attachment"
+                //visible: entryAttachmentCount > 0
+                onTriggered: {
+                    pageStack.addPageToNextColumn(
+                        singleEntryPage,
+                        Qt.resolvedUrl("AttachmentPage.qml"),
+                        {
+                            uuid: entryUuid
+                        }
+                    )
                 }
             }
         ]

@@ -168,7 +168,8 @@ impl RxEntry {
         let rx_icon = entry
             .custom_icon
             .as_ref()
-            .map(|(_, data)| RxIcon::Image(data.to_vec()))
+            .cloned()
+            .map(|(_, data)| RxIcon::Image(data))
             .or_else(|| entry.icon_id.map(|id| RxIcon::Builtin(id)))
             .unwrap_or(RxIcon::None);
 

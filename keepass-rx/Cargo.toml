@@ -10,6 +10,7 @@ build = "src/build.rs"
 [dependencies]
 actor-macro = { path = "../actor-macro" }
 qmetaobject = { version = "0.2.9" }
+chrono = "0.4"
 gettext-rs = "0.7"
 cstr = "0.2.11"
 cpp = "0.5"

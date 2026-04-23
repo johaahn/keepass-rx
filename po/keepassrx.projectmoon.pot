@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-23 14:17+0000\n"
+"POT-Creation-Date: 2026-04-23 14:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,35 +41,39 @@ msgstr ""
 msgid "Tap to copy 2FA code"
 msgstr ""
 
-#: qml/pages/DBList.qml:62
+#: qml/pages/DBList.qml:70
 msgid "Add Database"
 msgstr ""
 
-#: qml/pages/DBList.qml:69 qml/pages/EntriesPage.qml:203
+#: qml/pages/DBList.qml:77 qml/pages/EntriesPage.qml:203
 #: qml/pages/SettingsPage.qml:10 qml/pages/OpenDBPage.qml:111
 #: qml/pages/UnlockPage.qml:46
 msgid "Settings"
 msgstr ""
 
-#: qml/pages/DBList.qml:76 qml/pages/EntriesPage.qml:212
+#: qml/pages/DBList.qml:84 qml/pages/EntriesPage.qml:212
 #: qml/pages/OpenDBPage.qml:118 qml/pages/UnlockPage.qml:53
 #: qml/pages/AboutPage.qml:12
 msgid "About"
 msgstr ""
 
-#: qml/pages/DBList.qml:96
+#: qml/pages/DBList.qml:104
 msgid "Loading last database."
 msgstr ""
 
-#: qml/pages/DBList.qml:106
+#: qml/pages/DBList.qml:114
 msgid "Select Database"
 msgstr ""
 
-#: qml/pages/DBList.qml:178
+#: qml/pages/DBList.qml:186
 msgid "Tap + to import a database."
 msgstr ""
 
-#: qml/pages/DBList.qml:280
+#: qml/pages/DBList.qml:233
+msgid "Last Modified: %1"
+msgstr ""
+
+#: qml/pages/DBList.qml:283
 msgid "It will only be removed from the app, not your device."
 msgstr ""
 
@@ -474,12 +478,12 @@ msgid ""
 "using its action bar."
 msgstr ""
 
-#: src/gui/mod.rs:69
+#: src/gui/mod.rs:71
 msgctxt "A database imported via ContentHub"
 msgid "Imported"
 msgstr ""
 
-#: src/gui/mod.rs:70
+#: src/gui/mod.rs:72
 msgctxt "A database managed by external file sync"
 msgid "Synced"
 msgstr ""

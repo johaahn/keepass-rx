@@ -1,14 +1,16 @@
 use actix::prelude::*;
 use anyhow::{Result, anyhow};
+use chrono::{DateTime, Datelike, Local, Timelike};
 use colors::wash_out_by_blending;
 use gettextrs::pgettext;
 use log::{debug, info, warn};
 use qmeta_async::with_executor;
-use qmetaobject::{QMetaType, QStringList, QVariantMap, prelude::*};
+use qmetaobject::{QDate, QDateTime, QMetaType, QStringList, QTime, QVariantMap, prelude::*};
 use secstr::SecUtf8;
 use std::fs::{create_dir_all, remove_dir_all};
 use std::path::Path;
 use std::str::FromStr;
+use std::time::SystemTime;
 use unicase::UniCase;
 use uuid::Uuid;
 use zeroize::Zeroize;
@@ -172,6 +174,19 @@ impl QMetaType for RxViewMode {
     const CONVERSION_TO_STRING: Option<fn(&Self) -> QString> = Some(view_mode_to_string);
 }
 
+fn qdatetime_from_system_time(time: SystemTime) -> QDateTime {
+    let local: DateTime<Local> = time.into();
+    let date = QDate::from_y_m_d(local.year(), local.month() as i32, local.day() as i32);
+    let time = QTime::from_h_m_s_ms(
+        local.hour() as i32,
+        local.minute() as i32,
+        Some(local.second() as i32),
+        Some(local.timestamp_subsec_millis() as i32),
+    );
+
+    QDateTime::from_date_time_local_timezone(date, time)
+}
+
 #[derive(QObject, Default)]
 #[allow(non_snake_case, dead_code)]
 pub struct KeepassRx {
@@ -216,7 +231,7 @@ pub struct KeepassRx {
     fileListingCompleted: qt_signal!(),
     rootGroupUuidChanged: qt_signal!(),
     metadataReceived: qt_signal!(metadata: QVariantMap),
-    databaseImported: qt_signal!(db_name: QString, db_type: RxDbType),
+    databaseImported: qt_signal!(db_name: QString, db_type: RxDbType, last_modified: QDateTime),
     databaseOpened: qt_signal!(),
     databaseClosed: qt_signal!(),
     databaseDeleted: qt_signal!(db_name: QString),
@@ -265,6 +280,10 @@ impl KeepassRx {
 
     #[with_executor]
     pub fn listImportedDatabases(&self) {
+        fn last_modified_datetime(db: &std::fs::DirEntry) -> Result<QDateTime> {
+            Ok(qdatetime_from_system_time(db.metadata()?.modified()?))
+        }
+
         let want_file = |db: &std::fs::DirEntry| -> bool {
             match db.file_name().into_string() {
                 Ok(file_str) => file_str.ends_with(".kdbx") || file_str.ends_with(".kdb"),
@@ -306,9 +325,11 @@ impl KeepassRx {
             });
 
             for DbListing(db, db_type) in dbs {
+                let last_modified = last_modified_datetime(&db)?;
                 self.databaseImported(
                     QString::from(db.file_name().to_string_lossy().to_string()),
                     db_type,
+                    last_modified,
                 );
             }
 
@@ -326,7 +347,7 @@ impl KeepassRx {
     /// in QML from the same scope as this method call.
     #[with_executor]
     pub fn importDatabase(&self, path: String) {
-        let copy_file = move || -> Result<String> {
+        let copy_file = move || -> Result<(String, QDateTime)> {
             let source = Path::new(&path);
             let db_name = source
                 .file_name()
@@ -362,11 +383,17 @@ impl KeepassRx {
 
             let bytes_copied = std::fs::copy(&source, &dest)?;
             info!("Copied {} bytes", bytes_copied);
-            Ok(db_name)
+
+            let modified = dest.metadata()?.modified()?;
+            Ok((db_name, qdatetime_from_system_time(modified)))
         };
 
         match copy_file() {
-            Ok(db_name) => self.databaseImported(QString::from(db_name), RxDbType::Imported),
+            Ok((db_name, last_modified)) => self.databaseImported(
+                QString::from(db_name),
+                RxDbType::Imported,
+                last_modified,
+            ),
             Err(err) => self.databaseOpenFailed(format!("{}", err)),
         }
     }

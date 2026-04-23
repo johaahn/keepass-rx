@@ -15,14 +15,22 @@ Page {
     property bool busy
     property string errorMsg
 
+    function formatLastModified(lastModified) {
+        return Qt.formatDateTime(
+            lastModified,
+            Qt.locale().dateTimeFormat(Locale.ShortFormat)
+        );
+    }
+
     Connections {
         target: keepassrx
 
-        function onDatabaseImported(databaseName, databaseType) {
+        function onDatabaseImported(databaseName, databaseType, lastModified) {
             dbListModel.append({
                 databaseName,
                 databaseType,
-                databaseTypeString: databaseType.toString()
+                databaseTypeString: databaseType.toString(),
+                lastModified
             });
         }
 
@@ -213,6 +221,7 @@ Page {
 
             model: ListModel {
                 id: dbListModel
+                dynamicRoles: true
             }
 
             delegate: ListItem {
@@ -221,15 +230,9 @@ Page {
                 ListItemLayout {
                     id: layout
                     title.text: databaseName
-                    subtitle.text: databaseTypeString == 'Imported'
-                        ? i18n.ctr(
-                            "When an imported DB is loaded from the app's data folder",
-                            "Imported"
-                        )
-                        : i18n.ctr(
-                            "When DB is loaded via external managed folder (e.g. Syncthing)",
-                            "Synced"
-                        )
+                    subtitle.text: i18n.tr("Last Modified: %1").arg(
+                        formatLastModified(lastModified)
+                    )
 
                     Icon {
                         name: "next"

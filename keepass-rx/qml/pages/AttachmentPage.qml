@@ -45,6 +45,27 @@ Page {
         exportPeerPicker.visible = true;
     }
 
+    function viewOrExportAttachment(attachmentName) {
+        const result = theEntry.viewAttachment(attachmentName);
+
+        if (result.ok && result.canView && result.viewType === "text") {
+            pageStack.addPageToNextColumn(
+                attachmentPage,
+                Qt.resolvedUrl("ViewAttachment.qml"),
+                {
+                    attachmentName: attachmentName,
+                    displayName: result.fileName || attachmentName,
+                    mimeType: result.mimeType || "",
+                    text: result.text || "",
+                    sourcePage: attachmentPage
+                }
+            );
+            return;
+        }
+
+        beginAttachmentExport(attachmentName);
+    }
+
     header: PageHeader {
         id: header
         title: i18n.tr("Entry Attachments")
@@ -172,7 +193,7 @@ Page {
             }
 
             onClicked: {
-                beginAttachmentExport(attachmentName);
+                viewOrExportAttachment(attachmentName);
             }
         }
     }

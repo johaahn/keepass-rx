@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-23 08:43+0000\n"
+"POT-Creation-Date: 2026-04-23 09:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -140,7 +140,7 @@ msgid "Lock"
 msgstr ""
 
 #: qml/pages/EntriesPage.qml:155 qml/pages/NotePage.qml:17
-#: qml/pages/AttachmentPage.qml:17
+#: qml/pages/AttachmentPage.qml:55
 msgid "Close"
 msgstr ""
 
@@ -419,8 +419,24 @@ msgstr ""
 msgid "Note copied to clipboard"
 msgstr ""
 
-#: qml/pages/AttachmentPage.qml:12
+#: qml/pages/AttachmentPage.qml:38
+msgid "Unable to export attachment."
+msgstr ""
+
+#: qml/pages/AttachmentPage.qml:50
 msgid "Entry Attachments"
+msgstr ""
+
+#: qml/pages/AttachmentPage.qml:79
+msgid "Export Attachment"
+msgstr ""
+
+#: qml/pages/AttachmentPage.qml:127
+msgid "%1 ready to export."
+msgstr ""
+
+#: qml/pages/AttachmentPage.qml:135
+msgid "%1 exported."
 msgstr ""
 
 #: src/gui/instructions.rs:9

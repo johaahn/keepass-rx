@@ -695,6 +695,10 @@ impl RxAttachments {
         self.attachments.iter()
     }
 
+    pub fn get(&self, name: &str) -> Option<&RxValue> {
+        self.attachments.get(name)
+    }
+
     pub fn from_entry(master_key: &Rc<MasterKey>, entry: &mut Entry) -> Result<Self> {
         let mapped: HashMap<String, RxValue> = mem::take(&mut entry.attachments)
             .into_iter()

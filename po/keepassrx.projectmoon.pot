@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-23 12:08+0000\n"
+"POT-Creation-Date: 2026-04-23 12:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -140,7 +140,7 @@ msgid "Lock"
 msgstr ""
 
 #: qml/pages/EntriesPage.qml:155 qml/pages/NotePage.qml:17
-#: qml/pages/AttachmentPage.qml:84 qml/pages/ViewAttachment.qml:23
+#: qml/pages/AttachmentPage.qml:86 qml/pages/ViewAttachment.qml:25
 msgid "Close"
 msgstr ""
 
@@ -217,7 +217,7 @@ msgstr ""
 msgid "Select"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:327 qml/pages/AttachmentPage.qml:150
+#: qml/pages/EntriesPage.qml:327 qml/pages/AttachmentPage.qml:152
 msgid "Cancel"
 msgstr ""
 
@@ -423,44 +423,44 @@ msgstr ""
 msgid "Unable to export attachment."
 msgstr ""
 
-#: qml/pages/AttachmentPage.qml:79
+#: qml/pages/AttachmentPage.qml:81
 msgid "Entry Attachments"
 msgstr ""
 
-#: qml/pages/AttachmentPage.qml:108
+#: qml/pages/AttachmentPage.qml:110
 msgid "Export Attachment"
 msgstr ""
 
-#: qml/pages/AttachmentPage.qml:134
+#: qml/pages/AttachmentPage.qml:136
 msgid "Attachment Not Viewable"
 msgstr ""
 
-#: qml/pages/AttachmentPage.qml:136
+#: qml/pages/AttachmentPage.qml:138
 msgid "KeePassRX cannot view this %1 attachment, but it can be exported."
 msgstr ""
 
-#: qml/pages/AttachmentPage.qml:137
+#: qml/pages/AttachmentPage.qml:139
 msgid "KeePassRX cannot view this attachment, but it can be exported."
 msgstr ""
 
-#: qml/pages/AttachmentPage.qml:140 qml/pages/AttachmentPage.qml:235
-#: qml/pages/ViewAttachment.qml:34
+#: qml/pages/AttachmentPage.qml:142 qml/pages/AttachmentPage.qml:237
+#: qml/pages/ViewAttachment.qml:36
 msgid "Export"
 msgstr ""
 
-#: qml/pages/AttachmentPage.qml:183
+#: qml/pages/AttachmentPage.qml:185
 msgid "%1 ready to export."
 msgstr ""
 
-#: qml/pages/AttachmentPage.qml:191
+#: qml/pages/AttachmentPage.qml:193
 msgid "%1 exported."
 msgstr ""
 
-#: qml/pages/AttachmentPage.qml:218
+#: qml/pages/AttachmentPage.qml:220
 msgid "%1 bytes"
 msgstr ""
 
-#: qml/pages/ViewAttachment.qml:18
+#: qml/pages/ViewAttachment.qml:20
 msgid "Attachment"
 msgstr ""
 

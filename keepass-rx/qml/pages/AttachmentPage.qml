@@ -62,6 +62,8 @@ Page {
                     mimeType: result.mimeType || "",
                     viewType: result.viewType || "",
                     text: result.text || "",
+                    highlightedText: result.highlightedText || "",
+                    syntaxName: result.syntaxName || "",
                     dataUrl: result.dataUrl || "",
                     sourcePage: attachmentPage
                 }

@@ -5,6 +5,7 @@ use std::io::Write;
 use std::os::unix::fs::OpenOptionsExt;
 use std::path::{Path, PathBuf};
 use std::str::FromStr;
+use std::sync::OnceLock;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use actor_macro::observing_model;
@@ -16,7 +17,13 @@ use log::{error, warn};
 use qmeta_async::with_executor;
 use qmetaobject::prelude::*;
 use qmetaobject::{QVariantMap, SimpleListModel};
+use syntect::easy::HighlightLines;
+use syntect::highlighting::ThemeSet;
+use syntect::html::{IncludeBackground, styled_line_to_highlighted_html};
+use syntect::parsing::SyntaxSet;
+use syntect::util::LinesWithEndings;
 use uuid::Uuid;
+use zeroize::Zeroize;
 
 use crate::crypto::MasterKey;
 use crate::gui::utils::exported_attachments_path;
@@ -44,6 +51,7 @@ fn convert_attachments(value: &RxAttachments, master_key: &MasterKey) -> Vec<RxU
                 .try_into()
                 .ok()
                 .unwrap_or(0);
+
             let attachment_mime_type = attachment_bytes
                 .as_ref()
                 .and_then(|val| infer::get(val).map(|kind| kind.mime_type().to_string()))
@@ -55,10 +63,16 @@ fn convert_attachments(value: &RxAttachments, master_key: &MasterKey) -> Vec<RxU
                     })
                 })
                 .unwrap_or_else(|| "unknown".to_string());
+
             let attachment_view_type = attachment_bytes
                 .as_ref()
                 .map(|val| view_type_for_attachment(val))
                 .unwrap_or_default();
+
+            // Not sure if necessary, but might as well.
+            if let Some(mut bytes) = attachment_bytes {
+                bytes.zeroize();
+            }
 
             RxUiAttachment {
                 attachmentName: QString::from(name.as_str()),
@@ -112,6 +126,8 @@ fn view_result(
     file_name: &str,
     mime_type: &str,
     text: &str,
+    highlighted_text: &str,
+    syntax_name: &str,
     data_url: &str,
     error: &str,
 ) -> QVariantMap {
@@ -122,6 +138,11 @@ fn view_result(
     map.insert("fileName".into(), QString::from(file_name).into());
     map.insert("mimeType".into(), QString::from(mime_type).into());
     map.insert("text".into(), QString::from(text).into());
+    map.insert(
+        "highlightedText".into(),
+        QString::from(highlighted_text).into(),
+    );
+    map.insert("syntaxName".into(), QString::from(syntax_name).into());
     map.insert("dataUrl".into(), QString::from(data_url).into());
     map.insert("error".into(), QString::from(error).into());
     map
@@ -130,7 +151,79 @@ fn view_result(
 fn view_error(error: impl ToString) -> QVariantMap {
     let error = error.to_string();
     error!("Attachment view failed: {}", error);
-    view_result(false, false, "", "", "", "", "", &error)
+    view_result(false, false, "", "", "", "", "", "", "", &error)
+}
+
+fn syntax_set() -> &'static SyntaxSet {
+    static SYNTAX_SET: OnceLock<SyntaxSet> = OnceLock::new();
+    SYNTAX_SET.get_or_init(SyntaxSet::load_defaults_newlines)
+}
+
+fn theme_set() -> &'static ThemeSet {
+    static THEME_SET: OnceLock<ThemeSet> = OnceLock::new();
+    THEME_SET.get_or_init(ThemeSet::load_defaults)
+}
+
+fn file_extension(file_name: &str) -> Option<&str> {
+    file_name.rsplit_once('.').and_then(|(_, extension)| {
+        if extension.is_empty() {
+            None
+        } else {
+            Some(extension)
+        }
+    })
+}
+
+fn highlighted_attachment_html(file_name: &str, text: &str) -> Option<(String, String)> {
+    let syntax_set = syntax_set();
+    let syntax = file_extension(file_name)
+        .and_then(|extension| syntax_set.find_syntax_by_extension(extension))
+        .or_else(|| {
+            file_extension(file_name)
+                .filter(|&extension| extension.eq_ignore_ascii_case("conf"))
+                .and_then(|_| syntax_set.find_syntax_by_extension("sh"))
+        })
+        .or_else(|| syntax_set.find_syntax_by_first_line(text))
+        .unwrap_or_else(|| syntax_set.find_syntax_plain_text());
+
+    let theme = theme_set().themes.get("InspiredGitHub")?;
+    let mut highlighter = HighlightLines::new(syntax, theme);
+    let mut html = String::from("<pre>");
+
+    for line in LinesWithEndings::from(text) {
+        let regions = highlighter.highlight_line(line, syntax_set).ok()?;
+        let line_html =
+            styled_line_to_highlighted_html(&regions, IncludeBackground::No).ok()?;
+        html.push_str(&line_html);
+    }
+
+    html.push_str("</pre>");
+    Some((html, syntax.name.clone()))
+}
+
+fn text_view_result(file_name: &str, mime_type: &str, text: &str) -> QVariantMap {
+    let highlighted = highlighted_attachment_html(file_name, text);
+    let highlighted_text = highlighted
+        .as_ref()
+        .map(|(html, _)| html.as_str())
+        .unwrap_or_default();
+    let syntax_name = highlighted
+        .as_ref()
+        .map(|(_, syntax)| syntax.as_str())
+        .unwrap_or_default();
+
+    view_result(
+        true,
+        true,
+        "text",
+        file_name,
+        mime_type,
+        text,
+        highlighted_text,
+        syntax_name,
+        "",
+        "",
+    )
 }
 
 fn sanitize_export_file_name(value: &str) -> String {
@@ -336,16 +429,7 @@ impl RxUiEntry {
                 Some(kind) if kind.matcher_type() == MatcherType::Text => {
                     let text = std::str::from_utf8(&attachment_bytes)
                         .map_err(|err| anyhow!("Unable to decode text attachment: {}", err))?;
-                    Ok(view_result(
-                        true,
-                        true,
-                        "text",
-                        &file_name,
-                        kind.mime_type(),
-                        text,
-                        "",
-                        "",
-                    ))
+                    Ok(text_view_result(&file_name, kind.mime_type(), text))
                 }
                 Some(kind) if kind.matcher_type() == MatcherType::Image => {
                     let data_url = format!(
@@ -360,6 +444,8 @@ impl RxUiEntry {
                         &file_name,
                         kind.mime_type(),
                         "",
+                        "",
+                        "",
                         &data_url,
                         "",
                     ))
@@ -373,19 +459,14 @@ impl RxUiEntry {
                     "",
                     "",
                     "",
+                    "",
+                    "",
                 )),
                 None => match std::str::from_utf8(&attachment_bytes) {
-                    Ok(text) => Ok(view_result(
-                        true,
-                        true,
-                        "text",
-                        &file_name,
-                        "text/plain",
-                        text,
-                        "",
-                        "",
+                    Ok(text) => Ok(text_view_result(&file_name, "text/plain", text)),
+                    Err(_) => Ok(view_result(
+                        true, false, "", &file_name, "", "", "", "", "", "",
                     )),
-                    Err(_) => Ok(view_result(true, false, "", &file_name, "", "", "", "")),
                 },
             }
         };

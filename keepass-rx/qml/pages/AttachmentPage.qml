@@ -137,11 +137,6 @@ Page {
                 : i18n.tr("KeePassRX cannot view this attachment, but it can be exported.")
 
             Button {
-                text: i18n.tr("Cancel")
-                onClicked: PopupUtils.close(dialog)
-            }
-
-            Button {
                 text: i18n.tr("Export")
                 color: LomiriColors.green
                 onClicked: {
@@ -149,6 +144,11 @@ Page {
                     PopupUtils.close(dialog);
                     beginAttachmentExport(attachmentName);
                 }
+            }
+
+            Button {
+                text: i18n.tr("Cancel")
+                onClicked: PopupUtils.close(dialog)
             }
         }
     }
@@ -211,11 +211,11 @@ Page {
         delegate: ListItem {
             height: layout.height + (divider.visible ? divider.height : 0)
 
-            // From RxUiAttachment
+            // Field names from RxUiAttachment
             ListItemLayout {
                 id: layout
                 title.text: attachmentName
-                subtitle.text: `${attachmentSize} bytes`
+                subtitle.text: i18n.tr('%1 bytes').arg(attachmentSize)
                 summary.text: attachmentMimeType
 
                 Icon {

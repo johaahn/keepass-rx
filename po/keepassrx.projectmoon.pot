@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-23 11:41+0000\n"
+"POT-Creation-Date: 2026-04-23 11:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -217,7 +217,7 @@ msgstr ""
 msgid "Select"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:327 qml/pages/AttachmentPage.qml:140
+#: qml/pages/EntriesPage.qml:327 qml/pages/AttachmentPage.qml:150
 msgid "Cancel"
 msgstr ""
 
@@ -443,7 +443,7 @@ msgstr ""
 msgid "KeePassRX cannot view this attachment, but it can be exported."
 msgstr ""
 
-#: qml/pages/AttachmentPage.qml:145 qml/pages/ViewAttachment.qml:34
+#: qml/pages/AttachmentPage.qml:140 qml/pages/ViewAttachment.qml:34
 msgid "Export"
 msgstr ""
 
@@ -453,6 +453,10 @@ msgstr ""
 
 #: qml/pages/AttachmentPage.qml:191
 msgid "%1 exported."
+msgstr ""
+
+#: qml/pages/AttachmentPage.qml:218
+msgid "%1 bytes"
 msgstr ""
 
 #: qml/pages/ViewAttachment.qml:18

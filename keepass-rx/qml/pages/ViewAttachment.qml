@@ -49,101 +49,101 @@ Page {
         anchors.left: parent.left
         anchors.right: parent.right
         sourceComponent: viewType === "image" ? imageViewer : textViewer
-    }
 
-    Component {
-        id: textViewer
+        Component {
+            id: textViewer
 
-        TextArea {
-            anchors.fill: parent
-            anchors.leftMargin: units.gu(1.0)
-            anchors.rightMargin: units.gu(1.0)
-            text: viewAttachmentPage.text
-            readOnly: true
-            cursorVisible: selectedText !== ""
-            selectByMouse: true
-            persistentSelection: true
-            wrapMode: Text.Wrap
-        }
-    }
-
-    Component {
-        id: imageViewer
-
-        Flickable {
-            id: imageFlickable
-            anchors.fill: parent
-            clip: true
-            contentWidth: imageContainer.width
-            contentHeight: imageContainer.height
-            boundsBehavior: Flickable.DragAndOvershootBounds
-
-            property real minimumScale: 1
-            property real maximumScale: 6
-            property real imageScale: 1
-            property real pinchStartScale: 1
-            property real pinchSensitivity: 0.65
-
-            function fitImage() {
-                if (attachmentImage.status !== Image.Ready || attachmentImage.implicitWidth === 0 || attachmentImage.implicitHeight === 0) {
-                    return;
-                }
-
-                const widthScale = imageFlickable.width / attachmentImage.implicitWidth;
-                const heightScale = imageFlickable.height / attachmentImage.implicitHeight;
-                minimumScale = Math.min(1, widthScale, heightScale);
-                imageScale = minimumScale;
-                returnToBounds();
-            }
-
-            PinchArea {
+            TextArea {
                 anchors.fill: parent
-                pinch.minimumScale: imageFlickable.minimumScale
-                pinch.maximumScale: imageFlickable.maximumScale
+                anchors.leftMargin: units.gu(1.0)
+                anchors.rightMargin: units.gu(1.0)
+                text: viewAttachmentPage.text
+                readOnly: true
+                cursorVisible: selectedText !== ""
+                selectByMouse: true
+                persistentSelection: true
+                wrapMode: Text.Wrap
+            }
+        }
 
-                onPinchStarted: {
-                    imageFlickable.pinchStartScale = imageFlickable.imageScale;
+        Component {
+            id: imageViewer
+
+            Flickable {
+                id: imageFlickable
+                anchors.fill: parent
+                clip: true
+                contentWidth: imageContainer.width
+                contentHeight: imageContainer.height
+                boundsBehavior: Flickable.DragAndOvershootBounds
+
+                property real minimumScale: 1
+                property real maximumScale: 6
+                property real imageScale: 1
+                property real pinchStartScale: 1
+                property real pinchSensitivity: 0.65
+
+                function fitImage() {
+                    if (attachmentImage.status !== Image.Ready || attachmentImage.implicitWidth === 0 || attachmentImage.implicitHeight === 0) {
+                        return;
+                    }
+
+                    const widthScale = imageFlickable.width / attachmentImage.implicitWidth;
+                    const heightScale = imageFlickable.height / attachmentImage.implicitHeight;
+                    minimumScale = Math.min(1, widthScale, heightScale);
+                    imageScale = minimumScale;
+                    returnToBounds();
                 }
 
-                onPinchUpdated: {
-                    const dampedScale = 1 + ((pinch.scale - 1) * imageFlickable.pinchSensitivity);
-                    const nextScale = Math.max(
-                        imageFlickable.minimumScale,
-                        Math.min(imageFlickable.maximumScale, imageFlickable.pinchStartScale * dampedScale)
-                    );
-                    imageFlickable.imageScale = nextScale;
-                }
+                PinchArea {
+                    anchors.fill: parent
+                    pinch.minimumScale: imageFlickable.minimumScale
+                    pinch.maximumScale: imageFlickable.maximumScale
 
-                onPinchFinished: {
-                    imageFlickable.returnToBounds();
-                }
+                    onPinchStarted: {
+                        imageFlickable.pinchStartScale = imageFlickable.imageScale;
+                    }
 
-                Item {
-                    id: imageContainer
-                    width: Math.max(imageFlickable.width, attachmentImage.implicitWidth * imageFlickable.imageScale)
-                    height: Math.max(imageFlickable.height, attachmentImage.implicitHeight * imageFlickable.imageScale)
+                    onPinchUpdated: {
+                        const dampedScale = 1 + ((pinch.scale - 1) * imageFlickable.pinchSensitivity);
+                        const nextScale = Math.max(
+                            imageFlickable.minimumScale,
+                            Math.min(imageFlickable.maximumScale, imageFlickable.pinchStartScale * dampedScale)
+                        );
+                        imageFlickable.imageScale = nextScale;
+                    }
 
-                    Image {
-                        id: attachmentImage
-                        anchors.centerIn: parent
-                        source: viewAttachmentPage.dataUrl
-                        fillMode: Image.PreserveAspectFit
-                        width: implicitWidth * imageFlickable.imageScale
-                        height: implicitHeight * imageFlickable.imageScale
-                        asynchronous: true
-                        smooth: true
+                    onPinchFinished: {
+                        imageFlickable.returnToBounds();
+                    }
 
-                        onStatusChanged: {
-                            if (status === Image.Ready) {
-                                imageFlickable.fitImage();
+                    Item {
+                        id: imageContainer
+                        width: Math.max(imageFlickable.width, attachmentImage.implicitWidth * imageFlickable.imageScale)
+                        height: Math.max(imageFlickable.height, attachmentImage.implicitHeight * imageFlickable.imageScale)
+
+                        Image {
+                            id: attachmentImage
+                            anchors.centerIn: parent
+                            source: viewAttachmentPage.dataUrl
+                            fillMode: Image.PreserveAspectFit
+                            width: implicitWidth * imageFlickable.imageScale
+                            height: implicitHeight * imageFlickable.imageScale
+                            asynchronous: true
+                            smooth: true
+
+                            onStatusChanged: {
+                                if (status === Image.Ready) {
+                                    imageFlickable.fitImage();
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            onWidthChanged: fitImage()
-            onHeightChanged: fitImage()
+                onWidthChanged: fitImage()
+                onHeightChanged: fitImage()
+            }
         }
     }
 }

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-11 14:27+0000\n"
+"POT-Creation-Date: 2026-04-22 08:59+0000\n"
 "PO-Revision-Date: 2026-03-16 09:58+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -218,57 +218,6 @@ msgid ""
 "case insensitive text."
 msgstr "Schakel uit om alleen te zoeken naar items die precies overeenkomen."
 
-msgid "Password"
-msgstr "Wachtwoord"
-
-msgid "%1 bits"
-msgstr "%1 bits"
-
-msgid "Password (Entropy: %1)"
-msgstr "Wachtwoord (entropie: %1)"
-
-msgid "%1 copied to clipboard (30 secs)"
-msgstr "%1 is gekopieerd naar het klembord (30 sec.)"
-
-msgid "Notes"
-msgstr "Aantekeningen"
-
-msgid "Tap to hide"
-msgstr "Druk om te verbergen"
-
-msgid "Tap to reveal"
-msgstr "Druk om te tonen"
-
-msgid "Tap to copy"
-msgstr "Druk om te kopiëren"
-
-msgid "Tap reveal to view notes"
-msgstr "Druk om aantekeningen te bekijken"
-
-msgid "Main"
-msgstr "Algemeen"
-
-msgid "Username"
-msgstr "Gebruikersnaam"
-
-msgid "Loading…"
-msgstr "Bezig met laden…"
-
-msgid "URL"
-msgstr "Url"
-
-msgid "TOTP (Valid for %1)"
-msgstr "Totp (%1 geldig)"
-
-msgid "TOTP"
-msgstr "Totp"
-
-msgid "Other Fields"
-msgstr "Overige velden"
-
-msgid "KeePassRX: Clipboard cleared."
-msgstr "KeePassRX: klembord gewist."
-
 msgid "Key Loaded"
 msgstr "De sleutel is ingelezen"
 
@@ -330,6 +279,60 @@ msgstr "Veilig vergrendelen"
 msgid "Database Not Opening?"
 msgstr "Wordt de databank niet geopend?"
 
+msgid "Password"
+msgstr "Wachtwoord"
+
+msgid "%1 bits"
+msgstr "%1 bits"
+
+msgid "Password (Entropy: %1)"
+msgstr "Wachtwoord (entropie: %1)"
+
+msgid "%1 copied to clipboard (30 secs)"
+msgstr "%1 is gekopieerd naar het klembord (30 sec.)"
+
+msgid "Notes"
+msgstr "Aantekeningen"
+
+msgid "Tap to hide"
+msgstr "Druk om te verbergen"
+
+msgid "Tap to reveal"
+msgstr "Druk om te tonen"
+
+msgid "Tap reveal to view notes"
+msgstr "Druk om aantekeningen te bekijken"
+
+msgid "Main"
+msgstr "Algemeen"
+
+msgid "Username"
+msgstr "Gebruikersnaam"
+
+msgid "Loading…"
+msgstr "Bezig met laden…"
+
+msgid "URL"
+msgstr "Url"
+
+msgid "TOTP (Valid for %1)"
+msgstr "Totp (%1 geldig)"
+
+msgid "TOTP"
+msgstr "Totp"
+
+msgid "Other Fields"
+msgstr "Overige velden"
+
+msgid "KeePassRX: Clipboard cleared."
+msgstr "KeePassRX: klembord gewist."
+
+msgid "Entry Notes"
+msgstr ""
+
+msgid "Note copied to clipboard"
+msgstr ""
+
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
@@ -379,6 +382,9 @@ msgstr "Goed"
 msgctxt "Password strength"
 msgid "Excellent"
 msgstr "Uitstekend"
+
+#~ msgid "Tap to copy"
+#~ msgstr "Druk om te kopiëren"
 
 #~ msgid "Notes copied to clipboard (30 secs)"
 #~ msgstr "De aantekeningen zijn gekopieerd naar het klembord (30 sec.)"

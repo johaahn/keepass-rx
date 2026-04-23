@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-11 14:27+0000\n"
+"POT-Creation-Date: 2026-04-22 08:59+0000\n"
 "PO-Revision-Date: 2026-03-15 16:09+0000\n"
 "Last-Translator: Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/ubports/"
@@ -219,57 +219,6 @@ msgstr ""
 "Hägusa otsinguga saad kirjeid mugavamat otsida. Kui eelistus pole kasutusel, "
 "siis otsing otsib täpset tõstutundetut vastet."
 
-msgid "Password"
-msgstr "Salasõna"
-
-msgid "%1 bits"
-msgstr "%1 bitti"
-
-msgid "Password (Entropy: %1)"
-msgstr "Salasõna (entroopia: %1)"
-
-msgid "%1 copied to clipboard (30 secs)"
-msgstr "%1 on kopeeritud lõikelauale (30 sek)"
-
-msgid "Notes"
-msgstr "Märkmed"
-
-msgid "Tap to hide"
-msgstr "Peitmiseks klõpsa"
-
-msgid "Tap to reveal"
-msgstr "Näitamiseks klõpsa"
-
-msgid "Tap to copy"
-msgstr "Kopeerimiseks klõpsa"
-
-msgid "Tap reveal to view notes"
-msgstr "Klõpsa märkmete vaatamiseks"
-
-msgid "Main"
-msgstr "Peamine"
-
-msgid "Username"
-msgstr "Kasutajanimi"
-
-msgid "Loading…"
-msgstr "Laadin andmeid…"
-
-msgid "URL"
-msgstr "Võrguaadress"
-
-msgid "TOTP (Valid for %1)"
-msgstr "TOTP ehk ajapõhine ühekordne salasõna (kehtivus: %1)"
-
-msgid "TOTP"
-msgstr "TOTP ehk ajapõhine ühekordne salasõna"
-
-msgid "Other Fields"
-msgstr "Muud väljad"
-
-msgid "KeePassRX: Clipboard cleared."
-msgstr "KeePassRX: lõikelaud on tühjendatud."
-
 msgid "Key Loaded"
 msgstr "Võti on laaditud"
 
@@ -331,6 +280,60 @@ msgstr "Turvaline lukustamine"
 msgid "Database Not Opening?"
 msgstr "Kas andmebaas ei avane?"
 
+msgid "Password"
+msgstr "Salasõna"
+
+msgid "%1 bits"
+msgstr "%1 bitti"
+
+msgid "Password (Entropy: %1)"
+msgstr "Salasõna (entroopia: %1)"
+
+msgid "%1 copied to clipboard (30 secs)"
+msgstr "%1 on kopeeritud lõikelauale (30 sek)"
+
+msgid "Notes"
+msgstr "Märkmed"
+
+msgid "Tap to hide"
+msgstr "Peitmiseks klõpsa"
+
+msgid "Tap to reveal"
+msgstr "Näitamiseks klõpsa"
+
+msgid "Tap reveal to view notes"
+msgstr "Klõpsa märkmete vaatamiseks"
+
+msgid "Main"
+msgstr "Peamine"
+
+msgid "Username"
+msgstr "Kasutajanimi"
+
+msgid "Loading…"
+msgstr "Laadin andmeid…"
+
+msgid "URL"
+msgstr "Võrguaadress"
+
+msgid "TOTP (Valid for %1)"
+msgstr "TOTP ehk ajapõhine ühekordne salasõna (kehtivus: %1)"
+
+msgid "TOTP"
+msgstr "TOTP ehk ajapõhine ühekordne salasõna"
+
+msgid "Other Fields"
+msgstr "Muud väljad"
+
+msgid "KeePassRX: Clipboard cleared."
+msgstr "KeePassRX: lõikelaud on tühjendatud."
+
+msgid "Entry Notes"
+msgstr ""
+
+msgid "Note copied to clipboard"
+msgstr ""
+
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
@@ -380,6 +383,9 @@ msgstr "Hea"
 msgctxt "Password strength"
 msgid "Excellent"
 msgstr "Suurepärane"
+
+#~ msgid "Tap to copy"
+#~ msgstr "Kopeerimiseks klõpsa"
 
 #~ msgid "Notes copied to clipboard (30 secs)"
 #~ msgstr "Märkmed on kopeeritud lõikelauale (30-ks sekundiks)"

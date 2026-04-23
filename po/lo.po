@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-11 14:27+0000\n"
+"POT-Creation-Date: 2026-04-22 08:59+0000\n"
 "PO-Revision-Date: 2026-01-26 18:01+0000\n"
 "Last-Translator: BoneNI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://hosted.weblate.org/projects/ubports/keepassrx/lo/"
@@ -214,57 +214,6 @@ msgstr ""
 "ໃຊ້ການຄົ້ນຫາແບບຄຸມເຄືອເພື່ອຊອກຫາຂໍ້ມູນ. ຫາກປິດໄວ້, ການຄົ້ນຫາຈະກົງກັບຂໍ້ຄວາມທີ່ຖືກຕ້ອງທຸກຕົວອັກສອນ "
 "(ບໍ່ຈຳແນກຕົວພິມໃຫຍ່-ນ້ອຍ)."
 
-msgid "Password"
-msgstr "ລະຫັດຜ່ານ"
-
-msgid "%1 bits"
-msgstr ""
-
-msgid "Password (Entropy: %1)"
-msgstr ""
-
-msgid "%1 copied to clipboard (30 secs)"
-msgstr "ຄັດລອກ %1 ໃສ່ຄລິບບອດແລ້ວ (30 ວິນາທີ)"
-
-msgid "Notes"
-msgstr "ບັນທຶກ"
-
-msgid "Tap to hide"
-msgstr ""
-
-msgid "Tap to reveal"
-msgstr ""
-
-msgid "Tap to copy"
-msgstr "ແຕະເພື່ອຄັດລອກ"
-
-msgid "Tap reveal to view notes"
-msgstr ""
-
-msgid "Main"
-msgstr "ຫຼັກ"
-
-msgid "Username"
-msgstr "ຊື່ຜູ້ໃຊ້"
-
-msgid "Loading…"
-msgstr ""
-
-msgid "URL"
-msgstr "URL"
-
-msgid "TOTP (Valid for %1)"
-msgstr ""
-
-msgid "TOTP"
-msgstr ""
-
-msgid "Other Fields"
-msgstr "ຊ່ອງຂໍ້ມູນອື່ນໆ"
-
-msgid "KeePassRX: Clipboard cleared."
-msgstr "KeePassRX: ລ້າງຂໍ້ມູນໃນຄລິບບອດແລ້ວ."
-
 msgid "Key Loaded"
 msgstr "ໂຫຼດກະແຈແລ້ວ"
 
@@ -326,6 +275,60 @@ msgstr "ກຳລັງລັອກຢ່າງປອດໄພ"
 msgid "Database Not Opening?"
 msgstr "ຖານຂໍ້ມູນເປີດບໍ່ໄດ້ບໍ?"
 
+msgid "Password"
+msgstr "ລະຫັດຜ່ານ"
+
+msgid "%1 bits"
+msgstr ""
+
+msgid "Password (Entropy: %1)"
+msgstr ""
+
+msgid "%1 copied to clipboard (30 secs)"
+msgstr "ຄັດລອກ %1 ໃສ່ຄລິບບອດແລ້ວ (30 ວິນາທີ)"
+
+msgid "Notes"
+msgstr "ບັນທຶກ"
+
+msgid "Tap to hide"
+msgstr ""
+
+msgid "Tap to reveal"
+msgstr ""
+
+msgid "Tap reveal to view notes"
+msgstr ""
+
+msgid "Main"
+msgstr "ຫຼັກ"
+
+msgid "Username"
+msgstr "ຊື່ຜູ້ໃຊ້"
+
+msgid "Loading…"
+msgstr ""
+
+msgid "URL"
+msgstr "URL"
+
+msgid "TOTP (Valid for %1)"
+msgstr ""
+
+msgid "TOTP"
+msgstr ""
+
+msgid "Other Fields"
+msgstr "ຊ່ອງຂໍ້ມູນອື່ນໆ"
+
+msgid "KeePassRX: Clipboard cleared."
+msgstr "KeePassRX: ລ້າງຂໍ້ມູນໃນຄລິບບອດແລ້ວ."
+
+msgid "Entry Notes"
+msgstr ""
+
+msgid "Note copied to clipboard"
+msgstr ""
+
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
@@ -373,6 +376,9 @@ msgstr ""
 msgctxt "Password strength"
 msgid "Excellent"
 msgstr ""
+
+#~ msgid "Tap to copy"
+#~ msgstr "ແຕະເພື່ອຄັດລອກ"
 
 #~ msgid "Notes copied to clipboard (30 secs)"
 #~ msgstr "ຄັດລອກບັນທຶກໃສ່ຄລິບບອດແລ້ວ (30 ວິນາທີ)"

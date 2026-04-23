@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-11 14:27+0000\n"
+"POT-Creation-Date: 2026-04-22 08:59+0000\n"
 "PO-Revision-Date: 2026-01-15 18:01+0000\n"
 "Last-Translator: தமிழ்நேரம் <tamilneram247@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -219,57 +219,6 @@ msgstr ""
 "உள்ளீடுகளைக் கண்டறிய தெளிவற்ற தேடலைப் பயன்படுத்தவும். முடக்கப்பட்டிருந்தால், தேடல் சரியான "
 "கேச் சென்சிட்டிவ் உரையுடன் மட்டுமே பொருந்தும்."
 
-msgid "Password"
-msgstr "கடவுச்சொல்"
-
-msgid "%1 bits"
-msgstr ""
-
-msgid "Password (Entropy: %1)"
-msgstr ""
-
-msgid "%1 copied to clipboard (30 secs)"
-msgstr "%1 இடைநிலைப்பலகைக்கு நகலெடுக்கப்பட்டது (30 வினாடிகள்)"
-
-msgid "Notes"
-msgstr "குறிப்புகள்"
-
-msgid "Tap to hide"
-msgstr ""
-
-msgid "Tap to reveal"
-msgstr ""
-
-msgid "Tap to copy"
-msgstr "நகலெடுக்க தட்டவும்"
-
-msgid "Tap reveal to view notes"
-msgstr ""
-
-msgid "Main"
-msgstr "முக்கிய"
-
-msgid "Username"
-msgstr "பயனர் பெயர்"
-
-msgid "Loading…"
-msgstr ""
-
-msgid "URL"
-msgstr "முகவரி"
-
-msgid "TOTP (Valid for %1)"
-msgstr ""
-
-msgid "TOTP"
-msgstr ""
-
-msgid "Other Fields"
-msgstr "மற்ற துறைகள்"
-
-msgid "KeePassRX: Clipboard cleared."
-msgstr "KeePassRX: இடைநிலைப்பலகை அழிக்கப்பட்டது."
-
 msgid "Key Loaded"
 msgstr "விசை ஏற்றப்பட்டது"
 
@@ -331,6 +280,60 @@ msgstr "பாதுகாப்பாக பூட்டுதல்"
 msgid "Database Not Opening?"
 msgstr "தரவுத்தளம் திறக்கவில்லையா?"
 
+msgid "Password"
+msgstr "கடவுச்சொல்"
+
+msgid "%1 bits"
+msgstr ""
+
+msgid "Password (Entropy: %1)"
+msgstr ""
+
+msgid "%1 copied to clipboard (30 secs)"
+msgstr "%1 இடைநிலைப்பலகைக்கு நகலெடுக்கப்பட்டது (30 வினாடிகள்)"
+
+msgid "Notes"
+msgstr "குறிப்புகள்"
+
+msgid "Tap to hide"
+msgstr ""
+
+msgid "Tap to reveal"
+msgstr ""
+
+msgid "Tap reveal to view notes"
+msgstr ""
+
+msgid "Main"
+msgstr "முக்கிய"
+
+msgid "Username"
+msgstr "பயனர் பெயர்"
+
+msgid "Loading…"
+msgstr ""
+
+msgid "URL"
+msgstr "முகவரி"
+
+msgid "TOTP (Valid for %1)"
+msgstr ""
+
+msgid "TOTP"
+msgstr ""
+
+msgid "Other Fields"
+msgstr "மற்ற துறைகள்"
+
+msgid "KeePassRX: Clipboard cleared."
+msgstr "KeePassRX: இடைநிலைப்பலகை அழிக்கப்பட்டது."
+
+msgid "Entry Notes"
+msgstr ""
+
+msgid "Note copied to clipboard"
+msgstr ""
+
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
@@ -380,6 +383,9 @@ msgstr ""
 msgctxt "Password strength"
 msgid "Excellent"
 msgstr ""
+
+#~ msgid "Tap to copy"
+#~ msgstr "நகலெடுக்க தட்டவும்"
 
 #~ msgid "Notes copied to clipboard (30 secs)"
 #~ msgstr "குறிப்புகள் இடைநிலைப்பலகைக்கு நகலெடுக்கப்பட்டது (30 வினாடிகள்)"

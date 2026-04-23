@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-11 14:27+0000\n"
+"POT-Creation-Date: 2026-04-22 08:59+0000\n"
 "PO-Revision-Date: 2025-11-18 09:39+0000\n"
 "Last-Translator: projectmoon <projectmoon@agnos.is>\n"
 "Language-Team: Icelandic <https://hosted.weblate.org/projects/ubports/"
@@ -205,57 +205,6 @@ msgid ""
 "case insensitive text."
 msgstr ""
 
-msgid "Password"
-msgstr ""
-
-msgid "%1 bits"
-msgstr ""
-
-msgid "Password (Entropy: %1)"
-msgstr ""
-
-msgid "%1 copied to clipboard (30 secs)"
-msgstr ""
-
-msgid "Notes"
-msgstr "Athugasemdir"
-
-msgid "Tap to hide"
-msgstr ""
-
-msgid "Tap to reveal"
-msgstr ""
-
-msgid "Tap to copy"
-msgstr "Ýtið á til að afrita"
-
-msgid "Tap reveal to view notes"
-msgstr ""
-
-msgid "Main"
-msgstr ""
-
-msgid "Username"
-msgstr ""
-
-msgid "Loading…"
-msgstr ""
-
-msgid "URL"
-msgstr ""
-
-msgid "TOTP (Valid for %1)"
-msgstr ""
-
-msgid "TOTP"
-msgstr ""
-
-msgid "Other Fields"
-msgstr ""
-
-msgid "KeePassRX: Clipboard cleared."
-msgstr ""
-
 msgid "Key Loaded"
 msgstr ""
 
@@ -317,6 +266,60 @@ msgstr "Læsa með öryggi"
 msgid "Database Not Opening?"
 msgstr "Er gagnagrunnur ekki að opna?"
 
+msgid "Password"
+msgstr ""
+
+msgid "%1 bits"
+msgstr ""
+
+msgid "Password (Entropy: %1)"
+msgstr ""
+
+msgid "%1 copied to clipboard (30 secs)"
+msgstr ""
+
+msgid "Notes"
+msgstr "Athugasemdir"
+
+msgid "Tap to hide"
+msgstr ""
+
+msgid "Tap to reveal"
+msgstr ""
+
+msgid "Tap reveal to view notes"
+msgstr ""
+
+msgid "Main"
+msgstr ""
+
+msgid "Username"
+msgstr ""
+
+msgid "Loading…"
+msgstr ""
+
+msgid "URL"
+msgstr ""
+
+msgid "TOTP (Valid for %1)"
+msgstr ""
+
+msgid "TOTP"
+msgstr ""
+
+msgid "Other Fields"
+msgstr ""
+
+msgid "KeePassRX: Clipboard cleared."
+msgstr ""
+
+msgid "Entry Notes"
+msgstr ""
+
+msgid "Note copied to clipboard"
+msgstr ""
+
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
@@ -364,6 +367,9 @@ msgstr ""
 msgctxt "Password strength"
 msgid "Excellent"
 msgstr ""
+
+#~ msgid "Tap to copy"
+#~ msgstr "Ýtið á til að afrita"
 
 #~ msgid ""
 #~ "Change settings based on your preferences. Any change to the settings "

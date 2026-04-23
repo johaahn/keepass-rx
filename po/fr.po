@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-11 14:27+0000\n"
+"POT-Creation-Date: 2026-04-22 08:59+0000\n"
 "PO-Revision-Date: 2026-04-19 21:09+0000\n"
 "Last-Translator: libermax <libremax@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -221,57 +221,6 @@ msgstr ""
 "option est désactivée, la recherche ne trouve que les correspondances "
 "exactes, sans distinction entre majuscules et minuscules."
 
-msgid "Password"
-msgstr "Mot de passe"
-
-msgid "%1 bits"
-msgstr "%1 bits"
-
-msgid "Password (Entropy: %1)"
-msgstr "Mot de passe (Entropie : %1)"
-
-msgid "%1 copied to clipboard (30 secs)"
-msgstr "%1 copié dans le presse-papiers (30 secondes)"
-
-msgid "Notes"
-msgstr "Notes"
-
-msgid "Tap to hide"
-msgstr "Appuyez pour masquer"
-
-msgid "Tap to reveal"
-msgstr "Appuyez pour afficher"
-
-msgid "Tap to copy"
-msgstr "Appuyez pour copier"
-
-msgid "Tap reveal to view notes"
-msgstr "Appuyez sur afficher pour voir les notes"
-
-msgid "Main"
-msgstr "Principal"
-
-msgid "Username"
-msgstr "Nom d'utilisateur"
-
-msgid "Loading…"
-msgstr "Chargement…"
-
-msgid "URL"
-msgstr "URL"
-
-msgid "TOTP (Valid for %1)"
-msgstr "TOTP (Valide pour %1)"
-
-msgid "TOTP"
-msgstr "TOTP"
-
-msgid "Other Fields"
-msgstr "Autres champs"
-
-msgid "KeePassRX: Clipboard cleared."
-msgstr "KeePassRX : Presse-papiers effacé."
-
 msgid "Key Loaded"
 msgstr "Clé chargée"
 
@@ -334,6 +283,60 @@ msgstr "Verrouillage sécurisé"
 msgid "Database Not Opening?"
 msgstr "La base de données ne s'ouvre pas ?"
 
+msgid "Password"
+msgstr "Mot de passe"
+
+msgid "%1 bits"
+msgstr "%1 bits"
+
+msgid "Password (Entropy: %1)"
+msgstr "Mot de passe (Entropie : %1)"
+
+msgid "%1 copied to clipboard (30 secs)"
+msgstr "%1 copié dans le presse-papiers (30 secondes)"
+
+msgid "Notes"
+msgstr "Notes"
+
+msgid "Tap to hide"
+msgstr "Appuyez pour masquer"
+
+msgid "Tap to reveal"
+msgstr "Appuyez pour afficher"
+
+msgid "Tap reveal to view notes"
+msgstr "Appuyez sur afficher pour voir les notes"
+
+msgid "Main"
+msgstr "Principal"
+
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+msgid "Loading…"
+msgstr "Chargement…"
+
+msgid "URL"
+msgstr "URL"
+
+msgid "TOTP (Valid for %1)"
+msgstr "TOTP (Valide pour %1)"
+
+msgid "TOTP"
+msgstr "TOTP"
+
+msgid "Other Fields"
+msgstr "Autres champs"
+
+msgid "KeePassRX: Clipboard cleared."
+msgstr "KeePassRX : Presse-papiers effacé."
+
+msgid "Entry Notes"
+msgstr ""
+
+msgid "Note copied to clipboard"
+msgstr ""
+
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
@@ -383,6 +386,9 @@ msgstr "Bonne"
 msgctxt "Password strength"
 msgid "Excellent"
 msgstr "Excellente"
+
+#~ msgid "Tap to copy"
+#~ msgstr "Appuyez pour copier"
 
 #~ msgid "Notes copied to clipboard (30 secs)"
 #~ msgstr "Notes copiées dans le presse-papiers (30 secondes)"

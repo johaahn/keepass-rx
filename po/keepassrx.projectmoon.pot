@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-23 13:04+0000\n"
+"POT-Creation-Date: 2026-04-23 13:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,54 +41,6 @@ msgstr ""
 msgid "Tap to copy 2FA code"
 msgstr ""
 
-#: qml/pages/AboutPage.qml:12 qml/pages/DBList.qml:76
-#: qml/pages/EntriesPage.qml:212 qml/pages/OpenDBPage.qml:118
-#: qml/pages/UnlockPage.qml:53
-msgid "About"
-msgstr ""
-
-#: qml/pages/AboutPage.qml:52
-msgid "Version %1"
-msgstr ""
-
-#: qml/pages/AboutPage.qml:85
-msgid ""
-"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
-"Touch. It is licensed under the GNU AGPL v3 license."
-msgstr ""
-
-#: qml/pages/AboutPage.qml:96
-msgid ""
-"The built-in KeePass icon images are licensed under a variety of licenses as "
-"detailed in assets/COPYING."
-msgstr ""
-
-#: qml/pages/AboutPage.qml:104
-msgid "Manual"
-msgstr ""
-
-#: qml/pages/AboutPage.qml:116
-msgid ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-
-#: qml/pages/AboutPage.qml:129
-msgid ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-
-#: qml/pages/AboutPage.qml:138
-msgid "Source Code"
-msgstr ""
-
-#: qml/pages/AboutPage.qml:147
-msgid ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
-msgstr ""
-
 #: qml/pages/DBList.qml:62
 msgid "Add Database"
 msgstr ""
@@ -97,6 +49,12 @@ msgstr ""
 #: qml/pages/SettingsPage.qml:10 qml/pages/OpenDBPage.qml:111
 #: qml/pages/UnlockPage.qml:46
 msgid "Settings"
+msgstr ""
+
+#: qml/pages/DBList.qml:76 qml/pages/EntriesPage.qml:212
+#: qml/pages/OpenDBPage.qml:118 qml/pages/UnlockPage.qml:53
+#: qml/pages/AboutPage.qml:12
+msgid "About"
 msgstr ""
 
 #: qml/pages/DBList.qml:96
@@ -345,6 +303,59 @@ msgstr ""
 msgid "Database Not Opening?"
 msgstr ""
 
+#: qml/pages/NotePage.qml:12
+msgid "Entry Notes"
+msgstr ""
+
+#: qml/pages/NotePage.qml:31
+msgid "Note copied to clipboard"
+msgstr ""
+
+#: qml/pages/AttachmentPage.qml:41
+msgid "Unable to export attachment."
+msgstr ""
+
+#: qml/pages/AttachmentPage.qml:81
+msgid "Entry Attachments"
+msgstr ""
+
+#: qml/pages/AttachmentPage.qml:110
+msgid "Export Attachment"
+msgstr ""
+
+#: qml/pages/AttachmentPage.qml:136
+msgid "Attachment Not Viewable"
+msgstr ""
+
+#: qml/pages/AttachmentPage.qml:138
+msgid "KeePassRX cannot view this %1 attachment, but it can be exported."
+msgstr ""
+
+#: qml/pages/AttachmentPage.qml:139
+msgid "KeePassRX cannot view this attachment, but it can be exported."
+msgstr ""
+
+#: qml/pages/AttachmentPage.qml:142 qml/pages/AttachmentPage.qml:237
+#: qml/pages/ViewAttachment.qml:36
+msgid "Export"
+msgstr ""
+
+#: qml/pages/AttachmentPage.qml:185
+msgid "%1 ready to export."
+msgstr ""
+
+#: qml/pages/AttachmentPage.qml:193
+msgid "%1 exported."
+msgstr ""
+
+#: qml/pages/AttachmentPage.qml:220
+msgid "%1 bytes"
+msgstr ""
+
+#: qml/pages/ViewAttachment.qml:20
+msgid "Attachment"
+msgstr ""
+
 #: qml/pages/SingleEntry.qml:64
 msgid "Password"
 msgstr ""
@@ -415,57 +426,46 @@ msgstr ""
 msgid "KeePassRX: Clipboard cleared."
 msgstr ""
 
-#: qml/pages/NotePage.qml:12
-msgid "Entry Notes"
+#: qml/pages/AboutPage.qml:52
+msgid "Version %1"
 msgstr ""
 
-#: qml/pages/NotePage.qml:31
-msgid "Note copied to clipboard"
+#: qml/pages/AboutPage.qml:85
+msgid ""
+"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
+"Touch. It is licensed under the GNU AGPL v3 license."
 msgstr ""
 
-#: qml/pages/AttachmentPage.qml:41
-msgid "Unable to export attachment."
+#: qml/pages/AboutPage.qml:96
+msgid ""
+"The built-in KeePass icon images are licensed under a variety of licenses as "
+"detailed in assets/COPYING."
 msgstr ""
 
-#: qml/pages/AttachmentPage.qml:81
-msgid "Entry Attachments"
+#: qml/pages/AboutPage.qml:104
+msgid "Manual"
 msgstr ""
 
-#: qml/pages/AttachmentPage.qml:110
-msgid "Export Attachment"
+#: qml/pages/AboutPage.qml:116
+msgid ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
 msgstr ""
 
-#: qml/pages/AttachmentPage.qml:136
-msgid "Attachment Not Viewable"
+#: qml/pages/AboutPage.qml:129
+msgid ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
 msgstr ""
 
-#: qml/pages/AttachmentPage.qml:138
-msgid "KeePassRX cannot view this %1 attachment, but it can be exported."
+#: qml/pages/AboutPage.qml:138
+msgid "Source Code"
 msgstr ""
 
-#: qml/pages/AttachmentPage.qml:139
-msgid "KeePassRX cannot view this attachment, but it can be exported."
-msgstr ""
-
-#: qml/pages/AttachmentPage.qml:142 qml/pages/AttachmentPage.qml:237
-#: qml/pages/ViewAttachment.qml:36
-msgid "Export"
-msgstr ""
-
-#: qml/pages/AttachmentPage.qml:185
-msgid "%1 ready to export."
-msgstr ""
-
-#: qml/pages/AttachmentPage.qml:193
-msgid "%1 exported."
-msgstr ""
-
-#: qml/pages/AttachmentPage.qml:220
-msgid "%1 bytes"
-msgstr ""
-
-#: qml/pages/ViewAttachment.qml:20
-msgid "Attachment"
+#: qml/pages/AboutPage.qml:147
+msgid ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
 msgstr ""
 
 #: src/gui/instructions.rs:9

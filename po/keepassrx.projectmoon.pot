@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-23 12:44+0000\n"
+"POT-Creation-Date: 2026-04-23 13:04+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -47,39 +47,43 @@ msgstr ""
 msgid "About"
 msgstr ""
 
-#: qml/pages/AboutPage.qml:79
+#: qml/pages/AboutPage.qml:52
+msgid "Version %1"
+msgstr ""
+
+#: qml/pages/AboutPage.qml:85
 msgid ""
 "KeePassRX is password manager for KeePass databases, designed for Ubuntu "
 "Touch. It is licensed under the GNU AGPL v3 license."
 msgstr ""
 
-#: qml/pages/AboutPage.qml:90
+#: qml/pages/AboutPage.qml:96
 msgid ""
 "The built-in KeePass icon images are licensed under a variety of licenses as "
 "detailed in assets/COPYING."
 msgstr ""
 
-#: qml/pages/AboutPage.qml:98
+#: qml/pages/AboutPage.qml:104
 msgid "Manual"
 msgstr ""
 
-#: qml/pages/AboutPage.qml:110
+#: qml/pages/AboutPage.qml:116
 msgid ""
 "• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
 "projects/keepassrx/</a>"
 msgstr ""
 
-#: qml/pages/AboutPage.qml:123
+#: qml/pages/AboutPage.qml:129
 msgid ""
 "• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
 "projects/keepassrx/</a>"
 msgstr ""
 
-#: qml/pages/AboutPage.qml:132
+#: qml/pages/AboutPage.qml:138
 msgid "Source Code"
 msgstr ""
 
-#: qml/pages/AboutPage.qml:141
+#: qml/pages/AboutPage.qml:147
 msgid ""
 "<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
 "projectmoon/keepass-rx</a>"

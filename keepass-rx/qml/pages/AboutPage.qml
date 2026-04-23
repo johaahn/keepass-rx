@@ -47,6 +47,12 @@ Page {
                 horizontalAlignment: Text.AlignHCenter
             }
 
+            Label {
+                Layout.fillWidth: true
+                text: i18n.tr("Version %1").arg(keepassRxVersion)
+                horizontalAlignment: Text.AlignHCenter
+            }
+
             RowLayout {
                 Layout.fillWidth: true
 

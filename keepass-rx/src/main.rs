@@ -32,7 +32,10 @@ use gettextrs::{bindtextdomain, textdomain};
 use log::{LevelFilter, error, info};
 use pretty_env_logger::env_logger::Builder;
 use qmeta_async::with_executor;
-use qmetaobject::{QObjectBox, QQuickStyle, QQuickView, qml_register_enum, qml_register_type};
+use qmetaobject::{
+    QObjectBox, QQuickStyle, QQuickView, QString, QVariant, qml_register_enum,
+    qml_register_type,
+};
 use std::env;
 use std::path::PathBuf;
 use std::rc::Rc;
@@ -132,6 +135,10 @@ fn load_gui() -> Result<()> {
             let engine = view.engine();
 
             engine.set_property("keepassrx".into(), gui.pinned().into());
+            engine.set_property(
+                "keepassRxVersion".into(),
+                QVariant::from(QString::from(env!("CARGO_PKG_VERSION"))),
+            );
             engine.set_object_property("AppState".into(), app.app_state.pinned());
             engine.set_object_property("SettingsBridge".into(), app.settings_bridge.pinned());
 

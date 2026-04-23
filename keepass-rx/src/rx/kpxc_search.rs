@@ -226,21 +226,19 @@ fn password_term_matches(token: &QueryToken, password: &[u8]) -> bool {
 }
 
 fn entry_matches(db: &RxDatabase, entry: &RxEntry, tokens: &[QueryToken]) -> bool {
-    tokens
-        .iter()
-        .all(|token| match token.operator.as_deref() {
-            Some(op) if is_password_operator(op) => entry
-                .password()
-                .and_then(|value| value.value_secure())
-                .as_deref()
-                .is_some_and(|password| password_term_matches(token, password)),
-            Some(op) => operator_field(entry, op, db)
-                .iter()
-                .any(|field| term_matches(token, field)),
-            None => entry_default_fields(entry, db)
-                .iter()
-                .any(|field| term_matches(token, field)),
-        })
+    tokens.iter().all(|token| match token.operator.as_deref() {
+        Some(op) if is_password_operator(op) => entry
+            .password()
+            .and_then(|value| value.value_secure())
+            .as_deref()
+            .is_some_and(|password| password_term_matches(token, password)),
+        Some(op) => operator_field(entry, op, db)
+            .iter()
+            .any(|field| term_matches(token, field)),
+        None => entry_default_fields(entry, db)
+            .iter()
+            .any(|field| term_matches(token, field)),
+    })
 }
 
 pub fn evaluate_saved_search(db: &RxDatabase, query: &str) -> Vec<Uuid> {
@@ -263,7 +261,6 @@ pub fn evaluate_saved_search(db: &RxDatabase, query: &str) -> Vec<Uuid> {
 
 #[cfg(test)]
 mod tests {
-    use keepass::db::Node;
     use keyring::set_default_credential_builder;
     use zeroize::Zeroizing;
 
@@ -310,9 +307,9 @@ mod tests {
             keepass::db::Value::Unprotected("BobSecret1".into()),
         );
 
-        child.add_child(Node::Entry(entry1));
-        root.add_child(Node::Group(child));
-        root.add_child(Node::Entry(entry2));
+        child.entries.push(entry1);
+        root.groups.push(child);
+        root.entries.push(entry2);
         db.root = root;
 
         RxDatabase::new(Zeroizing::new(ZeroableDatabase(db)))

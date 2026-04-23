@@ -7,40 +7,25 @@ use indexmap::IndexMap;
 use keepass::config::DatabaseConfig;
 use keepass::db::Meta;
 use log::info;
-use paste::paste;
-use regex::Regex;
 use std::rc::Rc;
-use std::sync::LazyLock;
 use std::{collections::HashMap, mem, str::FromStr};
 use uuid::Uuid;
 use zeroize::{Zeroize, Zeroizing};
 
-fn extract_string(input: String) -> Option<String> {
-    static RE: LazyLock<Regex> =
-        LazyLock::new(|| Regex::new(r#"String\("([^"\\]*(?:\\.[^"\\]*)*)"\)"#).unwrap());
-
-    RE.captures(&input)
-        .and_then(|caps| caps.get(1).map(|m| m.as_str().to_string()))
+fn get_kpxc_string_field(config: &DatabaseConfig, field: &str) -> Option<String> {
+    config
+        .public_custom_data
+        .as_ref()
+        .and_then(|data| data.data.get(field))
+        .and_then(|value| Into::<Option<&String>>::into(value).cloned())
 }
 
-fn extract_i32(input: String) -> Option<i32> {
-    static RE: LazyLock<Regex> =
-        LazyLock::new(|| Regex::new(r#"Int32\(([^"\\]*(?:\\.[^"\\]*)*)\)"#).unwrap());
-
-    RE.captures(&input)
-        .and_then(|caps| caps.get(1).map(|m| m.as_str()))
-        .and_then(|num| num.parse().ok())
-}
-
-// Hippity hackity time to extractity
-macro_rules! get_kpxc_field {
-    ($kind:ty, $dbdata:expr, $field:expr) => {{
-        $dbdata
-            .as_mut()
-            .and_then(|d| d.remove($field))
-            .map(|val| format!("{:?}", val))
-            .and_then(paste! { [<extract_ $kind:lower>] })
-    }};
+fn get_kpxc_i32_field(config: &DatabaseConfig, field: &str) -> Option<i32> {
+    config
+        .public_custom_data
+        .as_ref()
+        .and_then(|data| data.data.get(field))
+        .and_then(|value| Into::<Option<&i32>>::into(value).copied())
 }
 
 #[derive(Default, Clone)]
@@ -58,13 +43,11 @@ pub struct RxSavedSearchDef {
 }
 
 impl RxMetadata {
-    pub fn new(mut config: DatabaseConfig, meta: Meta) -> RxMetadata {
-        let mut custom_db_data = config.public_custom_data.take().map(|pcd| pcd.data);
-
+    pub fn new(config: DatabaseConfig, meta: Meta) -> RxMetadata {
         RxMetadata {
-            name: get_kpxc_field!(String, custom_db_data, "KPXC_PUBLIC_NAME"),
-            color: get_kpxc_field!(String, custom_db_data, "KPXC_PUBLIC_COLOR"),
-            icon: get_kpxc_field!(i32, custom_db_data, "KPXC_PUBLIC_ICON"),
+            name: get_kpxc_string_field(&config, "KPXC_PUBLIC_NAME"),
+            color: get_kpxc_string_field(&config, "KPXC_PUBLIC_COLOR"),
+            icon: get_kpxc_i32_field(&config, "KPXC_PUBLIC_ICON"),
             recycle_bin_uuid: meta.recyclebin_uuid,
         }
     }
@@ -251,14 +234,6 @@ mod tests {
     use crate::rx::{RxCustomFields, RxValue, TEMPLATE_FIELD_NAME};
 
     #[test]
-    fn test_extract_string() {
-        let text = String::from(r#"String("value")"#);
-        let result = extract_string(text);
-        assert!(result.is_some());
-        assert_eq!(result, Some(String::from("value")));
-    }
-
-    #[test]
     fn loads_recursively() {
         set_default_credential_builder(keyring::mock::default_credential_builder());
         let mut db = keepass::db::Database::new(Default::default());
@@ -284,9 +259,9 @@ mod tests {
             keepass::db::Value::Unprotected("sub entry".to_string()),
         );
 
-        subgroup.add_child(keepass::db::Node::Entry(sub_entry));
-        group.add_child(keepass::db::Node::Entry(entry));
-        group.add_child(keepass::db::Node::Group(subgroup));
+        subgroup.entries.push(sub_entry);
+        group.entries.push(entry);
+        group.groups.push(subgroup);
 
         db.root = group;
 

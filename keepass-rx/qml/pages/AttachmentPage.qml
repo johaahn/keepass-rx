@@ -219,7 +219,7 @@ Page {
                 summary.text: attachmentMimeType
 
                 Icon {
-                    name: "document-save-as"
+                    name: attachmentViewType ? "document-preview" : "document-save-as"
                     SlotsLayout.overrideVerticalPositioning: true
                     SlotsLayout.position: SlotsLayout.Trailing
                     width: units.gu(3)

@@ -29,6 +29,7 @@ pub struct RxUiAttachment {
     pub attachmentName: QString,
     pub attachmentSize: i32,
     pub attachmentMimeType: QString,
+    pub attachmentViewType: QString,
 }
 
 fn convert_attachments(value: &RxAttachments, master_key: &MasterKey) -> Vec<RxUiAttachment> {
@@ -52,14 +53,28 @@ fn convert_attachments(value: &RxAttachments, master_key: &MasterKey) -> Vec<RxU
                     })
                 })
                 .unwrap_or_else(|| "unknown".to_string());
+            let attachment_view_type = attachment_bytes
+                .as_ref()
+                .map(|val| view_type_for_attachment(val))
+                .unwrap_or_default();
 
             RxUiAttachment {
                 attachmentName: QString::from(name.as_str()),
                 attachmentSize: attachment_size,
                 attachmentMimeType: attachment_mime_type.into(),
+                attachmentViewType: attachment_view_type.into(),
             }
         })
         .collect()
+}
+
+fn view_type_for_attachment(bytes: &[u8]) -> &'static str {
+    match infer::get(bytes) {
+        Some(kind) if kind.matcher_type() == MatcherType::Text => "text",
+        Some(kind) if kind.matcher_type() == MatcherType::Image => "image",
+        None if std::str::from_utf8(bytes).is_ok() => "text",
+        _ => "",
+    }
 }
 
 fn export_result(

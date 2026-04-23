@@ -28,20 +28,36 @@ use crate::{app::AppState, rx::virtual_hierarchy::VirtualHierarchyType};
 pub struct RxUiAttachment {
     pub attachmentName: QString,
     pub attachmentSize: i32,
+    pub attachmentMimeType: QString,
 }
 
 fn convert_attachments(value: &RxAttachments, master_key: &MasterKey) -> Vec<RxUiAttachment> {
     value
         .iter()
-        .map(|(name, attachment)| RxUiAttachment {
-            attachmentName: QString::from(name.as_str()),
-            attachmentSize: attachment
-                .value_secure(master_key)
+        .map(|(name, attachment)| {
+            let attachment_bytes = attachment.value_secure(master_key);
+            let attachment_size = attachment_bytes
+                .as_ref()
                 .map(|val| val.len())
                 .unwrap_or(0)
                 .try_into()
                 .ok()
-                .unwrap_or(0),
+                .unwrap_or(0);
+            let attachment_mime_type = attachment_bytes
+                .as_ref()
+                .and_then(|val| infer::get(val).map(|kind| kind.mime_type().to_string()))
+                .or_else(|| {
+                    attachment_bytes.as_ref().and_then(|val| {
+                        std::str::from_utf8(val).ok().map(|_| "text/plain".to_string())
+                    })
+                })
+                .unwrap_or_else(|| "unknown".to_string());
+
+            RxUiAttachment {
+                attachmentName: QString::from(name.as_str()),
+                attachmentSize: attachment_size,
+                attachmentMimeType: attachment_mime_type.into(),
+            }
         })
         .collect()
 }

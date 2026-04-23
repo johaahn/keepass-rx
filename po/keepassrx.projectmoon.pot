@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-23 12:34+0000\n"
+"POT-Creation-Date: 2026-04-23 12:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -361,53 +361,53 @@ msgstr ""
 msgid "Attachments"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:369
+#: qml/pages/SingleEntry.qml:370
 msgid "Notes"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:377
+#: qml/pages/SingleEntry.qml:378
 msgid "Tap to hide"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:377 qml/pages/SingleEntry.qml:477
-#: qml/pages/SingleEntry.qml:521 qml/pages/SingleEntry.qml:574
+#: qml/pages/SingleEntry.qml:378 qml/pages/SingleEntry.qml:478
+#: qml/pages/SingleEntry.qml:522 qml/pages/SingleEntry.qml:575
 msgid "Tap to reveal"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:433
+#: qml/pages/SingleEntry.qml:434
 msgid "Tap reveal to view notes"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:462
+#: qml/pages/SingleEntry.qml:463
 msgid "Main"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:472
+#: qml/pages/SingleEntry.qml:473
 msgid "Username"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:476 qml/pages/SingleEntry.qml:499
-#: qml/pages/SingleEntry.qml:520 qml/pages/SingleEntry.qml:573
+#: qml/pages/SingleEntry.qml:477 qml/pages/SingleEntry.qml:500
+#: qml/pages/SingleEntry.qml:521 qml/pages/SingleEntry.qml:574
 msgid "Loading…"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:517
+#: qml/pages/SingleEntry.qml:518
 msgid "URL"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:537
+#: qml/pages/SingleEntry.qml:538
 msgid "TOTP (Valid for %1)"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:538 qml/pages/SingleEntry.qml:542
+#: qml/pages/SingleEntry.qml:539 qml/pages/SingleEntry.qml:543
 msgid "TOTP"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:564
+#: qml/pages/SingleEntry.qml:565
 msgid "Other Fields"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:605 qml/Main.qml:241
+#: qml/pages/SingleEntry.qml:606 qml/Main.qml:241
 msgid "KeePassRX: Clipboard cleared."
 msgstr ""
 

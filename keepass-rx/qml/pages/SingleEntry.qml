@@ -299,7 +299,7 @@ Page {
                 name: "Attachments"
                 text: i18n.tr("Attachments")
                 iconName: "attachment"
-                //visible: entryAttachmentCount > 0
+                visible: theEntry.attachmentCount > 0
                 onTriggered: {
                     pageStack.addPageToNextColumn(
                         singleEntryPage,
@@ -318,9 +318,14 @@ Page {
     }
 
     RxUiEntry {
-        id: totpEntry
+        id: theEntry
         entryUuid: singleEntryPage.entryUuid
         app: AppState
+        onReadyChanged: {
+            if (theEntry.ready) {
+                theEntry.loadAttachments();
+            }
+        }
     }
 
     Timer {
@@ -331,7 +336,7 @@ Page {
         triggeredOnStart: true
         onTriggered: {
             if (hasTotpSection()) {
-                totpEntry.updateTotp();
+                theEntry.updateTotp();
             }
         }
     }
@@ -528,13 +533,13 @@ Page {
             }
 
             DetailField {
-                title: valueIsDefined(totpEntry.currentTotpValidFor)
-                    ? i18n.tr("TOTP (Valid for %1)").arg(totpEntry.currentTotpValidFor)
+                title: valueIsDefined(theEntry.currentTotpValidFor)
+                    ? i18n.tr("TOTP (Valid for %1)").arg(theEntry.currentTotpValidFor)
                     : i18n.tr("TOTP")
                 visible: hasTotpSection()
-                subtitle: totpEntry.currentTotp
-                showCopyButton: valueIsDefined(totpEntry.currentTotp)
-                onCopyClicked: copyToClipboard(i18n.tr("TOTP"), totpEntry.currentTotp)
+                subtitle: theEntry.currentTotp
+                showCopyButton: valueIsDefined(theEntry.currentTotp)
+                onCopyClicked: copyToClipboard(i18n.tr("TOTP"), theEntry.currentTotp)
             }
 
         }

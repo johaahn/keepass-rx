@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-23 11:50+0000\n"
+"POT-Creation-Date: 2026-04-23 12:08+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -361,53 +361,53 @@ msgstr ""
 msgid "Attachments"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:364
+#: qml/pages/SingleEntry.qml:369
 msgid "Notes"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:372
+#: qml/pages/SingleEntry.qml:377
 msgid "Tap to hide"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:372 qml/pages/SingleEntry.qml:472
-#: qml/pages/SingleEntry.qml:516 qml/pages/SingleEntry.qml:569
+#: qml/pages/SingleEntry.qml:377 qml/pages/SingleEntry.qml:477
+#: qml/pages/SingleEntry.qml:521 qml/pages/SingleEntry.qml:574
 msgid "Tap to reveal"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:428
+#: qml/pages/SingleEntry.qml:433
 msgid "Tap reveal to view notes"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:457
+#: qml/pages/SingleEntry.qml:462
 msgid "Main"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:467
+#: qml/pages/SingleEntry.qml:472
 msgid "Username"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:471 qml/pages/SingleEntry.qml:494
-#: qml/pages/SingleEntry.qml:515 qml/pages/SingleEntry.qml:568
+#: qml/pages/SingleEntry.qml:476 qml/pages/SingleEntry.qml:499
+#: qml/pages/SingleEntry.qml:520 qml/pages/SingleEntry.qml:573
 msgid "Loading…"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:512
+#: qml/pages/SingleEntry.qml:517
 msgid "URL"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:532
+#: qml/pages/SingleEntry.qml:537
 msgid "TOTP (Valid for %1)"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:533 qml/pages/SingleEntry.qml:537
+#: qml/pages/SingleEntry.qml:538 qml/pages/SingleEntry.qml:542
 msgid "TOTP"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:559
+#: qml/pages/SingleEntry.qml:564
 msgid "Other Fields"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:600 qml/Main.qml:241
+#: qml/pages/SingleEntry.qml:605 qml/Main.qml:241
 msgid "KeePassRX: Clipboard cleared."
 msgstr ""
 
@@ -443,7 +443,8 @@ msgstr ""
 msgid "KeePassRX cannot view this attachment, but it can be exported."
 msgstr ""
 
-#: qml/pages/AttachmentPage.qml:140 qml/pages/ViewAttachment.qml:34
+#: qml/pages/AttachmentPage.qml:140 qml/pages/AttachmentPage.qml:235
+#: qml/pages/ViewAttachment.qml:34
 msgid "Export"
 msgstr ""
 

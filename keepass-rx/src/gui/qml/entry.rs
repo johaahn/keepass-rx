@@ -49,7 +49,9 @@ fn convert_attachments(value: &RxAttachments, master_key: &MasterKey) -> Vec<RxU
                 .and_then(|val| infer::get(val).map(|kind| kind.mime_type().to_string()))
                 .or_else(|| {
                     attachment_bytes.as_ref().and_then(|val| {
-                        std::str::from_utf8(val).ok().map(|_| "text/plain".to_string())
+                        std::str::from_utf8(val)
+                            .ok()
+                            .map(|_| "text/plain".to_string())
                     })
                 })
                 .unwrap_or_else(|| "unknown".to_string());
@@ -205,6 +207,8 @@ pub struct RxUiEntry {
     pub(super) updateTotp: qt_method!(fn(&mut self)),
 
     // Attachments
+    pub(super) attachmentCount: qt_property!(i32; NOTIFY attachmentCountChanged),
+    pub(super) attachmentCountChanged: qt_signal!(),
     pub(super) attachments: qt_property!(RefCell<SimpleListModel<RxUiAttachment>>; NOTIFY attachmentsChanged),
     pub(super) attachmentsChanged: qt_signal!(),
     pub(super) loadAttachments: qt_method!(fn(&mut self)),
@@ -219,32 +223,62 @@ impl RxUiEntry {
     fn init_from_state(&mut self, _: &AppState) {}
     fn init_from_view(&mut self, _: &VirtualHierarchyType) {}
 
+    fn get_attachments(&self) -> Result<Vec<RxUiAttachment>> {
+        let entry_uuid = Uuid::from_str(&self.entryUuid.to_string())?;
+        let app_state = self
+            ._app
+            .as_pinned()
+            .ok_or_else(|| anyhow!("Unable to get app state"))?;
+
+        let app_state = app_state.borrow();
+        let maybe_db = app_state.curr_db_ref();
+        let db = maybe_db?;
+
+        let maybe_entry = db.get_entry(entry_uuid);
+        let maybe_attach = maybe_entry.as_ref().map(|ent| &ent.attachments);
+
+        Ok(maybe_attach
+            .map(|att| convert_attachments(att, db.master_key()))
+            .unwrap_or_default())
+    }
+
+    #[with_executor]
+    pub fn loadAttachmentCount(&mut self) {
+        let count: usize = self
+            .get_attachments()
+            .ok()
+            .map(|list| list.len())
+            .unwrap_or_default();
+
+        let count: i32 = count.try_into().ok().unwrap_or_default();
+        let change = self.attachmentCount != count;
+
+        if change {
+            self.attachmentCount = count;
+            self.attachmentCountChanged();
+        }
+    }
+
     #[with_executor]
     pub fn loadAttachments(&mut self) {
-        let load = || -> Result<()> {
-            let entry_uuid = Uuid::from_str(&self.entryUuid.to_string())?;
-            let app_state = self
-                ._app
-                .as_pinned()
-                .ok_or_else(|| anyhow!("Unable to get app state"))?;
+        let maybe_attachments = self.get_attachments();
 
-            let app_state = app_state.borrow();
-            let maybe_db = app_state.curr_db_ref();
-            let db = maybe_db?;
-
-            let maybe_entry = db.get_entry(entry_uuid);
-            let maybe_attach = maybe_entry.as_ref().map(|ent| &ent.attachments);
-
-            let attachments = maybe_attach
-                .map(|att| convert_attachments(att, db.master_key()))
-                .unwrap_or_default();
+        if let Ok(attachments) = maybe_attachments {
+            let count: i32 = attachments.len().try_into().ok().unwrap_or_default();
+            let count_change = self.attachmentCount != count;
 
             self.attachments.borrow_mut().reset_data(attachments);
-            Ok(())
-        };
+            self.attachmentCountChanged();
 
-        if let Err(err) = load() {
-            error!("Unable to load attachments: {}", err);
+            if count_change {
+                self.attachmentCount = count;
+                self.attachmentCountChanged();
+            }
+        } else {
+            error!(
+                "Unable to load attachments: {}",
+                maybe_attachments.unwrap_err()
+            );
         }
     }
 

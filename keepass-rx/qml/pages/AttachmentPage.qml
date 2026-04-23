@@ -50,9 +50,9 @@ Page {
 
     function viewOrExportAttachment(attachmentName) {
         const result = theEntry.viewAttachment(attachmentName);
+        const viewTypeValid = result.viewType === "text" || result.viewType === "image";
 
-        if (result.ok && result.canView &&
-                (result.viewType === "text" || result.viewType === "image")) {
+        if (result.ok && result.canView && viewTypeValid) {
             pageStack.addPageToNextColumn(
                 attachmentPage,
                 Qt.resolvedUrl("ViewAttachment.qml"),
@@ -67,11 +67,11 @@ Page {
                 }
             );
             return;
+        } else {
+            pendingAttachmentName = attachmentName;
+            pendingAttachmentMimeType = result.mimeType || "";
+            PopupUtils.open(notViewableDialog);
         }
-
-        pendingAttachmentName = attachmentName;
-        pendingAttachmentMimeType = result.mimeType || "";
-        PopupUtils.open(notViewableDialog);
     }
 
     header: PageHeader {
@@ -224,8 +224,21 @@ Page {
                     SlotsLayout.position: SlotsLayout.Trailing
                     width: units.gu(3)
                     height: units.gu(3)
-                    y: layout.subtitle.y - baselineOffset
+                    y: (parent.height / 2) - (height / 2)
                 }
+            }
+
+            trailingActions: ListItemActions {
+                actions: [
+                    Action {
+                        name: "Export"
+                        text: i18n.tr("Export")
+                        iconName: "document-save-as"
+                        onTriggered: {
+                            beginAttachmentExport(attachmentName);
+                        }
+                    }
+                ]
             }
 
             onClicked: {

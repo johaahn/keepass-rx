@@ -216,6 +216,7 @@ Page {
                 id: layout
                 title.text: attachmentName
                 subtitle.text: `${attachmentSize} bytes`
+                summary.text: attachmentMimeType
 
                 Icon {
                     name: "document-save-as"

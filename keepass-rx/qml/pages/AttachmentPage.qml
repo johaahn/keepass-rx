@@ -33,4 +33,38 @@ Page {
             }
         }
     }
+
+    LomiriListView {
+        anchors.top: header.bottom
+        anchors.bottom: parent.bottom
+        width: parent.width
+        height: parent.height - header.height
+
+        id: attachmentList
+        model: theEntry.attachments
+
+        delegate: ListItem {
+            height: layout.height + (divider.visible ? divider.height : 0)
+
+            // From RxUiAttachment
+            ListItemLayout {
+                id: layout
+                title.text: attachmentName
+                subtitle.text: `${attachmentSize} bytes`
+
+                Icon {
+                    name: "document-save-as"
+                    SlotsLayout.overrideVerticalPositioning: true
+                    SlotsLayout.position: SlotsLayout.Trailing
+                    width: units.gu(3)
+                    height: units.gu(3)
+                    y: layout.subtitle.y - baselineOffset
+                }
+            }
+
+            onClicked: {
+                console.log('want to open attachment', attachmentName);
+            }
+        }
+    }
 }

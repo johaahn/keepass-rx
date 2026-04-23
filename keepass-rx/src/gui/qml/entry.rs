@@ -14,16 +14,16 @@ use crate::{app::AppState, rx::virtual_hierarchy::VirtualHierarchyType};
 #[derive(Clone, Default, SimpleListItem, Debug)]
 #[allow(non_snake_case)]
 pub struct RxUiAttachment {
-    pub name: QString,
-    pub size: i32,
+    pub attachmentName: QString,
+    pub attachmentSize: i32,
 }
 
 fn convert_attachments(value: &RxAttachments, master_key: &MasterKey) -> Vec<RxUiAttachment> {
     value
         .iter()
         .map(|(name, attachment)| RxUiAttachment {
-            name: QString::from(name.as_str()),
-            size: attachment
+            attachmentName: QString::from(name.as_str()),
+            attachmentSize: attachment
                 .value_secure(master_key)
                 .map(|val| val.len())
                 .unwrap_or(0)

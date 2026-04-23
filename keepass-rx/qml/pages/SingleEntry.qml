@@ -358,6 +358,7 @@ Page {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
+            anchors.topMargin: units.gu(0.5)
             anchors.leftMargin: units.gu(0.25)
             anchors.rightMargin: units.gu(0.25)
 

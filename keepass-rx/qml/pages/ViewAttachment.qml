@@ -10,6 +10,8 @@ Page {
     property string mimeType
     property string viewType
     property string text
+    property string highlightedText
+    property string syntaxName
     property string dataUrl
     property var sourcePage
 
@@ -57,7 +59,8 @@ Page {
                 anchors.fill: parent
                 anchors.leftMargin: units.gu(1.0)
                 anchors.rightMargin: units.gu(1.0)
-                text: viewAttachmentPage.text
+                text: viewAttachmentPage.highlightedText || viewAttachmentPage.text
+                textFormat: viewAttachmentPage.highlightedText ? TextEdit.RichText : TextEdit.PlainText
                 readOnly: true
                 cursorVisible: selectedText !== ""
                 selectByMouse: true

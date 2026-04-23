@@ -22,6 +22,10 @@ pub fn synced_databases_path() -> PathBuf {
     PathBuf::from(app_data_path()).join("synced")
 }
 
+pub fn exported_attachments_path() -> PathBuf {
+    PathBuf::from(app_data_path()).join("exports")
+}
+
 pub fn db_path_for_type(db_type: RxDbType) -> PathBuf {
     match db_type {
         RxDbType::Imported => imported_databases_path(),

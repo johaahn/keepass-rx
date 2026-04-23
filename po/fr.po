@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-22 08:59+0000\n"
+"POT-Creation-Date: 2026-04-23 14:36+0000\n"
 "PO-Revision-Date: 2026-04-19 21:09+0000\n"
 "Last-Translator: libermax <libremax@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -37,55 +37,14 @@ msgstr "Afficher l'entrée"
 msgid "Tap to copy 2FA code"
 msgstr "Appuyez pour copier le code 2FA"
 
-msgid "About"
-msgstr "À propos"
-
-msgid ""
-"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
-"Touch. It is licensed under the GNU AGPL v3 license."
-msgstr ""
-"KeePassRX est un gestionnaire de mots de passe pour les bases de données "
-"KeePass, conçu pour Ubuntu Touch. Il est distribué sous licence GNU AGPL v3."
-
-msgid ""
-"The built-in KeePass icon images are licensed under a variety of licenses as "
-"detailed in assets/COPYING."
-msgstr ""
-"Les images des icônes KeePass intégrées sont soumises à diverses licences, "
-"comme indiqué dans actifs/copie."
-
-msgid "Manual"
-msgstr "Manuel"
-
-msgid ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
-
-msgid ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
-
-msgid "Source Code"
-msgstr "Code source"
-
-msgid ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
-msgstr ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
-
 msgid "Add Database"
 msgstr "Ajouter une base de données"
 
 msgid "Settings"
 msgstr "Paramètres"
+
+msgid "About"
+msgstr "À propos"
 
 msgid "Loading last database."
 msgstr "Chargement de la dernière base de données."
@@ -95,6 +54,9 @@ msgstr "Sélectionner la base de données"
 
 msgid "Tap + to import a database."
 msgstr "Appuyer + pour importer une base de données."
+
+msgid "Last Modified: %1"
+msgstr ""
 
 msgid "It will only be removed from the app, not your device."
 msgstr "Elle sera simplement retirée de l’application, pas de votre appareil."
@@ -283,6 +245,45 @@ msgstr "Verrouillage sécurisé"
 msgid "Database Not Opening?"
 msgstr "La base de données ne s'ouvre pas ?"
 
+msgid "Entry Notes"
+msgstr ""
+
+msgid "Note copied to clipboard"
+msgstr ""
+
+msgid "Unable to export attachment."
+msgstr ""
+
+msgid "Entry Attachments"
+msgstr ""
+
+msgid "Export Attachment"
+msgstr ""
+
+msgid "Attachment Not Viewable"
+msgstr ""
+
+msgid "KeePassRX cannot view this %1 attachment, but it can be exported."
+msgstr ""
+
+msgid "KeePassRX cannot view this attachment, but it can be exported."
+msgstr ""
+
+msgid "Export"
+msgstr ""
+
+msgid "%1 ready to export."
+msgstr ""
+
+msgid "%1 exported."
+msgstr ""
+
+msgid "%1 bytes"
+msgstr ""
+
+msgid "Attachment"
+msgstr ""
+
 msgid "Password"
 msgstr "Mot de passe"
 
@@ -294,6 +295,9 @@ msgstr "Mot de passe (Entropie : %1)"
 
 msgid "%1 copied to clipboard (30 secs)"
 msgstr "%1 copié dans le presse-papiers (30 secondes)"
+
+msgid "Attachments"
+msgstr ""
 
 msgid "Notes"
 msgstr "Notes"
@@ -331,11 +335,49 @@ msgstr "Autres champs"
 msgid "KeePassRX: Clipboard cleared."
 msgstr "KeePassRX : Presse-papiers effacé."
 
-msgid "Entry Notes"
+msgid "Version %1"
 msgstr ""
 
-msgid "Note copied to clipboard"
+msgid ""
+"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
+"Touch. It is licensed under the GNU AGPL v3 license."
 msgstr ""
+"KeePassRX est un gestionnaire de mots de passe pour les bases de données "
+"KeePass, conçu pour Ubuntu Touch. Il est distribué sous licence GNU AGPL v3."
+
+msgid ""
+"The built-in KeePass icon images are licensed under a variety of licenses as "
+"detailed in assets/COPYING."
+msgstr ""
+"Les images des icônes KeePass intégrées sont soumises à diverses licences, "
+"comme indiqué dans actifs/copie."
+
+msgid "Manual"
+msgstr "Manuel"
+
+msgid ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+
+msgid ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+
+msgid "Source Code"
+msgstr "Code source"
+
+msgid ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
+msgstr ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-22 08:59+0000\n"
+"POT-Creation-Date: 2026-04-23 14:36+0000\n"
 "PO-Revision-Date: 2026-01-26 18:01+0000\n"
 "Last-Translator: BoneNI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://hosted.weblate.org/projects/ubports/keepassrx/lo/"
@@ -37,54 +37,14 @@ msgstr "ເບິ່ງຂໍ້ມູນ"
 msgid "Tap to copy 2FA code"
 msgstr "ແຕະເພື່ອຄັດລອກລະຫັດ 2FA"
 
-msgid "About"
-msgstr "ກ່ຽວກັບ"
-
-msgid ""
-"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
-"Touch. It is licensed under the GNU AGPL v3 license."
-msgstr ""
-"KeePassRX ແມ່ນໂປຣແກຣມຈັດການລະຫັດຜ່ານສຳລັບຖານຂໍ້ມູນ KeePass, ຖືກອອກແບບມາສຳລັບ Ubuntu "
-"Touch. ມັນໄດ້ຮັບອະນຸຍາດພາຍໃຕ້ໃບອະນຸຍາດ GNU AGPL v3."
-
-msgid ""
-"The built-in KeePass icon images are licensed under a variety of licenses as "
-"detailed in assets/COPYING."
-msgstr ""
-"ຮູບໄອຄອນ KeePass ທີ່ມີມາໃຫ້ນັ້ນຢູ່ພາຍໃຕ້ໃບອະນຸຍາດທີ່ຫຼາກຫຼາຍ ດັ່ງທີ່ລະບຸໄວ້ໃນ assets/COPYING."
-
-msgid "Manual"
-msgstr "ຄູ່ມື"
-
-msgid ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
-
-msgid ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
-
-msgid "Source Code"
-msgstr "ລະຫັດຕົ້ນສະບັບ"
-
-msgid ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
-msgstr ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
-
 msgid "Add Database"
 msgstr "ເພີ່ມຖານຂໍ້ມູນ"
 
 msgid "Settings"
 msgstr "ການຕັ້ງຄ່າ"
+
+msgid "About"
+msgstr "ກ່ຽວກັບ"
 
 msgid "Loading last database."
 msgstr "ກຳລັງໂຫຼດຖານຂໍ້ມູນຫຼ້າສຸດ."
@@ -94,6 +54,9 @@ msgstr "ເລືອກຖານຂໍ້ມູນ"
 
 msgid "Tap + to import a database."
 msgstr "ແຕະ + ເພື່ອນຳເຂົ້າຖານຂໍ້ມູນ."
+
+msgid "Last Modified: %1"
+msgstr ""
 
 msgid "It will only be removed from the app, not your device."
 msgstr "ມັນຈະຖືກລຶບອອກຈາກແອັບເທົ່ານັ້ນ, ບໍ່ແມ່ນຈາກອຸປະກອນຂອງທ່ານ."
@@ -275,6 +238,45 @@ msgstr "ກຳລັງລັອກຢ່າງປອດໄພ"
 msgid "Database Not Opening?"
 msgstr "ຖານຂໍ້ມູນເປີດບໍ່ໄດ້ບໍ?"
 
+msgid "Entry Notes"
+msgstr ""
+
+msgid "Note copied to clipboard"
+msgstr ""
+
+msgid "Unable to export attachment."
+msgstr ""
+
+msgid "Entry Attachments"
+msgstr ""
+
+msgid "Export Attachment"
+msgstr ""
+
+msgid "Attachment Not Viewable"
+msgstr ""
+
+msgid "KeePassRX cannot view this %1 attachment, but it can be exported."
+msgstr ""
+
+msgid "KeePassRX cannot view this attachment, but it can be exported."
+msgstr ""
+
+msgid "Export"
+msgstr ""
+
+msgid "%1 ready to export."
+msgstr ""
+
+msgid "%1 exported."
+msgstr ""
+
+msgid "%1 bytes"
+msgstr ""
+
+msgid "Attachment"
+msgstr ""
+
 msgid "Password"
 msgstr "ລະຫັດຜ່ານ"
 
@@ -286,6 +288,9 @@ msgstr ""
 
 msgid "%1 copied to clipboard (30 secs)"
 msgstr "ຄັດລອກ %1 ໃສ່ຄລິບບອດແລ້ວ (30 ວິນາທີ)"
+
+msgid "Attachments"
+msgstr ""
 
 msgid "Notes"
 msgstr "ບັນທຶກ"
@@ -323,11 +328,48 @@ msgstr "ຊ່ອງຂໍ້ມູນອື່ນໆ"
 msgid "KeePassRX: Clipboard cleared."
 msgstr "KeePassRX: ລ້າງຂໍ້ມູນໃນຄລິບບອດແລ້ວ."
 
-msgid "Entry Notes"
+msgid "Version %1"
 msgstr ""
 
-msgid "Note copied to clipboard"
+msgid ""
+"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
+"Touch. It is licensed under the GNU AGPL v3 license."
 msgstr ""
+"KeePassRX ແມ່ນໂປຣແກຣມຈັດການລະຫັດຜ່ານສຳລັບຖານຂໍ້ມູນ KeePass, ຖືກອອກແບບມາສຳລັບ Ubuntu "
+"Touch. ມັນໄດ້ຮັບອະນຸຍາດພາຍໃຕ້ໃບອະນຸຍາດ GNU AGPL v3."
+
+msgid ""
+"The built-in KeePass icon images are licensed under a variety of licenses as "
+"detailed in assets/COPYING."
+msgstr ""
+"ຮູບໄອຄອນ KeePass ທີ່ມີມາໃຫ້ນັ້ນຢູ່ພາຍໃຕ້ໃບອະນຸຍາດທີ່ຫຼາກຫຼາຍ ດັ່ງທີ່ລະບຸໄວ້ໃນ assets/COPYING."
+
+msgid "Manual"
+msgstr "ຄູ່ມື"
+
+msgid ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+
+msgid ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+
+msgid "Source Code"
+msgstr "ລະຫັດຕົ້ນສະບັບ"
+
+msgid ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
+msgstr ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

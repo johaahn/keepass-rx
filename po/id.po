@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-22 08:59+0000\n"
+"POT-Creation-Date: 2026-04-23 14:36+0000\n"
 "PO-Revision-Date: 2026-03-16 08:09+0000\n"
 "Last-Translator: Arif Budiman <arifpedia@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/ubports/"
@@ -37,56 +37,14 @@ msgstr "Lihat Entri"
 msgid "Tap to copy 2FA code"
 msgstr "Ketuk untuk menyalin kode 2FA"
 
-msgid "About"
-msgstr "Tentang"
-
-msgid ""
-"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
-"Touch. It is licensed under the GNU AGPL v3 license."
-msgstr ""
-"KeePassRX adalah pengelola kata sandi untuk basis data KeePass, yang "
-"dirancang untuk Ubuntu Touch. Aplikasi ini dilisensikan di bawah lisensi GNU "
-"AGPL v3."
-
-msgid ""
-"The built-in KeePass icon images are licensed under a variety of licenses as "
-"detailed in assets/COPYING."
-msgstr ""
-"Gambar ikon bawaan KeePass dilisensikan di bawah berbagai lisensi "
-"sebagaimana dirinci dalam assets/COPYING."
-
-msgid "Manual"
-msgstr "Panduan"
-
-msgid ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
-
-msgid ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
-
-msgid "Source Code"
-msgstr "Kode Sumber"
-
-msgid ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
-msgstr ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
-
 msgid "Add Database"
 msgstr "Tambah Basis Data"
 
 msgid "Settings"
 msgstr "Pengaturan"
+
+msgid "About"
+msgstr "Tentang"
 
 msgid "Loading last database."
 msgstr "Memuat basis data terakhir."
@@ -96,6 +54,9 @@ msgstr "Pilih Basis Data"
 
 msgid "Tap + to import a database."
 msgstr "Ketuk + untuk mengimpor basis data."
+
+msgid "Last Modified: %1"
+msgstr ""
 
 msgid "It will only be removed from the app, not your device."
 msgstr "Ini hanya akan dihapus dari aplikasi, bukan dari perangkat Anda."
@@ -281,6 +242,45 @@ msgstr "Mengunci dengan Aman"
 msgid "Database Not Opening?"
 msgstr "Basis Data Tidak Terbuka?"
 
+msgid "Entry Notes"
+msgstr ""
+
+msgid "Note copied to clipboard"
+msgstr ""
+
+msgid "Unable to export attachment."
+msgstr ""
+
+msgid "Entry Attachments"
+msgstr ""
+
+msgid "Export Attachment"
+msgstr ""
+
+msgid "Attachment Not Viewable"
+msgstr ""
+
+msgid "KeePassRX cannot view this %1 attachment, but it can be exported."
+msgstr ""
+
+msgid "KeePassRX cannot view this attachment, but it can be exported."
+msgstr ""
+
+msgid "Export"
+msgstr ""
+
+msgid "%1 ready to export."
+msgstr ""
+
+msgid "%1 exported."
+msgstr ""
+
+msgid "%1 bytes"
+msgstr ""
+
+msgid "Attachment"
+msgstr ""
+
 msgid "Password"
 msgstr "Kata Sandi"
 
@@ -292,6 +292,9 @@ msgstr "Kata Sandi (Entropi: %1)"
 
 msgid "%1 copied to clipboard (30 secs)"
 msgstr "%1 disalin ke papan klip (30 detik)"
+
+msgid "Attachments"
+msgstr ""
 
 msgid "Notes"
 msgstr "Catatan"
@@ -329,11 +332,50 @@ msgstr "Bidang Lainnya"
 msgid "KeePassRX: Clipboard cleared."
 msgstr "KeePassRX: Papan klip dikosongkan."
 
-msgid "Entry Notes"
+msgid "Version %1"
 msgstr ""
 
-msgid "Note copied to clipboard"
+msgid ""
+"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
+"Touch. It is licensed under the GNU AGPL v3 license."
 msgstr ""
+"KeePassRX adalah pengelola kata sandi untuk basis data KeePass, yang "
+"dirancang untuk Ubuntu Touch. Aplikasi ini dilisensikan di bawah lisensi GNU "
+"AGPL v3."
+
+msgid ""
+"The built-in KeePass icon images are licensed under a variety of licenses as "
+"detailed in assets/COPYING."
+msgstr ""
+"Gambar ikon bawaan KeePass dilisensikan di bawah berbagai lisensi "
+"sebagaimana dirinci dalam assets/COPYING."
+
+msgid "Manual"
+msgstr "Panduan"
+
+msgid ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+
+msgid ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+
+msgid "Source Code"
+msgstr "Kode Sumber"
+
+msgid ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
+msgstr ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "

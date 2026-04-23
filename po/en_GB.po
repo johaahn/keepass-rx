@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-22 08:59+0000\n"
+"POT-Creation-Date: 2026-04-23 14:36+0000\n"
 "PO-Revision-Date: 2026-04-01 19:10+0000\n"
 "Last-Translator: Andi Chandler <andi@gowling.com>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
@@ -37,45 +37,14 @@ msgstr ""
 msgid "Tap to copy 2FA code"
 msgstr ""
 
-msgid "About"
-msgstr "About"
-
-msgid ""
-"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
-"Touch. It is licensed under the GNU AGPL v3 license."
-msgstr ""
-
-msgid ""
-"The built-in KeePass icon images are licensed under a variety of licenses as "
-"detailed in assets/COPYING."
-msgstr ""
-
-msgid "Manual"
-msgstr ""
-
-msgid ""
-"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-
-msgid ""
-"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
-"projects/keepassrx/</a>"
-msgstr ""
-
-msgid "Source Code"
-msgstr ""
-
-msgid ""
-"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
-"projectmoon/keepass-rx</a>"
-msgstr ""
-
 msgid "Add Database"
 msgstr ""
 
 msgid "Settings"
 msgstr "Settings"
+
+msgid "About"
+msgstr "About"
 
 msgid "Loading last database."
 msgstr ""
@@ -84,6 +53,9 @@ msgid "Select Database"
 msgstr ""
 
 msgid "Tap + to import a database."
+msgstr ""
+
+msgid "Last Modified: %1"
 msgstr ""
 
 msgid "It will only be removed from the app, not your device."
@@ -262,6 +234,45 @@ msgstr ""
 msgid "Database Not Opening?"
 msgstr ""
 
+msgid "Entry Notes"
+msgstr ""
+
+msgid "Note copied to clipboard"
+msgstr ""
+
+msgid "Unable to export attachment."
+msgstr ""
+
+msgid "Entry Attachments"
+msgstr ""
+
+msgid "Export Attachment"
+msgstr ""
+
+msgid "Attachment Not Viewable"
+msgstr ""
+
+msgid "KeePassRX cannot view this %1 attachment, but it can be exported."
+msgstr ""
+
+msgid "KeePassRX cannot view this attachment, but it can be exported."
+msgstr ""
+
+msgid "Export"
+msgstr ""
+
+msgid "%1 ready to export."
+msgstr ""
+
+msgid "%1 exported."
+msgstr ""
+
+msgid "%1 bytes"
+msgstr ""
+
+msgid "Attachment"
+msgstr ""
+
 msgid "Password"
 msgstr ""
 
@@ -272,6 +283,9 @@ msgid "Password (Entropy: %1)"
 msgstr ""
 
 msgid "%1 copied to clipboard (30 secs)"
+msgstr ""
+
+msgid "Attachments"
 msgstr ""
 
 msgid "Notes"
@@ -310,10 +324,38 @@ msgstr ""
 msgid "KeePassRX: Clipboard cleared."
 msgstr ""
 
-msgid "Entry Notes"
+msgid "Version %1"
 msgstr ""
 
-msgid "Note copied to clipboard"
+msgid ""
+"KeePassRX is password manager for KeePass databases, designed for Ubuntu "
+"Touch. It is licensed under the GNU AGPL v3 license."
+msgstr ""
+
+msgid ""
+"The built-in KeePass icon images are licensed under a variety of licenses as "
+"detailed in assets/COPYING."
+msgstr ""
+
+msgid "Manual"
+msgstr ""
+
+msgid ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+
+msgid ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
+msgstr ""
+
+msgid "Source Code"
+msgstr ""
+
+msgid ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
 msgstr ""
 
 msgid ""

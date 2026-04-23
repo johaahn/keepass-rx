@@ -158,26 +158,31 @@ impl RxUiEntry {
 
     #[with_executor]
     pub fn loadAttachments(&mut self) {
-        let entry_uuid =
-            Uuid::from_str(&self.entryUuid.to_string()).expect("UUID parse failure");
-        let app_state = self._app.as_pinned().expect("No app state");
-        let app_state = app_state.borrow();
-        let maybe_db = app_state.curr_db_ref();
+        let load = || -> Result<()> {
+            let entry_uuid = Uuid::from_str(&self.entryUuid.to_string())?;
+            let app_state = self
+                ._app
+                .as_pinned()
+                .ok_or_else(|| anyhow!("Unable to get app state"))?;
 
-        let attachments = if let Ok(db) = maybe_db {
+            let app_state = app_state.borrow();
+            let maybe_db = app_state.curr_db_ref();
+            let db = maybe_db?;
+
             let maybe_entry = db.get_entry(entry_uuid);
             let maybe_attach = maybe_entry.as_ref().map(|ent| &ent.attachments);
 
-            maybe_attach
+            let attachments = maybe_attach
                 .map(|att| convert_attachments(att, db.master_key()))
-                .unwrap_or_default()
-        } else {
-            vec![]
+                .unwrap_or_default();
+
+            self.attachments.borrow_mut().reset_data(attachments);
+            Ok(())
         };
 
-        println!("Entries are: {:?}", attachments);
-
-        self.attachments.borrow_mut().reset_data(attachments);
+        if let Err(err) = load() {
+            error!("Unable to load attachments: {}", err);
+        }
     }
 
     #[with_executor]

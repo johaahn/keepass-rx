@@ -9,6 +9,8 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 use actor_macro::observing_model;
 use anyhow::{Result, anyhow};
+use infer::MatcherType;
+use libsodium_rs::utils::SecureVec;
 use log::{error, warn};
 use qmeta_async::with_executor;
 use qmetaobject::prelude::*;
@@ -67,6 +69,32 @@ fn export_error(error: impl ToString) -> QVariantMap {
     let error = error.to_string();
     error!("Attachment export failed: {}", error);
     export_result(false, "", "", "", &error)
+}
+
+fn view_result(
+    ok: bool,
+    can_view: bool,
+    view_type: &str,
+    file_name: &str,
+    mime_type: &str,
+    text: &str,
+    error: &str,
+) -> QVariantMap {
+    let mut map = QVariantMap::default();
+    map.insert("ok".into(), ok.into());
+    map.insert("canView".into(), can_view.into());
+    map.insert("viewType".into(), QString::from(view_type).into());
+    map.insert("fileName".into(), QString::from(file_name).into());
+    map.insert("mimeType".into(), QString::from(mime_type).into());
+    map.insert("text".into(), QString::from(text).into());
+    map.insert("error".into(), QString::from(error).into());
+    map
+}
+
+fn view_error(error: impl ToString) -> QVariantMap {
+    let error = error.to_string();
+    error!("Attachment view failed: {}", error);
+    view_result(false, false, "", "", "", "", &error)
 }
 
 fn sanitize_export_file_name(value: &str) -> String {
@@ -149,6 +177,7 @@ pub struct RxUiEntry {
     pub(super) exportAttachment:
         qt_method!(fn(&self, attachment_name: QString) -> QVariantMap),
     pub(super) cleanupExportedAttachment: qt_method!(fn(&self, path: QString)),
+    pub(super) viewAttachment: qt_method!(fn(&self, attachment_name: QString) -> QVariantMap),
 }
 
 #[allow(dead_code, non_snake_case)]
@@ -188,22 +217,8 @@ impl RxUiEntry {
     #[with_executor]
     pub fn exportAttachment(&self, attachment_name: QString) -> QVariantMap {
         let export = || -> Result<QVariantMap> {
-            let entry_uuid = Uuid::from_str(&self.entryUuid.to_string())
-                .map_err(|err| anyhow!("Invalid entry UUID for attachment export: {}", err))?;
             let attachment_name = attachment_name.to_string();
-            let app_state = self._app.as_pinned().expect("No app state");
-            let app_state = app_state.borrow();
-            let db = app_state.curr_db_ref()?;
-            let entry = db
-                .get_entry(entry_uuid)
-                .ok_or_else(|| anyhow!("Entry not found"))?;
-            let attachment = entry
-                .attachments
-                .get(&attachment_name)
-                .ok_or_else(|| anyhow!("Attachment not found: {}", attachment_name))?;
-            let attachment_bytes = attachment
-                .value_secure(db.master_key())
-                .ok_or_else(|| anyhow!("Unable to read attachment data"))?;
+            let attachment_bytes = self.attachment_bytes(&attachment_name)?;
 
             let file_name = sanitize_export_file_name(&attachment_name);
             let export_dir = exported_attachments_path();
@@ -217,6 +232,86 @@ impl RxUiEntry {
         };
 
         export().unwrap_or_else(export_error)
+    }
+
+    fn attachment_bytes(&self, attachment_name: &str) -> Result<SecureVec<u8>> {
+        let entry_uuid = Uuid::from_str(&self.entryUuid.to_string())
+            .map_err(|err| anyhow!("Invalid entry UUID for attachment: {}", err))?;
+        let app_state = self
+            ._app
+            .as_pinned()
+            .ok_or_else(|| anyhow!("Unable to get app state"))?;
+        let app_state = app_state.borrow();
+        let db = app_state.curr_db_ref()?;
+        let entry = db
+            .get_entry(entry_uuid)
+            .ok_or_else(|| anyhow!("Entry not found"))?;
+        let attachment = entry
+            .attachments
+            .get(attachment_name)
+            .ok_or_else(|| anyhow!("Attachment not found: {}", attachment_name))?;
+
+        attachment
+            .value_secure(db.master_key())
+            .ok_or_else(|| anyhow!("Unable to read attachment data"))
+    }
+
+    #[with_executor]
+    pub fn viewAttachment(&self, attachment_name: QString) -> QVariantMap {
+        let view = || -> Result<QVariantMap> {
+            let attachment_name = attachment_name.to_string();
+            let attachment_bytes = self.attachment_bytes(&attachment_name)?;
+            let file_name = sanitize_export_file_name(&attachment_name);
+            let inferred = infer::get(&attachment_bytes);
+
+            match inferred {
+                Some(kind) if kind.matcher_type() == MatcherType::Text => {
+                    let text = std::str::from_utf8(&attachment_bytes)
+                        .map_err(|err| anyhow!("Unable to decode text attachment: {}", err))?;
+                    Ok(view_result(
+                        true,
+                        true,
+                        "text",
+                        &file_name,
+                        kind.mime_type(),
+                        text,
+                        "",
+                    ))
+                }
+                Some(kind) if kind.matcher_type() == MatcherType::Image => Ok(view_result(
+                    true,
+                    false,
+                    "image",
+                    &file_name,
+                    kind.mime_type(),
+                    "",
+                    "",
+                )),
+                Some(kind) => Ok(view_result(
+                    true,
+                    false,
+                    "",
+                    &file_name,
+                    kind.mime_type(),
+                    "",
+                    "",
+                )),
+                None => match std::str::from_utf8(&attachment_bytes) {
+                    Ok(text) => Ok(view_result(
+                        true,
+                        true,
+                        "text",
+                        &file_name,
+                        "text/plain",
+                        text,
+                        "",
+                    )),
+                    Err(_) => Ok(view_result(true, false, "", &file_name, "", "", "")),
+                },
+            }
+        };
+
+        view().unwrap_or_else(view_error)
     }
 
     #[with_executor]

@@ -1,5 +1,6 @@
 import QtQuick 2.12
 import Lomiri.Components 1.3
+import Lomiri.Components.Popups 1.3
 import Lomiri.Content 1.3
 import Qt.labs.settings 1.0
 import keepassrx 1.0
@@ -11,6 +12,8 @@ Page {
     property string exportPath: ""
     property string exportUrl: ""
     property string exportFileName: ""
+    property string pendingAttachmentName: ""
+    property string pendingAttachmentMimeType: ""
 
     function cleanupExportFile() {
         if (exportPath !== "") {
@@ -48,7 +51,8 @@ Page {
     function viewOrExportAttachment(attachmentName) {
         const result = theEntry.viewAttachment(attachmentName);
 
-        if (result.ok && result.canView && result.viewType === "text") {
+        if (result.ok && result.canView &&
+                (result.viewType === "text" || result.viewType === "image")) {
             pageStack.addPageToNextColumn(
                 attachmentPage,
                 Qt.resolvedUrl("ViewAttachment.qml"),
@@ -56,14 +60,18 @@ Page {
                     attachmentName: attachmentName,
                     displayName: result.fileName || attachmentName,
                     mimeType: result.mimeType || "",
+                    viewType: result.viewType || "",
                     text: result.text || "",
+                    dataUrl: result.dataUrl || "",
                     sourcePage: attachmentPage
                 }
             );
             return;
         }
 
-        beginAttachmentExport(attachmentName);
+        pendingAttachmentName = attachmentName;
+        pendingAttachmentMimeType = result.mimeType || "";
+        PopupUtils.open(notViewableDialog);
     }
 
     header: PageHeader {
@@ -116,6 +124,33 @@ Page {
     ContentTransferHint {
         anchors.fill: parent
         activeTransfer: attachmentPage.activeTransfer
+    }
+
+    Component {
+        id: notViewableDialog
+
+        Dialog {
+            id: dialog
+            title: i18n.tr("Attachment Not Viewable")
+            text: pendingAttachmentMimeType
+                ? i18n.tr("KeePassRX cannot view this %1 attachment, but it can be exported.").arg(pendingAttachmentMimeType)
+                : i18n.tr("KeePassRX cannot view this attachment, but it can be exported.")
+
+            Button {
+                text: i18n.tr("Cancel")
+                onClicked: PopupUtils.close(dialog)
+            }
+
+            Button {
+                text: i18n.tr("Export")
+                color: LomiriColors.green
+                onClicked: {
+                    const attachmentName = pendingAttachmentName;
+                    PopupUtils.close(dialog);
+                    beginAttachmentExport(attachmentName);
+                }
+            }
+        }
     }
 
     Component {

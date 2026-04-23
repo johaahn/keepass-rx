@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-23 10:59+0000\n"
+"POT-Creation-Date: 2026-04-23 11:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -140,7 +140,7 @@ msgid "Lock"
 msgstr ""
 
 #: qml/pages/EntriesPage.qml:155 qml/pages/NotePage.qml:17
-#: qml/pages/AttachmentPage.qml:76 qml/pages/ViewAttachment.qml:21
+#: qml/pages/AttachmentPage.qml:84 qml/pages/ViewAttachment.qml:23
 msgid "Close"
 msgstr ""
 
@@ -217,7 +217,7 @@ msgstr ""
 msgid "Select"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:327
+#: qml/pages/EntriesPage.qml:327 qml/pages/AttachmentPage.qml:140
 msgid "Cancel"
 msgstr ""
 
@@ -419,32 +419,44 @@ msgstr ""
 msgid "Note copied to clipboard"
 msgstr ""
 
-#: qml/pages/AttachmentPage.qml:38
+#: qml/pages/AttachmentPage.qml:41
 msgid "Unable to export attachment."
 msgstr ""
 
-#: qml/pages/AttachmentPage.qml:71
+#: qml/pages/AttachmentPage.qml:79
 msgid "Entry Attachments"
 msgstr ""
 
-#: qml/pages/AttachmentPage.qml:100
+#: qml/pages/AttachmentPage.qml:108
 msgid "Export Attachment"
 msgstr ""
 
-#: qml/pages/AttachmentPage.qml:148
+#: qml/pages/AttachmentPage.qml:134
+msgid "Attachment Not Viewable"
+msgstr ""
+
+#: qml/pages/AttachmentPage.qml:136
+msgid "KeePassRX cannot view this %1 attachment, but it can be exported."
+msgstr ""
+
+#: qml/pages/AttachmentPage.qml:137
+msgid "KeePassRX cannot view this attachment, but it can be exported."
+msgstr ""
+
+#: qml/pages/AttachmentPage.qml:145 qml/pages/ViewAttachment.qml:34
+msgid "Export"
+msgstr ""
+
+#: qml/pages/AttachmentPage.qml:183
 msgid "%1 ready to export."
 msgstr ""
 
-#: qml/pages/AttachmentPage.qml:156
+#: qml/pages/AttachmentPage.qml:191
 msgid "%1 exported."
 msgstr ""
 
-#: qml/pages/ViewAttachment.qml:16
+#: qml/pages/ViewAttachment.qml:18
 msgid "Attachment"
-msgstr ""
-
-#: qml/pages/ViewAttachment.qml:32
-msgid "Export"
 msgstr ""
 
 #: src/gui/instructions.rs:9

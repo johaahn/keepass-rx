@@ -204,16 +204,13 @@ Page {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: header.bottom
-        height: parent.height
-        width: parent.width
+        anchors.bottom: parent.bottom
 
         LomiriListView {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            height: parent.height
-            width: parent.width
-
             id: dbList
+            anchors.fill: parent
+            clip: true
+
             model: ListModel {
                 id: dbListModel
             }

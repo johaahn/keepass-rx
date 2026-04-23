@@ -9,6 +9,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 use actor_macro::observing_model;
 use anyhow::{Result, anyhow};
+use base64::{Engine, prelude::BASE64_STANDARD};
 use infer::MatcherType;
 use libsodium_rs::utils::SecureVec;
 use log::{error, warn};
@@ -78,6 +79,7 @@ fn view_result(
     file_name: &str,
     mime_type: &str,
     text: &str,
+    data_url: &str,
     error: &str,
 ) -> QVariantMap {
     let mut map = QVariantMap::default();
@@ -87,6 +89,7 @@ fn view_result(
     map.insert("fileName".into(), QString::from(file_name).into());
     map.insert("mimeType".into(), QString::from(mime_type).into());
     map.insert("text".into(), QString::from(text).into());
+    map.insert("dataUrl".into(), QString::from(data_url).into());
     map.insert("error".into(), QString::from(error).into());
     map
 }
@@ -94,7 +97,7 @@ fn view_result(
 fn view_error(error: impl ToString) -> QVariantMap {
     let error = error.to_string();
     error!("Attachment view failed: {}", error);
-    view_result(false, false, "", "", "", "", &error)
+    view_result(false, false, "", "", "", "", "", &error)
 }
 
 fn sanitize_export_file_name(value: &str) -> String {
@@ -276,23 +279,33 @@ impl RxUiEntry {
                         kind.mime_type(),
                         text,
                         "",
+                        "",
                     ))
                 }
-                Some(kind) if kind.matcher_type() == MatcherType::Image => Ok(view_result(
-                    true,
-                    false,
-                    "image",
-                    &file_name,
-                    kind.mime_type(),
-                    "",
-                    "",
-                )),
+                Some(kind) if kind.matcher_type() == MatcherType::Image => {
+                    let data_url = format!(
+                        "data:{};base64,{}",
+                        kind.mime_type(),
+                        BASE64_STANDARD.encode(&*attachment_bytes)
+                    );
+                    Ok(view_result(
+                        true,
+                        true,
+                        "image",
+                        &file_name,
+                        kind.mime_type(),
+                        "",
+                        &data_url,
+                        "",
+                    ))
+                }
                 Some(kind) => Ok(view_result(
                     true,
                     false,
                     "",
                     &file_name,
                     kind.mime_type(),
+                    "",
                     "",
                     "",
                 )),
@@ -305,8 +318,9 @@ impl RxUiEntry {
                         "text/plain",
                         text,
                         "",
+                        "",
                     )),
-                    Err(_) => Ok(view_result(true, false, "", &file_name, "", "", "")),
+                    Err(_) => Ok(view_result(true, false, "", &file_name, "", "", "", "")),
                 },
             }
         };

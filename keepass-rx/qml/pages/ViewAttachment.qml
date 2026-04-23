@@ -81,6 +81,8 @@ Page {
             property real minimumScale: 1
             property real maximumScale: 6
             property real imageScale: 1
+            property real pinchStartScale: 1
+            property real pinchSensitivity: 0.65
 
             function fitImage() {
                 if (attachmentImage.status !== Image.Ready || attachmentImage.implicitWidth === 0 || attachmentImage.implicitHeight === 0) {
@@ -99,10 +101,15 @@ Page {
                 pinch.minimumScale: imageFlickable.minimumScale
                 pinch.maximumScale: imageFlickable.maximumScale
 
+                onPinchStarted: {
+                    imageFlickable.pinchStartScale = imageFlickable.imageScale;
+                }
+
                 onPinchUpdated: {
+                    const dampedScale = 1 + ((pinch.scale - 1) * imageFlickable.pinchSensitivity);
                     const nextScale = Math.max(
                         imageFlickable.minimumScale,
-                        Math.min(imageFlickable.maximumScale, imageFlickable.imageScale * pinch.scale)
+                        Math.min(imageFlickable.maximumScale, imageFlickable.pinchStartScale * dampedScale)
                     );
                     imageFlickable.imageScale = nextScale;
                 }

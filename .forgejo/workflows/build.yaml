@@ -40,6 +40,9 @@ jobs:
       - name: Setup Cache
         uses: https://github.com/Swatinem/rust-cache@v2
 
+      - name: Build
+        run: clickable build --clean
+
       - name: Test
         run: clickable test
 

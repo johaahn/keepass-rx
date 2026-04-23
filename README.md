@@ -49,7 +49,7 @@ still only supporting read-only database access.
  - [x] Clear clipboard after 30 seconds (partially implemented).
  - [x] "Easy lock" to re-open database without typing the whole password.
  - [x] Improved password search UX (across groups).
- - [ ] Support opening attachments on entries.
+ - [x] Support opening attachments on entries.
  - [x] New UI layout to support groups
    - [x] Main page becomes the root group + entries list.
    - [x] Display entries under a group.
@@ -66,7 +66,7 @@ CLI.
  - [x] Support KeePassDX templates (i.e. show credit card entries as a
        credit card, etc).
  - [ ] YubiKey challenge-response? (requires support in OS)
- - [ ] Make a clear distinction between "imported" databases (from
+ - [x] Make a clear distinction between "imported" databases (from
        ContentHub) and "synced" databases (via external unconfined
        program).
  - [ ] Edit and Save Databases

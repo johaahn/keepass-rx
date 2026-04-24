@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-23 14:36+0000\n"
-"PO-Revision-Date: 2026-04-19 21:09+0000\n"
-"Last-Translator: libermax <libremax@protonmail.com>\n"
+"PO-Revision-Date: 2026-04-24 04:53+0000\n"
+"Last-Translator: Vlad Nirky <nirky.vlad@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
 "fr/>\n"
 "Language: fr\n"
@@ -56,7 +56,7 @@ msgid "Tap + to import a database."
 msgstr "Appuyer + pour importer une base de données."
 
 msgid "Last Modified: %1"
-msgstr ""
+msgstr "Dernière modification : %1"
 
 msgid "It will only be removed from the app, not your device."
 msgstr "Elle sera simplement retirée de l’application, pas de votre appareil."
@@ -246,43 +246,47 @@ msgid "Database Not Opening?"
 msgstr "La base de données ne s'ouvre pas ?"
 
 msgid "Entry Notes"
-msgstr ""
+msgstr "Notes relatives à l'entrée"
 
 msgid "Note copied to clipboard"
-msgstr ""
+msgstr "Note copiée dans le presse-papiers"
 
 msgid "Unable to export attachment."
-msgstr ""
+msgstr "Impossible d'exporter la pièce jointe."
 
 msgid "Entry Attachments"
-msgstr ""
+msgstr "Pièces jointes à l'entrée"
 
 msgid "Export Attachment"
-msgstr ""
+msgstr "Exporter la pièce jointe"
 
 msgid "Attachment Not Viewable"
-msgstr ""
+msgstr "Pièce jointe non visible"
 
 msgid "KeePassRX cannot view this %1 attachment, but it can be exported."
 msgstr ""
+"KeePassRX ne peut pas afficher cette pièce jointe %1, mais celle-ci peut "
+"être exportée."
 
 msgid "KeePassRX cannot view this attachment, but it can be exported."
 msgstr ""
+"KeePassRX ne peut pas afficher cette pièce jointe, mais celle-ci peut être "
+"exportée."
 
 msgid "Export"
-msgstr ""
+msgstr "Exporter"
 
 msgid "%1 ready to export."
-msgstr ""
+msgstr "%1 prête à être exportée."
 
 msgid "%1 exported."
-msgstr ""
+msgstr "%1 exportée."
 
 msgid "%1 bytes"
-msgstr ""
+msgstr "%1 octets"
 
 msgid "Attachment"
-msgstr ""
+msgstr "Pièce jointe"
 
 msgid "Password"
 msgstr "Mot de passe"
@@ -297,7 +301,7 @@ msgid "%1 copied to clipboard (30 secs)"
 msgstr "%1 copié dans le presse-papiers (30 secondes)"
 
 msgid "Attachments"
-msgstr ""
+msgstr "Pièces jointes"
 
 msgid "Notes"
 msgstr "Notes"
@@ -336,7 +340,7 @@ msgid "KeePassRX: Clipboard cleared."
 msgstr "KeePassRX : Presse-papiers effacé."
 
 msgid "Version %1"
-msgstr ""
+msgstr "Version %1"
 
 msgid ""
 "KeePassRX is password manager for KeePass databases, designed for Ubuntu "

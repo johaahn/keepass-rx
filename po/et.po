@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-23 14:36+0000\n"
-"PO-Revision-Date: 2026-04-23 16:12+0000\n"
+"PO-Revision-Date: 2026-04-24 10:09+0000\n"
 "Last-Translator: Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/ubports/"
 "keepassrx/et/>\n"
@@ -56,7 +56,7 @@ msgid "Tap + to import a database."
 msgstr "Andmebaasi importimiseks klõpsa + ikooni."
 
 msgid "Last Modified: %1"
-msgstr ""
+msgstr "Viimati muudetud: %1"
 
 msgid "It will only be removed from the app, not your device."
 msgstr "Ta eemaldatakse rakendusest, mitte aga seadmest."
@@ -249,37 +249,37 @@ msgid "Note copied to clipboard"
 msgstr "Märge on kopeeritud lõikelauale"
 
 msgid "Unable to export attachment."
-msgstr ""
+msgstr "Faili eksportimine ei õnnestunud."
 
 msgid "Entry Attachments"
-msgstr ""
+msgstr "Kirje failid/manused"
 
 msgid "Export Attachment"
-msgstr ""
+msgstr "Ekspordi fail/manus"
 
 msgid "Attachment Not Viewable"
-msgstr ""
+msgstr "Fail/manus pole vaadatav"
 
 msgid "KeePassRX cannot view this %1 attachment, but it can be exported."
-msgstr ""
+msgstr "KeePassRX ei saa „%1“ faili kuvada, aga ta on eksporditav."
 
 msgid "KeePassRX cannot view this attachment, but it can be exported."
-msgstr ""
+msgstr "KeePassRX ei saa seda faili kuvada, aga ta on eksporditav."
 
 msgid "Export"
-msgstr ""
+msgstr "Ekspordi"
 
 msgid "%1 ready to export."
-msgstr ""
+msgstr "„%1“ on eksportimiseks valmis."
 
 msgid "%1 exported."
-msgstr ""
+msgstr "„%1“ on eksporditud."
 
 msgid "%1 bytes"
-msgstr ""
+msgstr "%1 baiti"
 
 msgid "Attachment"
-msgstr ""
+msgstr "Manus/fail"
 
 msgid "Password"
 msgstr "Salasõna"
@@ -294,7 +294,7 @@ msgid "%1 copied to clipboard (30 secs)"
 msgstr "%1 on kopeeritud lõikelauale (30 sek)"
 
 msgid "Attachments"
-msgstr ""
+msgstr "Failid/manused"
 
 msgid "Notes"
 msgstr "Märkmed"
@@ -333,7 +333,7 @@ msgid "KeePassRX: Clipboard cleared."
 msgstr "KeePassRX: lõikelaud on tühjendatud."
 
 msgid "Version %1"
-msgstr ""
+msgstr "Versioon %1"
 
 msgid ""
 "KeePassRX is password manager for KeePass databases, designed for Ubuntu "

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-23 14:36+0000\n"
-"PO-Revision-Date: 2026-04-27 10:09+0000\n"
+"PO-Revision-Date: 2026-04-27 16:09+0000\n"
 "Last-Translator: Walter Garcia-Fontes <walter.garcia@upf.edu>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/ubports/"
 "keepassrx/ca/>\n"
@@ -41,7 +41,7 @@ msgid "Add Database"
 msgstr "Afegeix una base de dades"
 
 msgid "Settings"
-msgstr "Paràmetres"
+msgstr "Configuració"
 
 msgid "About"
 msgstr "Quant a"
@@ -56,7 +56,7 @@ msgid "Tap + to import a database."
 msgstr "Feu un toc sobre + per importar la base de dades."
 
 msgid "Last Modified: %1"
-msgstr ""
+msgstr "Última modificació: %1"
 
 msgid "It will only be removed from the app, not your device."
 msgstr "Sols se suprimirà de l'aplicació, no del dispositiu."
@@ -244,43 +244,43 @@ msgid "Database Not Opening?"
 msgstr "No s'obre la base de dades?"
 
 msgid "Entry Notes"
-msgstr ""
+msgstr "Notes d'entrada"
 
 msgid "Note copied to clipboard"
-msgstr ""
+msgstr "S'ha copiat la nota al porta-retalls"
 
 msgid "Unable to export attachment."
-msgstr ""
+msgstr "No es pot exportar l'adjunt."
 
 msgid "Entry Attachments"
-msgstr ""
+msgstr "Adjunts d'entrada"
 
 msgid "Export Attachment"
-msgstr ""
+msgstr "Exporta l'adjunt"
 
 msgid "Attachment Not Viewable"
-msgstr ""
+msgstr "No es pot visualitzar l'adjunt"
 
 msgid "KeePassRX cannot view this %1 attachment, but it can be exported."
-msgstr ""
+msgstr "KeePassRX no pot visualitzar aquest adjunt %1, però es pot exportar."
 
 msgid "KeePassRX cannot view this attachment, but it can be exported."
-msgstr ""
+msgstr "KeePassRX no pot visualitzar aquest adjunt, però es pot exportar."
 
 msgid "Export"
-msgstr ""
+msgstr "Exporta"
 
 msgid "%1 ready to export."
-msgstr ""
+msgstr "%1 està preparat per exportar."
 
 msgid "%1 exported."
-msgstr ""
+msgstr "%1 exportat."
 
 msgid "%1 bytes"
-msgstr ""
+msgstr "%1 bytes"
 
 msgid "Attachment"
-msgstr ""
+msgstr "Adjunt"
 
 msgid "Password"
 msgstr "Contrasenya"
@@ -295,7 +295,7 @@ msgid "%1 copied to clipboard (30 secs)"
 msgstr "S'ha copiat %1 al porta-retalls (30 segons)"
 
 msgid "Attachments"
-msgstr ""
+msgstr "Adjunts"
 
 msgid "Notes"
 msgstr "Notes"
@@ -334,7 +334,7 @@ msgid "KeePassRX: Clipboard cleared."
 msgstr "KeePassRX: S'ha netejat el porta-retalls."
 
 msgid "Version %1"
-msgstr ""
+msgstr "Versió %1"
 
 msgid ""
 "KeePassRX is password manager for KeePass databases, designed for Ubuntu "

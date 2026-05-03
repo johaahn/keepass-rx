@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-23 14:36+0000\n"
-"PO-Revision-Date: 2026-03-16 08:09+0000\n"
+"PO-Revision-Date: 2026-05-03 05:09+0000\n"
 "Last-Translator: Arif Budiman <arifpedia@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/ubports/"
 "keepassrx/id/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 5.17.1\n"
 
 msgid "Copy Username"
 msgstr "Salin Nama Pengguna"
@@ -56,7 +56,7 @@ msgid "Tap + to import a database."
 msgstr "Ketuk + untuk mengimpor basis data."
 
 msgid "Last Modified: %1"
-msgstr ""
+msgstr "Terakhir Diubah: %1"
 
 msgid "It will only be removed from the app, not your device."
 msgstr "Ini hanya akan dihapus dari aplikasi, bukan dari perangkat Anda."
@@ -243,43 +243,43 @@ msgid "Database Not Opening?"
 msgstr "Basis Data Tidak Terbuka?"
 
 msgid "Entry Notes"
-msgstr ""
+msgstr "Catatan Entri"
 
 msgid "Note copied to clipboard"
-msgstr ""
+msgstr "Catatan disalin ke papan klip"
 
 msgid "Unable to export attachment."
-msgstr ""
+msgstr "Tidak dapat mengekspor lampiran."
 
 msgid "Entry Attachments"
-msgstr ""
+msgstr "Lampiran Entri"
 
 msgid "Export Attachment"
-msgstr ""
+msgstr "Ekspor Lampiran"
 
 msgid "Attachment Not Viewable"
-msgstr ""
+msgstr "Lampiran Tidak Dapat Dilihat"
 
 msgid "KeePassRX cannot view this %1 attachment, but it can be exported."
-msgstr ""
+msgstr "KeePassRX tidak dapat melihat lampiran %1 ini, tetapi dapat diekspor."
 
 msgid "KeePassRX cannot view this attachment, but it can be exported."
-msgstr ""
+msgstr "KeePassRX tidak dapat melihat lampiran ini, tetapi dapat diekspor."
 
 msgid "Export"
-msgstr ""
+msgstr "Ekspor"
 
 msgid "%1 ready to export."
-msgstr ""
+msgstr "%1 siap diekspor."
 
 msgid "%1 exported."
-msgstr ""
+msgstr "%1 diekspor."
 
 msgid "%1 bytes"
-msgstr ""
+msgstr "%1 bita"
 
 msgid "Attachment"
-msgstr ""
+msgstr "Lampiran"
 
 msgid "Password"
 msgstr "Kata Sandi"
@@ -294,7 +294,7 @@ msgid "%1 copied to clipboard (30 secs)"
 msgstr "%1 disalin ke papan klip (30 detik)"
 
 msgid "Attachments"
-msgstr ""
+msgstr "Lampiran"
 
 msgid "Notes"
 msgstr "Catatan"
@@ -333,7 +333,7 @@ msgid "KeePassRX: Clipboard cleared."
 msgstr "KeePassRX: Papan klip dikosongkan."
 
 msgid "Version %1"
-msgstr ""
+msgstr "Versi %1"
 
 msgid ""
 "KeePassRX is password manager for KeePass databases, designed for Ubuntu "

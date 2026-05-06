@@ -233,7 +233,7 @@ impl RxDatabase {
 
 #[cfg(test)]
 mod tests {
-    use std::fs::File;
+    use std::{fs::File, path::PathBuf};
 
     use keepass::{Database, DatabaseKey};
     use keyring::set_default_credential_builder;
@@ -242,6 +242,13 @@ mod tests {
 
     use super::*;
     use crate::rx::{RxCustomFields, RxValue, TEMPLATE_FIELD_NAME};
+
+    fn fixture_path(name: &str) -> PathBuf {
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("tests")
+            .join("fixtures")
+            .join(name)
+    }
 
     #[test]
     fn loads_recursively() {
@@ -310,7 +317,8 @@ mod tests {
     fn parses_saved_searches_from_test_db() {
         set_default_credential_builder(keyring::mock::default_credential_builder());
 
-        let mut file = File::open("test.kdbx").expect("open test.kdbx");
+        let mut file =
+            File::open(fixture_path("test_saved_searches.kdbx")).expect("open test fixture");
         let db = Database::open(&mut file, DatabaseKey::new().with_password("somePassw0rd"))
             .expect("open keepass db");
 

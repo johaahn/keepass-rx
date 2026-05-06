@@ -3,6 +3,9 @@ use gettextrs::{gettext, pgettext};
 use std::{collections::HashMap, rc::Rc};
 use uuid::Uuid;
 
+#[cfg(feature = "gui")]
+use qmetaobject::QEnum;
+
 use super::{
     RxContainedRef, RxContainer, RxDatabase, RxRoot, RxSavedSearch, RxSearchType, RxTag,
     kpxc_search::evaluate_saved_search,

@@ -12,25 +12,22 @@ pub struct RxUiLicenses {
 macro_rules! qstr {
     ($value:expr) => {{ QVariant::from(QString::from($value.to_string())) }};
 }
-impl From<&License> for QVariantMap {
-    fn from(value: &License) -> Self {
-        let mut map = QVariantMap::default();
 
-        map.insert("crateName".into(), qstr!(value.crate_name));
-        map.insert("crateVersion".into(), qstr!(value.crate_version));
-        map.insert("crateURL".into(), qstr!(value.crate_url));
-        map.insert("licenseName".into(), qstr!(value.license_name));
-        map.insert("licenseSPDX".into(), qstr!(value.license_spdx));
-        map.insert("licenseText".into(), qstr!(value.license_text));
+fn license_to_qvariant_map(value: &License) -> QVariantMap {
+    let mut map = QVariantMap::default();
 
-        map
-    }
+    map.insert("crateName".into(), qstr!(value.crate_name));
+    map.insert("crateVersion".into(), qstr!(value.crate_version));
+    map.insert("crateURL".into(), qstr!(value.crate_url));
+    map.insert("licenseName".into(), qstr!(value.license_name));
+    map.insert("licenseSPDX".into(), qstr!(value.license_spdx));
+    map.insert("licenseText".into(), qstr!(value.license_text));
+
+    map
 }
 
-impl From<&License> for QVariant {
-    fn from(value: &License) -> Self {
-        QVariantMap::from(value).into()
-    }
+fn license_to_qvariant(value: &License) -> QVariant {
+    license_to_qvariant_map(value).into()
 }
 
 // impl from License to QVariantMap. this component just lists all the
@@ -40,9 +37,6 @@ impl From<&License> for QVariant {
 impl RxUiLicenses {
     #[with_executor]
     pub fn allLicenses(&self) -> QVariantList {
-        LICENSES
-            .iter()
-            .map(|license| QVariant::from(license))
-            .collect()
+        LICENSES.iter().map(license_to_qvariant).collect()
     }
 }

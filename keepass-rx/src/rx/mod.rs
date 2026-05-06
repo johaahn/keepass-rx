@@ -8,7 +8,7 @@ mod rx_entry;
 mod rx_group;
 mod rx_loader;
 mod search;
-pub(crate) mod virtual_hierarchy;
+pub mod virtual_hierarchy;
 mod zeroable_db;
 
 #[cfg(feature = "gui")]

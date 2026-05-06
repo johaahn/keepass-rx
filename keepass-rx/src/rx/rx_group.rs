@@ -65,10 +65,10 @@ pub struct RxTemplate {
 #[derive(Zeroize, ZeroizeOnDrop, Default, Clone)]
 pub struct RxTag {
     #[zeroize(skip)]
-    pub(crate) uuid: Uuid,
-    pub(crate) name: String,
+    pub uuid: Uuid,
+    pub name: String,
     #[zeroize(skip)]
-    pub(crate) entry_uuids: Vec<Uuid>,
+    pub entry_uuids: Vec<Uuid>,
 }
 
 impl RxTag {
@@ -84,11 +84,11 @@ impl RxTag {
 #[derive(Zeroize, ZeroizeOnDrop, Default, Clone)]
 pub struct RxSavedSearch {
     #[zeroize(skip)]
-    pub(crate) uuid: Uuid,
-    pub(crate) name: String,
-    pub(crate) query: String,
+    pub uuid: Uuid,
+    pub name: String,
+    pub query: String,
     #[zeroize(skip)]
-    pub(crate) entry_uuids: Vec<Uuid>,
+    pub entry_uuids: Vec<Uuid>,
 }
 
 impl RxSavedSearch {

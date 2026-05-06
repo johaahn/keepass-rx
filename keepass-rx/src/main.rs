@@ -23,8 +23,6 @@ extern crate cstr;
 #[macro_use]
 extern crate qmetaobject;
 
-extern crate libsodium_rs;
-
 use actix::Actor;
 use anyhow::{Context, Result};
 use cpp::cpp;
@@ -46,9 +44,7 @@ use std::path::PathBuf;
 use std::rc::Rc;
 use std::sync::OnceLock;
 
-mod crypto;
-mod license;
-mod rx;
+pub use keepassrx::{crypto, license, rx};
 
 #[cfg(feature = "gui")]
 mod actor;

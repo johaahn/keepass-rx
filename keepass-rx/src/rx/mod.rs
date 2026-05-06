@@ -1,4 +1,5 @@
 mod entropy;
+mod entry_mirror;
 pub(crate) mod icons;
 mod kpxc_search;
 mod rx_container;

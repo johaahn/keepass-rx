@@ -1,5 +1,6 @@
 use crate::crypto::{EncryptedValue, MasterKey};
 
+use super::entry_mirror::NamedAttachmentsHack;
 use super::entropy::calculate_entropy;
 use super::icons::RxIcon;
 use anyhow::{Result, anyhow};
@@ -710,9 +711,9 @@ impl RxAttachments {
         master_key: &Rc<MasterKey>,
         entry: &mut EntryMut<'db>,
     ) -> Result<Self> {
-        //entry.foreach_attachment_mut(|attachment| attachment.as_ref().);
-
-        let mapped: HashMap<String, RxValue> = mem::take(&mut entry.attachments)
+        let mapped: HashMap<String, RxValue> = entry
+            .as_ref()
+            .named_attachments_hack()
             .into_iter()
             .map(|(name, att)| {
                 RxValue::from_attachment(master_key, att).map(|value| (name, value))

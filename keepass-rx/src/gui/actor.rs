@@ -2,12 +2,13 @@ use actix::prelude::*;
 use anyhow::{Result, anyhow};
 use keepass::{Database, DatabaseKey};
 use libsodium_rs::utils::SecureVec;
-use log::{debug, info, warn};
+use log::{debug, error, info, warn};
 use qmetaobject::{QMetaType, QStringList, QVariantMap, prelude::*};
 use secstr::SecUtf8;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::fs::File;
+use std::panic::{AssertUnwindSafe, catch_unwind};
 use std::rc::Rc;
 use tokio::task::AbortHandle;
 use uuid::Uuid;
@@ -25,6 +26,16 @@ use crate::{
     gui::{RxViewMode, utils::imported_databases_path},
     rx::{RxDatabase, RxFieldName, ZeroableDatabase},
 };
+
+fn panic_payload_to_string(payload: &(dyn std::any::Any + Send)) -> String {
+    if let Some(message) = payload.downcast_ref::<&str>() {
+        (*message).to_string()
+    } else if let Some(message) = payload.downcast_ref::<String>() {
+        message.clone()
+    } else {
+        "non-string panic payload".to_string()
+    }
+}
 
 #[derive(Default)]
 pub struct KeepassRxActor {
@@ -297,9 +308,34 @@ impl Handler<OpenDatabase> for KeepassRxActor {
 
                 match result {
                     Ok(keepass_db) => {
-                        let wrapped_db = Zeroizing::new(ZeroableDatabase(keepass_db));
-                        let rx_db = RxDatabase::new(wrapped_db);
-                        let view = VirtualHierarchyType::DefaultView(DefaultView::new(&rx_db));
+                        let conversion = catch_unwind(AssertUnwindSafe(|| -> Result<_> {
+                            let wrapped_db = Zeroizing::new(ZeroableDatabase(keepass_db));
+                            let rx_db = RxDatabase::new(wrapped_db)?;
+                            let view = VirtualHierarchyType::DefaultView(DefaultView::new(&rx_db));
+                            Ok((rx_db, view))
+                        }));
+
+                        let (rx_db, view) = match conversion {
+                            Ok(Ok(value)) => value,
+                            Ok(Err(err)) => {
+                                error!("Database materialization failed: {err:?}");
+                                gui.databaseOpenFailed(format!(
+                                    "Unable to load database contents: {err}. See log file."
+                                ));
+                                return Ok(());
+                            }
+                            Err(payload) => {
+                                let payload = panic_payload_to_string(payload.as_ref());
+                                let backtrace = std::backtrace::Backtrace::force_capture();
+                                error!(
+                                    "Panic while materializing database: {payload}\n{backtrace}"
+                                );
+                                gui.databaseOpenFailed(format!(
+                                    "Internal error while loading database: {payload}. See log file."
+                                ));
+                                return Ok(());
+                            }
+                        };
 
                         let app_state = this.app_state.pinned();
                         let mut app_state = app_state.borrow_mut();
@@ -330,7 +366,10 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                         gui.viewMode = RxViewMode::All;
                         gui.viewModeChanged(RxViewMode::All);
                     }
-                    Err(err) => gui.databaseOpenFailed(format!("{}", err)),
+                    Err(err) => {
+                        error!("Database open failed: {err:?}");
+                        gui.databaseOpenFailed(format!("{}", err));
+                    }
                 }
 
                 Ok(())

@@ -14,7 +14,7 @@ use keepass::db::{
     Value,
 };
 use libsodium_rs::utils::{SecureVec, vec_utils};
-use log::warn;
+use log::{info, warn};
 use querystring::querify;
 use secrecy::{ExposeSecretMut, SecretBox};
 use secstr::SecStr;
@@ -154,6 +154,8 @@ impl RxEntry {
         mut entry: EntryMut<'db>,
         parent_uuid: Uuid,
     ) -> Self {
+        let entry_uuid = entry.id().uuid();
+        info!("Starting RxEntry::new for entry {}", entry_uuid);
         let master_key = master_key.clone();
         let custom_data = mem::take(&mut entry.custom_data);
 
@@ -204,8 +206,10 @@ impl RxEntry {
                 RxAttachments::empty(&master_key)
             });
 
+        info!("Finished RxEntry::new for entry {}", entry_uuid);
+
         Self {
-            uuid: entry.id().uuid(),
+            uuid: entry_uuid,
             master_key: master_key,
             parent_group: parent_uuid,
             template_uuid: template_uuid,
@@ -711,9 +715,19 @@ impl RxAttachments {
         master_key: &Rc<MasterKey>,
         entry: &mut EntryMut<'db>,
     ) -> Result<Self> {
-        let mapped: HashMap<String, RxValue> = entry
+        let entry_uuid = entry.id().uuid();
+        info!("Loading attachment names for entry {}", entry_uuid);
+        let named_attachments: Vec<_> = entry
             .as_ref()
             .named_attachments_hack()
+            .collect();
+        info!(
+            "Loading {} attachments for entry {}",
+            named_attachments.len(),
+            entry_uuid
+        );
+
+        let mapped: HashMap<String, RxValue> = named_attachments
             .into_iter()
             .map(|(name, att)| {
                 RxValue::from_attachment(master_key, att).map(|value| (name, value))

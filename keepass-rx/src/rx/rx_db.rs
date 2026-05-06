@@ -2,11 +2,11 @@ use crate::crypto::MasterKey;
 
 use super::rx_loader::RxLoader;
 use super::{RxEntry, RxGroup, RxTemplate, RxTotp, ZeroableDatabase};
-use anyhow::{Result, anyhow};
+use anyhow::{Context, Result, anyhow};
 use indexmap::IndexMap;
 use keepass::config::DatabaseConfig;
 use keepass::db::Meta;
-use log::info;
+use log::{debug, info};
 use std::rc::Rc;
 use std::{collections::HashMap, mem, str::FromStr};
 use uuid::Uuid;
@@ -122,9 +122,10 @@ impl std::fmt::Debug for RxDatabase {
 
 #[allow(dead_code)]
 impl RxDatabase {
-    pub fn new(db: Zeroizing<ZeroableDatabase>) -> Self {
+    pub fn new(db: Zeroizing<ZeroableDatabase>) -> Result<Self> {
+        info!("Starting RxDatabase construction");
         let loader = RxLoader::new(db);
-        let mut loaded = loader.load().expect("Coud not load the database");
+        let mut loaded = loader.load().context("materializing database view")?;
 
         let mut db = Self {
             master_key: loaded.master_key,
@@ -141,7 +142,11 @@ impl RxDatabase {
             .state
             .templates
             .iter_mut()
-            .map(|(_, t)| Rc::get_mut(t).expect("Could not acquire mutable template ref"));
+            .map(|(uuid, t)| {
+                Rc::get_mut(t)
+                    .ok_or_else(|| anyhow!("Could not acquire mutable template ref for {uuid}"))
+            })
+            .collect::<Result<Vec<_>>>()?;
 
         for rx_template in rx_templates {
             let template_entry = db.get_entry(rx_template.uuid);
@@ -161,8 +166,13 @@ impl RxDatabase {
         }
 
         db.templates = loaded.state.templates;
+        debug!(
+            "Finished RxDatabase construction ({} groups, {} entries)",
+            db.all_groups.len(),
+            db.all_entries.len()
+        );
 
-        db
+        Ok(db)
     }
 
     pub fn master_key(&self) -> &MasterKey {
@@ -265,7 +275,7 @@ mod tests {
 
         db.root = group;
 
-        let rx_db = RxDatabase::new(Zeroizing::new(ZeroableDatabase(db)));
+        let rx_db = RxDatabase::new(Zeroizing::new(ZeroableDatabase(db))).expect("load rx db");
         let rx_root = rx_db.root_group();
 
         assert_eq!(rx_db.all_groups_iter().count(), 2);
@@ -293,7 +303,7 @@ mod tests {
         let db = Database::open(&mut file, DatabaseKey::new().with_password("somePassw0rd"))
             .expect("open keepass db");
 
-        let rx_db = RxDatabase::new(Zeroizing::new(ZeroableDatabase(db)));
+        let rx_db = RxDatabase::new(Zeroizing::new(ZeroableDatabase(db))).expect("load rx db");
         let saved: Vec<_> = rx_db.saved_searches_iter().collect();
         assert!(!saved.is_empty(), "expected at least one saved search");
 

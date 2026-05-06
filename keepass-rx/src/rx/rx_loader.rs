@@ -1,11 +1,12 @@
 use crate::crypto::MasterKey;
 
 use super::{RxEntry, RxGroup, RxMetadata, RxSavedSearchDef, RxTemplate, ZeroableDatabase};
-use anyhow::Result;
+use anyhow::{Context, Result, anyhow};
 use indexmap::IndexMap;
 use keepass::db::{
     CustomDataValue, GroupId, Meta as KeePassMeta,
 };
+use log::info;
 use serde_json::Value as JsonValue;
 use std::collections::HashMap;
 use std::mem;
@@ -65,13 +66,16 @@ impl RxLoader {
     }
 
     pub fn load(mut self) -> Result<Loaded> {
+        info!("Beginning RxLoader database materialization");
         self.master_key = Some(Rc::new(
-            MasterKey::new().expect("Could not create a master key"),
+            MasterKey::new().context("creating in-memory master key")?,
         ));
 
         self.state = LoadState::default();
 
-        let root_group = self.load_groups_recursive(self.db.root().id(), None);
+        let root_group = self
+            .load_groups_recursive(self.db.root().id(), None)
+            .context("loading root group recursively")?;
 
         let root_uuid = root_group.uuid;
         self.state
@@ -84,6 +88,7 @@ impl RxLoader {
         let rx_metadata = RxMetadata::new(config, meta);
 
         self.db.zeroize();
+        info!("Finished RxLoader database materialization");
 
         Ok(Loaded {
             master_key: self.master_key.unwrap(),
@@ -100,35 +105,50 @@ impl RxLoader {
         &mut self,
         group_id: GroupId,
         parent_group_uuid: Option<Uuid>,
-    ) -> RxGroup {
+    ) -> Result<RxGroup> {
         let Some(group) = self.db.group(group_id) else {
-            return RxGroup::default();
+            return Err(anyhow!("group {} missing from database", group_id));
         };
 
         let child_group_ids: Vec<_> = group.group_ids().into_iter().collect();
         let child_entry_ids: Vec<_> = group.entry_ids().into_iter().collect();
+        info!(
+            "Loading group {} ({} subgroups, {} entries)",
+            group_id,
+            child_group_ids.len(),
+            child_entry_ids.len()
+        );
         drop(group);
 
         let mut subgroups = Vec::new();
         for subgroup_id in child_group_ids {
-            let rx_subgroup = self.load_groups_recursive(subgroup_id, Some(group_id.uuid()));
+            info!("Descending into subgroup {} under group {}", subgroup_id, group_id);
+            let rx_subgroup = self
+                .load_groups_recursive(subgroup_id, Some(group_id.uuid()))
+                .with_context(|| format!("loading subgroup {subgroup_id} under group {group_id}"))?;
             subgroups.push(rx_subgroup);
         }
 
         let mut entries = Vec::new();
         for entry_id in child_entry_ids {
             let Some(entry) = self.db.entry_mut(entry_id) else {
-                continue;
+                return Err(anyhow!(
+                    "entry {} referenced by group {} missing from database",
+                    entry_id,
+                    group_id
+                ));
             };
 
+            info!("Loading entry {} under group {}", entry_id, group_id);
             let rx_entry = RxEntry::new(self.master_key.as_ref().unwrap(), entry, group_id.uuid());
+            info!("Finished entry {} under group {}", entry_id, group_id);
 
             // Build up template entries as we go. Name of the
             // template will be set later, in RxDatabase::new.
             if let Some(template_uuid) = rx_entry.template_uuid {
                 let rx_template =
                     Rc::get_mut(self.state.templates.entry(template_uuid).or_default())
-                        .expect("Could not update template");
+                        .ok_or_else(|| anyhow!("could not update template {template_uuid}"))?;
 
                 rx_template.uuid = template_uuid;
                 rx_template.entry_uuids.push(rx_entry.uuid);
@@ -138,7 +158,10 @@ impl RxLoader {
         }
 
         let Some(group) = self.db.group_mut(group_id) else {
-            return RxGroup::default();
+            return Err(anyhow!(
+                "group {} missing from database when reacquiring mutable reference",
+                group_id
+            ));
         };
 
         // Only need group id, name, icon. Extract to struct.
@@ -159,7 +182,8 @@ impl RxLoader {
             self.state.all_entries.insert(entry.uuid, Rc::new(entry));
         }
 
-        this_group
+        info!("Finished group {}", group_id);
+        Ok(this_group)
     }
 }
 

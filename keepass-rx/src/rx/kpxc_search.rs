@@ -312,7 +312,7 @@ mod tests {
         root.entries.push(entry2);
         db.root = root;
 
-        RxDatabase::new(Zeroizing::new(ZeroableDatabase(db)))
+        RxDatabase::new(Zeroizing::new(ZeroableDatabase(db))).expect("load rx db")
     }
 
     #[test]

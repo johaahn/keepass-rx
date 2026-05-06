@@ -156,7 +156,6 @@ fn expand(args: MirrorArgs, item: ItemStruct) -> syn::Result<proc_macro2::TokenS
     Ok(quote! {
         #(#imports)*
 
-        #[repr(C)]
         #mirror_vis struct #mirror_ident {
             #fields
         }
@@ -467,16 +466,29 @@ fn score_path(
 
 fn resolve_preferred_package(manifest_dir: &Path, crate_name: &str) -> Option<PreferredPackage> {
     let manifest_package = parse_manifest_dependency(&manifest_dir.join("Cargo.toml"), crate_name);
-
-    if manifest_package.is_some() {
-        return manifest_package;
-    }
-
-    manifest_dir
+    let lockfile_package = manifest_dir
         .ancestors()
         .map(|dir| dir.join("Cargo.lock"))
-        .find(|path| path.is_file())
-        .and_then(|lockfile| parse_lockfile_package(&lockfile, crate_name))
+        .filter(|path| path.is_file())
+        .filter_map(|lockfile| parse_lockfile_package(&lockfile, crate_name))
+        .max_by_key(|package| lockfile_package_compatibility(manifest_package.as_ref(), package));
+
+    match (manifest_package, lockfile_package) {
+        (Some(mut manifest), Some(lockfile)) => {
+            if manifest.version.is_none() {
+                manifest.version = lockfile.version;
+            }
+
+            if preferred_source_is_more_specific(lockfile.source.as_deref(), manifest.source.as_deref()) {
+                manifest.source = lockfile.source;
+            }
+
+            Some(manifest)
+        }
+        (Some(manifest), None) => Some(manifest),
+        (None, Some(lockfile)) => Some(lockfile),
+        (None, None) => None,
+    }
 }
 
 fn parse_manifest_dependency(manifest: &Path, crate_name: &str) -> Option<PreferredPackage> {
@@ -634,6 +646,65 @@ fn extract_semverish_version(input: &str) -> Option<String> {
     None
 }
 
+fn preferred_source_is_more_specific(candidate: Option<&str>, current: Option<&str>) -> bool {
+    let candidate = candidate.unwrap_or_default();
+    let current = current.unwrap_or_default();
+
+    source_specificity(candidate) > source_specificity(current)
+}
+
+fn lockfile_package_compatibility(
+    manifest_package: Option<&PreferredPackage>,
+    lockfile_package: &PreferredPackage,
+) -> usize {
+    let mut score = source_specificity(lockfile_package.source.as_deref().unwrap_or_default());
+
+    if let Some(manifest_package) = manifest_package {
+        if source_kind(manifest_package.source.as_deref()) == source_kind(lockfile_package.source.as_deref()) {
+            score += 100;
+        }
+
+        if manifest_package.version.is_some() && manifest_package.version == lockfile_package.version {
+            score += 50;
+        }
+    }
+
+    score
+}
+
+fn source_kind(source: Option<&str>) -> &'static str {
+    let source = source.unwrap_or_default();
+
+    if source.starts_with("git+") {
+        "git"
+    } else if source.starts_with("registry+") {
+        "registry"
+    } else if source.starts_with("path+") {
+        "path"
+    } else {
+        ""
+    }
+}
+
+fn source_specificity(source: &str) -> usize {
+    let mut score = 0usize;
+
+    if !source.is_empty() {
+        score += 1;
+    }
+    if source.contains("://") {
+        score += 1;
+    }
+    if source.contains('?') {
+        score += 1;
+    }
+    if source.contains('#') {
+        score += 2;
+    }
+
+    score
+}
+
 fn package_match_score(normalized_path: &str, preferred_package: &PreferredPackage) -> i32 {
     let mut score = 0;
     let package_name = normalize(&preferred_package.name);
@@ -672,6 +743,15 @@ fn package_match_score(normalized_path: &str, preferred_package: &PreferredPacka
 
             if normalized_path.contains("/registry/src/") {
                 score -= 120;
+            }
+
+            if let Some(rev) = source.split('#').nth(1) {
+                let short_rev = normalize(&rev[..rev.len().min(7)]);
+                if normalized_path.contains(&format!("/{short_rev}/")) {
+                    score += 500;
+                } else if normalized_path.contains("/git/checkouts/") {
+                    score -= 100;
+                }
             }
         }
     }
@@ -926,11 +1006,83 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
         let package = resolve_preferred_package(&temp_dir, "keepass").expect("package");
         assert_eq!(package.version.as_deref(), Some("0.12.4"));
-        assert_eq!(package.source.as_deref(), Some("registry+"));
+        assert_eq!(
+            package.source.as_deref(),
+            Some("registry+https://github.com/rust-lang/crates.io-index")
+        );
 
         let _ = fs::remove_file(manifest_path);
         let _ = fs::remove_file(lockfile_path);
         let _ = fs::remove_dir(temp_dir);
+    }
+
+    #[test]
+    fn merges_manifest_with_more_specific_lockfile_git_source() {
+        let temp_dir = env::temp_dir().join(format!(
+            "mirror_from_macro_git_resolve_test_{}",
+            std::process::id()
+        ));
+        fs::create_dir_all(&temp_dir).expect("create temp dir");
+        let manifest_path = temp_dir.join("Cargo.toml");
+        let lockfile_path = temp_dir.join("Cargo.lock");
+
+        fs::write(
+            &manifest_path,
+            r#"
+[package]
+name = "demo"
+
+[dependencies]
+keepass = { git = "https://github.com/sseemayer/keepass-rs", branch = "303-kdbx41-support" }
+"#,
+        )
+        .expect("write manifest");
+        fs::write(
+            &lockfile_path,
+            r#"
+[[package]]
+name = "keepass"
+version = "0.0.0-placeholder-version"
+source = "git+https://github.com/sseemayer/keepass-rs?branch=303-kdbx41-support#0e924b43b81878fe310d9c8dd4a7b1779ebadef5"
+"#,
+        )
+        .expect("write lockfile");
+
+        let package = resolve_preferred_package(&temp_dir, "keepass").expect("package");
+        assert_eq!(package.version.as_deref(), Some("0.0.0-placeholder-version"));
+        assert_eq!(
+            package.source.as_deref(),
+            Some("git+https://github.com/sseemayer/keepass-rs?branch=303-kdbx41-support#0e924b43b81878fe310d9c8dd4a7b1779ebadef5")
+        );
+
+        let _ = fs::remove_file(manifest_path);
+        let _ = fs::remove_file(lockfile_path);
+        let _ = fs::remove_dir(temp_dir);
+    }
+
+    #[test]
+    fn prefers_locked_git_revision_checkout() {
+        let preferred = PreferredPackage {
+            name: "keepass".into(),
+            version: Some("0.0.0-placeholder-version".into()),
+            source: Some(
+                "git+https://github.com/sseemayer/keepass-rs?branch=303-kdbx41-support#0e924b43b81878fe310d9c8dd4a7b1779ebadef5"
+                    .into(),
+            ),
+        };
+        let target = &["keepass".into(), "db".into(), "Entry".into()];
+
+        let selected = Path::new(
+            "/tmp/cargo/git/checkouts/keepass-rs-deb45182a93bbe71/0e924b4/src/db/types/entry.rs",
+        );
+        let stale = Path::new(
+            "/tmp/cargo/git/checkouts/keepass-rs-b78f56cfd0c013ed/7528c9d/src/db/types/entry.rs",
+        );
+
+        let selected_score = score_path(selected, target, "entry", Some(&preferred));
+        let stale_score = score_path(stale, target, "entry", Some(&preferred));
+
+        assert!(selected_score > stale_score);
     }
 
     #[test]

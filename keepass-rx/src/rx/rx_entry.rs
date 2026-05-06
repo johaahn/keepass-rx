@@ -1,7 +1,7 @@
 use crate::crypto::{EncryptedValue, MasterKey};
 
-use super::entry_mirror::NamedAttachmentsHack;
 use super::entropy::calculate_entropy;
+use super::entry_mirror::NamedAttachmentsHack;
 use super::icons::RxIcon;
 use anyhow::{Result, anyhow};
 use base64::{Engine, prelude::BASE64_STANDARD};
@@ -494,7 +494,7 @@ impl Zeroize for RxValue {
 
 static ID_COUNTER: AtomicU64 = AtomicU64::new(1);
 
-trait SecretBytes {
+pub trait SecretBytes {
     fn secret_bytes(&self) -> &[u8];
 }
 

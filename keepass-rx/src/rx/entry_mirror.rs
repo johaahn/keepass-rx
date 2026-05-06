@@ -10,7 +10,7 @@ unsafe fn attachments_map(
 ) -> &HashMap<String, keepass::db::AttachmentId> {
     let base = entry as *const keepass::db::Entry as *const u8;
     let offset = offset_of!(EntryMirror, attachments);
-    &*(base.add(offset) as *const HashMap<String, keepass::db::AttachmentId>)
+    unsafe { &*(base.add(offset) as *const HashMap<String, keepass::db::AttachmentId>) }
 }
 
 pub(crate) trait NamedAttachmentsHack {

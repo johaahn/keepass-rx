@@ -17,7 +17,7 @@ cstr = "0.2.11"
 cpp = "0.5"
 dirs = "6.0.0"
 anyhow = "1.0.100"
-keepass = { version = "0.12.4", features = [ "totp", "serialization" ] }
+keepass = { git = "https://github.com/sseemayer/keepass-rs", branch = "303-kdbx41-support", features = [ "totp", "serialization" ] }
 humanize-duration = "0.0.7"
 uriparse = "0.6.4"
 querystring = "1.1.0"

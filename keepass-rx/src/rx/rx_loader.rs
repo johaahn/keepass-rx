@@ -1,10 +1,10 @@
-use crate::{crypto::MasterKey, rx::to_part};
+use crate::crypto::MasterKey;
 
 use super::{RxEntry, RxGroup, RxMetadata, RxSavedSearchDef, RxTemplate, ZeroableDatabase};
 use anyhow::Result;
 use indexmap::IndexMap;
 use keepass::db::{
-    CustomDataValue, Entry, EntryMut, Group, GroupId, GroupMut, Meta as KeePassMeta, Value,
+    CustomDataValue, GroupId, Meta as KeePassMeta,
 };
 use serde_json::Value as JsonValue;
 use std::collections::HashMap;
@@ -25,11 +25,6 @@ pub struct Loaded {
     pub metadata: RxMetadata,
     pub saved_searches: Vec<RxSavedSearchDef>,
     pub master_key: Rc<MasterKey>,
-}
-
-enum Node<'db> {
-    Entry(EntryMut<'db>),
-    GroupId(GroupId),
 }
 
 fn parse_saved_searches(meta: &KeePassMeta) -> Vec<RxSavedSearchDef> {
@@ -106,44 +101,28 @@ impl RxLoader {
         group_id: GroupId,
         parent_group_uuid: Option<Uuid>,
     ) -> RxGroup {
-        let Some(mut group) = self.db.group_mut(group_id) else {
+        let Some(group) = self.db.group(group_id) else {
             return RxGroup::default();
         };
 
-        // TODO maybe change it to load all rxentries first, THEN load
-        // groups. Or pass down only the group ids instead of the
-        // whole group object. then self.db can load group_mut.
-        let mut subgroups: Vec<RxGroup> = vec![];
-        let mut entries = vec![];
-
-        let group_part = to_part(&mut group);
         let child_group_ids: Vec<_> = group.group_ids().into_iter().collect();
         let child_entry_ids: Vec<_> = group.entry_ids().into_iter().collect();
         drop(group);
 
+        let mut subgroups = Vec::new();
         for subgroup_id in child_group_ids {
-            // let rx_subgroup =
-            //     self.load_groups_recursive(subgroup_id, Some(subgroup_id.uuid()));
-
-            // subgroups.push(rx_subgroup);
+            let rx_subgroup = self.load_groups_recursive(subgroup_id, Some(group_id.uuid()));
+            subgroups.push(rx_subgroup);
         }
 
-        let child_entries: Vec<_> = child_entry_ids
-            .into_iter()
-            .flat_map(|entry_id| {
-                if let Some(entry) = self.db.entry_mut(entry_id) {
-                    Some(RxEntry::new(
-                        self.master_key.as_ref().unwrap(),
-                        entry,
-                        group_id.uuid(),
-                    ))
-                } else {
-                    None
-                }
-            })
-            .collect();
+        let mut entries = Vec::new();
+        for entry_id in child_entry_ids {
+            let Some(entry) = self.db.entry_mut(entry_id) else {
+                continue;
+            };
 
-        for rx_entry in child_entries {
+            let rx_entry = RxEntry::new(self.master_key.as_ref().unwrap(), entry, group_id.uuid());
+
             // Build up template entries as we go. Name of the
             // template will be set later, in RxDatabase::new.
             if let Some(template_uuid) = rx_entry.template_uuid {
@@ -157,6 +136,10 @@ impl RxLoader {
 
             entries.push(rx_entry);
         }
+
+        let Some(group) = self.db.group_mut(group_id) else {
+            return RxGroup::default();
+        };
 
         // Only need group id, name, icon. Extract to struct.
         let this_group = RxGroup::new(

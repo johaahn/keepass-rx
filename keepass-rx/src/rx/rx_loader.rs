@@ -3,9 +3,7 @@ use crate::crypto::MasterKey;
 use super::{RxEntry, RxGroup, RxMetadata, RxSavedSearchDef, RxTemplate, ZeroableDatabase};
 use anyhow::{Context, Result, anyhow};
 use indexmap::IndexMap;
-use keepass::db::{
-    CustomDataValue, GroupId, Meta as KeePassMeta,
-};
+use keepass::db::{CustomDataValue, GroupId, Meta as KeePassMeta};
 use log::info;
 use serde_json::Value as JsonValue;
 use std::collections::HashMap;
@@ -118,14 +116,18 @@ impl RxLoader {
             child_group_ids.len(),
             child_entry_ids.len()
         );
-        drop(group);
 
         let mut subgroups = Vec::new();
         for subgroup_id in child_group_ids {
-            info!("Descending into subgroup {} under group {}", subgroup_id, group_id);
+            info!(
+                "Descending into subgroup {} under group {}",
+                subgroup_id, group_id
+            );
             let rx_subgroup = self
                 .load_groups_recursive(subgroup_id, Some(group_id.uuid()))
-                .with_context(|| format!("loading subgroup {subgroup_id} under group {group_id}"))?;
+                .with_context(|| {
+                    format!("loading subgroup {subgroup_id} under group {group_id}")
+                })?;
             subgroups.push(rx_subgroup);
         }
 
@@ -140,7 +142,8 @@ impl RxLoader {
             };
 
             info!("Loading entry {} under group {}", entry_id, group_id);
-            let rx_entry = RxEntry::new(self.master_key.as_ref().unwrap(), entry, group_id.uuid());
+            let rx_entry =
+                RxEntry::new(self.master_key.as_ref().unwrap(), entry, group_id.uuid());
             info!("Finished entry {} under group {}", entry_id, group_id);
 
             // Build up template entries as we go. Name of the

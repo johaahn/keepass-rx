@@ -1,4 +1,4 @@
-use log::info;
+use log::{debug, info};
 use memoffset::offset_of;
 use mirror_from_macro::mirror_from;
 use std::collections::HashMap;
@@ -30,16 +30,17 @@ impl<'a> NamedAttachmentsHack for keepass::db::EntryRef<'a> {
         &self,
     ) -> impl Iterator<Item = (String, keepass::db::Attachment)> + '_ {
         let entry_uuid = self.id().uuid();
-        info!("Starting named attachment hack for entry {}", entry_uuid);
+        debug!("Starting named attachment hack for entry {}", entry_uuid);
         let names = unsafe { attachments_map(self).keys().cloned().collect::<Vec<_>>() };
-        info!(
+
+        debug!(
             "Collected {} mirrored attachment names for entry {}",
             names.len(),
             entry_uuid
         );
 
         names.into_iter().filter_map(move |name| {
-            info!(
+            debug!(
                 "Resolving mirrored attachment name for entry {}",
                 entry_uuid
             );

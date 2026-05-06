@@ -515,10 +515,7 @@ impl SecretBytes for Vec<u8> {
 }
 
 impl RxValue {
-    pub fn from_attachment(
-        master_key: &MasterKey,
-        mut attachment: Attachment,
-    ) -> Result<Self> {
+    pub fn from_attachment(master_key: &MasterKey, attachment: Attachment) -> Result<Self> {
         match attachment.data {
             Value::Protected(val) => Self::encrypted(master_key, val),
             Value::Unprotected(mut val) => {
@@ -717,10 +714,7 @@ impl RxAttachments {
     ) -> Result<Self> {
         let entry_uuid = entry.id().uuid();
         info!("Loading attachment names for entry {}", entry_uuid);
-        let named_attachments: Vec<_> = entry
-            .as_ref()
-            .named_attachments_hack()
-            .collect();
+        let named_attachments: Vec<_> = entry.as_ref().named_attachments_hack().collect();
         info!(
             "Loading {} attachments for entry {}",
             named_attachments.len(),

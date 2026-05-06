@@ -9,7 +9,8 @@ use humanize_duration::prelude::DurationExt;
 use infer;
 use itertools::Itertools;
 use keepass::db::{
-    Attachment, CustomDataItem, CustomDataValue, Entry, TOTP as KeePassTOTP, Value,
+    Attachment, CustomDataItem, CustomDataValue, Entry, EntryMut, Icon, TOTP as KeePassTOTP,
+    Value,
 };
 use libsodium_rs::utils::{SecureVec, vec_utils};
 use log::warn;
@@ -147,7 +148,11 @@ fn extract_value(
 
 #[allow(dead_code)]
 impl RxEntry {
-    pub fn new(master_key: &Rc<MasterKey>, mut entry: Entry, parent_uuid: Uuid) -> Self {
+    pub fn new<'db>(
+        master_key: &Rc<MasterKey>,
+        mut entry: EntryMut<'db>,
+        parent_uuid: Uuid,
+    ) -> Self {
         let master_key = master_key.clone();
         let custom_data = mem::take(&mut entry.custom_data);
 
@@ -168,13 +173,15 @@ impl RxEntry {
 
         // Icon: Can either be the custom one (provided), or the
         // built-in one, or nothing.
-        let rx_icon = entry
-            .custom_icon
-            .as_ref()
-            .cloned()
-            .map(|(_, data)| RxIcon::Image(data))
-            .or_else(|| entry.icon_id.map(|id| RxIcon::Builtin(id)))
-            .unwrap_or(RxIcon::None);
+        let rx_icon = match entry.icon() {
+            Some(Icon::BuiltIn(id)) => RxIcon::Builtin(*id),
+            Some(Icon::Custom(_)) => entry
+                .custom_icon_mut()
+                .as_ref()
+                .map(|icon| RxIcon::Image(icon.data.clone()))
+                .unwrap_or(RxIcon::None),
+            _ => RxIcon::None,
+        };
 
         // Expiration: self-explanatory.
         let is_expired = entry
@@ -197,7 +204,7 @@ impl RxEntry {
             });
 
         Self {
-            uuid: entry.uuid,
+            uuid: entry.id().uuid(),
             master_key: master_key,
             parent_group: parent_uuid,
             template_uuid: template_uuid,
@@ -699,7 +706,12 @@ impl RxAttachments {
         self.attachments.get(name)
     }
 
-    pub fn from_entry(master_key: &Rc<MasterKey>, entry: &mut Entry) -> Result<Self> {
+    pub fn from_entry<'db>(
+        master_key: &Rc<MasterKey>,
+        entry: &mut EntryMut<'db>,
+    ) -> Result<Self> {
+        //entry.foreach_attachment_mut(|attachment| attachment.as_ref().);
+
         let mapped: HashMap<String, RxValue> = mem::take(&mut entry.attachments)
             .into_iter()
             .map(|(name, att)| {

@@ -1,9 +1,11 @@
-use crate::crypto::MasterKey;
+use crate::{crypto::MasterKey, rx::to_part};
 
 use super::{RxEntry, RxGroup, RxMetadata, RxSavedSearchDef, RxTemplate, ZeroableDatabase};
 use anyhow::Result;
 use indexmap::IndexMap;
-use keepass::db::{CustomDataValue, Entry, Group, Meta as KeePassMeta, Value};
+use keepass::db::{
+    CustomDataValue, Entry, EntryMut, Group, GroupId, GroupMut, Meta as KeePassMeta, Value,
+};
 use serde_json::Value as JsonValue;
 use std::collections::HashMap;
 use std::mem;
@@ -25,9 +27,9 @@ pub struct Loaded {
     pub master_key: Rc<MasterKey>,
 }
 
-enum Node {
-    Entry(Entry),
-    Group(Group),
+enum Node<'db> {
+    Entry(EntryMut<'db>),
+    GroupId(GroupId),
 }
 
 fn parse_saved_searches(meta: &KeePassMeta) -> Vec<RxSavedSearchDef> {
@@ -74,9 +76,7 @@ impl RxLoader {
 
         self.state = LoadState::default();
 
-        let mut db_root = mem::take(&mut self.db().root);
-
-        let root_group = self.load_groups_recursive(&mut db_root, None);
+        let root_group = self.load_groups_recursive(self.db.root().id(), None);
 
         let root_uuid = root_group.uuid;
         self.state
@@ -103,51 +103,62 @@ impl RxLoader {
     /// buildingd up the database state.
     pub fn load_groups_recursive(
         &mut self,
-        group: &mut Group,
+        group_id: GroupId,
         parent_group_uuid: Option<Uuid>,
     ) -> RxGroup {
-        let mut subgroups = vec![];
+        let Some(mut group) = self.db.group_mut(group_id) else {
+            return RxGroup::default();
+        };
+
+        // TODO maybe change it to load all rxentries first, THEN load
+        // groups. Or pass down only the group ids instead of the
+        // whole group object. then self.db can load group_mut.
+        let mut subgroups: Vec<RxGroup> = vec![];
         let mut entries = vec![];
 
-        let child_entries = mem::take(&mut group.entries)
-            .into_iter()
-            .map(|ent| Node::Entry(ent));
-        let child_groups = mem::take(&mut group.groups)
-            .into_iter()
-            .map(|grp| Node::Group(grp));
+        let group_part = to_part(&mut group);
+        let child_group_ids: Vec<_> = group.group_ids().into_iter().collect();
+        let child_entry_ids: Vec<_> = group.entry_ids().into_iter().collect();
+        drop(group);
 
-        let children: Vec<Node> = child_groups.chain(child_entries).collect();
+        for subgroup_id in child_group_ids {
+            // let rx_subgroup =
+            //     self.load_groups_recursive(subgroup_id, Some(subgroup_id.uuid()));
 
-        for node in children.into_iter() {
-            match node {
-                Node::Group(mut subgroup) => {
-                    let subgroup_id = subgroup.uuid;
-                    let rx_subgroup =
-                        self.load_groups_recursive(&mut subgroup, Some(subgroup_id));
-
-                    subgroups.push(rx_subgroup);
-                }
-                Node::Entry(entry) => {
-                    let rx_entry =
-                        RxEntry::new(self.master_key.as_ref().unwrap(), entry, group.uuid);
-
-                    // Build up template entries as we go. Name of the
-                    // template will be set later, in RxDatabase::new.
-                    if let Some(template_uuid) = rx_entry.template_uuid {
-                        let rx_template = Rc::get_mut(
-                            self.state.templates.entry(template_uuid).or_default(),
-                        )
-                        .expect("Could not update template");
-
-                        rx_template.uuid = template_uuid;
-                        rx_template.entry_uuids.push(rx_entry.uuid);
-                    }
-
-                    entries.push(rx_entry);
-                }
-            }
+            // subgroups.push(rx_subgroup);
         }
 
+        let child_entries: Vec<_> = child_entry_ids
+            .into_iter()
+            .flat_map(|entry_id| {
+                if let Some(entry) = self.db.entry_mut(entry_id) {
+                    Some(RxEntry::new(
+                        self.master_key.as_ref().unwrap(),
+                        entry,
+                        group_id.uuid(),
+                    ))
+                } else {
+                    None
+                }
+            })
+            .collect();
+
+        for rx_entry in child_entries {
+            // Build up template entries as we go. Name of the
+            // template will be set later, in RxDatabase::new.
+            if let Some(template_uuid) = rx_entry.template_uuid {
+                let rx_template =
+                    Rc::get_mut(self.state.templates.entry(template_uuid).or_default())
+                        .expect("Could not update template");
+
+                rx_template.uuid = template_uuid;
+                rx_template.entry_uuids.push(rx_entry.uuid);
+            }
+
+            entries.push(rx_entry);
+        }
+
+        // Only need group id, name, icon. Extract to struct.
         let this_group = RxGroup::new(
             group,
             subgroups.iter().map(|sg| sg.uuid).collect(),

@@ -2,7 +2,7 @@ use std::ops::{Deref, DerefMut};
 
 use keepass::{
     Database,
-    db::{CustomDataValue, Entry, Group, Value},
+    db::{CustomDataItem, CustomDataValue, Entry, Group, Value},
 };
 use take_mut::take;
 use zeroize::Zeroize;
@@ -32,27 +32,36 @@ macro_rules! zero_out {
     }};
 }
 
-fn zero_group(group: &mut Group) {
-    for entry in group.entries.iter_mut() {
-        zero_entry(entry);
-    }
+fn zero_db(db: &mut Database) {
+    db.foreach_entry_mut(|mut entry| {
+        zero_entry(&mut entry);
+    });
 
-    for group in group.groups.iter_mut() {
-        zero_group(group);
-    }
-
-    for (_, data_item) in group.custom_data.iter_mut() {
-        if let Some(value) = &mut data_item.value {
-            zero_custom_data_value(value);
+    db.foreach_group_mut(|mut group| {
+        for (_, data_item) in group.custom_data.iter_mut() {
+            if let Some(value) = &mut data_item.value {
+                zero_custom_data_value(value);
+            }
         }
-    }
 
-    take(&mut group.name, |mut name| zero_out!(name));
+        take(&mut group.name, |mut name| zero_out!(name));
+    });
 }
 
 fn zero_entry(entry: &mut Entry) {
     for (_, value) in entry.fields.iter_mut() {
         zero_value(value);
+    }
+
+    let data = std::mem::take(&mut entry.custom_data);
+
+    for (mut key, item) in data {
+        key.zeroize();
+        match item.value {
+            Some(CustomDataValue::Binary(mut blob)) => blob.zeroize(),
+            Some(CustomDataValue::String(mut val)) => val.zeroize(),
+            _ => (),
+        }
     }
 }
 
@@ -75,7 +84,6 @@ where
 
 impl Zeroize for ZeroableDatabase {
     fn zeroize(&mut self) {
-        let db = &mut self.0;
-        zero_group(&mut db.root);
+        zero_db(&mut self.0);
     }
 }

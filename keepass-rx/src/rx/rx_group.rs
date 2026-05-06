@@ -1,8 +1,28 @@
-use keepass::db::Group;
+use keepass::db::{Group, GroupMut, Icon};
 use uuid::Uuid;
 use zeroize::{Zeroize, ZeroizeOnDrop};
 
 use super::icons::RxIcon;
+
+pub struct RxGroupPart {
+    name: String,
+    icon: RxIcon,
+    uuid: Uuid,
+}
+
+pub fn to_part<'db>(group: &mut GroupMut<'db>) -> RxGroupPart {
+    let icon = match group.icon() {
+        Some(Icon::BuiltIn(builtin_id)) => RxIcon::Builtin(*builtin_id),
+        Some(Icon::Custom(_custom_icon_id)) => RxIcon::None, // TODO support custom group icons
+        _ => RxIcon::None,
+    };
+
+    RxGroupPart {
+        name: std::mem::take(&mut group.name),
+        icon: icon,
+        uuid: group.id().uuid(),
+    }
+}
 
 #[derive(Zeroize, ZeroizeOnDrop, Default, Clone)]
 pub struct RxGroup {
@@ -26,20 +46,20 @@ pub struct RxGroup {
 }
 
 impl RxGroup {
-    pub fn new(
-        group: &mut Group,
+    pub fn new<'db>(
+        mut group: GroupMut<'db>,
         subgroups: Vec<Uuid>,
         entries: Vec<Uuid>,
         parent: Option<Uuid>,
     ) -> Self {
-        let icon = match (group.custom_icon_uuid, group.icon_id) {
-            (Some(_custom_id), _) => RxIcon::None, // TODO support custom group icons
-            (_, Some(buitin_id)) => RxIcon::Builtin(buitin_id),
+        let icon = match group.icon() {
+            Some(Icon::BuiltIn(builtin_id)) => RxIcon::Builtin(*builtin_id),
+            Some(Icon::Custom(_custom_icon_id)) => RxIcon::None, // TODO support custom group icons
             _ => RxIcon::None,
         };
 
         Self {
-            uuid: group.uuid,
+            uuid: group.id().uuid(),
             name: std::mem::take(&mut group.name),
             subgroups: subgroups,
             entries: entries,

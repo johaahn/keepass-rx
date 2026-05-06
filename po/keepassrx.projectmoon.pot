@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-23 14:36+0000\n"
+"POT-Creation-Date: 2026-05-06 13:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -159,7 +159,7 @@ msgstr ""
 msgid "Entries with 2FA codes."
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:278 src/rx/virtual_hierarchy.rs:260
+#: qml/pages/EntriesPage.qml:278 src/rx/virtual_hierarchy.rs:255
 msgid "Tags"
 msgstr ""
 
@@ -497,17 +497,17 @@ msgctxt "Default view of the password database (all entries)"
 msgid "Default View"
 msgstr ""
 
-#: src/rx/virtual_hierarchy.rs:192 src/rx/virtual_hierarchy.rs:205
+#: src/rx/virtual_hierarchy.rs:187 src/rx/virtual_hierarchy.rs:200
 msgctxt "Two-factor/OTP codes (keep phrase short as possible)"
 msgid "2FA Codes"
 msgstr ""
 
-#: src/rx/virtual_hierarchy.rs:252
+#: src/rx/virtual_hierarchy.rs:247
 msgctxt "List of entries with tags"
 msgid "Tags"
 msgstr ""
 
-#: src/rx/virtual_hierarchy.rs:301 src/rx/virtual_hierarchy.rs:309
+#: src/rx/virtual_hierarchy.rs:296 src/rx/virtual_hierarchy.rs:304
 msgctxt "Saved database searches"
 msgid "Saved Searches"
 msgstr ""

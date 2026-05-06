@@ -246,34 +246,45 @@ mod tests {
     #[test]
     fn loads_recursively() {
         set_default_credential_builder(keyring::mock::default_credential_builder());
-        let mut db = keepass::db::Database::new(Default::default());
-        let mut group = keepass::db::Group::new("groupname");
-        let mut subgroup = keepass::db::Group::new("subgroupname");
+        let mut db = keepass::db::Database::new();
+        let group_id = db.root().id().uuid();
+        let (subgroup_id, entry_id) = {
+            let mut root = db.root_mut();
+            root.name = "groupname".into();
 
-        let group_id = group.uuid;
-        let subgroup_id = subgroup.uuid;
+            let subgroup_id = root
+                .add_group()
+                .edit(|group| group.name = "subgroupname".into())
+                .id();
 
-        let mut entry = keepass::db::Entry::new();
-        let entry_id = entry.uuid;
+            let entry_id = root
+                .add_entry()
+                .edit(|entry| {
+                    entry.fields.insert(
+                        "Tite".to_string(),
+                        keepass::db::Value::Unprotected("top-level entry".to_string()),
+                    );
+                })
+                .id();
 
-        entry.fields.insert(
-            "Tite".to_string(),
-            keepass::db::Value::Unprotected("top-level entry".to_string()),
-        );
+            (subgroup_id, entry_id)
+        };
 
-        let mut sub_entry = keepass::db::Entry::new();
-        let sub_entry_id = sub_entry.uuid;
+        let sub_entry_id = db
+            .group_mut(subgroup_id)
+            .unwrap()
+            .add_entry()
+            .edit(|entry| {
+                entry.fields.insert(
+                    "SubTite".to_string(),
+                    keepass::db::Value::Unprotected("sub entry".to_string()),
+                );
+            })
+            .id();
 
-        sub_entry.fields.insert(
-            "SubTite".to_string(),
-            keepass::db::Value::Unprotected("sub entry".to_string()),
-        );
-
-        subgroup.entries.push(sub_entry);
-        group.entries.push(entry);
-        group.groups.push(subgroup);
-
-        db.root = group;
+        let subgroup_id = subgroup_id.uuid();
+        let entry_id = entry_id.uuid();
+        let sub_entry_id = sub_entry_id.uuid();
 
         let rx_db = RxDatabase::new(Zeroizing::new(ZeroableDatabase(db))).expect("load rx db");
         let rx_root = rx_db.root_group();

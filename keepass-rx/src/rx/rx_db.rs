@@ -123,7 +123,7 @@ impl std::fmt::Debug for RxDatabase {
 #[allow(dead_code)]
 impl RxDatabase {
     pub fn new(db: Zeroizing<ZeroableDatabase>) -> Result<Self> {
-        info!("Starting RxDatabase construction");
+        info!("Loading password database.");
         let loader = RxLoader::new(db);
         let mut loaded = loader.load().context("materializing database view")?;
 
@@ -143,8 +143,9 @@ impl RxDatabase {
             .templates
             .iter_mut()
             .map(|(uuid, t)| {
-                Rc::get_mut(t)
-                    .ok_or_else(|| anyhow!("Could not acquire mutable template ref for {uuid}"))
+                Rc::get_mut(t).ok_or_else(|| {
+                    anyhow!("Could not acquire mutable template ref for {uuid}")
+                })
             })
             .collect::<Result<Vec<_>>>()?;
 

@@ -1,7 +1,6 @@
 use crate::crypto::{EncryptedValue, MasterKey};
 
 use super::entropy::calculate_entropy;
-use super::entry_mirror::NamedAttachmentsHack;
 use super::icons::RxIcon;
 use anyhow::{Result, anyhow};
 use base64::{Engine, prelude::BASE64_STANDARD};
@@ -10,11 +9,11 @@ use humanize_duration::prelude::DurationExt;
 use infer;
 use itertools::Itertools;
 use keepass::db::{
-    Attachment, CustomDataItem, CustomDataValue, Entry, EntryMut, Icon, TOTP as KeePassTOTP,
-    Value,
+    Attachment, AttachmentMut, AttachmentRef, CustomDataItem, CustomDataValue, Entry,
+    EntryMut, Icon, TOTP as KeePassTOTP, Value,
 };
 use libsodium_rs::utils::{SecureVec, vec_utils};
-use log::{info, warn};
+use log::warn;
 use querystring::querify;
 use secrecy::{ExposeSecretMut, SecretBox};
 use secstr::SecStr;
@@ -125,7 +124,7 @@ fn extract_remaining_fields(
         .fields
         .drain()
         .flat_map(|(key, value)| match value {
-            Value::Protected(val) => RxValue::encrypted(master_key, val)
+            Value::Protected(mut val) => RxValue::encrypted(master_key, &mut val)
                 .ok()
                 .map(|rx_val| (key, rx_val)),
             Value::Unprotected(val) => RxValue::try_from(val).ok().map(|rx_val| (key, rx_val)),
@@ -142,7 +141,7 @@ fn extract_value(
         .fields
         .remove(field_name)
         .and_then(|value| match value {
-            Value::Protected(val) => RxValue::encrypted(master_key, val).ok(),
+            Value::Protected(mut val) => RxValue::encrypted(master_key, &mut val).ok(),
             Value::Unprotected(val) => RxValue::try_from(val).ok(),
         })
 }
@@ -155,7 +154,6 @@ impl RxEntry {
         parent_uuid: Uuid,
     ) -> Self {
         let entry_uuid = entry.id().uuid();
-        info!("Starting RxEntry::new for entry {}", entry_uuid);
         let master_key = master_key.clone();
         let custom_data = mem::take(&mut entry.custom_data);
 
@@ -205,8 +203,6 @@ impl RxEntry {
                 warn!("Unable to parse attachments: {}", err);
                 RxAttachments::empty(&master_key)
             });
-
-        info!("Finished RxEntry::new for entry {}", entry_uuid);
 
         Self {
             uuid: entry_uuid,
@@ -515,10 +511,13 @@ impl SecretBytes for Vec<u8> {
 }
 
 impl RxValue {
-    pub fn from_attachment(master_key: &MasterKey, attachment: Attachment) -> Result<Self> {
+    pub fn from_attachment(
+        master_key: &MasterKey,
+        attachment: &mut AttachmentMut<'_>,
+    ) -> Result<Self> {
         match attachment.data {
-            Value::Protected(val) => Self::encrypted(master_key, val),
-            Value::Unprotected(mut val) => {
+            Value::Protected(ref mut val) => Self::encrypted(master_key, val),
+            Value::Unprotected(ref mut val) => {
                 let mut secure_vec = vec_utils::secure_vec::<u8>(val.len())?;
                 secure_vec.copy_from_slice(&val);
                 val.zeroize();
@@ -527,7 +526,7 @@ impl RxValue {
         }
     }
 
-    pub fn encrypted<V>(master_key: &MasterKey, mut value: SecretBox<V>) -> Result<Self>
+    pub fn encrypted<V>(master_key: &MasterKey, value: &mut SecretBox<V>) -> Result<Self>
     where
         V: SecretBytes + Zeroize,
     {
@@ -713,18 +712,20 @@ impl RxAttachments {
         entry: &mut EntryMut<'db>,
     ) -> Result<Self> {
         let entry_uuid = entry.id().uuid();
-        info!("Loading attachment names for entry {}", entry_uuid);
-        let named_attachments: Vec<_> = entry.as_ref().named_attachments_hack().collect();
-        info!(
-            "Loading {} attachments for entry {}",
-            named_attachments.len(),
-            entry_uuid
-        );
+
+        let named_attachments: Vec<_> = entry
+            .as_ref()
+            .attachments_named()
+            .map(|(name, att)| (name.to_owned(), att.id()))
+            .collect();
 
         let mapped: HashMap<String, RxValue> = named_attachments
             .into_iter()
-            .map(|(name, att)| {
-                RxValue::from_attachment(master_key, att).map(|value| (name, value))
+            .map(|(name, att_id)| {
+                let mut att = entry
+                    .attachment_mut(att_id)
+                    .expect("No mutable attachment found!");
+                RxValue::from_attachment(master_key, &mut att).map(|value| (name, value))
             })
             .try_collect()?;
 

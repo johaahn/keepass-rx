@@ -4,7 +4,7 @@ use super::{RxEntry, RxGroup, RxMetadata, RxSavedSearchDef, RxTemplate, Zeroable
 use anyhow::{Context, Result, anyhow};
 use indexmap::IndexMap;
 use keepass::db::{CustomDataValue, GroupId, Meta as KeePassMeta};
-use log::info;
+use log::debug;
 use serde_json::Value as JsonValue;
 use std::collections::HashMap;
 use std::mem;
@@ -64,7 +64,7 @@ impl RxLoader {
     }
 
     pub fn load(mut self) -> Result<Loaded> {
-        info!("Beginning RxLoader database materialization");
+        debug!("Beginning RxLoader database materialization");
         self.master_key = Some(Rc::new(
             MasterKey::new().context("creating in-memory master key")?,
         ));
@@ -86,7 +86,7 @@ impl RxLoader {
         let rx_metadata = RxMetadata::new(config, meta);
 
         self.db.zeroize();
-        info!("Finished RxLoader database materialization");
+        debug!("Finished RxLoader database materialization");
 
         Ok(Loaded {
             master_key: self.master_key.unwrap(),
@@ -110,7 +110,7 @@ impl RxLoader {
 
         let child_group_ids: Vec<_> = group.group_ids().into_iter().collect();
         let child_entry_ids: Vec<_> = group.entry_ids().into_iter().collect();
-        info!(
+        debug!(
             "Loading group {} ({} subgroups, {} entries)",
             group_id,
             child_group_ids.len(),
@@ -119,7 +119,7 @@ impl RxLoader {
 
         let mut subgroups = Vec::new();
         for subgroup_id in child_group_ids {
-            info!(
+            debug!(
                 "Descending into subgroup {} under group {}",
                 subgroup_id, group_id
             );
@@ -141,10 +141,8 @@ impl RxLoader {
                 ));
             };
 
-            info!("Loading entry {} under group {}", entry_id, group_id);
-            let rx_entry =
-                RxEntry::new(self.master_key.as_ref().unwrap(), entry, group_id.uuid());
-            info!("Finished entry {} under group {}", entry_id, group_id);
+            let master_key = self.master_key.as_ref().expect("No master key set");
+            let rx_entry = RxEntry::new(master_key, entry, group_id.uuid());
 
             // Build up template entries as we go. Name of the
             // template will be set later, in RxDatabase::new.
@@ -185,7 +183,6 @@ impl RxLoader {
             self.state.all_entries.insert(entry.uuid, Rc::new(entry));
         }
 
-        info!("Finished group {}", group_id);
         Ok(this_group)
     }
 }

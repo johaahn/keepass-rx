@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-23 14:36+0000\n"
-"PO-Revision-Date: 2026-03-20 15:09+0000\n"
-"Last-Translator: Serhii Horichenko <serhii@horichenko.com>\n"
+"PO-Revision-Date: 2026-05-29 21:01+0000\n"
+"Last-Translator: Vitalii Babych <osnovna.my@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/ubports/"
 "keepassrx/uk/>\n"
 "Language: uk\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 2026.6.dev0\n"
 
 msgid "Copy Username"
 msgstr "Копіювати Логін"
@@ -57,7 +57,7 @@ msgid "Tap + to import a database."
 msgstr "Імпортуйте базу даних через +."
 
 msgid "Last Modified: %1"
-msgstr ""
+msgstr "Останнє оновлення: %1"
 
 msgid "It will only be removed from the app, not your device."
 msgstr "Це буде вилучене лише з програми, але залишиться на пристрої."
@@ -244,43 +244,45 @@ msgid "Database Not Opening?"
 msgstr "База даних не відкривається?"
 
 msgid "Entry Notes"
-msgstr ""
+msgstr "Примітки до запису"
 
 msgid "Note copied to clipboard"
-msgstr ""
+msgstr "Нотатка скопійована в буфер обміну"
 
 msgid "Unable to export attachment."
-msgstr ""
+msgstr "Не вдалося експортувати вкладення."
 
 msgid "Entry Attachments"
-msgstr ""
+msgstr "Вкладення до запису"
 
 msgid "Export Attachment"
-msgstr ""
+msgstr "Експорт вкладення"
 
 msgid "Attachment Not Viewable"
-msgstr ""
+msgstr "Вкладення не відображається"
 
 msgid "KeePassRX cannot view this %1 attachment, but it can be exported."
 msgstr ""
+"KeePassRX не може відкрити це вкладення %1, але його можна експортувати."
 
 msgid "KeePassRX cannot view this attachment, but it can be exported."
 msgstr ""
+"KeePassRX не може відкрити цей файл-вкладення, але його можна експортувати."
 
 msgid "Export"
-msgstr ""
+msgstr "Експорт"
 
 msgid "%1 ready to export."
-msgstr ""
+msgstr "%1 готово до експорту."
 
 msgid "%1 exported."
-msgstr ""
+msgstr "%1 експортовано."
 
 msgid "%1 bytes"
-msgstr ""
+msgstr "%1 байт"
 
 msgid "Attachment"
-msgstr ""
+msgstr "Вкладення"
 
 msgid "Password"
 msgstr "Пароль"
@@ -295,7 +297,7 @@ msgid "%1 copied to clipboard (30 secs)"
 msgstr "%1 скопійовано до буфера обміну (30 сек)"
 
 msgid "Attachments"
-msgstr ""
+msgstr "Вкладення"
 
 msgid "Notes"
 msgstr "Нотатки"

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-23 14:36+0000\n"
-"PO-Revision-Date: 2026-05-29 21:01+0000\n"
+"PO-Revision-Date: 2026-05-30 09:01+0000\n"
 "Last-Translator: Daniel Frost <one@frostinfo.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/ubports/keepassrx/"
 "de/>\n"
@@ -263,24 +263,28 @@ msgstr "nicht darstellbarer Anhang"
 
 msgid "KeePassRX cannot view this %1 attachment, but it can be exported."
 msgstr ""
+"KeePassRX kann den Anhang %1 nicht darstellen, aber er kann exportiert "
+"werden."
 
 msgid "KeePassRX cannot view this attachment, but it can be exported."
 msgstr ""
+"KeePassRX kann diesen Anhang nicht darstellen, aber er kann exportiert "
+"werden."
 
 msgid "Export"
-msgstr ""
+msgstr "Exportieren"
 
 msgid "%1 ready to export."
-msgstr ""
+msgstr "%1 bereit für den Export."
 
 msgid "%1 exported."
-msgstr ""
+msgstr "%1 exportiert."
 
 msgid "%1 bytes"
 msgstr "%1 Bytes"
 
 msgid "Attachment"
-msgstr ""
+msgstr "Anhang"
 
 msgid "Password"
 msgstr "Passwort"
@@ -295,7 +299,7 @@ msgid "%1 copied to clipboard (30 secs)"
 msgstr "%1 in die Zwischenablage kopiert (für 30 Sek.)"
 
 msgid "Attachments"
-msgstr ""
+msgstr "Anhänge"
 
 msgid "Notes"
 msgstr "Notizen"
@@ -334,7 +338,7 @@ msgid "KeePassRX: Clipboard cleared."
 msgstr "KeePassRX: Zwischenablage geleert."
 
 msgid "Version %1"
-msgstr ""
+msgstr "Version %1"
 
 msgid ""
 "KeePassRX is password manager for KeePass databases, designed for Ubuntu "

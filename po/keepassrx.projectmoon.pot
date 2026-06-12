@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-06 14:26+0000\n"
+"POT-Creation-Date: 2026-06-12 12:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -488,6 +488,26 @@ msgctxt "A database managed by external file sync"
 msgid "Synced"
 msgstr ""
 
+#: src/rx/rx_gui_traits.rs:115
+msgctxt "Password strength"
+msgid "Poor"
+msgstr ""
+
+#: src/rx/rx_gui_traits.rs:117
+msgctxt "Password strength"
+msgid "Weak"
+msgstr ""
+
+#: src/rx/rx_gui_traits.rs:118
+msgctxt "Password strength"
+msgid "Good"
+msgstr ""
+
+#: src/rx/rx_gui_traits.rs:120
+msgctxt "Password strength"
+msgid "Excellent"
+msgstr ""
+
 #: src/rx/virtual_hierarchy.rs:97
 msgid "All Templates"
 msgstr ""
@@ -510,24 +530,4 @@ msgstr ""
 #: src/rx/virtual_hierarchy.rs:299 src/rx/virtual_hierarchy.rs:307
 msgctxt "Saved database searches"
 msgid "Saved Searches"
-msgstr ""
-
-#: src/rx/rx_gui_traits.rs:115
-msgctxt "Password strength"
-msgid "Poor"
-msgstr ""
-
-#: src/rx/rx_gui_traits.rs:117
-msgctxt "Password strength"
-msgid "Weak"
-msgstr ""
-
-#: src/rx/rx_gui_traits.rs:118
-msgctxt "Password strength"
-msgid "Good"
-msgstr ""
-
-#: src/rx/rx_gui_traits.rs:120
-msgctxt "Password strength"
-msgid "Excellent"
 msgstr ""

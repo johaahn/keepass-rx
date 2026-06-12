@@ -3,6 +3,9 @@ use gettextrs::{gettext, pgettext};
 use std::{collections::HashMap, rc::Rc};
 use uuid::Uuid;
 
+#[cfg(feature = "gui")]
+use qmetaobject::QEnum;
+
 use super::{
     RxContainedRef, RxContainer, RxDatabase, RxRoot, RxSavedSearch, RxSearchType, RxTag,
     kpxc_search::evaluate_saved_search,
@@ -154,7 +157,7 @@ impl VirtualHierarchy for DefaultView {
         container_uuid: Uuid,
         search_term: Option<&str>,
     ) -> Vec<RxContainedRef<'_>> {
-        let mut results = self
+        self
             .root()
             .get_container(container_uuid)
             .map(|container| match search_term {
@@ -165,12 +168,7 @@ impl VirtualHierarchy for DefaultView {
                 ),
                 None => container.search_children_immediate(search_type, search_term),
             })
-            .unwrap_or_default();
-
-        // Groupings before non-groupings
-        results.sort();
-
-        results
+            .unwrap_or_default()
     }
 }
 

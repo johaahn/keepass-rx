@@ -2,11 +2,11 @@ use crate::crypto::MasterKey;
 
 use super::rx_loader::RxLoader;
 use super::{RxEntry, RxGroup, RxTemplate, RxTotp, ZeroableDatabase};
-use anyhow::{Result, anyhow};
+use anyhow::{Context, Result, anyhow};
 use indexmap::IndexMap;
 use keepass::config::DatabaseConfig;
 use keepass::db::Meta;
-use log::info;
+use log::{debug, info};
 use std::rc::Rc;
 use std::{collections::HashMap, mem, str::FromStr};
 use uuid::Uuid;
@@ -16,7 +16,7 @@ fn get_kpxc_string_field(config: &DatabaseConfig, field: &str) -> Option<String>
     config
         .public_custom_data
         .as_ref()
-        .and_then(|data| data.data.get(field))
+        .and_then(|data| data.get(field))
         .and_then(|value| Into::<Option<&String>>::into(value).cloned())
 }
 
@@ -24,7 +24,7 @@ fn get_kpxc_i32_field(config: &DatabaseConfig, field: &str) -> Option<i32> {
     config
         .public_custom_data
         .as_ref()
-        .and_then(|data| data.data.get(field))
+        .and_then(|data| data.get(field))
         .and_then(|value| Into::<Option<&i32>>::into(value).copied())
 }
 
@@ -122,9 +122,10 @@ impl std::fmt::Debug for RxDatabase {
 
 #[allow(dead_code)]
 impl RxDatabase {
-    pub fn new(db: Zeroizing<ZeroableDatabase>) -> Self {
+    pub fn new(db: Zeroizing<ZeroableDatabase>) -> Result<Self> {
+        info!("Loading password database.");
         let loader = RxLoader::new(db);
-        let mut loaded = loader.load().expect("Coud not load the database");
+        let mut loaded = loader.load().context("materializing database view")?;
 
         let mut db = Self {
             master_key: loaded.master_key,
@@ -141,7 +142,12 @@ impl RxDatabase {
             .state
             .templates
             .iter_mut()
-            .map(|(_, t)| Rc::get_mut(t).expect("Could not acquire mutable template ref"));
+            .map(|(uuid, t)| {
+                Rc::get_mut(t).ok_or_else(|| {
+                    anyhow!("Could not acquire mutable template ref for {uuid}")
+                })
+            })
+            .collect::<Result<Vec<_>>>()?;
 
         for rx_template in rx_templates {
             let template_entry = db.get_entry(rx_template.uuid);
@@ -161,8 +167,13 @@ impl RxDatabase {
         }
 
         db.templates = loaded.state.templates;
+        debug!(
+            "Finished RxDatabase construction ({} groups, {} entries)",
+            db.all_groups.len(),
+            db.all_entries.len()
+        );
 
-        db
+        Ok(db)
     }
 
     pub fn master_key(&self) -> &MasterKey {
@@ -223,7 +234,7 @@ impl RxDatabase {
 
 #[cfg(test)]
 mod tests {
-    use std::fs::File;
+    use std::{fs::File, path::PathBuf};
 
     use keepass::{Database, DatabaseKey};
     use keyring::set_default_credential_builder;
@@ -233,39 +244,57 @@ mod tests {
     use super::*;
     use crate::rx::{RxCustomFields, RxValue, TEMPLATE_FIELD_NAME};
 
+    fn fixture_path(name: &str) -> PathBuf {
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("tests")
+            .join("fixtures")
+            .join(name)
+    }
+
     #[test]
     fn loads_recursively() {
         set_default_credential_builder(keyring::mock::default_credential_builder());
-        let mut db = keepass::db::Database::new(Default::default());
-        let mut group = keepass::db::Group::new("groupname");
-        let mut subgroup = keepass::db::Group::new("subgroupname");
+        let mut db = keepass::db::Database::new();
+        let group_id = db.root().id().uuid();
+        let (subgroup_id, entry_id) = {
+            let mut root = db.root_mut();
+            root.name = "groupname".into();
 
-        let group_id = group.uuid;
-        let subgroup_id = subgroup.uuid;
+            let subgroup_id = root
+                .add_group()
+                .edit(|group| group.name = "subgroupname".into())
+                .id();
 
-        let mut entry = keepass::db::Entry::new();
-        let entry_id = entry.uuid;
+            let entry_id = root
+                .add_entry()
+                .edit(|entry| {
+                    entry.fields.insert(
+                        "Tite".to_string(),
+                        keepass::db::Value::Unprotected("top-level entry".to_string()),
+                    );
+                })
+                .id();
 
-        entry.fields.insert(
-            "Tite".to_string(),
-            keepass::db::Value::Unprotected("top-level entry".to_string()),
-        );
+            (subgroup_id, entry_id)
+        };
 
-        let mut sub_entry = keepass::db::Entry::new();
-        let sub_entry_id = sub_entry.uuid;
+        let sub_entry_id = db
+            .group_mut(subgroup_id)
+            .unwrap()
+            .add_entry()
+            .edit(|entry| {
+                entry.fields.insert(
+                    "SubTite".to_string(),
+                    keepass::db::Value::Unprotected("sub entry".to_string()),
+                );
+            })
+            .id();
 
-        sub_entry.fields.insert(
-            "SubTite".to_string(),
-            keepass::db::Value::Unprotected("sub entry".to_string()),
-        );
+        let subgroup_id = subgroup_id.uuid();
+        let entry_id = entry_id.uuid();
+        let sub_entry_id = sub_entry_id.uuid();
 
-        subgroup.entries.push(sub_entry);
-        group.entries.push(entry);
-        group.groups.push(subgroup);
-
-        db.root = group;
-
-        let rx_db = RxDatabase::new(Zeroizing::new(ZeroableDatabase(db)));
+        let rx_db = RxDatabase::new(Zeroizing::new(ZeroableDatabase(db))).expect("load rx db");
         let rx_root = rx_db.root_group();
 
         assert_eq!(rx_db.all_groups_iter().count(), 2);
@@ -289,11 +318,12 @@ mod tests {
     fn parses_saved_searches_from_test_db() {
         set_default_credential_builder(keyring::mock::default_credential_builder());
 
-        let mut file = File::open("test.kdbx").expect("open test.kdbx");
+        let mut file =
+            File::open(fixture_path("test_saved_searches.kdbx")).expect("open test fixture");
         let db = Database::open(&mut file, DatabaseKey::new().with_password("somePassw0rd"))
             .expect("open keepass db");
 
-        let rx_db = RxDatabase::new(Zeroizing::new(ZeroableDatabase(db)));
+        let rx_db = RxDatabase::new(Zeroizing::new(ZeroableDatabase(db))).expect("load rx db");
         let saved: Vec<_> = rx_db.saved_searches_iter().collect();
         assert!(!saved.is_empty(), "expected at least one saved search");
 

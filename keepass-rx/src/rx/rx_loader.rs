@@ -1,9 +1,10 @@
 use crate::crypto::MasterKey;
 
 use super::{RxEntry, RxGroup, RxMetadata, RxSavedSearchDef, RxTemplate, ZeroableDatabase};
-use anyhow::Result;
+use anyhow::{Context, Result, anyhow};
 use indexmap::IndexMap;
-use keepass::db::{CustomDataValue, Entry, Group, Meta as KeePassMeta, Value};
+use keepass::db::{CustomDataValue, GroupId, Meta as KeePassMeta};
+use log::debug;
 use serde_json::Value as JsonValue;
 use std::collections::HashMap;
 use std::mem;
@@ -23,11 +24,6 @@ pub struct Loaded {
     pub metadata: RxMetadata,
     pub saved_searches: Vec<RxSavedSearchDef>,
     pub master_key: Rc<MasterKey>,
-}
-
-enum Node {
-    Entry(Entry),
-    Group(Group),
 }
 
 fn parse_saved_searches(meta: &KeePassMeta) -> Vec<RxSavedSearchDef> {
@@ -68,15 +64,16 @@ impl RxLoader {
     }
 
     pub fn load(mut self) -> Result<Loaded> {
+        debug!("Beginning RxLoader database materialization");
         self.master_key = Some(Rc::new(
-            MasterKey::new().expect("Could not create a master key"),
+            MasterKey::new().context("creating in-memory master key")?,
         ));
 
         self.state = LoadState::default();
 
-        let mut db_root = mem::take(&mut self.db().root);
-
-        let root_group = self.load_groups_recursive(&mut db_root, None);
+        let root_group = self
+            .load_groups_recursive(self.db.root().id(), None)
+            .context("loading root group recursively")?;
 
         let root_uuid = root_group.uuid;
         self.state
@@ -89,6 +86,7 @@ impl RxLoader {
         let rx_metadata = RxMetadata::new(config, meta);
 
         self.db.zeroize();
+        debug!("Finished RxLoader database materialization");
 
         Ok(Loaded {
             master_key: self.master_key.unwrap(),
@@ -103,51 +101,71 @@ impl RxLoader {
     /// buildingd up the database state.
     pub fn load_groups_recursive(
         &mut self,
-        group: &mut Group,
+        group_id: GroupId,
         parent_group_uuid: Option<Uuid>,
-    ) -> RxGroup {
-        let mut subgroups = vec![];
-        let mut entries = vec![];
+    ) -> Result<RxGroup> {
+        let Some(group) = self.db.group(group_id) else {
+            return Err(anyhow!("group {} missing from database", group_id));
+        };
 
-        let child_entries = mem::take(&mut group.entries)
-            .into_iter()
-            .map(|ent| Node::Entry(ent));
-        let child_groups = mem::take(&mut group.groups)
-            .into_iter()
-            .map(|grp| Node::Group(grp));
+        let child_group_ids: Vec<_> = group.group_ids().into_iter().collect();
+        let child_entry_ids: Vec<_> = group.entry_ids().into_iter().collect();
+        debug!(
+            "Loading group {} ({} subgroups, {} entries)",
+            group_id,
+            child_group_ids.len(),
+            child_entry_ids.len()
+        );
 
-        let children: Vec<Node> = child_groups.chain(child_entries).collect();
-
-        for node in children.into_iter() {
-            match node {
-                Node::Group(mut subgroup) => {
-                    let subgroup_id = subgroup.uuid;
-                    let rx_subgroup =
-                        self.load_groups_recursive(&mut subgroup, Some(subgroup_id));
-
-                    subgroups.push(rx_subgroup);
-                }
-                Node::Entry(entry) => {
-                    let rx_entry =
-                        RxEntry::new(self.master_key.as_ref().unwrap(), entry, group.uuid);
-
-                    // Build up template entries as we go. Name of the
-                    // template will be set later, in RxDatabase::new.
-                    if let Some(template_uuid) = rx_entry.template_uuid {
-                        let rx_template = Rc::get_mut(
-                            self.state.templates.entry(template_uuid).or_default(),
-                        )
-                        .expect("Could not update template");
-
-                        rx_template.uuid = template_uuid;
-                        rx_template.entry_uuids.push(rx_entry.uuid);
-                    }
-
-                    entries.push(rx_entry);
-                }
-            }
+        let mut subgroups = Vec::new();
+        for subgroup_id in child_group_ids {
+            debug!(
+                "Descending into subgroup {} under group {}",
+                subgroup_id, group_id
+            );
+            let rx_subgroup = self
+                .load_groups_recursive(subgroup_id, Some(group_id.uuid()))
+                .with_context(|| {
+                    format!("loading subgroup {subgroup_id} under group {group_id}")
+                })?;
+            subgroups.push(rx_subgroup);
         }
 
+        let mut entries = Vec::new();
+        for entry_id in child_entry_ids {
+            let Some(entry) = self.db.entry_mut(entry_id) else {
+                return Err(anyhow!(
+                    "entry {} referenced by group {} missing from database",
+                    entry_id,
+                    group_id
+                ));
+            };
+
+            let master_key = self.master_key.as_ref().expect("No master key set");
+            let rx_entry = RxEntry::new(master_key, entry, group_id.uuid());
+
+            // Build up template entries as we go. Name of the
+            // template will be set later, in RxDatabase::new.
+            if let Some(template_uuid) = rx_entry.template_uuid {
+                let rx_template =
+                    Rc::get_mut(self.state.templates.entry(template_uuid).or_default())
+                        .ok_or_else(|| anyhow!("could not update template {template_uuid}"))?;
+
+                rx_template.uuid = template_uuid;
+                rx_template.entry_uuids.push(rx_entry.uuid);
+            }
+
+            entries.push(rx_entry);
+        }
+
+        let Some(group) = self.db.group_mut(group_id) else {
+            return Err(anyhow!(
+                "group {} missing from database when reacquiring mutable reference",
+                group_id
+            ));
+        };
+
+        // Only need group id, name, icon. Extract to struct.
         let this_group = RxGroup::new(
             group,
             subgroups.iter().map(|sg| sg.uuid).collect(),
@@ -165,7 +183,7 @@ impl RxLoader {
             self.state.all_entries.insert(entry.uuid, Rc::new(entry));
         }
 
-        this_group
+        Ok(this_group)
     }
 }
 

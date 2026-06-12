@@ -9,7 +9,8 @@ use humanize_duration::prelude::DurationExt;
 use infer;
 use itertools::Itertools;
 use keepass::db::{
-    Attachment, CustomDataItem, CustomDataValue, Entry, TOTP as KeePassTOTP, Value,
+    Attachment, AttachmentMut, AttachmentRef, CustomDataItem, CustomDataValue, Entry,
+    EntryMut, Icon, TOTP as KeePassTOTP, Value,
 };
 use libsodium_rs::utils::{SecureVec, vec_utils};
 use log::warn;
@@ -123,7 +124,7 @@ fn extract_remaining_fields(
         .fields
         .drain()
         .flat_map(|(key, value)| match value {
-            Value::Protected(val) => RxValue::encrypted(master_key, val)
+            Value::Protected(mut val) => RxValue::encrypted(master_key, &mut val)
                 .ok()
                 .map(|rx_val| (key, rx_val)),
             Value::Unprotected(val) => RxValue::try_from(val).ok().map(|rx_val| (key, rx_val)),
@@ -140,14 +141,19 @@ fn extract_value(
         .fields
         .remove(field_name)
         .and_then(|value| match value {
-            Value::Protected(val) => RxValue::encrypted(master_key, val).ok(),
+            Value::Protected(mut val) => RxValue::encrypted(master_key, &mut val).ok(),
             Value::Unprotected(val) => RxValue::try_from(val).ok(),
         })
 }
 
 #[allow(dead_code)]
 impl RxEntry {
-    pub fn new(master_key: &Rc<MasterKey>, mut entry: Entry, parent_uuid: Uuid) -> Self {
+    pub fn new<'db>(
+        master_key: &Rc<MasterKey>,
+        mut entry: EntryMut<'db>,
+        parent_uuid: Uuid,
+    ) -> Self {
+        let entry_uuid = entry.id().uuid();
         let master_key = master_key.clone();
         let custom_data = mem::take(&mut entry.custom_data);
 
@@ -168,13 +174,15 @@ impl RxEntry {
 
         // Icon: Can either be the custom one (provided), or the
         // built-in one, or nothing.
-        let rx_icon = entry
-            .custom_icon
-            .as_ref()
-            .cloned()
-            .map(|(_, data)| RxIcon::Image(data))
-            .or_else(|| entry.icon_id.map(|id| RxIcon::Builtin(id)))
-            .unwrap_or(RxIcon::None);
+        let rx_icon = match entry.icon() {
+            Some(Icon::BuiltIn(id)) => RxIcon::Builtin(*id),
+            Some(Icon::Custom(_)) => entry
+                .custom_icon_mut()
+                .as_ref()
+                .map(|icon| RxIcon::Image(icon.data.clone()))
+                .unwrap_or(RxIcon::None),
+            _ => RxIcon::None,
+        };
 
         // Expiration: self-explanatory.
         let is_expired = entry
@@ -197,7 +205,7 @@ impl RxEntry {
             });
 
         Self {
-            uuid: entry.uuid,
+            uuid: entry_uuid,
             master_key: master_key,
             parent_group: parent_uuid,
             template_uuid: template_uuid,
@@ -486,7 +494,7 @@ impl Zeroize for RxValue {
 
 static ID_COUNTER: AtomicU64 = AtomicU64::new(1);
 
-trait SecretBytes {
+pub trait SecretBytes {
     fn secret_bytes(&self) -> &[u8];
 }
 
@@ -505,11 +513,11 @@ impl SecretBytes for Vec<u8> {
 impl RxValue {
     pub fn from_attachment(
         master_key: &MasterKey,
-        mut attachment: Attachment,
+        attachment: &mut AttachmentMut<'_>,
     ) -> Result<Self> {
         match attachment.data {
-            Value::Protected(val) => Self::encrypted(master_key, val),
-            Value::Unprotected(mut val) => {
+            Value::Protected(ref mut val) => Self::encrypted(master_key, val),
+            Value::Unprotected(ref mut val) => {
                 let mut secure_vec = vec_utils::secure_vec::<u8>(val.len())?;
                 secure_vec.copy_from_slice(&val);
                 val.zeroize();
@@ -518,7 +526,7 @@ impl RxValue {
         }
     }
 
-    pub fn encrypted<V>(master_key: &MasterKey, mut value: SecretBox<V>) -> Result<Self>
+    pub fn encrypted<V>(master_key: &MasterKey, value: &mut SecretBox<V>) -> Result<Self>
     where
         V: SecretBytes + Zeroize,
     {
@@ -699,11 +707,25 @@ impl RxAttachments {
         self.attachments.get(name)
     }
 
-    pub fn from_entry(master_key: &Rc<MasterKey>, entry: &mut Entry) -> Result<Self> {
-        let mapped: HashMap<String, RxValue> = mem::take(&mut entry.attachments)
+    pub fn from_entry<'db>(
+        master_key: &Rc<MasterKey>,
+        entry: &mut EntryMut<'db>,
+    ) -> Result<Self> {
+        let entry_uuid = entry.id().uuid();
+
+        let named_attachments: Vec<_> = entry
+            .as_ref()
+            .attachments_named()
+            .map(|(name, att)| (name.to_owned(), att.id()))
+            .collect();
+
+        let mapped: HashMap<String, RxValue> = named_attachments
             .into_iter()
-            .map(|(name, att)| {
-                RxValue::from_attachment(master_key, att).map(|value| (name, value))
+            .map(|(name, att_id)| {
+                let mut att = entry
+                    .attachment_mut(att_id)
+                    .expect("No mutable attachment found!");
+                RxValue::from_attachment(master_key, &mut att).map(|value| (name, value))
             })
             .try_collect()?;
 

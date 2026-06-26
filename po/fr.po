@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-23 14:36+0000\n"
+"POT-Creation-Date: 2026-06-12 12:02+0000\n"
 "PO-Revision-Date: 2026-04-24 04:53+0000\n"
 "Last-Translator: Vlad Nirky <nirky.vlad@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/ubports/keepassrx/"
@@ -398,6 +398,22 @@ msgctxt "A database managed by external file sync"
 msgid "Synced"
 msgstr "Synchronisé"
 
+msgctxt "Password strength"
+msgid "Poor"
+msgstr "Médiocre"
+
+msgctxt "Password strength"
+msgid "Weak"
+msgstr "Faible"
+
+msgctxt "Password strength"
+msgid "Good"
+msgstr "Bonne"
+
+msgctxt "Password strength"
+msgid "Excellent"
+msgstr "Excellente"
+
 msgid "All Templates"
 msgstr "Tous les modèles"
 
@@ -416,22 +432,6 @@ msgstr "Balises"
 msgctxt "Saved database searches"
 msgid "Saved Searches"
 msgstr "Recherches sauvegardées"
-
-msgctxt "Password strength"
-msgid "Poor"
-msgstr "Médiocre"
-
-msgctxt "Password strength"
-msgid "Weak"
-msgstr "Faible"
-
-msgctxt "Password strength"
-msgid "Good"
-msgstr "Bonne"
-
-msgctxt "Password strength"
-msgid "Excellent"
-msgstr "Excellente"
 
 #~ msgid "Tap to copy"
 #~ msgstr "Appuyez pour copier"

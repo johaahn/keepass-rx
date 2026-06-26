@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-23 14:36+0000\n"
+"POT-Creation-Date: 2026-06-12 12:02+0000\n"
 "PO-Revision-Date: 2026-01-26 18:01+0000\n"
 "Last-Translator: BoneNI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://hosted.weblate.org/projects/ubports/keepassrx/lo/"
@@ -384,6 +384,22 @@ msgctxt "A database managed by external file sync"
 msgid "Synced"
 msgstr "ຊິງຄ໌ແລ້ວ"
 
+msgctxt "Password strength"
+msgid "Poor"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Weak"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Good"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Excellent"
+msgstr ""
+
 msgid "All Templates"
 msgstr "ແມ່ແບບທັງໝົດ"
 
@@ -401,22 +417,6 @@ msgstr "ແທັກ"
 
 msgctxt "Saved database searches"
 msgid "Saved Searches"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Poor"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Weak"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Good"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Excellent"
 msgstr ""
 
 #~ msgid "Tap to copy"

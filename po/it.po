@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-23 14:36+0000\n"
+"POT-Creation-Date: 2026-06-12 12:02+0000\n"
 "PO-Revision-Date: 2025-11-04 22:51+0000\n"
 "Last-Translator: projectmoon <projectmoon@agnos.is>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/ubports/"
@@ -371,6 +371,22 @@ msgctxt "A database managed by external file sync"
 msgid "Synced"
 msgstr ""
 
+msgctxt "Password strength"
+msgid "Poor"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Weak"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Good"
+msgstr ""
+
+msgctxt "Password strength"
+msgid "Excellent"
+msgstr ""
+
 msgid "All Templates"
 msgstr ""
 
@@ -388,20 +404,4 @@ msgstr ""
 
 msgctxt "Saved database searches"
 msgid "Saved Searches"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Poor"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Weak"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Good"
-msgstr ""
-
-msgctxt "Password strength"
-msgid "Excellent"
 msgstr ""

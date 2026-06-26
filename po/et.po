@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-23 14:36+0000\n"
+"POT-Creation-Date: 2026-06-12 12:02+0000\n"
 "PO-Revision-Date: 2026-04-24 10:09+0000\n"
 "Last-Translator: Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/ubports/"
@@ -391,6 +391,22 @@ msgctxt "A database managed by external file sync"
 msgid "Synced"
 msgstr "Sünkroonitud"
 
+msgctxt "Password strength"
+msgid "Poor"
+msgstr "Kehv"
+
+msgctxt "Password strength"
+msgid "Weak"
+msgstr "Nõrk"
+
+msgctxt "Password strength"
+msgid "Good"
+msgstr "Hea"
+
+msgctxt "Password strength"
+msgid "Excellent"
+msgstr "Suurepärane"
+
 msgid "All Templates"
 msgstr "Kõik mallid"
 
@@ -409,22 +425,6 @@ msgstr "Sildid"
 msgctxt "Saved database searches"
 msgid "Saved Searches"
 msgstr "Salvestatud otsingud"
-
-msgctxt "Password strength"
-msgid "Poor"
-msgstr "Kehv"
-
-msgctxt "Password strength"
-msgid "Weak"
-msgstr "Nõrk"
-
-msgctxt "Password strength"
-msgid "Good"
-msgstr "Hea"
-
-msgctxt "Password strength"
-msgid "Excellent"
-msgstr "Suurepärane"
 
 #~ msgid "Tap to copy"
 #~ msgstr "Kopeerimiseks klõpsa"

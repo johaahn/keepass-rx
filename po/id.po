@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-23 14:36+0000\n"
+"POT-Creation-Date: 2026-06-12 12:02+0000\n"
 "PO-Revision-Date: 2026-05-03 05:09+0000\n"
 "Last-Translator: Arif Budiman <arifpedia@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/ubports/"
@@ -392,6 +392,22 @@ msgctxt "A database managed by external file sync"
 msgid "Synced"
 msgstr "Disinkronkan"
 
+msgctxt "Password strength"
+msgid "Poor"
+msgstr "Buruk"
+
+msgctxt "Password strength"
+msgid "Weak"
+msgstr "Lemah"
+
+msgctxt "Password strength"
+msgid "Good"
+msgstr "Baik"
+
+msgctxt "Password strength"
+msgid "Excellent"
+msgstr "Sangat Baik"
+
 msgid "All Templates"
 msgstr "Semua Templat"
 
@@ -410,22 +426,6 @@ msgstr "Tag"
 msgctxt "Saved database searches"
 msgid "Saved Searches"
 msgstr "Pencarian Tersimpan"
-
-msgctxt "Password strength"
-msgid "Poor"
-msgstr "Buruk"
-
-msgctxt "Password strength"
-msgid "Weak"
-msgstr "Lemah"
-
-msgctxt "Password strength"
-msgid "Good"
-msgstr "Baik"
-
-msgctxt "Password strength"
-msgid "Excellent"
-msgstr "Sangat Baik"
 
 #~ msgid "Tap to copy"
 #~ msgstr "Ketuk untuk menyalin"

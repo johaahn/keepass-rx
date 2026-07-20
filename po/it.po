@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-12 12:02+0000\n"
-"PO-Revision-Date: 2026-07-20 13:01+0000\n"
+"PO-Revision-Date: 2026-07-20 16:01+0000\n"
 "Last-Translator: Sylke Vicious <silkevicious@tuta.io>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/ubports/"
 "keepassrx/it/>\n"
@@ -152,8 +152,8 @@ msgid ""
 "Securely lock and unlock database with a short passcode. Requires restart to "
 "take effect."
 msgstr ""
-"Blocca e sblocca in modo sicuro il database con un breve codice. Richiede il "
-"riavvio per avere effetto."
+"Blocca e sblocca in modo sicuro il database con un breve codice di accesso. "
+"Richiede il riavvio per avere effetto."
 
 msgid "Enable Accents"
 msgstr "Abilita Accenti di Colore"
@@ -169,39 +169,41 @@ msgid "Show the \"Recycle bin\" group"
 msgstr "Mostra il gruppo \"Cestino\""
 
 msgid "This group contains all the deleted entries"
-msgstr ""
+msgstr "Questo gruppo contiene tutte le voci eliminate"
 
 msgid "Fuzzy Search"
-msgstr ""
+msgstr "Ricerca Parziale"
 
 msgid ""
 "Use fuzzy search to find entries. If disabled, search only matches exact "
 "case insensitive text."
 msgstr ""
+"Usa la ricerca parziale per trovare le voci. Se disabilitata, ricerca solo "
+"le corrispondenze di testo esatte senza considerare le minuscole e maiuscole."
 
 msgid "Key Loaded"
-msgstr ""
+msgstr "Chiave Caricata"
 
 msgid "Remove Key"
-msgstr ""
+msgstr "Rimuovi Chiave"
 
 msgid "Use Key"
-msgstr ""
+msgstr "Usa Chiave"
 
 msgid "Automatically detected a key file for this database."
-msgstr ""
+msgstr "Rilevato automaticamente un file di chiave per questo database."
 
 msgid "A key file will be used to open this database."
-msgstr ""
+msgstr "Un file di chiave verrà utilizzato per aprire questo database."
 
 msgid "Select Key File"
-msgstr ""
+msgstr "Seleziona File di Chiave"
 
 msgid "Enter the database master password"
-msgstr ""
+msgstr "Inserisci la password master del database"
 
 msgid "Master Password"
-msgstr ""
+msgstr "Password Master"
 
 msgid "Open"
 msgstr "Apri"
@@ -216,51 +218,57 @@ msgid "Opening"
 msgstr "Apertura in corso"
 
 msgid "Manual path set."
-msgstr ""
+msgstr "Percorso manuale impostato."
 
 msgid ""
 "The passcode is the first five characters of the database password (or the "
 "whole password if less than five characters)."
 msgstr ""
+"Il codice di accesso sono i primi cinque caratteri della password del "
+"database (o l'intera password se meno di cinque caratteri)."
 
 msgid "Passcode"
-msgstr ""
+msgstr "Codice di accesso"
 
 msgid "Unlock"
 msgstr "Sblocca"
 
 msgid "Securely Unlocking"
-msgstr ""
+msgstr "Sbloccando in modo sicuro"
 
 msgid "Securely Locking"
-msgstr ""
+msgstr "Bloccando in modo sicuro"
 
 msgid "Database Not Opening?"
-msgstr ""
+msgstr "Il Database Non si sta Aprendo?"
 
 msgid "Entry Notes"
-msgstr ""
+msgstr "Note della Voce"
 
 msgid "Note copied to clipboard"
-msgstr ""
+msgstr "Nota copiata negli appunti"
 
 msgid "Unable to export attachment."
-msgstr ""
+msgstr "Impossibile esportare l'allegato."
 
 msgid "Entry Attachments"
-msgstr ""
+msgstr "Allegati della Voce"
 
 msgid "Export Attachment"
-msgstr ""
+msgstr "Esporta allegato"
 
 msgid "Attachment Not Viewable"
-msgstr ""
+msgstr "Allegato Non Visualizzabile"
 
 msgid "KeePassRX cannot view this %1 attachment, but it can be exported."
 msgstr ""
+"KeePassRX non è in grado di visualizzare questi %1 allegati, ma possono "
+"essere esportati."
 
 msgid "KeePassRX cannot view this attachment, but it can be exported."
 msgstr ""
+"KeePassRX non è in grado di visualizzare questo allegato, ma può essere "
+"esportato."
 
 msgid "Export"
 msgstr "Esporta"
@@ -287,7 +295,7 @@ msgid "Password (Entropy: %1)"
 msgstr "Password (Entropia: %1)"
 
 msgid "%1 copied to clipboard (30 secs)"
-msgstr ""
+msgstr "%1 copiato negli appunti (30 secondi)"
 
 msgid "Attachments"
 msgstr "Allegati"
@@ -302,7 +310,7 @@ msgid "Tap to reveal"
 msgstr "Premi per rivelare"
 
 msgid "Tap reveal to view notes"
-msgstr ""
+msgstr "Premendo vengono visualizzate le note"
 
 msgid "Main"
 msgstr "Principale"
@@ -335,11 +343,15 @@ msgid ""
 "KeePassRX is password manager for KeePass databases, designed for Ubuntu "
 "Touch. It is licensed under the GNU AGPL v3 license."
 msgstr ""
+"KeePassRX è un gestore password per i database KeePass, progettato per "
+"Ubuntu Touch. È rilasciato sotto licenza GNU AGPL v3."
 
 msgid ""
 "The built-in KeePass icon images are licensed under a variety of licenses as "
 "detailed in assets/COPYING."
 msgstr ""
+"Le icone integrate in KeePass sono rilasciate sotto varie licenze come "
+"specificato in assets/COPYING."
 
 msgid "Manual"
 msgstr "Manuale"
@@ -372,6 +384,8 @@ msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
 msgstr ""
+"<b>Mostrando tutti i codici 2FA nel database.</b><br/>Mostra i dettagli di "
+"una voce utilizzando la sua barra delle azioni."
 
 msgctxt "A database imported via ContentHub"
 msgid "Imported"

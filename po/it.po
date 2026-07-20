@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-12 12:02+0000\n"
-"PO-Revision-Date: 2025-11-04 22:51+0000\n"
-"Last-Translator: projectmoon <projectmoon@agnos.is>\n"
+"PO-Revision-Date: 2026-07-20 13:01+0000\n"
+"Last-Translator: Sylke Vicious <silkevicious@tuta.io>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/ubports/"
 "keepassrx/it/>\n"
 "Language: it\n"
@@ -17,152 +17,156 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.1-dev\n"
+"X-Generator: Weblate 2026.8.dev0\n"
 
 msgid "Copy Username"
-msgstr ""
+msgstr "Copia Nome Utente"
 
 msgid "Copy Password"
-msgstr ""
+msgstr "Copia Password"
 
 msgid "Open URL"
-msgstr ""
+msgstr "Apri URL"
 
 msgid "Copy 2FA Code"
-msgstr ""
+msgstr "Copia Codice 2FA"
 
 msgid "View Entry"
-msgstr ""
+msgstr "Vedi Voce"
 
 msgid "Tap to copy 2FA code"
-msgstr ""
+msgstr "Premi per copiare il codice 2FA"
 
 msgid "Add Database"
-msgstr ""
+msgstr "Aggiungi Database"
 
 msgid "Settings"
-msgstr ""
+msgstr "Impostazioni"
 
 msgid "About"
-msgstr ""
+msgstr "Info"
 
 msgid "Loading last database."
-msgstr ""
+msgstr "Carica ultimo database."
 
 msgid "Select Database"
-msgstr ""
+msgstr "Seleziona Database"
 
 msgid "Tap + to import a database."
-msgstr ""
+msgstr "Premi + per importare un database."
 
 msgid "Last Modified: %1"
-msgstr ""
+msgstr "Ultima Modifica: %1"
 
 msgid "It will only be removed from the app, not your device."
-msgstr ""
+msgstr "Verrà solo rimosso dall'app, non dal tuo dispositivo."
 
 msgid "Open Source Licenses"
-msgstr ""
+msgstr "Licenze Open Source"
 
 msgid "Website"
-msgstr ""
+msgstr "Sito Web"
 
 msgid "Cancel Search"
-msgstr ""
+msgstr "Annulla Ricerca"
 
 msgid "Search all entries"
-msgstr ""
+msgstr "Cerca tutte le voci"
 
 msgid "Search all entries under this group"
-msgstr ""
+msgstr "Ricerca tutte le voci di questo gruppo"
 
 msgid "Search entries in this group"
-msgstr ""
+msgstr "Ricerca le voci in questo gruppo"
 
 msgid "Lock"
-msgstr ""
+msgstr "Blocca"
 
 msgid "Close"
-msgstr ""
+msgstr "Chiudi"
 
 msgid "Back"
-msgstr ""
+msgstr "Indietro"
 
 msgid "View Mode"
-msgstr ""
+msgstr "Modalità Vista"
 
 msgid "Search"
-msgstr ""
+msgstr "Cerca"
 
 msgid "Lock Database"
-msgstr ""
+msgstr "Blocca Database"
 
 msgid "Close Database"
-msgstr ""
+msgstr "Chiudi Database"
 
 msgid "Change View"
-msgstr ""
+msgstr "Cambia Vista"
 
 msgid "All Entries"
-msgstr ""
+msgstr "Tutte le Voci"
 
 msgid "All groups and entries."
-msgstr ""
+msgstr "Tutti i gruppi e le voci."
 
 msgid "Special Categories"
-msgstr ""
+msgstr "Categorie Speciali"
 
 msgid "Entries grouped by template."
-msgstr ""
+msgstr "Voci raggruppate per modello."
 
 msgid "2FA Codes"
-msgstr ""
+msgstr "Codici 2FA"
 
 msgid "Entries with 2FA codes."
-msgstr ""
+msgstr "Voci con codici 2FA."
 
 msgid "Tags"
-msgstr ""
+msgstr "Etichette"
 
 msgid "Entries grouped by tag."
-msgstr ""
+msgstr "Voci raggruppate per etichetta."
 
 msgid "Saved Searches"
-msgstr ""
+msgstr "Ricerche Salvate"
 
 msgid "Entries matching search queries."
-msgstr ""
+msgstr "Voci corrispondenti alle parole chiave di ricerca."
 
 msgid "Select View"
-msgstr ""
+msgstr "Seleziona Vista"
 
 msgid "Select"
-msgstr ""
+msgstr "Seleziona"
 
 msgid "Cancel"
-msgstr ""
+msgstr "Annulla"
 
 msgid "Change settings based on your preferences."
-msgstr ""
+msgstr "Cambia impostazioni in base alle tue preferenze."
 
 msgid "Enable database locking"
-msgstr ""
+msgstr "Abilita blocco database"
 
 msgid ""
 "Securely lock and unlock database with a short passcode. Requires restart to "
 "take effect."
 msgstr ""
+"Blocca e sblocca in modo sicuro il database con un breve codice. Richiede il "
+"riavvio per avere effetto."
 
 msgid "Enable Accents"
-msgstr ""
+msgstr "Abilita Accenti di Colore"
 
 msgid ""
 "Set header color and name according to database settings. Compatible with "
 "KeePassXC."
 msgstr ""
+"Imposta colore e nome dell'intestazione come nelle impostazioni del "
+"database. Compatibile con KeePassXC."
 
 msgid "Show the \"Recycle bin\" group"
-msgstr ""
+msgstr "Mostra il gruppo \"Cestino\""
 
 msgid "This group contains all the deleted entries"
 msgstr ""
@@ -200,16 +204,16 @@ msgid "Master Password"
 msgstr ""
 
 msgid "Open"
-msgstr ""
+msgstr "Apri"
 
 msgid "Hide Password"
-msgstr ""
+msgstr "Nascondi Password"
 
 msgid "Show Password"
-msgstr ""
+msgstr "Mostra Password"
 
 msgid "Opening"
-msgstr ""
+msgstr "Apertura in corso"
 
 msgid "Manual path set."
 msgstr ""
@@ -223,7 +227,7 @@ msgid "Passcode"
 msgstr ""
 
 msgid "Unlock"
-msgstr ""
+msgstr "Sblocca"
 
 msgid "Securely Unlocking"
 msgstr ""
@@ -259,73 +263,73 @@ msgid "KeePassRX cannot view this attachment, but it can be exported."
 msgstr ""
 
 msgid "Export"
-msgstr ""
+msgstr "Esporta"
 
 msgid "%1 ready to export."
-msgstr ""
+msgstr "%1 pronta per l'esportazione."
 
 msgid "%1 exported."
-msgstr ""
+msgstr "%1 esportata."
 
 msgid "%1 bytes"
-msgstr ""
+msgstr "%1 bytes"
 
 msgid "Attachment"
-msgstr ""
+msgstr "Allegato"
 
 msgid "Password"
-msgstr ""
+msgstr "Password"
 
 msgid "%1 bits"
-msgstr ""
+msgstr "%1 bits"
 
 msgid "Password (Entropy: %1)"
-msgstr ""
+msgstr "Password (Entropia: %1)"
 
 msgid "%1 copied to clipboard (30 secs)"
 msgstr ""
 
 msgid "Attachments"
-msgstr ""
+msgstr "Allegati"
 
 msgid "Notes"
-msgstr ""
+msgstr "Note"
 
 msgid "Tap to hide"
-msgstr ""
+msgstr "Premi per nascondere"
 
 msgid "Tap to reveal"
-msgstr ""
+msgstr "Premi per rivelare"
 
 msgid "Tap reveal to view notes"
 msgstr ""
 
 msgid "Main"
-msgstr ""
+msgstr "Principale"
 
 msgid "Username"
-msgstr ""
+msgstr "Nome Utente"
 
 msgid "Loading…"
-msgstr ""
+msgstr "Caricamento…"
 
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 msgid "TOTP (Valid for %1)"
-msgstr ""
+msgstr "TOTP (Valido per %1)"
 
 msgid "TOTP"
-msgstr ""
+msgstr "TOTP"
 
 msgid "Other Fields"
-msgstr ""
+msgstr "Altri Campi"
 
 msgid "KeePassRX: Clipboard cleared."
-msgstr ""
+msgstr "KeePassRX: Appunti ripuliti."
 
 msgid "Version %1"
-msgstr ""
+msgstr "Versione %1"
 
 msgid ""
 "KeePassRX is password manager for KeePass databases, designed for Ubuntu "
@@ -338,25 +342,31 @@ msgid ""
 msgstr ""
 
 msgid "Manual"
-msgstr ""
+msgstr "Manuale"
 
 msgid ""
 "• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
 "projects/keepassrx/</a>"
 msgstr ""
+"• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
+"projects/keepassrx/</a>"
 
 msgid ""
 "• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
 "projects/keepassrx/</a>"
 msgstr ""
+"• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
+"projects/keepassrx/</a>"
 
 msgid "Source Code"
-msgstr ""
+msgstr "Codice Sorgente"
 
 msgid ""
 "<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
 "projectmoon/keepass-rx</a>"
 msgstr ""
+"<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
+"projectmoon/keepass-rx</a>"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
@@ -365,43 +375,43 @@ msgstr ""
 
 msgctxt "A database imported via ContentHub"
 msgid "Imported"
-msgstr ""
+msgstr "Importato"
 
 msgctxt "A database managed by external file sync"
 msgid "Synced"
-msgstr ""
+msgstr "Sincronizzato"
 
 msgctxt "Password strength"
 msgid "Poor"
-msgstr ""
+msgstr "Scarsa"
 
 msgctxt "Password strength"
 msgid "Weak"
-msgstr ""
+msgstr "Debole"
 
 msgctxt "Password strength"
 msgid "Good"
-msgstr ""
+msgstr "Buona"
 
 msgctxt "Password strength"
 msgid "Excellent"
-msgstr ""
+msgstr "Eccellente"
 
 msgid "All Templates"
-msgstr ""
+msgstr "Tutti i Modelli"
 
 msgctxt "Default view of the password database (all entries)"
 msgid "Default View"
-msgstr ""
+msgstr "Vista Predefinita"
 
 msgctxt "Two-factor/OTP codes (keep phrase short as possible)"
 msgid "2FA Codes"
-msgstr ""
+msgstr "Codici 2FA"
 
 msgctxt "List of entries with tags"
 msgid "Tags"
-msgstr ""
+msgstr "Etichette"
 
 msgctxt "Saved database searches"
 msgid "Saved Searches"
-msgstr ""
+msgstr "Ricerche Salvate"

@@ -1,5 +1,6 @@
 use anyhow::{Result, anyhow};
 use crypto_kdf::Key as KdfKey;
+#[cfg(not(feature = "sailfish"))]
 use keyring::Entry as KeyringEntry;
 use libsodium_rs::crypto_aead::xchacha20poly1305;
 use libsodium_rs::crypto_aead::xchacha20poly1305::{Key as ChaChaKey, Nonce};
@@ -9,6 +10,8 @@ use libsodium_rs::random;
 use libsodium_rs::utils::{SecureVec, vec_utils};
 use poison_guard::Poison;
 use secstr::SecUtf8;
+#[cfg(feature = "sailfish")]
+use secstr::SecVec;
 use std::cell::RefCell;
 use uuid::Uuid;
 use zeroize::Zeroize;
@@ -42,12 +45,16 @@ fn hash_password(value: &str, pw_salt: &[u8]) -> Result<Vec<u8>> {
     Ok(pw_hash)
 }
 
-/// Simple wrapper around the keyring library to store credentials in
-/// a secure(ish?) place.
+/// Stashes a secret out of the app's normal heap. On Ubuntu Touch this uses the
+/// kernel keyring. On Sailfish OS the keyring syscalls (add_key/keyctl) are
+/// blocked by the Sailjail seccomp filter, so it holds the secret in libsodium
+/// secure memory (mlock'd, guard pages, zeroized on drop) instead.
+#[cfg(not(feature = "sailfish"))]
 pub struct KernelBackedSecret {
     entry_id: Poison<String>,
 }
 
+#[cfg(not(feature = "sailfish"))]
 impl Clone for KernelBackedSecret {
     fn clone(&self) -> Self {
         KernelBackedSecret {
@@ -61,6 +68,7 @@ impl Clone for KernelBackedSecret {
     }
 }
 
+#[cfg(not(feature = "sailfish"))]
 #[allow(dead_code)]
 impl KernelBackedSecret {
     fn entry_for(service: &str) -> Result<KeyringEntry> {
@@ -102,6 +110,58 @@ impl KernelBackedSecret {
 
     pub fn is_poisoned(&self) -> bool {
         self.entry_id.is_poisoned()
+    }
+}
+
+#[cfg(feature = "sailfish")]
+pub struct KernelBackedSecret {
+    secret: Poison<SecVec<u8>>,
+}
+
+#[cfg(feature = "sailfish")]
+impl Clone for KernelBackedSecret {
+    fn clone(&self) -> Self {
+        let existing = self
+            .secret
+            .get()
+            .expect("Cannot clone poisoned encrypted password");
+        KernelBackedSecret {
+            secret: Poison::new(existing.clone()),
+        }
+    }
+}
+
+#[cfg(feature = "sailfish")]
+#[allow(dead_code)]
+impl KernelBackedSecret {
+    pub fn new_with_id(_id: &str, pw: &[u8]) -> Result<Self> {
+        Ok(Self {
+            secret: Poison::new(SecVec::new(pw.to_vec())),
+        })
+    }
+
+    pub fn new(pw: &[u8]) -> Result<Self> {
+        Self::new_with_id(KERNEL_SECRET_USER, pw)
+    }
+
+    pub fn retrieve(&mut self) -> Result<Vec<u8>> {
+        let guard = Poison::unless_recovered(&mut self.secret)
+            .map_err(|poisoned| poisoned.into_error())?;
+        let bytes = guard.unsecure().to_vec();
+        Poison::recover(guard);
+        Ok(bytes)
+    }
+
+    pub fn poison(&mut self) -> Result<()> {
+        // Consume the guard without recovering: the Poison is left poisoned and
+        // the SecureVec is dropped (zeroizing its memory).
+        Poison::unless_recovered(&mut self.secret)
+            .map_err(|poisoned| poisoned.into_error())?;
+        Ok(())
+    }
+
+    pub fn is_poisoned(&self) -> bool {
+        self.secret.is_poisoned()
     }
 }
 

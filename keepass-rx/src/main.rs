@@ -267,9 +267,12 @@ fn boot_sailfish() {
     use crate::platform::QmlApp;
 
     qmeta_async::run(|| {
-        // Keep `_app` alive for the lifetime of the event loop (see UT path).
-        let (mut view, _app) = with_executor(|| -> Result<_> {
+        // Keep `_app`/`_translator` alive for the event loop (see UT path).
+        let (mut view, _app, _translator) = with_executor(|| -> Result<_> {
+            use crate::gui::qml::RxTranslator;
+
             let (gui, app) = create_app_objects();
+            let translator = Rc::new(QObjectBox::new(RxTranslator::default()));
 
             let mut view = QmlApp::application("harbour-keepassrx".into());
             view.set_title("KeePassRX".into());
@@ -283,9 +286,10 @@ fn boot_sailfish() {
             );
             view.set_object_property("AppState".into(), app.app_state.pinned());
             view.set_object_property("SettingsBridge".into(), app.settings_bridge.pinned());
+            view.set_object_property("Tr".into(), translator.pinned());
 
             view.set_source(QmlApp::path_to("qml/harbour-keepassrx.qml".into()));
-            Ok((view, app))
+            Ok((view, app, translator))
         })
         .expect("app initialization failed");
 
@@ -300,13 +304,20 @@ fn init_gettext() {
     let domain = "keepassrx.projectmoon";
     textdomain(domain).expect("Failed to set gettext domain");
 
-    let mut app_dir_path =
-        env::current_dir().expect("Failed to get the app working directory");
-    if !app_dir_path.is_absolute() {
-        app_dir_path = PathBuf::from("/usr");
-    }
+    // On Sailfish OS the .mo catalogs are installed to a fixed system prefix,
+    // and the process working directory is not the app install dir.
+    #[cfg(feature = "sailfish")]
+    let path = PathBuf::from("/usr/share/locale");
 
-    let path = app_dir_path.join("share/locale");
+    #[cfg(not(feature = "sailfish"))]
+    let path = {
+        let mut app_dir_path =
+            env::current_dir().expect("Failed to get the app working directory");
+        if !app_dir_path.is_absolute() {
+            app_dir_path = PathBuf::from("/usr");
+        }
+        app_dir_path.join("share/locale")
+    };
 
     bindtextdomain(domain, path.to_str().unwrap()).expect("Failed to bind gettext domain");
 }

@@ -45,8 +45,7 @@ Page {
         // `message` is the declared signal arg name (Qt 5.6 block form).
         onDatabaseOpenFailed: {
             openDbPage.busy = false;
-            //% "Error: %1"
-            openDbPage.errorMsg = qsTrId("keepassrx-error").arg(message);
+            openDbPage.errorMsg = Tr.tr("Error: %1").arg(message);
             openDbPage.clearSensitiveUiState();
         }
     }
@@ -79,16 +78,14 @@ Page {
                 horizontalAlignment: Text.AlignHCenter
                 wrapMode: Text.Wrap
                 color: Theme.secondaryColor
-                //% "Enter the database master password"
-                text: qsTrId("keepassrx-enter-master-password")
+                text: Tr.tr("Enter the database master password")
             }
 
             PasswordField {
                 id: password
                 width: parent.width
                 enabled: !openDbPage.busy
-                //% "Master password"
-                label: qsTrId("keepassrx-master-password")
+                label: Tr.tr("Master password")
                 placeholderText: label
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-accept"
@@ -99,8 +96,7 @@ Page {
             Button {
                 anchors.horizontalCenter: parent.horizontalCenter
                 enabled: !openDbPage.busy && password.text.length > 0
-                //% "Open"
-                text: qsTrId("keepassrx-open")
+                text: Tr.tr("Open")
                 onClicked: openDbPage.openDatabase()
             }
 

@@ -7,11 +7,23 @@
  */
 import QtQuick 2.6
 import Sailfish.Silica 1.0
+import Sailfish.Pickers 1.0
 import keepassrx 1.0
 
 Page {
     id: dbListPage
     allowedOrientations: defaultAllowedOrientations
+
+    Component {
+        id: filePicker
+        FilePickerPage {
+            title: Tr.tr("Select database")
+            nameFilters: [ '*.kdbx', '*.kdb' ]
+            onSelectedContentPropertiesChanged: {
+                keepassrx.importDatabase(selectedContentProperties.filePath);
+            }
+        }
+    }
 
     function formatLastModified(lastModified) {
         return Qt.formatDateTime(lastModified,
@@ -64,26 +76,26 @@ Page {
 
         PullDownMenu {
             MenuItem {
-                //% "Settings"
-                text: qsTrId("keepassrx-settings")
+                text: Tr.tr("Settings")
                 onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
             }
             MenuItem {
-                //% "Refresh"
-                text: qsTrId("keepassrx-refresh")
+                text: Tr.tr("Refresh")
                 onClicked: {
                     dbListModel.clear();
                     keepassrx.listImportedDatabases();
                 }
             }
+            MenuItem {
+                text: Tr.tr("Add database")
+                onClicked: pageStack.push(filePicker)
+            }
         }
 
         ViewPlaceholder {
             enabled: dbListModel.count === 0
-            //% "No databases"
-            text: qsTrId("keepassrx-no-databases")
-            //% "Copy a .kdbx file into the app's data directory to get started."
-            hintText: qsTrId("keepassrx-no-databases-hint")
+            text: Tr.tr("No databases")
+            hintText: Tr.tr("Pull down to add a database.")
         }
 
         delegate: ListItem {
@@ -104,8 +116,7 @@ Page {
                     color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
                 }
                 Label {
-                    //% "Last modified: %1"
-                    text: qsTrId("keepassrx-last-modified").arg(formatLastModified(lastModified))
+                    text: Tr.tr("Last modified: %1").arg(formatLastModified(lastModified))
                     width: parent.width
                     truncationMode: TruncationMode.Fade
                     color: delegate.highlighted ? Theme.secondaryHighlightColor : Theme.secondaryColor
@@ -121,12 +132,10 @@ Page {
 
             menu: ContextMenu {
                 MenuItem {
-                    //% "Delete"
-                    text: qsTrId("keepassrx-delete")
+                    text: Tr.tr("Delete")
                     visible: databaseTypeString === 'Imported'
                     onClicked: {
-                        //% "Deleting"
-                        delegate.remorseAction(qsTrId("keepassrx-deleting"), function() {
+                        delegate.remorseAction(Tr.tr("Deleting"), function() {
                             keepassrx.deleteDatabase(databaseName);
                         });
                     }

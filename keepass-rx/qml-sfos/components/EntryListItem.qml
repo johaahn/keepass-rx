@@ -88,26 +88,22 @@ ListItem {
 
     menu: ContextMenu {
         MenuItem {
-            //% "Copy username"
-            text: qsTrId("keepassrx-copy-username")
+            text: Tr.tr("Copy username")
             visible: theEntry.hasUsername
             onClicked: keepassrx.getFieldValue(uuid, "Username")
         }
         MenuItem {
-            //% "Copy password"
-            text: qsTrId("keepassrx-copy-password")
+            text: Tr.tr("Copy password")
             visible: theEntry.hasPassword
             onClicked: keepassrx.getFieldValue(uuid, "Password")
         }
         MenuItem {
-            //% "Open URL"
-            text: qsTrId("keepassrx-open-url")
+            text: Tr.tr("Open URL")
             visible: theEntry.hasURL
             onClicked: keepassrx.getFieldValue(uuid, "URL")
         }
         MenuItem {
-            //% "Copy 2FA code"
-            text: qsTrId("keepassrx-copy-totp")
+            text: Tr.tr("Copy 2FA code")
             visible: theEntry.hasTOTP
             onClicked: keepassrx.getTotp(uuid)
         }

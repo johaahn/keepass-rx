@@ -23,27 +23,23 @@ Page {
             width: parent.width
 
             PageHeader {
-                //% "Settings"
-                title: qsTrId("keepassrx-settings")
+                title: Tr.tr("Settings")
             }
 
             TextSwitch {
-                //% "Database accent colours"
-                text: qsTrId("keepassrx-setting-accents")
+                text: Tr.tr("Database accent colours")
                 checked: SettingsBridge.showAccents
                 onClicked: SettingsBridge.showAccents = checked
             }
 
             TextSwitch {
-                //% "Show recycle bin"
-                text: qsTrId("keepassrx-setting-recycle-bin")
+                text: Tr.tr("Show recycle bin")
                 checked: SettingsBridge.showRecycleBin
                 onClicked: SettingsBridge.showRecycleBin = checked
             }
 
             TextSwitch {
-                //% "Enable database locking"
-                text: qsTrId("keepassrx-setting-locking")
+                text: Tr.tr("Enable database locking")
                 checked: SettingsBridge.databaseLocking
                 onClicked: SettingsBridge.databaseLocking = checked
             }

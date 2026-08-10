@@ -34,6 +34,7 @@ Source0:    %{name}-%{version}.tar.bz2
 
 Requires:   sailfishsilica-qt5 >= 0.10.9
 Requires:   nemo-qml-plugin-configuration-qt5
+Requires:   sailfish-components-pickers-qt5
 
 BuildRequires:  pkgconfig(sailfishapp) >= 1.0.3
 BuildRequires:  pkgconfig(Qt5Core)

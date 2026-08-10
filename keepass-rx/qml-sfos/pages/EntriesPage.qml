@@ -100,8 +100,7 @@ Page {
             SearchField {
                 id: searchField
                 width: parent.width
-                //% "Search entries"
-                placeholderText: qsTrId("keepassrx-search-entries")
+                placeholderText: Tr.tr("Search entries")
                 inputMethodHints: Qt.ImhNoPredictiveText
                 onTextChanged: entriesPage.getEntries(containerStack.containerUuid)
             }
@@ -109,18 +108,15 @@ Page {
 
         PullDownMenu {
             MenuItem {
-                //% "Close database"
-                text: qsTrId("keepassrx-close-database")
+                text: Tr.tr("Close database")
                 onClicked: applicationWindow.closeDatabase()
             }
             MenuItem {
-                //% "Settings"
-                text: qsTrId("keepassrx-settings")
+                text: Tr.tr("Settings")
                 onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
             }
             MenuItem {
-                //% "Go up"
-                text: qsTrId("keepassrx-go-up")
+                text: Tr.tr("Go up")
                 visible: !containerStack.isAtRoot
                 onClicked: containerStack.popContainer()
             }
@@ -128,8 +124,7 @@ Page {
 
         ViewPlaceholder {
             enabled: entriesModel.count === 0
-            //% "No entries"
-            text: qsTrId("keepassrx-no-entries")
+            text: Tr.tr("No entries")
         }
 
         delegate: EntryListItem {

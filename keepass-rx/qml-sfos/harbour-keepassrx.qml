@@ -96,8 +96,7 @@ ApplicationWindow {
         interval: 30000
         onTriggered: {
             Clipboard.text = "";
-            //% "Clipboard cleared."
-            applicationWindow.notify(qsTrId("keepassrx-clipboard-cleared"));
+            applicationWindow.notify(Tr.tr("Clipboard cleared."));
         }
     }
 
@@ -147,8 +146,7 @@ ApplicationWindow {
                 Qt.openUrlExternally(url);
             } else {
                 Clipboard.text = field_value;
-                //% "%1 copied to clipboard (30 secs)"
-                applicationWindow.notify(qsTrId("keepassrx-field-copied").arg(field_name));
+                applicationWindow.notify(Tr.tr("%1 copied to clipboard (30 secs)").arg(field_name));
                 clearClipboardTimer.restart();
             }
         }
@@ -156,8 +154,7 @@ ApplicationWindow {
         onTotpReceived: {
             if (!totp.error) {
                 Clipboard.text = totp.digits;
-                //% "Token '%1' copied. Valid for %2"
-                applicationWindow.notify(qsTrId("keepassrx-totp-copied").arg(totp.digits).arg(totp.validFor));
+                applicationWindow.notify(Tr.tr("Token '%1' copied. Valid for %2").arg(totp.digits).arg(totp.validFor));
                 clearClipboardTimer.restart();
             } else {
                 applicationWindow.notify(totp.error);

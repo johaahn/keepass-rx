@@ -54,54 +54,46 @@ Page {
             PageHeader {
                 title: entryTitle && entryTitle.length > 0
                     ? entryTitle
-                    //% "Untitled entry"
-                    : qsTrId("keepassrx-untitled-entry")
+                    : Tr.tr("Untitled entry")
             }
 
             // ------- Main fields -------
             SectionHeader {
-                //% "Main"
-                text: qsTrId("keepassrx-section-main")
+                text: Tr.tr("Main")
                 visible: entryHasUsername || entryHasPassword || entryHasUrl || entryHasTotp
             }
 
             CopyField {
-                //% "Username"
-                label: qsTrId("keepassrx-username")
+                label: Tr.tr("Username")
                 value: entryUsername.length > 0 ? entryUsername : "••••••"
                 visible: entryHasUsername
                 onClicked: entryPage.copyField("Username")
             }
 
             CopyField {
-                //% "Password"
-                label: qsTrId("keepassrx-password")
+                label: Tr.tr("Password")
                 value: "••••••••"
                 visible: entryHasPassword
                 onClicked: entryPage.copyField("Password")
             }
 
             CopyField {
-                //% "URL"
-                label: qsTrId("keepassrx-url")
+                label: Tr.tr("URL")
                 value: entryUrl.length > 0 ? entryUrl : "••••••"
                 visible: entryHasUrl
                 onClicked: entryPage.copyField("URL")
             }
 
             CopyField {
-                //% "TOTP"
-                label: qsTrId("keepassrx-totp")
-                //% "Tap to copy 2FA code"
-                value: qsTrId("keepassrx-tap-totp")
+                label: Tr.tr("TOTP")
+                value: Tr.tr("Tap to copy 2FA code")
                 visible: entryHasTotp
                 onClicked: keepassrx.getTotp(entryUuid)
             }
 
             // ------- Notes -------
             SectionHeader {
-                //% "Notes"
-                text: qsTrId("keepassrx-notes")
+                text: Tr.tr("Notes")
                 visible: entryHasNotes && entryNotes.length > 0
             }
 
@@ -116,8 +108,7 @@ Page {
 
             // ------- Custom fields -------
             SectionHeader {
-                //% "Other fields"
-                text: qsTrId("keepassrx-section-other")
+                text: Tr.tr("Other fields")
                 visible: customFieldsModel.count > 0
             }
 

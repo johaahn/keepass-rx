@@ -157,6 +157,7 @@ fn update_language_files() {
             "--qt",
             "--keyword=tr",
             "--keyword=tr:1,2",
+            "--keyword=ctr:1c,2",
             "--keyword=QT_TR_NOOP",
             "--keyword=QT_TR_NOOP:1,2",
             "--add-comments=i18n",
@@ -209,6 +210,13 @@ fn source_files() -> Vec<PathBuf> {
     let mut files = vec![];
     files.append(&mut qml);
     files.append(&mut src);
+
+    // The Sailfish OS QML tree translates via the `Tr.tr`/`Tr.ctr` gettext
+    // bridge, so its strings must be extracted too.
+    if PathBuf::from("qml-sfos").is_dir() {
+        files.append(&mut walk_dir(PathBuf::from("qml-sfos"), "qml"));
+    }
+
     files
 }
 

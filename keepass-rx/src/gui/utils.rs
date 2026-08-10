@@ -6,7 +6,12 @@ use dirs::data_dir;
 
 use super::RxDbType;
 
+#[cfg(not(feature = "sailfish"))]
 const APP_ID: &'static str = "keepassrx.projectmoon";
+// Sailjail confines the app to ~/.local/share/<desktop-name>, so on Sailfish the
+// data directory must match the harbour app name.
+#[cfg(feature = "sailfish")]
+const APP_ID: &'static str = "harbour-keepassrx";
 
 /// Old messed up data path, that had the app ID twice.
 pub fn app_data_path() -> PathBuf {

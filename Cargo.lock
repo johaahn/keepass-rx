@@ -1354,6 +1354,7 @@ dependencies = [
  "keepass",
  "keyring",
  "libsodium-rs",
+ "linux-keyutils",
  "log",
  "memoffset",
  "mirror_from_macro",

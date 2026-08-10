@@ -61,7 +61,10 @@ mod qrc;
 #[cfg(feature = "gui")]
 use crate::app::AppState;
 
+#[cfg(not(feature = "sailfish"))]
 const APP_ID: &str = "keepassrx.projectmoon";
+#[cfg(feature = "sailfish")]
+const APP_ID: &str = "harbour-keepassrx";
 static LOG_DIR: OnceLock<PathBuf> = OnceLock::new();
 
 fn app_data_path() -> PathBuf {
@@ -263,8 +266,18 @@ fn boot_ubuntu_touch() {
 /// (QGuiApplication + QQuickView). QML is loaded from the installed filesystem
 /// tree rather than a compiled-in resource bundle.
 #[cfg(feature = "sailfish")]
+fn create_session_keyring() {
+    use linux_keyutils::{KeyRing, KeyRingIdentifier};
+    if let Err(err) = KeyRing::from_special_id(KeyRingIdentifier::Session, true) {
+        log::warn!("could not create a session keyring: {}", err);
+    }
+}
+
+#[cfg(feature = "sailfish")]
 fn boot_sailfish() {
     use crate::platform::QmlApp;
+
+    create_session_keyring();
 
     qmeta_async::run(|| {
         // Keep `_app`/`_translator` alive for the event loop (see UT path).

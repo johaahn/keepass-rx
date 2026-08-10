@@ -23,6 +23,11 @@ pub struct SettingsBridge {
 }
 
 #[allow(non_snake_case, dead_code)]
+#[cfg(not(feature = "sailfish"))]
+const CONFIG_DIR: &str = "keepassrx.projectmoon";
+#[cfg(feature = "sailfish")]
+const CONFIG_DIR: &str = "harbour-keepassrx";
+
 impl Default for SettingsBridge {
     fn default() -> Self {
         Self {
@@ -30,7 +35,7 @@ impl Default for SettingsBridge {
             inner: QSettings::from_path(
                 dirs::config_dir()
                     .expect("Could not get xdg config directory path")
-                    .join("keepassrx.projectmoon")
+                    .join(CONFIG_DIR)
                     .join("keepassrx.projectmoon.conf")
                     .to_str()
                     .unwrap(),

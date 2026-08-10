@@ -1,3 +1,10 @@
+# NOTE (Sailfish OS cross-compile): the `RUSTFLAGS` environment variable, when
+# set, fully REPLACES the rustflags configured here (cargo does not merge the
+# two). The Sailfish RPM build (rpm/harbour-keepassrx.spec) exports a per-arch
+# `RUSTFLAGS` for every target it builds, which neutralizes the host-specific
+# `-C target-cpu=native` below (wrong under the SB2 cross toolchain) and re-adds
+# `--cfg aes_armv8` for aarch64 there. This config therefore only governs the
+# native Ubuntu Touch (clickable) build, which sets no RUSTFLAGS.
 [build]
 # Enable CPU-specific optimizations.
 # This can greatly improve performance for AES key derivation.

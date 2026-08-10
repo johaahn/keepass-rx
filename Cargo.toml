@@ -2,5 +2,14 @@
 resolver = "3"
 members = [ "actor-macro", "keepass-rx", "mirror_from_macro" ]
 
+# The woboq git versions of the qmetaobject stack carry fixes required to
+# build/run against the old Qt 5.6 that Sailfish OS ships. crates.io releases
+# are not reliable against Qt 5.6. This matches the Whisperfish setup and is
+# harmless for the Ubuntu Touch (Qt 5.15) build.
+[patch.crates-io]
+qttypes = { git = "https://github.com/woboq/qmetaobject-rs" }
+qmetaobject = { git = "https://github.com/woboq/qmetaobject-rs" }
+qmetaobject_impl = { git = "https://github.com/woboq/qmetaobject-rs" }
+
 [profile.release]
 strip="debuginfo"

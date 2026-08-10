@@ -57,12 +57,23 @@ syntect = { version = "5.3", default-features = false, features = ["default-fanc
 memoffset = "0.9"
 simplelog = "0.12"
 
+# Sailfish OS application bootstrap (SailfishApp wrapper: QGuiApplication +
+# QQuickView). Only pulled in for the SFOS build via the `sailfish` feature.
+sailors = { git = "https://gitlab.com/whisperfish/sailo-rs.git", optional = true }
+
 [build-dependencies]
 cpp_build = "0.5"
 walkdir = "2.5.0"
 cc = "1.2.43"
 
 [features]
-# Compile the GUI portion of the application (link QT etc).
+# Compile the GUI portion of the application (link QT etc). This is the shared
+# GUI code; the platform (Ubuntu Touch vs Sailfish OS) is selected by whether
+# `sailfish` is also enabled.
 gui = []
+# Native Sailfish OS build: Silica UI booted via sailo-rs. Implies `gui`.
+# Without this feature (plain `gui`), the Ubuntu Touch / Lomiri build is produced.
+sailfish = ["gui", "sailors"]
+# Harbour (Jolla Store) variant of the Sailfish OS build.
+harbour = ["sailfish"]
 default = ["gui"]

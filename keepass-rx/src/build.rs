@@ -138,6 +138,15 @@ fn compile_kpxc_zxcvbn() {
 
 /// Generate gettext translation files
 fn update_language_files() {
+    // INSTALL_DIR is provided by clickable (the Ubuntu Touch build). Outside of
+    // clickable (e.g. the Sailfish OS / mb2 build, or a plain `cargo build`) it
+    // is absent; in that case the RPM's %install step is responsible for
+    // compiling and installing the .mo files, so skip generation here rather
+    // than panicking or mutating the source .po tree.
+    if env::var("INSTALL_DIR").is_err() {
+        return;
+    }
+
     let pot_file = "../po/keepassrx.projectmoon.pot";
     let source_files = source_files();
 
@@ -245,10 +254,20 @@ fn main() {
 
     let qt_include_path = qmake_query(&qmake_cmd, &args, "QT_INSTALL_HEADERS");
     let qt_library_path = qmake_query(&qmake_cmd, &args, "QT_INSTALL_LIBS");
+    let qt_include_path = qt_include_path.trim();
 
-    cpp_build::Config::new()
-        .include(qt_include_path.trim())
-        .build("src/main.rs");
+    let mut cfg = cpp_build::Config::new();
+    cfg.include(qt_include_path);
+
+    // Sailfish OS ships an old Qt 5.6. Point the compiler at QtCore explicitly
+    // and silence -Wdeprecated-copy noise that its headers trigger (matches
+    // the Whisperfish setup).
+    if cfg!(feature = "sailfish") {
+        cfg.include(format!("{}/QtCore", qt_include_path))
+            .flag("-Wno-deprecated-copy");
+    }
+
+    cfg.build("src/main.rs");
 
     let macos_lib_search = if cfg!(target_os = "macos") {
         "=framework"
@@ -267,13 +286,21 @@ fn main() {
     println!("cargo:rerun-if-changed=qml/");
 
     println!("cargo:rustc-link-search{macos_lib_search}={qt_library_path}");
-    println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}Widgets");
+
+    // Qt modules needed on every platform.
     println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}Gui");
     println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}Core");
     println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}Quick");
     println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}Qml");
-    println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}QuickControls2");
-    println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}WebEngine");
+
+    // Ubuntu Touch (Lomiri, Qt 5.15) additionally uses Widgets, the
+    // QtQuickControls2 style engine, and WebEngine. None of these exist on
+    // Sailfish OS' Qt 5.6, and the Silica UI does not need them.
+    if !cfg!(feature = "sailfish") {
+        println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}Widgets");
+        println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}QuickControls2");
+        println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}WebEngine");
+    }
 }
 
 #[cfg(not(feature = "gui"))]

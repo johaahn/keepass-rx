@@ -29,10 +29,9 @@ use cpp::cpp;
 use gettextrs::{bindtextdomain, textdomain};
 use log::{LevelFilter, error, info};
 use qmeta_async::with_executor;
-use qmetaobject::{
-    QObjectBox, QQuickStyle, QQuickView, QString, QVariant, qml_register_enum,
-    qml_register_type,
-};
+use qmetaobject::{QObjectBox, QString, QVariant, qml_register_type};
+#[cfg(all(feature = "gui", not(feature = "sailfish")))]
+use qmetaobject::{QQuickStyle, QQuickView, qml_register_enum};
 use simplelog::{
     ColorChoice, CombinedLogger, ConfigBuilder, SharedLogger, TermLogger, TerminalMode,
     WriteLogger,
@@ -53,6 +52,10 @@ mod app;
 #[cfg(feature = "gui")]
 mod gui;
 #[cfg(feature = "gui")]
+mod platform;
+// The compiled-in QML resource bundle is only used by the Ubuntu Touch build.
+// The Sailfish OS build loads QML from the installed filesystem tree.
+#[cfg(all(feature = "gui", not(feature = "sailfish")))]
 mod qrc;
 
 #[cfg(feature = "gui")]
@@ -134,24 +137,83 @@ fn init_logging() -> Result<()> {
 
 #[cfg(feature = "gui")]
 fn load_gui() -> Result<()> {
-    use gui::{
-        RxDbType,
-        qml::{RxUiDatabase, RxUiLicenses},
-    };
-
-    use crate::gui::{
-        KeepassRx, RxGuiState, actor::KeepassRxActor, utils::move_old_dirs_and_files,
-    };
-
-    use crate::app::KeepassRxApp;
-    use crate::gui::RxViewMode;
-    use crate::gui::colors::RxColorType;
-    use crate::gui::qml::RxUiContainerStack;
-    use crate::gui::qml::{RxItemType, RxListItem, RxUiEntry};
-    use crate::rx::virtual_hierarchy::RxViewFeature;
+    use crate::gui::qml::{RxUiContainerStack, RxListItem, RxUiDatabase, RxUiEntry, RxUiLicenses};
+    use crate::gui::utils::move_old_dirs_and_files;
 
     init_gettext();
 
+    let uri = cstr!("keepassrx");
+
+    qml_register_type::<RxUiDatabase>(uri, 1, 0, cstr!("RxUiDatabase"));
+    qml_register_type::<RxUiContainerStack>(uri, 1, 0, cstr!("RxUiContainerStack"));
+    qml_register_type::<RxUiEntry>(uri, 1, 0, cstr!("RxUiEntry"));
+    qml_register_type::<RxUiLicenses>(uri, 1, 0, cstr!("RxUiLicenses"));
+    qml_register_type::<RxListItem>(uri, 1, 0, cstr!("RxListItem"));
+
+    #[cfg(not(feature = "sailfish"))]
+    {
+        use crate::gui::colors::RxColorType;
+        use crate::gui::qml::RxItemType;
+        use crate::gui::{RxDbType, RxGuiState, RxViewMode};
+        use crate::rx::virtual_hierarchy::RxViewFeature;
+
+        qml_register_enum::<RxItemType>(uri, 1, 0, cstr!("RxItemType"));
+        qml_register_enum::<RxGuiState>(uri, 1, 0, cstr!("RxGuiState"));
+        qml_register_enum::<RxViewMode>(uri, 1, 0, cstr!("RxViewMode"));
+        qml_register_enum::<RxDbType>(uri, 1, 0, cstr!("RxDbType"));
+        qml_register_enum::<RxViewFeature>(uri, 1, 0, cstr!("RxViewFeature"));
+        qml_register_enum::<RxColorType>(uri, 1, 0, cstr!("RxColorType"));
+    }
+
+    if let Err(err) = move_old_dirs_and_files() {
+        error!("Error during old app data migration: {}", err);
+    }
+
+    #[cfg(not(feature = "sailfish"))]
+    boot_ubuntu_touch();
+
+    #[cfg(feature = "sailfish")]
+    boot_sailfish();
+
+    Ok(())
+}
+
+/// Create the shared, platform-independent application objects: the
+/// `SettingsBridge`, `AppState`, the `KeepassRx` GUI object, and the backing
+/// actor. Must be called inside a `qmeta_async` executor context. Returns the
+/// GUI object and the app holder; both must be kept alive for the lifetime of
+/// the Qt event loop.
+#[cfg(feature = "gui")]
+fn create_app_objects() -> (
+    Rc<QObjectBox<crate::gui::KeepassRx>>,
+    Rc<crate::app::KeepassRxApp>,
+) {
+    use crate::app::KeepassRxApp;
+    use crate::gui::KeepassRx;
+    use crate::gui::actor::KeepassRxActor;
+    use actix::Actor;
+    use app::RxActors;
+    use gui::settings::SettingsBridge;
+
+    let settings_bridge = Rc::new(QObjectBox::new(SettingsBridge::default()));
+    let app_state = Rc::new(QObjectBox::new(AppState::new(&settings_bridge)));
+    let gui = Rc::new(QObjectBox::new(KeepassRx::new()));
+
+    let global_app_actor = KeepassRxActor::new(&gui, &app_state).start();
+
+    let app = Rc::new(KeepassRxApp {
+        app_state,
+        settings_bridge,
+    });
+
+    RxActors::set_app_actor(global_app_actor);
+    (gui, app)
+}
+
+/// Ubuntu Touch / Lomiri bootstrap: Suru style + compiled-in QML resources
+/// loaded through a bare `QQuickView`.
+#[cfg(all(feature = "gui", not(feature = "sailfish")))]
+fn boot_ubuntu_touch() {
     unsafe {
         cpp! {{
             #include <QtCore/QCoreApplication>
@@ -166,24 +228,6 @@ fn load_gui() -> Result<()> {
 
     QQuickStyle::set_style("Suru");
     qrc::load();
-    let uri = cstr!("keepassrx");
-
-    qml_register_type::<RxUiDatabase>(uri, 1, 0, cstr!("RxUiDatabase"));
-    qml_register_type::<RxUiContainerStack>(uri, 1, 0, cstr!("RxUiContainerStack"));
-    qml_register_type::<RxUiEntry>(uri, 1, 0, cstr!("RxUiEntry"));
-    qml_register_type::<RxUiLicenses>(uri, 1, 0, cstr!("RxUiLicenses"));
-    qml_register_type::<RxListItem>(uri, 1, 0, cstr!("RxListItem"));
-    qml_register_enum::<RxItemType>(uri, 1, 0, cstr!("RxItemType"));
-    qml_register_enum::<RxGuiState>(uri, 1, 0, cstr!("RxGuiState"));
-    qml_register_enum::<RxViewMode>(uri, 1, 0, cstr!("RxViewMode"));
-    qml_register_enum::<RxDbType>(uri, 1, 0, cstr!("RxDbType"));
-    qml_register_enum::<RxViewFeature>(uri, 1, 0, cstr!("RxViewFeature"));
-    qml_register_enum::<RxColorType>(uri, 1, 0, cstr!("RxColorType"));
-
-    // "Data migration": Move any db.kdbx from the data directory to imported.
-    if let Err(err) = move_old_dirs_and_files() {
-        error!("Error during old app data migration: {}", err);
-    }
 
     qmeta_async::run(|| {
         // We must return app here because it keeps the value alive
@@ -191,21 +235,7 @@ fn load_gui() -> Result<()> {
         // pointers inside app would be dropped and become null at
         // runtime.
         let (mut view, _app) = with_executor(|| -> Result<_> {
-            use app::RxActors;
-            use gui::settings::SettingsBridge;
-
-            let settings_bridge = Rc::new(QObjectBox::new(SettingsBridge::default()));
-            let app_state = Rc::new(QObjectBox::new(AppState::new(&settings_bridge)));
-            let gui = Rc::new(QObjectBox::new(KeepassRx::new()));
-
-            let global_app_actor = KeepassRxActor::new(&gui, &app_state).start();
-
-            let app = Rc::new(KeepassRxApp {
-                app_state,
-                settings_bridge,
-            });
-
-            RxActors::set_app_actor(global_app_actor);
+            let (gui, app) = create_app_objects();
 
             let mut view = QQuickView::new();
             let engine = view.engine();
@@ -227,8 +257,42 @@ fn load_gui() -> Result<()> {
         view.engine().exec();
     })
     .expect("running application");
+}
 
-    Ok(())
+/// Sailfish OS bootstrap: Silica app booted via sailo-rs' `QmlApp`
+/// (QGuiApplication + QQuickView). QML is loaded from the installed filesystem
+/// tree rather than a compiled-in resource bundle.
+#[cfg(feature = "sailfish")]
+fn boot_sailfish() {
+    use crate::platform::QmlApp;
+
+    qmeta_async::run(|| {
+        // Keep `_app` alive for the lifetime of the event loop (see UT path).
+        let (mut view, _app) = with_executor(|| -> Result<_> {
+            let (gui, app) = create_app_objects();
+
+            let mut view = QmlApp::application("harbour-keepassrx".into());
+            view.set_title("KeePassRX".into());
+            view.set_application_version(QString::from(env!("CARGO_PKG_VERSION")));
+            let _ = view.install_default_translator();
+
+            view.set_object_property("keepassrx".into(), gui.pinned());
+            view.set_property(
+                "keepassRxVersion".into(),
+                QVariant::from(QString::from(env!("CARGO_PKG_VERSION"))),
+            );
+            view.set_object_property("AppState".into(), app.app_state.pinned());
+            view.set_object_property("SettingsBridge".into(), app.settings_bridge.pinned());
+
+            view.set_source(QmlApp::path_to("qml/harbour-keepassrx.qml".into()));
+            Ok((view, app))
+        })
+        .expect("app initialization failed");
+
+        view.show_full_screen();
+        view.exec();
+    })
+    .expect("running application");
 }
 
 #[cfg(feature = "gui")]

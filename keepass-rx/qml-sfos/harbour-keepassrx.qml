@@ -124,6 +124,12 @@ ApplicationWindow {
             pageStack.replaceAbove(null, Qt.resolvedUrl("pages/EntriesPage.qml"));
         }
 
+        onViewModeChanged: {
+            if (keepassrx.databaseOpen) {
+                pageStack.replaceAbove(null, Qt.resolvedUrl("pages/EntriesPage.qml"));
+            }
+        }
+
         onDatabaseOpenFailed: {
             keepassrx.guiState = 'NotOpen';
             keepassrx.invalidateMasterPassword();

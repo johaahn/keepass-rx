@@ -15,10 +15,14 @@ Page {
     id: entriesPage
     allowedOrientations: defaultAllowedOrientations
 
+    property string containerUuid: ""
+    property string containerTitle: ""
+    property bool isViewRoot: containerUuid.length === 0
     property string searchTerm: ""
+    property bool loaded: false
 
-    function getEntries(containerUuid) {
-        keepassrx.getEntries(containerUuid, searchTerm);
+    function currentUuid() {
+        return isViewRoot ? containerStack.containerUuid : containerUuid;
     }
 
     function viewLabel(mode) {
@@ -32,34 +36,35 @@ Page {
     }
 
     function headerTitle() {
-        if (containerStack.containerName && !containerStack.isAtRoot) {
-            return containerStack.containerName;
-        }
-        if (keepassrx.viewMode !== 'All') {
-            return viewLabel(keepassrx.viewMode);
-        }
-        return "KeePassRX";
+        return isViewRoot ? viewLabel(keepassrx.viewMode) : containerTitle;
     }
 
-    Component.onCompleted: {
-        keepassrx.getMetadata();
-        // The container stack initialises from the current view on creation and
-        // emits containerChanged (handled below). Kick off an initial load only
-        // if we already have a valid container, to avoid a spurious empty-UUID
-        // error before that signal arrives.
-        if (containerStack.containerUuid) {
-            getEntries(containerStack.containerUuid);
+    function loadEntries() {
+        var uuid = currentUuid();
+        if (uuid.length > 0) {
+            keepassrx.getEntries(uuid, searchTerm);
         }
     }
 
+    // The container stack is the navigation business logic. Only the view
+    // root page drives it; child pages resolve their own container by the
+    // uuid passed in when the group was tapped.
     RxUiContainerStack {
         id: containerStack
         app: AppState
         viewMode: keepassrx.viewMode
-
         onContainerChanged: {
-            entriesModel.clear();
-            entriesPage.getEntries(container_uuid);
+            if (entriesPage.isViewRoot) {
+                entriesPage.loadEntries();
+            }
+        }
+    }
+
+    Component.onCompleted: keepassrx.getMetadata()
+
+    onStatusChanged: {
+        if (status === PageStatus.Active) {
+            loadEntries();
         }
     }
 
@@ -67,22 +72,24 @@ Page {
         target: keepassrx
 
         onEntriesReceived: {
+            if (entriesPage.status !== PageStatus.Active) {
+                return;
+            }
             entriesModel.clear();
             for (var i = 0; i < entries.length; i++) {
                 entriesModel.append({ entryUuid: entries[i] });
             }
+            entriesPage.loaded = true;
         }
 
-        // Full entry loaded: open the detail page.
         onSingleEntryReceived: {
-            if (!entry) {
+            if (entriesPage.status !== PageStatus.Active || !entry) {
                 return;
             }
             pageStack.push(Qt.resolvedUrl("EntryDetailsPage.qml"), {
                 entryUuid: entry.uuid ? entry.uuid : "",
                 entryTitle: entry.title ? entry.title : "",
                 entryUsername: entry.username ? entry.username : "",
-                entryPassword: entry.password ? entry.password : "",
                 entryUrl: entry.url ? entry.url : "",
                 entryNotes: entry.notes ? entry.notes : "",
                 entryHasUsername: entry.hasUsername === true,
@@ -99,36 +106,44 @@ Page {
         id: entriesModel
     }
 
-    Column {
-        id: topArea
-        anchors { top: parent.top; left: parent.left; right: parent.right }
+    Item {
+        id: headerBox
+        y: 0 - entriesList.contentY - height
+        z: 1
+        width: parent.width
+        height: pageHeader.height + searchField.height
 
         PageHeader {
+            id: pageHeader
+            anchors { top: parent.top; left: parent.left }
+            width: parent.width
             title: entriesPage.headerTitle()
         }
 
         SearchField {
             id: searchField
+            anchors { top: pageHeader.bottom; left: parent.left }
             width: parent.width
             placeholderText: Tr.tr("Search entries")
             inputMethodHints: Qt.ImhNoPredictiveText
+            EnterKey.iconSource: "image://theme/icon-m-enter-close"
+            EnterKey.onClicked: entriesList.focus = true
             onTextChanged: {
                 entriesPage.searchTerm = text;
-                entriesPage.getEntries(containerStack.containerUuid);
+                entriesPage.loadEntries();
             }
         }
     }
 
     SilicaListView {
         id: entriesList
-        anchors {
-            top: topArea.bottom
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-        }
-        clip: true
+        anchors.fill: parent
         model: entriesModel
+
+        header: Item {
+            width: parent.width
+            height: headerBox.height
+        }
 
         PullDownMenu {
             MenuItem {
@@ -143,21 +158,20 @@ Page {
                 text: Tr.tr("Change View")
                 onClicked: pageStack.push(Qt.resolvedUrl("ViewModePage.qml"))
             }
-            MenuItem {
-                text: Tr.tr("Go Up")
-                visible: !containerStack.isAtRoot
-                onClicked: containerStack.popContainer()
-            }
         }
 
         ViewPlaceholder {
-            enabled: entriesModel.count === 0
+            y: 0 - entriesList.contentY
+            enabled: entriesPage.loaded && entriesModel.count === 0
             text: Tr.tr("No entries")
         }
 
         delegate: EntryListItem {
             uuid: entryUuid
-            onGroupActivated: containerStack.pushContainer(uuid)
+            onGroupActivated: pageStack.push(Qt.resolvedUrl("EntriesPage.qml"), {
+                containerUuid: uuid,
+                containerTitle: title
+            })
             onEntryActivated: keepassrx.getSingleEntry(uuid)
         }
 

@@ -13,6 +13,8 @@ ListItem {
     id: entryItem
 
     property string uuid
+    readonly property string title: theEntry.title
+    readonly property bool isTotp: theEntry.feature === 'DisplayTwoFactorAuth'
 
     signal groupActivated()
     signal entryActivated()
@@ -42,7 +44,9 @@ ListItem {
     }
 
     onClicked: {
-        if (isGrouping()) {
+        if (isTotp) {
+            keepassrx.getTotp(uuid);
+        } else if (isGrouping()) {
             entryItem.groupActivated();
         } else {
             entryItem.entryActivated();
@@ -60,12 +64,25 @@ ListItem {
                                : Qt.resolvedUrl("../../assets/placeholder.png")
     }
 
+    Loader {
+        id: totpLoader
+        active: entryItem.isTotp
+        anchors {
+            right: parent.right
+            rightMargin: Theme.horizontalPageMargin
+            verticalCenter: parent.verticalCenter
+        }
+        sourceComponent: Component {
+            TotpFeature { uuid: entryItem.uuid }
+        }
+    }
+
     Column {
         anchors {
             left: icon.right
             leftMargin: Theme.paddingMedium
-            right: parent.right
-            rightMargin: Theme.horizontalPageMargin
+            right: totpLoader.left
+            rightMargin: Theme.paddingMedium
             verticalCenter: parent.verticalCenter
         }
 
@@ -80,7 +97,7 @@ ListItem {
             width: parent.width
             truncationMode: TruncationMode.Fade
             visible: text.length > 0
-            text: theEntry.subtitle
+            text: entryItem.isTotp ? Tr.tr("Tap to copy 2FA code") : theEntry.subtitle
             font.pixelSize: Theme.fontSizeExtraSmall
             color: entryItem.highlighted ? Theme.secondaryHighlightColor : Theme.secondaryColor
         }

@@ -44,10 +44,7 @@ Page {
 
                     property bool current: modelData.mode === keepassrx.viewMode
 
-                    onClicked: {
-                        keepassrx.viewMode = modelData.mode;
-                        pageStack.pop();
-                    }
+                    onClicked: keepassrx.viewMode = modelData.mode
 
                     Column {
                         anchors {

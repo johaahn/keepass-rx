@@ -30,13 +30,20 @@ Page {
                                  Qt.locale().dateTimeFormat(Locale.ShortFormat));
     }
 
+    property bool listed: false
+
+    function refresh() {
+        listed = false;
+        dbListModel.clear();
+        keepassrx.listImportedDatabases();
+    }
+
     Component.onCompleted: {
         if (keepassrx.databaseOpen) {
             applicationWindow.uiDatabase.clearKeyFile();
             keepassrx.closeDatabase();
         }
-        dbListModel.clear();
-        keepassrx.listImportedDatabases();
+        refresh();
     }
 
     Connections {
@@ -49,6 +56,8 @@ Page {
                 lastModified: last_modified
             });
         }
+
+        onFileListingCompleted: dbListPage.listed = true
 
         onDatabaseDeleted: {
             for (var i = 0; i < dbListModel.count; i++) {
@@ -81,10 +90,7 @@ Page {
             }
             MenuItem {
                 text: Tr.tr("Refresh")
-                onClicked: {
-                    dbListModel.clear();
-                    keepassrx.listImportedDatabases();
-                }
+                onClicked: dbListPage.refresh()
             }
             MenuItem {
                 text: Tr.tr("Add database")
@@ -93,7 +99,7 @@ Page {
         }
 
         ViewPlaceholder {
-            enabled: dbListModel.count === 0
+            enabled: dbListPage.listed && dbListModel.count === 0
             text: Tr.tr("No databases")
             hintText: Tr.tr("Pull down to add a database.")
         }

@@ -21,9 +21,22 @@ Page {
         keepassrx.getEntries(containerUuid, searchTerm);
     }
 
+    function viewLabel(mode) {
+        switch (mode) {
+        case "Templates": return Tr.tr("Special categories");
+        case "Totp": return Tr.tr("2FA codes");
+        case "Tags": return Tr.tr("Tags");
+        case "SavedSearches": return Tr.tr("Saved searches");
+        default: return "KeePassRX";
+        }
+    }
+
     function headerTitle() {
         if (containerStack.containerName && !containerStack.isAtRoot) {
             return containerStack.containerName;
+        }
+        if (keepassrx.viewMode !== 'All') {
+            return viewLabel(keepassrx.viewMode);
         }
         return "KeePassRX";
     }
@@ -114,7 +127,7 @@ Page {
 
         PullDownMenu {
             MenuItem {
-                text: Tr.tr("Close database")
+                text: Tr.tr("Close Database")
                 onClicked: applicationWindow.closeDatabase()
             }
             MenuItem {
@@ -122,7 +135,11 @@ Page {
                 onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
             }
             MenuItem {
-                text: Tr.tr("Go up")
+                text: Tr.tr("Change View")
+                onClicked: pageStack.push(Qt.resolvedUrl("ViewModePage.qml"))
+            }
+            MenuItem {
+                text: Tr.tr("Go Up")
                 visible: !containerStack.isAtRoot
                 onClicked: containerStack.popContainer()
             }

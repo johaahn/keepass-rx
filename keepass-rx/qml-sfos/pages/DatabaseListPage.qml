@@ -93,7 +93,7 @@ Page {
                 onClicked: dbListPage.refresh()
             }
             MenuItem {
-                text: Tr.tr("Add database")
+                text: Tr.tr("Add Database")
                 onClicked: pageStack.push(filePicker)
             }
         }

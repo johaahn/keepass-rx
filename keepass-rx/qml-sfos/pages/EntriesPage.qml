@@ -15,8 +15,10 @@ Page {
     id: entriesPage
     allowedOrientations: defaultAllowedOrientations
 
+    property string searchTerm: ""
+
     function getEntries(containerUuid) {
-        keepassrx.getEntries(containerUuid, searchField.text);
+        keepassrx.getEntries(containerUuid, searchTerm);
     }
 
     function headerTitle() {
@@ -43,7 +45,7 @@ Page {
         viewMode: keepassrx.viewMode
 
         onContainerChanged: {
-            searchField.text = '';
+            entriesPage.searchTerm = '';
             entriesModel.clear();
             entriesPage.getEntries(container_uuid);
         }
@@ -100,9 +102,13 @@ Page {
             SearchField {
                 id: searchField
                 width: parent.width
+                text: entriesPage.searchTerm
                 placeholderText: Tr.tr("Search entries")
                 inputMethodHints: Qt.ImhNoPredictiveText
-                onTextChanged: entriesPage.getEntries(containerStack.containerUuid)
+                onTextChanged: {
+                    entriesPage.searchTerm = text;
+                    entriesPage.getEntries(containerStack.containerUuid);
+                }
             }
         }
 

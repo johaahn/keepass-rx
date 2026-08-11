@@ -58,7 +58,6 @@ Page {
         viewMode: keepassrx.viewMode
 
         onContainerChanged: {
-            entriesPage.searchTerm = '';
             entriesModel.clear();
             entriesPage.getEntries(container_uuid);
         }
@@ -100,30 +99,36 @@ Page {
         id: entriesModel
     }
 
-    SilicaListView {
-        id: entriesList
-        anchors.fill: parent
-        model: entriesModel
+    Column {
+        id: topArea
+        anchors { top: parent.top; left: parent.left; right: parent.right }
 
-        header: Column {
-            width: entriesList.width
+        PageHeader {
+            title: entriesPage.headerTitle()
+        }
 
-            PageHeader {
-                title: entriesPage.headerTitle()
-            }
-
-            SearchField {
-                id: searchField
-                width: parent.width
-                text: entriesPage.searchTerm
-                placeholderText: Tr.tr("Search entries")
-                inputMethodHints: Qt.ImhNoPredictiveText
-                onTextChanged: {
-                    entriesPage.searchTerm = text;
-                    entriesPage.getEntries(containerStack.containerUuid);
-                }
+        SearchField {
+            id: searchField
+            width: parent.width
+            placeholderText: Tr.tr("Search entries")
+            inputMethodHints: Qt.ImhNoPredictiveText
+            onTextChanged: {
+                entriesPage.searchTerm = text;
+                entriesPage.getEntries(containerStack.containerUuid);
             }
         }
+    }
+
+    SilicaListView {
+        id: entriesList
+        anchors {
+            top: topArea.bottom
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+        }
+        clip: true
+        model: entriesModel
 
         PullDownMenu {
             MenuItem {

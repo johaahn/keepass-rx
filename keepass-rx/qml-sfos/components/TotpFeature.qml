@@ -9,7 +9,7 @@ import QtQuick 2.6
 import Sailfish.Silica 1.0
 import keepassrx 1.0
 
-Column {
+Item {
     id: totp
 
     property string uuid
@@ -28,17 +28,25 @@ Column {
         onTriggered: if (totp.uuid) entry.updateTotp()
     }
 
-    Label {
-        text: entry.currentTotp
-        color: Theme.highlightColor
-        font.pixelSize: Theme.fontSizeLarge
-    }
+    Column {
+        anchors.verticalCenter: parent.verticalCenter
+        width: parent.width
 
-    Label {
-        visible: text.length > 0
-        text: entry.currentTotpValidFor
-        color: Theme.secondaryColor
-        font.pixelSize: Theme.fontSizeExtraSmall
-        anchors.right: parent.right
+        Label {
+            width: parent.width
+            horizontalAlignment: Text.AlignRight
+            text: entry.currentTotp
+            color: Theme.highlightColor
+            font.pixelSize: Theme.fontSizeLarge
+        }
+
+        Label {
+            width: parent.width
+            horizontalAlignment: Text.AlignRight
+            visible: text.length > 0
+            text: entry.currentTotpValidFor
+            color: Theme.secondaryColor
+            font.pixelSize: Theme.fontSizeExtraSmall
+        }
     }
 }

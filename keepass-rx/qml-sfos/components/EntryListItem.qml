@@ -67,6 +67,8 @@ ListItem {
     Loader {
         id: totpLoader
         active: entryItem.isTotp
+        width: active ? Theme.itemSizeMedium : 0
+        height: parent.height
         anchors {
             right: parent.right
             rightMargin: Theme.horizontalPageMargin

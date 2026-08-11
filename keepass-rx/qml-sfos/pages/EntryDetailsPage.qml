@@ -77,6 +77,20 @@ Page {
         }
     }
 
+    RxUiEntry {
+        id: totpEntry
+        entryUuid: entryPage.entryUuid
+        app: AppState
+    }
+
+    Timer {
+        interval: 1000
+        repeat: true
+        running: entryHasTotp && entryPage.entryUuid.length > 0
+        triggeredOnStart: true
+        onTriggered: if (entryHasTotp) totpEntry.updateTotp()
+    }
+
     Connections {
         target: keepassrx
         onFieldValueReceived: {
@@ -140,9 +154,11 @@ Page {
 
             DetailField {
                 visible: entryHasTotp
-                label: Tr.tr("TOTP")
+                label: totpEntry.currentTotpValidFor.length > 0
+                    ? Tr.tr("TOTP (valid for %1)").arg(totpEntry.currentTotpValidFor)
+                    : Tr.tr("TOTP")
                 sensitive: false
-                value: Tr.tr("Long-press to copy the 2FA code")
+                value: totpEntry.currentTotp
                 onCopy: keepassrx.getTotp(entryUuid)
             }
 

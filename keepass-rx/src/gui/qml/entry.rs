@@ -282,6 +282,50 @@ fn write_export_file(path: &Path, bytes: &[u8]) -> Result<()> {
     Ok(())
 }
 
+fn write_user_file(path: &Path, bytes: &[u8]) -> Result<()> {
+    let mut file = OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(path)?;
+
+    file.write_all(bytes)?;
+    file.flush()?;
+    Ok(())
+}
+
+fn strip_file_scheme(value: &str) -> String {
+    value
+        .strip_prefix("file://")
+        .map(|rest| rest.to_string())
+        .unwrap_or_else(|| value.to_string())
+}
+
+fn non_clashing_path(dir: &Path, file_name: &str) -> PathBuf {
+    let candidate = dir.join(file_name);
+    if !candidate.exists() {
+        return candidate;
+    }
+
+    let (stem, extension) = match file_name.rsplit_once('.') {
+        Some((stem, extension)) if !stem.is_empty() => (stem, Some(extension)),
+        _ => (file_name, None),
+    };
+
+    for index in 1.. {
+        let name = match extension {
+            Some(extension) => format!("{} ({}).{}", stem, index, extension),
+            None => format!("{} ({})", stem, index),
+        };
+
+        let candidate = dir.join(name);
+        if !candidate.exists() {
+            return candidate;
+        }
+    }
+
+    dir.join(file_name)
+}
+
 /// A QObject that is wired to interact with a database entry via the
 /// app actor.
 #[observing_model]
@@ -307,6 +351,8 @@ pub struct RxUiEntry {
     pub(super) loadAttachments: qt_method!(fn(&mut self)),
     pub(super) exportAttachment:
         qt_method!(fn(&self, attachment_name: QString) -> QVariantMap),
+    pub(super) exportAttachmentTo:
+        qt_method!(fn(&self, attachment_name: QString, dest_dir: QString) -> QVariantMap),
     pub(super) cleanupExportedAttachment: qt_method!(fn(&self, path: QString)),
     pub(super) viewAttachment: qt_method!(fn(&self, attachment_name: QString) -> QVariantMap),
 }
@@ -388,6 +434,38 @@ impl RxUiEntry {
             let path = unique_export_path(&file_name);
             write_export_file(&path, &attachment_bytes)?;
             let url = percent_encode_file_path(&path);
+
+            Ok(export_success(&path, url, file_name))
+        };
+
+        export().unwrap_or_else(export_error)
+    }
+
+    #[with_executor]
+    pub fn exportAttachmentTo(
+        &self,
+        attachment_name: QString,
+        dest_dir: QString,
+    ) -> QVariantMap {
+        let export = || -> Result<QVariantMap> {
+            let attachment_name = attachment_name.to_string();
+            let attachment_bytes = self.attachment_bytes(&attachment_name)?;
+
+            let dest_dir = strip_file_scheme(&dest_dir.to_string());
+            let dest_dir = PathBuf::from(dest_dir);
+            if !dest_dir.is_dir() {
+                return Err(anyhow!("Export destination is not a directory"));
+            }
+
+            let file_name = sanitize_export_file_name(&attachment_name);
+            let path = non_clashing_path(&dest_dir, &file_name);
+            write_user_file(&path, &attachment_bytes)?;
+
+            let url = percent_encode_file_path(&path);
+            let file_name = path
+                .file_name()
+                .map(|name| name.to_string_lossy().into_owned())
+                .unwrap_or(file_name);
 
             Ok(export_success(&path, url, file_name))
         };

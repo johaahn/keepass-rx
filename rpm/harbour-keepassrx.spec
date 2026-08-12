@@ -150,9 +150,10 @@ for po in po/*.po; do
     msgfmt "$po" -o "%{buildroot}%{_datadir}/locale/$lang/LC_MESSAGES/keepassrx.projectmoon.mo"
 done
 
-# Desktop launcher + icon.
-desktop-file-install --dir %{buildroot}%{_datadir}/applications \
-    rpm/%{name}.desktop
+# Desktop launcher + icon. Installed verbatim so the [X-Sailjail] section is
+# preserved (desktop-file-install strips unknown groups).
+install -Dm 644 rpm/%{name}.desktop \
+    %{buildroot}%{_datadir}/applications/%{name}.desktop
 install -Dm 644 keepass-rx/assets/logo.png \
     %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{name}.png
 

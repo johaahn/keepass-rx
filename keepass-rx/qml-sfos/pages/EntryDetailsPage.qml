@@ -46,6 +46,25 @@ Page {
         keepassrx.getFieldValue(entryUuid, name);
     }
 
+    function viewAttachment(name) {
+        var result = entryModel.viewAttachment(name);
+        if (!result.ok) {
+            applicationWindow.notify(result.error
+                ? result.error : Tr.tr("Unable to open attachment."));
+            return;
+        }
+        pageStack.push(Qt.resolvedUrl("ViewAttachmentPage.qml"), {
+            entryUuid: entryPage.entryUuid,
+            attachmentName: name,
+            displayName: result.fileName ? result.fileName : name,
+            mimeType: result.mimeType ? result.mimeType : "",
+            viewType: result.viewType ? result.viewType : "",
+            text: result.text ? result.text : "",
+            highlightedText: result.highlightedText ? result.highlightedText : "",
+            dataUrl: result.dataUrl ? result.dataUrl : ""
+        });
+    }
+
     function setRevealed(name, value) {
         switch (name) {
         case "Username": usernameRevealed = value; break;
@@ -78,9 +97,11 @@ Page {
     }
 
     RxUiEntry {
-        id: totpEntry
+        id: entryModel
         entryUuid: entryPage.entryUuid
         app: AppState
+        onReadyChanged: if (ready) entryModel.loadAttachments()
+        Component.onCompleted: if (ready) entryModel.loadAttachments()
     }
 
     Timer {
@@ -88,7 +109,7 @@ Page {
         repeat: true
         running: entryHasTotp && entryPage.entryUuid.length > 0
         triggeredOnStart: true
-        onTriggered: if (entryHasTotp) totpEntry.updateTotp()
+        onTriggered: if (entryHasTotp) entryModel.updateTotp()
     }
 
     Connections {
@@ -154,11 +175,11 @@ Page {
 
             DetailField {
                 visible: entryHasTotp
-                label: totpEntry.currentTotpValidFor.length > 0
-                    ? Tr.tr("TOTP (valid for %1)").arg(totpEntry.currentTotpValidFor)
+                label: entryModel.currentTotpValidFor.length > 0
+                    ? Tr.tr("TOTP (valid for %1)").arg(entryModel.currentTotpValidFor)
                     : Tr.tr("TOTP")
                 sensitive: false
-                value: totpEntry.currentTotp
+                value: entryModel.currentTotp
                 onCopy: keepassrx.getTotp(entryUuid)
             }
 
@@ -192,6 +213,22 @@ Page {
                     value: plaintext.length > 0 ? plaintext : revealedValue
                     onToggle: entryPage.revealOrHide(fieldName, revealedValue.length > 0)
                     onCopy: entryPage.copyField(fieldName)
+                }
+            }
+
+            SectionHeader {
+                text: Tr.tr("Attachments")
+                visible: entryModel.attachmentCount > 0
+            }
+
+            Repeater {
+                model: entryModel.attachments
+
+                AttachmentItem {
+                    attachmentName: model.attachmentName
+                    attachmentSize: model.attachmentSize
+                    attachmentMimeType: model.attachmentMimeType
+                    onActivated: entryPage.viewAttachment(name)
                 }
             }
         }

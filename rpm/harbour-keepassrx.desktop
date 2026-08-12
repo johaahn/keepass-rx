@@ -4,3 +4,8 @@ X-Nemo-Application-Type=silica-qt5
 Name=KeePassRX
 Icon=harbour-keepassrx
 Exec=harbour-keepassrx
+
+[X-Sailjail]
+OrganizationName=harbour-keepassrx
+ApplicationName=harbour-keepassrx
+Permissions=Documents;Downloads;RemovableMedia

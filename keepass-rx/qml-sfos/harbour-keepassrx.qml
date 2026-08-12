@@ -144,9 +144,8 @@ ApplicationWindow {
     }
 
     // Lock (or close) the database after a spell minimized to the cover.
-    readonly property int applicationState: Qt.application.state
-    onApplicationStateChanged: {
-        if (applicationState === Qt.ApplicationActive) {
+    onApplicationActiveChanged: {
+        if (applicationActive) {
             idleLockTimer.stop();
         } else if (SettingsBridge.lockWhenIdle && keepassrx.guiState === 'Open') {
             idleLockTimer.restart();

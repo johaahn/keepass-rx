@@ -18,7 +18,7 @@ use qmeta_async::with_executor;
 use qmetaobject::prelude::*;
 use qmetaobject::{QVariantMap, SimpleListModel};
 use syntect::easy::HighlightLines;
-use syntect::highlighting::ThemeSet;
+use syntect::highlighting::{Color, Theme, ThemeSet};
 use syntect::html::{IncludeBackground, styled_line_to_highlighted_html};
 use syntect::parsing::SyntaxSet;
 use syntect::util::LinesWithEndings;
@@ -174,7 +174,20 @@ fn file_extension(file_name: &str) -> Option<&str> {
     })
 }
 
-fn highlighted_attachment_html(file_name: &str, text: &str) -> Option<(String, String)> {
+fn theme_for(dark: bool) -> Option<&'static Theme> {
+    let name = if dark {
+        "base16-ocean.dark"
+    } else {
+        "InspiredGitHub"
+    };
+    theme_set().themes.get(name)
+}
+
+fn color_to_hex(color: Color) -> String {
+    format!("#{:02X}{:02X}{:02X}", color.r, color.g, color.b)
+}
+
+fn highlighted_attachment_html(file_name: &str, text: &str, dark: bool) -> Option<(String, String)> {
     let syntax_set = syntax_set();
     let syntax = file_extension(file_name)
         .and_then(|extension| syntax_set.find_syntax_by_extension(extension))
@@ -186,7 +199,7 @@ fn highlighted_attachment_html(file_name: &str, text: &str) -> Option<(String, S
         .or_else(|| syntax_set.find_syntax_by_first_line(text))
         .unwrap_or_else(|| syntax_set.find_syntax_plain_text());
 
-    let theme = theme_set().themes.get("InspiredGitHub")?;
+    let theme = theme_for(dark)?;
     let mut highlighter = HighlightLines::new(syntax, theme);
     let mut html = String::from("<pre>");
 
@@ -201,8 +214,8 @@ fn highlighted_attachment_html(file_name: &str, text: &str) -> Option<(String, S
     Some((html, syntax.name.clone()))
 }
 
-fn text_view_result(file_name: &str, mime_type: &str, text: &str) -> QVariantMap {
-    let highlighted = highlighted_attachment_html(file_name, text);
+fn text_view_result(file_name: &str, mime_type: &str, text: &str, dark: bool) -> QVariantMap {
+    let highlighted = highlighted_attachment_html(file_name, text, dark);
     let highlighted_text = highlighted
         .as_ref()
         .map(|(html, _)| html.as_str())
@@ -212,7 +225,17 @@ fn text_view_result(file_name: &str, mime_type: &str, text: &str) -> QVariantMap
         .map(|(_, syntax)| syntax.as_str())
         .unwrap_or_default();
 
-    view_result(
+    let theme = theme_for(dark);
+    let background = theme
+        .and_then(|theme| theme.settings.background)
+        .map(color_to_hex)
+        .unwrap_or_default();
+    let foreground = theme
+        .and_then(|theme| theme.settings.foreground)
+        .map(color_to_hex)
+        .unwrap_or_default();
+
+    let mut map = view_result(
         true,
         true,
         "text",
@@ -223,7 +246,10 @@ fn text_view_result(file_name: &str, mime_type: &str, text: &str) -> QVariantMap
         syntax_name,
         "",
         "",
-    )
+    );
+    map.insert("backgroundColor".into(), QString::from(background).into());
+    map.insert("foregroundColor".into(), QString::from(foreground).into());
+    map
 }
 
 fn sanitize_export_file_name(value: &str) -> String {
@@ -335,6 +361,8 @@ pub struct RxUiEntry {
     pub(super) base: qt_base_class!(trait QObject),
 
     pub(super) entryUuid: qt_property!(QString),
+
+    pub(super) darkTheme: qt_property!(bool),
 
     // TOTP
     pub(super) currentTotp: qt_property!(QString; NOTIFY currentTotpChanged),
@@ -507,7 +535,7 @@ impl RxUiEntry {
                 Some(kind) if kind.matcher_type() == MatcherType::Text => {
                     let text = std::str::from_utf8(&attachment_bytes)
                         .map_err(|err| anyhow!("Unable to decode text attachment: {}", err))?;
-                    Ok(text_view_result(&file_name, kind.mime_type(), text))
+                    Ok(text_view_result(&file_name, kind.mime_type(), text, self.darkTheme))
                 }
                 Some(kind) if kind.matcher_type() == MatcherType::Image => {
                     let data_url = format!(
@@ -541,7 +569,7 @@ impl RxUiEntry {
                     "",
                 )),
                 None => match std::str::from_utf8(&attachment_bytes) {
-                    Ok(text) => Ok(text_view_result(&file_name, "text/plain", text)),
+                    Ok(text) => Ok(text_view_result(&file_name, "text/plain", text, self.darkTheme)),
                     Err(_) => Ok(view_result(
                         true, false, "", &file_name, "", "", "", "", "", "",
                     )),

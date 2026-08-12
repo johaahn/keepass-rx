@@ -1,0 +1,70 @@
+<svg width="720" height="720" viewBox="166 152 720 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sailfish OS style KeePass icon">
+  <defs>
+    <linearGradient id="baseGrad" x1="22%" y1="12%" x2="82%" y2="90%">
+      <stop offset="0%" stop-color="#FFFFFE"/>
+      <stop offset="56%" stop-color="#FCF7F1"/>
+      <stop offset="100%" stop-color="#F3ECE3"/>
+    </linearGradient>
+
+    <radialGradient id="baseGlow" cx="28%" cy="18%" r="58%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.98"/>
+      <stop offset="34%" stop-color="#FFFFFF" stop-opacity="0.34"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+
+    <linearGradient id="baseShade" x1="18%" y1="18%" x2="88%" y2="90%">
+      <stop offset="0%" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.10"/>
+    </linearGradient>
+
+    <linearGradient id="lockBody" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FF8410"/>
+      <stop offset="100%" stop-color="#F53600"/>
+    </linearGradient>
+
+    <linearGradient id="lockShackle" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFC23C"/>
+      <stop offset="100%" stop-color="#FE860A"/>
+    </linearGradient>
+
+    <linearGradient id="lockHighlight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.14"/>
+      <stop offset="36%" stop-color="#FFFFFF" stop-opacity="0.04"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+
+    <linearGradient id="shackleShade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#000000" stop-opacity="0.03"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.18"/>
+    </linearGradient>
+
+    <clipPath id="baseClip">
+      <path d="M236 160H508A352 352 0 0 1 508 864H236Q192 864 192 820V204Q192 160 236 160Z"/>
+    </clipPath>
+  </defs>
+
+  <g>
+    <path d="M236 160H508A352 352 0 0 1 508 864H236Q192 864 192 820V204Q192 160 236 160Z" fill="url(#baseGrad)"/>
+    <path d="M236 160H508A352 352 0 0 1 508 864H236Q192 864 192 820V204Q192 160 236 160Z" fill="none" stroke="#D8CEC1" stroke-width="2"/>
+
+    <g clip-path="url(#baseClip)">
+      <rect x="192" y="160" width="668" height="704" fill="url(#baseGlow)"/>
+      <rect x="192" y="160" width="668" height="704" fill="url(#baseShade)"/>
+    </g>
+  </g>
+
+  <g transform="translate(512 486) scale(0.84)">
+    <path d="M-132 24V-108A132 132 0 0 1 132 -108V24" fill="none" stroke="url(#lockShackle)" stroke-width="68" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M-132 24V-108A132 132 0 0 1 132 -108V24" fill="none" stroke="url(#shackleShade)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" opacity="0.34"/>
+
+    <path d="M-206 20H206A32 32 0 0 1 238 52V206C238 304 130 374 0 374C-130 374-238 304-238 206V52A32 32 0 0 1 -206 20Z" fill="url(#lockBody)"/>
+    <path d="M-206 20H206A32 32 0 0 1 238 52V206C238 304 130 374 0 374C-130 374-238 304-238 206V52A32 32 0 0 1 -206 20Z" fill="none" stroke="#C6461D" stroke-width="3" opacity="0.34"/>
+    <path d="M-206 20H206" stroke="#FFFFFF" stroke-opacity="0.22" stroke-width="7" stroke-linecap="round"/>
+    <path d="M-206 20H206A32 32 0 0 1 238 52V136H-238V52A32 32 0 0 1 -206 20Z" fill="url(#lockHighlight)"/>
+
+    <g transform="translate(0 176)" fill="#5A2E10" opacity="0.92">
+      <circle r="40"/>
+      <path d="M-16 36L-30 116Q-30 121 -24 124Q0 127 24 124Q30 121 30 116L16 36Z"/>
+    </g>
+  </g>
+</svg>

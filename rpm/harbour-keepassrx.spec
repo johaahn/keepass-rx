@@ -154,7 +154,7 @@ done
 # preserved (desktop-file-install strips unknown groups).
 install -Dm 644 rpm/%{name}.desktop \
     %{buildroot}%{_datadir}/applications/%{name}.desktop
-install -Dm 644 keepass-rx/assets/logo.png \
+install -Dm 644 keepass-rx/assets/logo-sfos.png \
     %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{name}.png
 
 %files

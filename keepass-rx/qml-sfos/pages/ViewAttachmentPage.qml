@@ -22,6 +22,15 @@ Page {
     property string text: ""
     property string highlightedText: ""
     property string dataUrl: ""
+    property string backgroundColor: ""
+    property string foregroundColor: ""
+
+    readonly property color textBackground: backgroundColor.length > 0
+        ? backgroundColor
+        : (Theme.colorScheme === Theme.LightOnDark ? "#1c1c1c" : "#ffffff")
+    readonly property color textForeground: foregroundColor.length > 0
+        ? foregroundColor
+        : (Theme.colorScheme === Theme.LightOnDark ? "#ffffff" : "#000000")
 
     function exportTo(path) {
         var result = entryModel.exportAttachmentTo(viewPage.attachmentName, path);
@@ -70,22 +79,25 @@ Page {
                 title: viewPage.displayName
             }
 
-            Label {
-                x: Theme.horizontalPageMargin
-                width: parent.width - 2 * Theme.horizontalPageMargin
-                wrapMode: Text.Wrap
-                textFormat: viewPage.highlightedText.length > 0
-                    ? Text.RichText : Text.PlainText
-                font.family: "monospace"
-                font.pixelSize: Theme.fontSizeExtraSmall
-                color: Theme.primaryColor
-                text: viewPage.highlightedText.length > 0
-                    ? viewPage.highlightedText : viewPage.text
-            }
-
-            Item {
+            Rectangle {
                 width: parent.width
-                height: Theme.paddingLarge
+                height: previewLabel.height + 2 * Theme.paddingMedium
+                color: viewPage.textBackground
+
+                Label {
+                    id: previewLabel
+                    x: Theme.horizontalPageMargin
+                    y: Theme.paddingMedium
+                    width: parent.width - 2 * Theme.horizontalPageMargin
+                    wrapMode: Text.Wrap
+                    textFormat: viewPage.highlightedText.length > 0
+                        ? Text.RichText : Text.PlainText
+                    font.family: "monospace"
+                    font.pixelSize: Theme.fontSizeExtraSmall
+                    color: viewPage.textForeground
+                    text: viewPage.highlightedText.length > 0
+                        ? viewPage.highlightedText : viewPage.text
+                }
             }
         }
 

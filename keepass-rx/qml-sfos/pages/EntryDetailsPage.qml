@@ -47,6 +47,7 @@ Page {
     }
 
     function viewAttachment(name) {
+        entryModel.darkTheme = Theme.colorScheme === Theme.LightOnDark;
         var result = entryModel.viewAttachment(name);
         if (!result.ok) {
             applicationWindow.notify(result.error
@@ -61,7 +62,9 @@ Page {
             viewType: result.viewType ? result.viewType : "",
             text: result.text ? result.text : "",
             highlightedText: result.highlightedText ? result.highlightedText : "",
-            dataUrl: result.dataUrl ? result.dataUrl : ""
+            dataUrl: result.dataUrl ? result.dataUrl : "",
+            backgroundColor: result.backgroundColor ? result.backgroundColor : "",
+            foregroundColor: result.foregroundColor ? result.foregroundColor : ""
         });
     }
 

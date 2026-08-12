@@ -14,7 +14,7 @@ ListItem {
 
     property string uuid
     readonly property string title: theEntry.title
-    readonly property bool isTotp: theEntry.feature === 'DisplayTwoFactorAuth'
+    readonly property bool isTotp: theEntry.hasTOTP && keepassrx.viewMode == 'Totp'
 
     signal groupActivated()
     signal entryActivated()
@@ -25,6 +25,20 @@ ListItem {
         id: theEntry
         entryUuid: uuid
         app: AppState
+    }
+
+    RxUiEntry {
+        id: totpEntry
+        entryUuid: uuid
+        app: AppState
+    }
+
+    Timer {
+        interval: 1000
+        repeat: true
+        running: entryItem.isTotp && uuid.length > 0
+        triggeredOnStart: true
+        onTriggered: if (entryItem.isTotp) totpEntry.updateTotp()
     }
 
     function isGrouping() {
@@ -64,18 +78,31 @@ ListItem {
                                : Qt.resolvedUrl("../../assets/placeholder.png")
     }
 
-    Loader {
-        id: totpLoader
-        active: entryItem.isTotp
-        width: active ? Theme.itemSizeMedium : 0
-        height: parent.height
+    Column {
+        id: totpColumn
+        visible: entryItem.isTotp
+        width: Theme.itemSizeMedium
         anchors {
             right: parent.right
             rightMargin: Theme.horizontalPageMargin
             verticalCenter: parent.verticalCenter
         }
-        sourceComponent: Component {
-            TotpFeature { uuid: entryItem.uuid }
+
+        Label {
+            width: parent.width
+            horizontalAlignment: Text.AlignRight
+            text: totpEntry.currentTotp
+            color: Theme.highlightColor
+            font.pixelSize: Theme.fontSizeLarge
+        }
+
+        Label {
+            width: parent.width
+            horizontalAlignment: Text.AlignRight
+            visible: text.length > 0
+            text: totpEntry.currentTotpValidFor
+            color: Theme.secondaryColor
+            font.pixelSize: Theme.fontSizeExtraSmall
         }
     }
 
@@ -83,7 +110,7 @@ ListItem {
         anchors {
             left: icon.right
             leftMargin: Theme.paddingMedium
-            right: totpLoader.left
+            right: totpColumn.visible ? totpColumn.left : parent.right
             rightMargin: Theme.paddingMedium
             verticalCenter: parent.verticalCenter
         }
@@ -106,6 +133,11 @@ ListItem {
     }
 
     menu: ContextMenu {
+        MenuItem {
+            text: Tr.tr("View details")
+            visible: entryItem.isTotp
+            onClicked: entryItem.entryActivated()
+        }
         MenuItem {
             text: Tr.tr("Copy username")
             visible: theEntry.hasUsername

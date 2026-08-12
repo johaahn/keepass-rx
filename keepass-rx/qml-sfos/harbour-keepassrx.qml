@@ -100,15 +100,11 @@ ApplicationWindow {
         }
     }
 
-    // Close the currently-open database and return to its password screen.
     function closeDatabase() {
         clearSensitiveUiState();
         keepassrx.invalidateMasterPassword();
-        uiDatabaseObj.clearKeyFile();
-        keepassrx.closeDatabase();
         keepassrx.guiState = 'NotOpen';
         pageStack.replaceAbove(null, Qt.resolvedUrl("pages/DatabaseListPage.qml"));
-        pageStack.push(Qt.resolvedUrl("pages/OpenDatabasePage.qml"));
     }
 
     // Lock the database: keep the encrypted master password and key file so it

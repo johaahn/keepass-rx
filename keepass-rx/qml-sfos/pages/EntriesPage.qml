@@ -147,6 +147,11 @@ Page {
 
         PullDownMenu {
             MenuItem {
+                text: Tr.tr("Lock Database")
+                visible: SettingsBridge.databaseLocking
+                onClicked: applicationWindow.lockDatabase()
+            }
+            MenuItem {
                 text: Tr.tr("Close Database")
                 onClicked: applicationWindow.closeDatabase()
             }

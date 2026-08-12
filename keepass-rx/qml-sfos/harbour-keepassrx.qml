@@ -100,15 +100,24 @@ ApplicationWindow {
         }
     }
 
-    // Close the currently-open database and return to the database list.
+    // Close the currently-open database and return to its password screen.
     function closeDatabase() {
         clearSensitiveUiState();
         keepassrx.invalidateMasterPassword();
         uiDatabaseObj.clearKeyFile();
         keepassrx.closeDatabase();
         keepassrx.guiState = 'NotOpen';
-        uiDatabaseObj.databaseName = null;
         pageStack.replaceAbove(null, Qt.resolvedUrl("pages/DatabaseListPage.qml"));
+        pageStack.push(Qt.resolvedUrl("pages/OpenDatabasePage.qml"));
+    }
+
+    // Lock the database: keep the encrypted master password and key file so it
+    // can be reopened with the passcode on the unlock page.
+    function lockDatabase() {
+        clearSensitiveUiState();
+        keepassrx.closeDatabase();
+        keepassrx.guiState = 'Locked';
+        pageStack.replaceAbove(null, Qt.resolvedUrl("pages/UnlockPage.qml"));
     }
 
     Connections {
@@ -121,6 +130,7 @@ ApplicationWindow {
 
         onDatabaseOpened: {
             keepassrx.guiState = 'Open';
+            keepassrx.encryptMasterPassword();
             pageStack.replaceAbove(null, Qt.resolvedUrl("pages/EntriesPage.qml"));
         }
 

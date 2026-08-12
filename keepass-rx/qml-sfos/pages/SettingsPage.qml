@@ -46,6 +46,17 @@ Page {
                 checked: SettingsBridge.databaseLocking
                 onClicked: SettingsBridge.databaseLocking = checked
             }
+
+            Item {
+                width: parent.width
+                height: Theme.paddingLarge
+            }
+
+            Button {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: Tr.tr("About")
+                onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
+            }
         }
     }
 }

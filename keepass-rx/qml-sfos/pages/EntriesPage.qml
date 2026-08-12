@@ -132,7 +132,9 @@ Page {
             id: searchField
             anchors { top: pageHeader.bottom; left: parent.left }
             width: parent.width
-            placeholderText: Tr.tr("Search entries")
+            placeholderText: keepassrx.viewMode == 'All'
+                ? (entriesPage.isViewRoot ? Tr.tr("Search all entries") : Tr.tr("Search all entries under this group"))
+                : Tr.tr("Search entries in this group")
             inputMethodHints: Qt.ImhNoPredictiveText
             EnterKey.iconSource: "image://theme/icon-m-enter-close"
             EnterKey.onClicked: entriesList.focus = true
@@ -166,10 +168,6 @@ Page {
             MenuItem {
                 text: Tr.tr("Settings")
                 onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
-            }
-            MenuItem {
-                text: Tr.tr("About")
-                onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
             }
             MenuItem {
                 text: Tr.tr("Change View")

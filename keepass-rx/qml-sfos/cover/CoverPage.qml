@@ -23,6 +23,9 @@ CoverBackground {
     signal requestCopy(string kind)
     signal requestUnlock()
 
+    property string infoText: ""
+    readonly property bool showingInfo: infoText.length > 0
+
     readonly property bool locked: guiState === 'Locked'
     readonly property bool inEntry: guiState === 'Open' && entryTitle.length > 0
 
@@ -66,6 +69,27 @@ CoverBackground {
         }
     }
 
+    function copyLabel(kind) {
+        switch (kind) {
+        case "password": return Tr.tr("Password copied");
+        case "totp": return Tr.tr("2FA code copied");
+        case "username": return Tr.tr("Username copied");
+        default: return "";
+        }
+    }
+
+    function copyAction(kind) {
+        cover.infoText = cover.copyLabel(kind);
+        infoTimer.restart();
+        cover.requestCopy(kind);
+    }
+
+    Timer {
+        id: infoTimer
+        interval: 1500
+        onTriggered: cover.infoText = ""
+    }
+
     Label {
         id: dbLabel
         anchors {
@@ -103,8 +127,8 @@ CoverBackground {
             wrapMode: Text.Wrap
             maximumLineCount: 3
             truncationMode: TruncationMode.Fade
-            text: cover.coverText
-            color: cover.locked ? Theme.highlightColor : Theme.primaryColor
+            text: cover.showingInfo ? cover.infoText : cover.coverText
+            color: (cover.locked || cover.showingInfo) ? Theme.highlightColor : Theme.primaryColor
             font.pixelSize: Theme.fontSizeSmall
         }
     }
@@ -119,24 +143,24 @@ CoverBackground {
     }
 
     CoverActionList {
-        enabled: !cover.locked && cover.entryActions.length === 2
+        enabled: !cover.locked && !cover.showingInfo && cover.entryActions.length === 2
 
         CoverAction {
             iconSource: cover.actionIcon(cover.entryActions[0])
-            onTriggered: cover.requestCopy(cover.entryActions[0])
+            onTriggered: cover.copyAction(cover.entryActions[0])
         }
         CoverAction {
             iconSource: cover.actionIcon(cover.entryActions[1])
-            onTriggered: cover.requestCopy(cover.entryActions[1])
+            onTriggered: cover.copyAction(cover.entryActions[1])
         }
     }
 
     CoverActionList {
-        enabled: !cover.locked && cover.entryActions.length === 1
+        enabled: !cover.locked && !cover.showingInfo && cover.entryActions.length === 1
 
         CoverAction {
             iconSource: cover.actionIcon(cover.entryActions[0])
-            onTriggered: cover.requestCopy(cover.entryActions[0])
+            onTriggered: cover.copyAction(cover.entryActions[0])
         }
     }
 }

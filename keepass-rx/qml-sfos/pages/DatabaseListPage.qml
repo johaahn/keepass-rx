@@ -89,10 +89,6 @@ Page {
                 onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
             }
             MenuItem {
-                text: Tr.tr("About")
-                onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
-            }
-            MenuItem {
                 text: Tr.tr("Refresh")
                 onClicked: dbListPage.refresh()
             }

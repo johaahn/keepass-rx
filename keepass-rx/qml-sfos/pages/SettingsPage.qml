@@ -47,6 +47,13 @@ Page {
                 onClicked: SettingsBridge.databaseLocking = checked
             }
 
+            TextSwitch {
+                text: Tr.tr("Lock or close when idle")
+                description: Tr.tr("Lock the open database (or close it, when locking is disabled) 30 seconds after the app is minimized.")
+                checked: SettingsBridge.lockWhenIdle
+                onClicked: SettingsBridge.lockWhenIdle = checked
+            }
+
             Item {
                 width: parent.width
                 height: Theme.paddingLarge

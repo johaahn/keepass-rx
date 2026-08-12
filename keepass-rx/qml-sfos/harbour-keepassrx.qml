@@ -143,6 +143,32 @@ ApplicationWindow {
         pageStack.replaceAbove(null, Qt.resolvedUrl("pages/UnlockPage.qml"));
     }
 
+    // Lock (or close) the database after a spell minimized to the cover.
+    readonly property int applicationState: Qt.application.state
+    onApplicationStateChanged: {
+        if (applicationState === Qt.ApplicationActive) {
+            idleLockTimer.stop();
+        } else if (SettingsBridge.lockWhenIdle && keepassrx.guiState === 'Open') {
+            idleLockTimer.restart();
+        }
+    }
+
+    Timer {
+        id: idleLockTimer
+        interval: 30000
+        repeat: false
+        onTriggered: {
+            if (keepassrx.guiState !== 'Open') {
+                return;
+            }
+            if (SettingsBridge.databaseLocking) {
+                applicationWindow.lockDatabase();
+            } else {
+                applicationWindow.closeDatabase();
+            }
+        }
+    }
+
     Connections {
         target: keepassrx
 

@@ -20,6 +20,9 @@ pub struct SettingsBridge {
 
     pub databaseLocking: qt_property!(bool; READ get_database_locking WRITE set_database_locking NOTIFY databaseLockingChanged),
     pub databaseLockingChanged: qt_signal!(),
+
+    pub lockWhenIdle: qt_property!(bool; READ get_lock_when_idle WRITE set_lock_when_idle NOTIFY lockWhenIdleChanged),
+    pub lockWhenIdleChanged: qt_signal!(),
 }
 
 #[allow(non_snake_case, dead_code)]
@@ -52,6 +55,9 @@ impl Default for SettingsBridge {
 
             databaseLocking: true,
             databaseLockingChanged: Default::default(),
+
+            lockWhenIdle: false,
+            lockWhenIdleChanged: Default::default(),
         }
     }
 }
@@ -118,5 +124,14 @@ impl SettingsBridge {
     pub fn set_database_locking(&mut self, value: bool) {
         self.set_bool("databaseLocking", value);
         self.databaseLockingChanged();
+    }
+
+    pub fn get_lock_when_idle(&self) -> bool {
+        self.value_bool("lockWhenIdle")
+    }
+
+    pub fn set_lock_when_idle(&mut self, value: bool) {
+        self.set_bool("lockWhenIdle", value);
+        self.lockWhenIdleChanged();
     }
 }

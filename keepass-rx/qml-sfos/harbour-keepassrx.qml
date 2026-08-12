@@ -20,12 +20,16 @@ import "cover"
 ApplicationWindow {
     id: applicationWindow
 
-    // Shared across every page via the global `applicationWindow` context
-    // object (Silica exposes the ApplicationWindow to all pages).
     property alias uiDatabase: uiDatabaseObj
 
-    // The database the UI is currently working with. Mirrors the Ubuntu Touch
-    // Main.qml `uiDatabase`.
+    property string coverEntryUuid: ""
+    property string coverEntryTitle: ""
+    property string coverEntryIcon: ""
+    property string coverGroupTitle: ""
+    property bool coverHasUsername: false
+    property bool coverHasPassword: false
+    property bool coverHasTotp: false
+
     RxUiDatabase {
         id: uiDatabaseObj
         app: AppState
@@ -39,12 +43,33 @@ ApplicationWindow {
     }
 
     initialPage: Component { DatabaseListPage {} }
-    cover: Component { CoverPage {} }
     allowedOrientations: defaultAllowedOrientations
 
-    // ------------------------------------------------------------------
-    // Feedback banner (lightweight replacement for the UT toast).
-    // ------------------------------------------------------------------
+    // Cover can't see this window's ids; state is pushed in via the bindings below.
+    cover: Component {
+        CoverPage {
+            guiState: keepassrx.guiState
+            dbName: applicationWindow.uiDatabase.databaseName
+            entryTitle: applicationWindow.coverEntryTitle
+            entryIcon: applicationWindow.coverEntryIcon
+            groupTitle: applicationWindow.coverGroupTitle
+            hasPassword: applicationWindow.coverHasPassword
+            hasTotp: applicationWindow.coverHasTotp
+            hasUsername: applicationWindow.coverHasUsername
+            onRequestUnlock: applicationWindow.activate()
+            onRequestCopy: {
+                var uuid = applicationWindow.coverEntryUuid;
+                if (kind === "password") {
+                    keepassrx.getFieldValue(uuid, "Password");
+                } else if (kind === "totp") {
+                    keepassrx.getTotp(uuid);
+                } else if (kind === "username") {
+                    keepassrx.getFieldValue(uuid, "Username");
+                }
+            }
+        }
+    }
+
     function notify(message) {
         bannerLabel.text = message;
         banner.opacity = 1;
@@ -82,12 +107,16 @@ ApplicationWindow {
         }
     }
 
-    // ------------------------------------------------------------------
-    // Clipboard handling (mirrors the UT Main.qml behaviour).
-    // ------------------------------------------------------------------
     function clearSensitiveUiState() {
         clearClipboardTimer.stop();
         Clipboard.text = "";
+        coverEntryUuid = "";
+        coverEntryTitle = "";
+        coverEntryIcon = "";
+        coverGroupTitle = "";
+        coverHasUsername = false;
+        coverHasPassword = false;
+        coverHasTotp = false;
     }
 
     Timer {
@@ -107,8 +136,6 @@ ApplicationWindow {
         pageStack.replaceAbove(null, Qt.resolvedUrl("pages/DatabaseListPage.qml"));
     }
 
-    // Lock the database: keep the encrypted master password and key file so it
-    // can be reopened with the passcode on the unlock page.
     function lockDatabase() {
         clearSensitiveUiState();
         keepassrx.closeDatabase();
@@ -144,8 +171,7 @@ ApplicationWindow {
         onDatabaseClosed: applicationWindow.clearSensitiveUiState()
         onMasterPasswordInvalidated: applicationWindow.clearSensitiveUiState()
 
-        // Single field value requested for copy (field_extra === "copy").
-        // NB: Qt 5.6 Connections expose signal args by their declared names.
+        // Qt 5.6 Connections expose signal args by their declared names.
         onFieldValueReceived: {
             if (field_extra !== "copy" || !field_value) {
                 return;

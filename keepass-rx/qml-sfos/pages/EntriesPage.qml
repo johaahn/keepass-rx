@@ -65,6 +65,13 @@ Page {
     onStatusChanged: {
         if (status === PageStatus.Active) {
             loadEntries();
+            applicationWindow.coverEntryUuid = "";
+            applicationWindow.coverEntryTitle = "";
+            applicationWindow.coverEntryIcon = "";
+            applicationWindow.coverGroupTitle = headerTitle();
+            applicationWindow.coverHasUsername = false;
+            applicationWindow.coverHasPassword = false;
+            applicationWindow.coverHasTotp = false;
         }
     }
 
@@ -97,7 +104,8 @@ Page {
                 entryHasUrl: entry.hasUrl === true,
                 entryHasNotes: entry.hasNotes === true,
                 entryHasTotp: entry.hasTotp === true,
-                entryCustomFields: entry.customFields ? entry.customFields : null
+                entryCustomFields: entry.customFields ? entry.customFields : null,
+                entryIconUrl: entry.iconPath ? entry.iconPath : ""
             });
         }
     }
@@ -158,6 +166,10 @@ Page {
             MenuItem {
                 text: Tr.tr("Settings")
                 onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
+            }
+            MenuItem {
+                text: Tr.tr("About")
+                onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
             }
             MenuItem {
                 text: Tr.tr("Change View")

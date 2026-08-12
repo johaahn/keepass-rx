@@ -193,7 +193,7 @@ pub struct KeepassRx {
     base: qt_base_class!(trait QObject),
     actor: Option<Addr<KeepassRxActor>>,
 
-    guiState: qt_property!(RxGuiState),
+    guiState: qt_property!(RxGuiState; NOTIFY guiStateChanged),
     viewMode: qt_property!(RxViewMode; READ getViewMode WRITE setViewMode NOTIFY viewModeChanged),
     databaseOpen: qt_property!(bool),
     isMasterPasswordEncrypted: qt_property!(bool; NOTIFY masterPasswordStateChanged),
@@ -227,6 +227,7 @@ pub struct KeepassRx {
     washOutColor: qt_method!(fn(&self, hex_color: QString) -> QVariantMap),
 
     // db management signals
+    guiStateChanged: qt_signal!(),
     viewModeChanged: qt_signal!(value: RxViewMode),
     fileListingCompleted: qt_signal!(),
     rootGroupUuidChanged: qt_signal!(),

@@ -26,6 +26,20 @@ Page {
     property bool entryHasNotes: false
     property bool entryHasTotp: false
     property var entryCustomFields: null
+    property string entryIconUrl: ""
+
+    onStatusChanged: {
+        if (status === PageStatus.Active) {
+            applicationWindow.coverEntryUuid = entryUuid;
+            applicationWindow.coverEntryTitle = entryTitle && entryTitle.length > 0
+                ? entryTitle
+                : Tr.tr("Untitled entry");
+            applicationWindow.coverEntryIcon = entryIconUrl;
+            applicationWindow.coverHasUsername = entryHasUsername;
+            applicationWindow.coverHasPassword = entryHasPassword;
+            applicationWindow.coverHasTotp = entryHasTotp;
+        }
+    }
 
     // Values revealed on demand for fields the payload omits (hidden-by-default:
     // always the password, plus any custom field marked hidden).

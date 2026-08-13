@@ -20,7 +20,7 @@
 %define rust_triple i686-unknown-linux-gnu
 %endif
 
-%define targetdir target/%{rust_triple}/release
+%define targetdir target/sfos-%{rust_triple}/%{rust_triple}/release
 %define datadir %{_datadir}/%{name}
 
 Name:       harbour-keepassrx
@@ -78,6 +78,10 @@ export CFLAGS_aarch64_unknown_linux_gnu="$CFLAGS -march=armv8-a+crypto+fp+simd+s
 %ifarch %ix86
 export SB2_RUST_TARGET_TRIPLE=i686-unknown-linux-gnu
 %endif
+
+# Per-arch target dir so alternating arches don't invalidate each other's
+# shared host build cache (cascades into a full rebuild). Under target/ (gitignored).
+export CARGO_TARGET_DIR=target/sfos-%{rust_triple}
 
 # qttypes' build script tries qmake6 first; Sailfish only ships the Qt5 qmake.
 export QMAKE=/usr/bin/qmake

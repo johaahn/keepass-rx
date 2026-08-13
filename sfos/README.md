@@ -20,13 +20,22 @@ With the Jolla SDK installed, from the repo root:
 That's the whole thing. The script provisions the toolings/targets (adds the
 repo, installs Rust and the build deps) the first time and then builds; on later
 runs it sees the toolchain is already there and goes straight to building. RPMs
-land in `RPMS/`. Set `SFOS_VERSION` for a different release (default 5.1.0.11).
+land in `RPMS/`, one per arch — building a second arch (or rebuilding one)
+preserves the others' packages. Set `SFOS_VERSION` for a different release
+(default 5.1.0.11).
+
+By default sfdk derives the package version from git (e.g.
+`1.0.0+sailfish.<timestamp>.<hash>`). Pass `--stable` to use the plain `Version:`
+from the spec instead, for release builds:
+
+    sfos/build.sh --stable aarch64
 
 The repo has to sit under the SDK's shared workspace (the home directory by
 default) or sfdk can't see it.
 
 First build is slow — it cross-compiles the whole dependency tree under SB2,
-including libsodium from source. `target/` is cached, so subsequent builds are
+including libsodium from source. Each arch caches into its own
+`target/sfos-<triple>/`, so subsequent builds (and switching between arches) are
 much faster. Cargo is capped to 4 jobs (`CARGO_BUILD_JOBS` in the spec) because
 scratchbox2 deadlocks at full parallelism; raise it with
 `--define "cargo_jobs N"` if your setup tolerates it.

@@ -18,8 +18,11 @@ SFDK="${SFDK:-$(command -v sfdk || echo "$HOME/SailfishOS/bin/sfdk")}"
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 ARCH="${ARCH:-i486}"
 
+PKG="$(sed -nE 's/^Name:[[:space:]]*//p' "$REPO_ROOT"/rpm/*.spec | head -1)"
+[ -n "$PKG" ] || { echo "Could not read Name: from rpm/*.spec" >&2; exit 1; }
+
 # --- Locate (or build) the RPM ---
-find_rpm() { ls -t "$REPO_ROOT"/RPMS/harbour-keepassrx-*."$ARCH".rpm 2>/dev/null | head -1; }
+find_rpm() { ls -t "$REPO_ROOT"/RPMS/"$PKG"-*."$ARCH".rpm 2>/dev/null | head -1; }
 rpm="$(find_rpm || true)"
 if [ "${1:-}" = "--build" ] || [ -z "$rpm" ]; then
     echo ">> Building $ARCH RPM"
@@ -46,6 +49,6 @@ base="$(basename "$rpm")"
 # --- Copy + install (root via passwordless sudo of the sdk user) ---
 scp -P "$port" "${sshopts[@]}" "$rpm" "$user@$host:/tmp/$base"
 ssh -p "$port" "${sshopts[@]}" "$user@$host" \
-    "sudo pkcon install-local -y /tmp/$base && (pkill -x harbour-keepassrx 2>/dev/null || true) && rpm -q harbour-keepassrx"
+    "sudo pkcon install-local -y /tmp/$base && (pkill -x $PKG 2>/dev/null || true) && rpm -q $PKG"
 
-echo ">> Installed. Launch KeePassRX from the emulator's app grid."
+echo ">> Installed. Launch $PKG from the emulator's app grid."

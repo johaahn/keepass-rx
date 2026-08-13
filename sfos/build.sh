@@ -7,6 +7,7 @@
 #   sfos/build.sh              # emulator (i486)
 #   sfos/build.sh aarch64      # arm64 device
 #   sfos/build.sh i486 aarch64 # both
+#   sfos/build.sh --stable ... # version from the spec, not the git-derived one
 #
 # Env:
 #   SFOS_VERSION   SDK release to build against (default 5.1.0.11)
@@ -26,7 +27,15 @@ SFDK="${SFDK:-$(command -v sfdk || echo "$HOME/SailfishOS/bin/sfdk")}"
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$REPO_ROOT"
 
-ARCHES=("$@")
+ARCHES=()
+sfdk_opts=()
+for arg in "$@"; do
+    case "$arg" in
+        --stable) sfdk_opts+=(-c no-fix-version) ;;
+        -*) echo "unknown option: $arg" >&2; exit 1 ;;
+        *) ARCHES+=("$arg") ;;
+    esac
+done
 [ ${#ARCHES[@]} -gt 0 ] || ARCHES=(i486)
 
 tooling="SailfishOS-$SFOS_VERSION"
@@ -95,14 +104,22 @@ if [ "$($SFDK engine exec -- sh -c 'ps -eo args 2>/dev/null | grep -c "[c]argo b
 fi
 
 # --- Build ---
-# mb2 clears RPMS/ at the start of each build, so building a second arch would
-# delete the first arch's package. Stash each arch's output and restore at the
-# end so all requested arches survive.
+# mb2 clears RPMS/ at the start of each build. Stash existing RPMs for arches
+# we're not rebuilding, plus each arch built now, and restore them all so every
+# arch's newest RPM survives across runs.
 stash="$(mktemp -d)"
+shopt -s nullglob
+for rpm in "$REPO_ROOT"/RPMS/*.rpm; do
+    a="${rpm%.rpm}"; a="${a##*.}"
+    for arch in "${ARCHES[@]}"; do
+        [ "$a" = "$arch" ] && continue 2
+    done
+    cp -f "$rpm" "$stash"/
+done
 for arch in "${ARCHES[@]}"; do
     target="SailfishOS-$SFOS_VERSION-$arch"
     echo ">> Building for $target"
-    $SFDK -c target="$target" build
+    $SFDK -c target="$target" "${sfdk_opts[@]}" build
     cp -f "$REPO_ROOT"/RPMS/*."$arch".rpm "$stash"/ 2>/dev/null || true
 done
 mkdir -p "$REPO_ROOT/RPMS"

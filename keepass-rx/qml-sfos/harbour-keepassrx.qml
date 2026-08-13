@@ -147,7 +147,7 @@ ApplicationWindow {
     onApplicationActiveChanged: {
         if (applicationActive) {
             idleLockTimer.stop();
-        } else if (SettingsBridge.lockWhenIdle && keepassrx.guiState === 'Open') {
+        } else if (SettingsBridge.lockWhenIdle && keepassrx.databaseOpen) {
             idleLockTimer.restart();
         }
     }
@@ -157,7 +157,7 @@ ApplicationWindow {
         interval: 30000
         repeat: false
         onTriggered: {
-            if (keepassrx.guiState !== 'Open') {
+            if (!keepassrx.databaseOpen) {
                 return;
             }
             if (SettingsBridge.databaseLocking) {

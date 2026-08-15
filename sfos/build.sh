@@ -1,130 +1,73 @@
 #!/usr/bin/env bash
 #
-# Build the KeePassRX Sailfish OS RPM(s) with the Jolla SDK (sfdk), from a fresh
-# SDK install and with no manual setup: this provisions the toolings/targets
-# with a modern Rust toolchain (see sfos/README.md for why) and then builds.
+# Convenience wrapper around the sfos/Dockerfile image (which does the build).
+# Equivalent one-liner for a single arch:
+#   docker run --rm -v "$PWD":/src:ro -v "$PWD/RPMS":/out \
+#       keepassrx-sfos-build:5.0.0.43-aarch64
 #
 #   sfos/build.sh              # emulator (i486)
 #   sfos/build.sh aarch64      # arm64 device
 #   sfos/build.sh i486 aarch64 # both
-#   sfos/build.sh --stable ... # version from the spec, not the git-derived one
+#   sfos/build.sh --stable ... # spec version, not the git-derived one
 #
-# Env:
-#   SFOS_VERSION   SDK release to build against (default 5.1.0.11)
-#   SFDK           path to sfdk (default: sfdk on PATH, else ~/SailfishOS/bin/sfdk)
-#
-# RPMs are written to RPMS/.
+# Env: SFOS_VERSION (default 5.0.0.43), DOCKER, REBUILD_IMAGE. RPMs -> RPMS/.
 set -euo pipefail
 
-SFOS_VERSION="${SFOS_VERSION:-5.1.0.11}"
-RUBDOS_REPO=https://nas.rubdos.be/~rsmet/sailfish-repo/
-MIN_RUST=1.89
-MIN_LLVM=20
+SFOS_VERSION="${SFOS_VERSION:-5.0.0.43}"
 
-SFDK="${SFDK:-$(command -v sfdk || echo "$HOME/SailfishOS/bin/sfdk")}"
-[ -x "$SFDK" ] || { echo "sfdk not found (set \$SFDK)" >&2; exit 1; }
+DOCKER="${DOCKER:-$(command -v docker || command -v podman || true)}"
+[ -n "$DOCKER" ] || { echo "no container runtime (install docker/podman or set \$DOCKER)" >&2; exit 1; }
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$REPO_ROOT"
 
 ARCHES=()
-sfdk_opts=()
+stable=
 for arg in "$@"; do
     case "$arg" in
-        --stable) sfdk_opts+=(-c no-fix-version) ;;
+        --stable) stable=1 ;;
         -*) echo "unknown option: $arg" >&2; exit 1 ;;
         *) ARCHES+=("$arg") ;;
     esac
 done
 [ ${#ARCHES[@]} -gt 0 ] || ARCHES=(i486)
 
-tooling="SailfishOS-$SFOS_VERSION"
-
-# std packages needed in the tooling (all arches) and per target.
-all_std="rust-std-static-i686-unknown-linux-gnu rust-std-static-armv7-unknown-linux-gnueabihf rust-std-static-aarch64-unknown-linux-gnu"
-std_for() {
-    case "$1" in
-        SailfishOS-*-i486)    echo "rust-std-static-i686-unknown-linux-gnu" ;;
-        SailfishOS-*-armv7hl) echo "rust-std-static-armv7-unknown-linux-gnueabihf rust-std-static-i686-unknown-linux-gnu" ;;
-        SailfishOS-*-aarch64) echo "rust-std-static-aarch64-unknown-linux-gnu rust-std-static-i686-unknown-linux-gnu" ;;
-    esac
-}
-
-# True if the given tooling/target already has a new-enough Rust.
-rust_ok() { # $1 = maintain scope (e.g. "target maintain SailfishOS-...-i486")
-    local v
-    v=$($SFDK engine exec -- sdk-manage $1 rustc --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+' | head -1) || return 1
-    [ -n "$v" ] && [ "$(printf '%s\n%s\n' "$MIN_RUST" "$v" | sort -V | head -1)" = "$MIN_RUST" ]
-}
-
-add_repo() { # $1 = maintain scope
-    $SFDK engine exec -- sudo sdk-manage $1 zypper -n addrepo --gpgcheck-allow-unsigned "$RUBDOS_REPO" rubdos >/dev/null 2>&1 || true
-    $SFDK engine exec -- sudo sdk-manage $1 zypper -n --gpg-auto-import-keys refresh >/dev/null
-}
-
-echo ">> Ensuring build engine is running"
-$SFDK engine start >/dev/null
-
-# --- Provision the tooling once (shared by all targets) ---
-if rust_ok "tooling maintain $tooling"; then
-    echo ">> Tooling $tooling already has Rust >= $MIN_RUST"
-else
-    echo ">> Provisioning tooling $tooling"
-    add_repo "tooling maintain $tooling"
-    $SFDK engine exec -- sudo sdk-manage tooling maintain "$tooling" \
-        zypper -n install --allow-vendor-change --from rubdos \
-        "rust >= $MIN_RUST" cargo $all_std "llvm >= $MIN_LLVM" "clang >= $MIN_LLVM"
+version_env=()
+if [ -z "$stable" ]; then
+    desc="$(git -C "$REPO_ROOT" describe --tags --always --dirty 2>/dev/null | sed -e 's/^v//' -e 's/[^A-Za-z0-9.]/./g' || true)"
+    [ -n "$desc" ] && version_env=(-e "KEEPASSRX_VERSION=$desc")
 fi
 
-# --- Provision each requested target ---
-for arch in "${ARCHES[@]}"; do
-    target="SailfishOS-$SFOS_VERSION-$arch"
-    if rust_ok "target maintain $target"; then
-        echo ">> Target $target already has Rust >= $MIN_RUST"
-    else
-        echo ">> Provisioning target $target"
-        add_repo "target maintain $target"
-        $SFDK engine exec -- sudo sdk-manage target maintain "$target" \
-            zypper -n install --allow-vendor-change --from rubdos \
-            "rust >= $MIN_RUST" cargo $(std_for "$target") "llvm >= $MIN_LLVM" "clang >= $MIN_LLVM"
+supported() { case "$1" in i486|armv7hl|aarch64) return 0 ;; *) echo "unsupported arch: $1" >&2; return 1 ;; esac; }
+
+ensure_image() { # $1 = arch, $2 = image tag
+    if [ -z "${REBUILD_IMAGE:-}" ] && $DOCKER image inspect "$2" >/dev/null 2>&1; then
+        return
     fi
-    # Build-time deps (idempotent; no-ops once present).
-    $SFDK engine exec -- sudo sdk-manage target maintain "$target" \
-        zypper -n install \
-        libatomic libatomic-static gettext desktop-file-utils tar make gzip xz \
-        'pkgconfig(sailfishapp)' 'pkgconfig(Qt5Core)' 'pkgconfig(Qt5Qml)' \
-        'pkgconfig(Qt5Quick)' 'pkgconfig(Qt5Gui)' >/dev/null
-done
+    echo ">> Building image $2"
+    $DOCKER build -f "$REPO_ROOT/sfos/Dockerfile" -t "$2" \
+        --build-arg SFOS_VERSION="$SFOS_VERSION" --build-arg SFOS_ARCH="$1" "$REPO_ROOT/sfos"
+}
 
-# A build that was hard-killed can leave an orphaned cargo/rustc holding cargo's
-# global package-cache lock, which then deadlocks every later build. Clear a
-# stale lock when nothing is actually building.
-if [ "$($SFDK engine exec -- sh -c 'ps -eo args 2>/dev/null | grep -c "[c]argo build --release"' 2>/dev/null || echo 0)" -eq 0 ]; then
-    $SFDK engine exec -- sh -c 'rm -f /home/mersdk/.cargo/.package-cache' >/dev/null 2>&1 || true
-fi
-
-# --- Build ---
-# mb2 clears RPMS/ at the start of each build. Stash existing RPMs for arches
-# we're not rebuilding, plus each arch built now, and restore them all so every
-# arch's newest RPM survives across runs.
-stash="$(mktemp -d)"
-shopt -s nullglob
-for rpm in "$REPO_ROOT"/RPMS/*.rpm; do
-    a="${rpm%.rpm}"; a="${a##*.}"
-    for arch in "${ARCHES[@]}"; do
-        [ "$a" = "$arch" ] && continue 2
-    done
-    cp -f "$rpm" "$stash"/
-done
-for arch in "${ARCHES[@]}"; do
-    target="SailfishOS-$SFOS_VERSION-$arch"
-    echo ">> Building for $target"
-    $SFDK -c target="$target" "${sfdk_opts[@]}" build
-    cp -f "$REPO_ROOT"/RPMS/*."$arch".rpm "$stash"/ 2>/dev/null || true
-done
 mkdir -p "$REPO_ROOT/RPMS"
-cp -f "$stash"/*.rpm "$REPO_ROOT/RPMS"/ 2>/dev/null || true
-rm -rf "$stash"
+shopt -s nullglob
+
+for arch in "${ARCHES[@]}"; do
+    supported "$arch"
+    image="keepassrx-sfos-build:$SFOS_VERSION-$arch"
+    ensure_image "$arch" "$image"
+    echo ">> Building for SailfishOS-$SFOS_VERSION-$arch"
+    old=("$REPO_ROOT"/RPMS/*."$arch".rpm)
+    $DOCKER run --rm \
+        -v "$REPO_ROOT":/src:ro \
+        -v "keepassrx-sfos-cache-$SFOS_VERSION":/cache \
+        -v "$REPO_ROOT/RPMS":/out \
+        "${version_env[@]}" "$image"
+    new=("$REPO_ROOT"/RPMS/*."$arch".rpm)
+    if [ ${#old[@]} -gt 0 ] && [ ${#new[@]} -gt ${#old[@]} ]; then
+        rm -f "${old[@]}"
+    fi
+done
 
 echo ">> RPMs:"
 ls -1 "$REPO_ROOT"/RPMS/*.rpm 2>/dev/null || echo "(none found in RPMS/)"

@@ -25,7 +25,7 @@
 
 Name:       harbour-keepassrx
 Summary:    Password manager compatible with KeePass databases
-Version:    1.0.1
+Version:    %{?keepassrx_version}%{!?keepassrx_version:1.0.1}
 Release:    1
 License:    AGPLv3
 Group:      Qt/Qt

@@ -4,59 +4,36 @@ The Ubuntu Touch build is handled by clickable (`clickable.yaml`). This is the
 Sailfish side.
 
 SFOS SDK targets ship Rust 1.75 and this crate is edition 2024, so the stock
-toolchain won't build it. There's no official newer Rust for Sailfish, so we do
-what Whisperfish does: pull Rust 1.89 plus LLVM/clang from the rubdos repo
-(https://nas.rubdos.be/~rsmet/sailfish-repo/). It's an unsigned repo run by the
-Whisperfish maintainer, which is worth knowing before you add it.
+toolchain won't build it. Rather than provision a newer Rust ourselves, we build
+on top of Whisperfish's `sailo-rs` image, which already carries a working Rust
+1.89 for the Sailfish SDK. That image is published for SFOS 5.0.0.43 only, so
+that's the version we target (its RPMs run on newer devices too).
 
 ## Build
 
-With the Jolla SDK installed, from the repo root:
+The `sfos/Dockerfile` image does the whole build (its entrypoint is
+`docker-entrypoint.sh`): mount the source at `/src`, the output at `/out`, run
+it. For one arch that's a single command:
+
+    docker run --rm -v "$PWD":/src:ro -v "$PWD/RPMS":/out \
+      keepassrx-sfos-build:5.0.0.43-aarch64
+
+`sfos/build.sh` wraps that — it builds the per-arch image on first use, computes
+the git version, and can do several arches at once:
 
     sfos/build.sh              # emulator (i486)
     sfos/build.sh aarch64      # arm64 device
     sfos/build.sh i486 aarch64 # both
+    sfos/build.sh --stable ... # spec version, not the git-derived one
 
-That's the whole thing. The script provisions the toolings/targets (adds the
-repo, installs Rust and the build deps) the first time and then builds; on later
-runs it sees the toolchain is already there and goes straight to building. RPMs
-land in `RPMS/`, one per arch — building a second arch (or rebuilding one)
-preserves the others' packages. Set `SFOS_VERSION` for a different release
-(default 5.1.0.11).
+RPMs land in `RPMS/`, one per arch — building a second arch (or rebuilding one)
+preserves the others. Env: `SFOS_VERSION`, `DOCKER`, `REBUILD_IMAGE=1`.
 
-By default sfdk derives the package version from git (e.g.
-`1.0.0+sailfish.<timestamp>.<hash>`). Pass `--stable` to use the plain `Version:`
-from the spec instead, for release builds:
-
-    sfos/build.sh --stable aarch64
-
-The repo has to sit under the SDK's shared workspace (the home directory by
-default) or sfdk can't see it.
-
-First build is slow — it cross-compiles the whole dependency tree under SB2,
-including libsodium from source. Each arch caches into its own
-`target/sfos-<triple>/`, so subsequent builds (and switching between arches) are
-much faster. Cargo is capped to 4 jobs (`CARGO_BUILD_JOBS` in the spec) because
-scratchbox2 deadlocks at full parallelism; raise it with
-`--define "cargo_jobs N"` if your setup tolerates it.
-
-Don't `kill -9` a build mid-flight — that can orphan a cargo process holding
-`~/.cargo/.package-cache` in the engine and wedge every later build. build.sh
-clears a stale lock when nothing is building; if you're stuck, kill the engine's
-cargo/rpmbuild tree and `rm` that file.
-
-## CI / clean room
-
-`Dockerfile` bakes the same environment on top of the CODeRUS platform SDK image
-for CI, where you don't have a persistent SDK:
-
-    docker build -f sfos/Dockerfile \
-      --build-arg SFOS_VERSION=5.1.0.11 \
-      --build-arg SFOS_ARCH=aarch64 \
-      --build-arg RUST_TARGET=aarch64-unknown-linux-gnu \
-      -t keepassrx-sfos:aarch64 .
-    docker run --rm -v "$PWD":/build -w /build keepassrx-sfos:aarch64 \
-      mb2 -t SailfishOS-5.1.0.11-aarch64 build
+Building on a bind-mount/volume breaks scratchbox2, so the entrypoint copies the
+source into the container and builds there; the cargo target dir is cached in a
+`/cache` volume per arch (mount one with `-v keepassrx-sfos-cache:/cache` for a
+standalone run). First build is slow — it cross-compiles the whole dependency
+tree under SB2, including libsodium from source.
 
 ## Layout
 

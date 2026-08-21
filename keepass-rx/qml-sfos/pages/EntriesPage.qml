@@ -114,45 +114,32 @@ Page {
         id: entriesModel
     }
 
-    Item {
-        id: headerBox
-        y: 0 - entriesList.contentY - height
-        z: 1
-        width: parent.width
-        height: pageHeader.height + searchField.height
-
-        PageHeader {
-            id: pageHeader
-            anchors { top: parent.top; left: parent.left }
-            width: parent.width
-            title: entriesPage.headerTitle()
-        }
-
-        SearchField {
-            id: searchField
-            anchors { top: pageHeader.bottom; left: parent.left }
-            width: parent.width
-            placeholderText: keepassrx.viewMode == 'All'
-                ? (entriesPage.isViewRoot ? Tr.tr("Search all entries") : Tr.tr("Search all entries under this group"))
-                : Tr.tr("Search entries in this group")
-            inputMethodHints: Qt.ImhNoPredictiveText
-            EnterKey.iconSource: "image://theme/icon-m-enter-close"
-            EnterKey.onClicked: entriesList.focus = true
-            onTextChanged: {
-                entriesPage.searchTerm = text;
-                entriesPage.loadEntries();
-            }
-        }
-    }
-
     SilicaListView {
         id: entriesList
         anchors.fill: parent
         model: entriesModel
 
-        header: Item {
-            width: parent.width
-            height: headerBox.height
+        header: Column {
+            width: entriesList.width
+
+            PageHeader {
+                width: parent.width
+                title: entriesPage.headerTitle()
+            }
+
+            SearchField {
+                width: parent.width
+                placeholderText: keepassrx.viewMode == 'All'
+                    ? (entriesPage.isViewRoot ? Tr.tr("Search all entries") : Tr.tr("Search all entries under this group"))
+                    : Tr.tr("Search entries in this group")
+                inputMethodHints: Qt.ImhNoPredictiveText
+                EnterKey.iconSource: "image://theme/icon-m-enter-close"
+                EnterKey.onClicked: entriesList.focus = true
+                onTextChanged: {
+                    entriesPage.searchTerm = text;
+                    entriesPage.loadEntries();
+                }
+            }
         }
 
         PullDownMenu {
@@ -176,7 +163,6 @@ Page {
         }
 
         ViewPlaceholder {
-            y: 0 - entriesList.contentY
             enabled: entriesPage.loaded && entriesModel.count === 0
             text: Tr.tr("No entries")
         }

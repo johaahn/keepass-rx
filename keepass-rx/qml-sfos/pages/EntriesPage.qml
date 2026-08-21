@@ -114,32 +114,51 @@ Page {
         id: entriesModel
     }
 
+    // The header rides above the list rather than living in it: as a ListView
+    // header the SearchField loses focus every time the model reloads (once per
+    // keystroke) and the keyboard closes. It is pinned to the spacer item the
+    // list reserves for it, so it tracks the real content position instead of
+    // assuming the content starts at contentY == 0 -- that assumption is what
+    // let it drift into the middle of the list after a reload.
+    Item {
+        id: headerBox
+        y: (entriesList.headerItem ? entriesList.headerItem.y : 0) - entriesList.contentY
+        z: 1
+        width: parent.width
+        height: pageHeader.height + searchField.height
+
+        PageHeader {
+            id: pageHeader
+            anchors { top: parent.top; left: parent.left }
+            width: parent.width
+            title: entriesPage.headerTitle()
+        }
+
+        SearchField {
+            id: searchField
+            anchors { top: pageHeader.bottom; left: parent.left }
+            width: parent.width
+            placeholderText: keepassrx.viewMode == 'All'
+                ? (entriesPage.isViewRoot ? Tr.tr("Search all entries") : Tr.tr("Search all entries under this group"))
+                : Tr.tr("Search entries in this group")
+            inputMethodHints: Qt.ImhNoPredictiveText
+            EnterKey.iconSource: "image://theme/icon-m-enter-close"
+            EnterKey.onClicked: entriesList.focus = true
+            onTextChanged: {
+                entriesPage.searchTerm = text;
+                entriesPage.loadEntries();
+            }
+        }
+    }
+
     SilicaListView {
         id: entriesList
         anchors.fill: parent
         model: entriesModel
 
-        header: Column {
-            width: entriesList.width
-
-            PageHeader {
-                width: parent.width
-                title: entriesPage.headerTitle()
-            }
-
-            SearchField {
-                width: parent.width
-                placeholderText: keepassrx.viewMode == 'All'
-                    ? (entriesPage.isViewRoot ? Tr.tr("Search all entries") : Tr.tr("Search all entries under this group"))
-                    : Tr.tr("Search entries in this group")
-                inputMethodHints: Qt.ImhNoPredictiveText
-                EnterKey.iconSource: "image://theme/icon-m-enter-close"
-                EnterKey.onClicked: entriesList.focus = true
-                onTextChanged: {
-                    entriesPage.searchTerm = text;
-                    entriesPage.loadEntries();
-                }
-            }
+        header: Item {
+            width: parent.width
+            height: headerBox.height
         }
 
         PullDownMenu {
@@ -163,6 +182,7 @@ Page {
         }
 
         ViewPlaceholder {
+            y: 0 - entriesList.contentY
             enabled: entriesPage.loaded && entriesModel.count === 0
             text: Tr.tr("No entries")
         }

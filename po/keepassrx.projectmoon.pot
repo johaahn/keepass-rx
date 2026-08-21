@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-12 12:24+0000\n"
+"POT-Creation-Date: 2026-08-17 07:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -47,14 +47,15 @@ msgstr ""
 
 #: qml/pages/DBList.qml:77 qml/pages/EntriesPage.qml:203
 #: qml/pages/SettingsPage.qml:10 qml/pages/OpenDBPage.qml:111
-#: qml/pages/UnlockPage.qml:46 qml-sfos/pages/SettingsPage.qml:26
-#: qml-sfos/pages/DatabaseListPage.qml:88 qml-sfos/pages/EntriesPage.qml:159
+#: qml/pages/UnlockPage.qml:46 qml-sfos/pages/DatabaseListPage.qml:88
+#: qml-sfos/pages/EntriesPage.qml:169 qml-sfos/pages/SettingsPage.qml:26
 msgid "Settings"
 msgstr ""
 
 #: qml/pages/DBList.qml:84 qml/pages/EntriesPage.qml:212
 #: qml/pages/OpenDBPage.qml:118 qml/pages/UnlockPage.qml:53
-#: qml/pages/AboutPage.qml:12
+#: qml/pages/AboutPage.qml:12 qml-sfos/pages/AboutPage.qml:35
+#: qml-sfos/pages/SettingsPage.qml:64
 msgid "About"
 msgstr ""
 
@@ -87,11 +88,12 @@ msgstr ""
 msgid "It will only be removed from the app, not your device."
 msgstr ""
 
-#: qml/pages/LicensesPage.qml:13
+#: qml/pages/LicensesPage.qml:13 qml-sfos/pages/AboutPage.qml:23
+#: qml-sfos/pages/LicensesPage.qml:37
 msgid "Open Source Licenses"
 msgstr ""
 
-#: qml/pages/LicensesPage.qml:66
+#: qml/pages/LicensesPage.qml:66 qml-sfos/pages/LicensesPage.qml:73
 msgid "Website"
 msgstr ""
 
@@ -99,15 +101,15 @@ msgstr ""
 msgid "Cancel Search"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:117
+#: qml/pages/EntriesPage.qml:117 qml-sfos/pages/EntriesPage.qml:136
 msgid "Search all entries"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:117
+#: qml/pages/EntriesPage.qml:117 qml-sfos/pages/EntriesPage.qml:136
 msgid "Search all entries under this group"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:118
+#: qml/pages/EntriesPage.qml:118 qml-sfos/pages/EntriesPage.qml:137
 msgid "Search entries in this group"
 msgstr ""
 
@@ -133,17 +135,17 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:224 qml-sfos/pages/EntriesPage.qml:150
+#: qml/pages/EntriesPage.qml:224 qml-sfos/pages/EntriesPage.qml:160
 msgid "Lock Database"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:234 qml-sfos/pages/EntriesPage.qml:155
-#: qml-sfos/pages/UnlockPage.qml:62
+#: qml/pages/EntriesPage.qml:234 qml-sfos/pages/UnlockPage.qml:62
+#: qml-sfos/pages/EntriesPage.qml:165
 msgid "Close Database"
 msgstr ""
 
 #: qml/pages/EntriesPage.qml:254 qml-sfos/pages/ViewModePage.qml:35
-#: qml-sfos/pages/EntriesPage.qml:163
+#: qml-sfos/pages/EntriesPage.qml:173
 msgid "Change View"
 msgstr ""
 
@@ -204,7 +206,7 @@ msgstr ""
 msgid "Change settings based on your preferences."
 msgstr ""
 
-#: qml/pages/SettingsPage.qml:39 qml-sfos/pages/SettingsPage.qml:42
+#: qml/pages/SettingsPage.qml:39 qml-sfos/pages/SettingsPage.qml:44
 msgid "Enable database locking"
 msgstr ""
 
@@ -373,7 +375,7 @@ msgstr ""
 msgid "Attachment"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:64 qml-sfos/pages/EntryDetailsPage.qml:161
+#: qml/pages/SingleEntry.qml:64 qml-sfos/pages/EntryDetailsPage.qml:175
 msgid "Password"
 msgstr ""
 
@@ -386,7 +388,7 @@ msgid "Password (Entropy: %1)"
 msgstr ""
 
 #: qml/pages/SingleEntry.qml:76 qml/Main.qml:106
-#: qml-sfos/harbour-keepassrx.qml:161
+#: qml-sfos/harbour-keepassrx.qml:212
 msgid "%1 copied to clipboard (30 secs)"
 msgstr ""
 
@@ -395,12 +397,12 @@ msgctxt "Page header for single entry"
 msgid "Untitled Entry"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:300 qml-sfos/pages/EntryDetailsPage.qml:223
+#: qml/pages/SingleEntry.qml:300 qml-sfos/pages/EntryDetailsPage.qml:237
 msgid "Attachments"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:370 qml-sfos/pages/EntryDetailsPage.qml:190
-#: qml-sfos/pages/EntryDetailsPage.qml:196
+#: qml/pages/SingleEntry.qml:370 qml-sfos/pages/EntryDetailsPage.qml:204
+#: qml-sfos/pages/EntryDetailsPage.qml:210
 msgid "Notes"
 msgstr ""
 
@@ -417,11 +419,11 @@ msgstr ""
 msgid "Tap reveal to view notes"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:463 qml-sfos/pages/EntryDetailsPage.qml:145
+#: qml/pages/SingleEntry.qml:463 qml-sfos/pages/EntryDetailsPage.qml:159
 msgid "Main"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:473 qml-sfos/pages/EntryDetailsPage.qml:151
+#: qml/pages/SingleEntry.qml:473 qml-sfos/pages/EntryDetailsPage.qml:165
 msgid "Username"
 msgstr ""
 
@@ -430,7 +432,7 @@ msgstr ""
 msgid "Loading…"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:518 qml-sfos/pages/EntryDetailsPage.qml:171
+#: qml/pages/SingleEntry.qml:518 qml-sfos/pages/EntryDetailsPage.qml:185
 msgid "URL"
 msgstr ""
 
@@ -439,7 +441,7 @@ msgid "TOTP (Valid for %1)"
 msgstr ""
 
 #: qml/pages/SingleEntry.qml:539 qml/pages/SingleEntry.qml:543
-#: qml-sfos/pages/EntryDetailsPage.qml:183
+#: qml-sfos/pages/EntryDetailsPage.qml:197
 msgid "TOTP"
 msgstr ""
 
@@ -451,7 +453,7 @@ msgstr ""
 msgid "KeePassRX: Clipboard cleared."
 msgstr ""
 
-#: qml/pages/AboutPage.qml:52
+#: qml/pages/AboutPage.qml:52 qml-sfos/pages/AboutPage.qml:55
 msgid "Version %1"
 msgstr ""
 
@@ -461,13 +463,13 @@ msgid ""
 "Touch. It is licensed under the GNU AGPL v3 license."
 msgstr ""
 
-#: qml/pages/AboutPage.qml:96
+#: qml/pages/AboutPage.qml:96 qml-sfos/pages/AboutPage.qml:80
 msgid ""
 "The built-in KeePass icon images are licensed under a variety of licenses as "
 "detailed in assets/COPYING."
 msgstr ""
 
-#: qml/pages/AboutPage.qml:104
+#: qml/pages/AboutPage.qml:104 qml-sfos/pages/AboutPage.qml:84
 msgid "Manual"
 msgstr ""
 
@@ -483,7 +485,7 @@ msgid ""
 "projects/keepassrx/</a>"
 msgstr ""
 
-#: qml/pages/AboutPage.qml:138
+#: qml/pages/AboutPage.qml:138 qml-sfos/pages/AboutPage.qml:112
 msgid "Source Code"
 msgstr ""
 
@@ -558,20 +560,75 @@ msgctxt "Saved database searches"
 msgid "Saved Searches"
 msgstr ""
 
-#: qml-sfos/pages/SettingsPage.qml:30
-msgid "Database accent colours"
-msgstr ""
-
-#: qml-sfos/pages/SettingsPage.qml:36
-msgid "Show recycle bin"
-msgstr ""
-
 #: qml-sfos/pages/OpenDatabasePage.qml:48 qml-sfos/pages/UnlockPage.qml:51
 msgid "Error: %1"
 msgstr ""
 
 #: qml-sfos/pages/OpenDatabasePage.qml:88
 msgid "Master password"
+msgstr ""
+
+#: qml-sfos/pages/ViewModePage.qml:17
+msgid "All entries"
+msgstr ""
+
+#: qml-sfos/pages/ViewModePage.qml:18 qml-sfos/pages/EntriesPage.qml:30
+msgid "Special categories"
+msgstr ""
+
+#: qml-sfos/pages/ViewModePage.qml:19 qml-sfos/pages/EntriesPage.qml:31
+msgid "2FA codes"
+msgstr ""
+
+#: qml-sfos/pages/ViewModePage.qml:21 qml-sfos/pages/EntriesPage.qml:33
+msgid "Saved searches"
+msgstr ""
+
+#: qml-sfos/pages/UnlockPage.qml:25
+msgid "There is no locked database"
+msgstr ""
+
+#: qml-sfos/pages/UnlockPage.qml:44
+msgid "Error: %1. Wrong passcode?"
+msgstr ""
+
+#: qml-sfos/pages/ViewAttachmentPage.qml:38
+msgid "Saved %1"
+msgstr ""
+
+#: qml-sfos/pages/ViewAttachmentPage.qml:54
+msgid "Export to"
+msgstr ""
+
+#: qml-sfos/pages/ViewAttachmentPage.qml:116
+msgid "Cannot preview this file type"
+msgstr ""
+
+#: qml-sfos/pages/ViewAttachmentPage.qml:117
+msgid "Pull down to export the attachment."
+msgstr ""
+
+#: qml-sfos/pages/AboutPage.qml:71
+msgid ""
+"KeePassRX is a password manager for KeePass databases. It is licensed under "
+"the GNU AGPL v3 license."
+msgstr ""
+
+#: qml-sfos/pages/EntryDetailsPage.qml:36
+#: qml-sfos/pages/EntryDetailsPage.qml:155
+msgid "Untitled entry"
+msgstr ""
+
+#: qml-sfos/pages/EntryDetailsPage.qml:68
+msgid "Unable to open attachment."
+msgstr ""
+
+#: qml-sfos/pages/EntryDetailsPage.qml:196
+msgid "TOTP (valid for %1)"
+msgstr ""
+
+#: qml-sfos/pages/EntryDetailsPage.qml:219
+msgid "Other fields"
 msgstr ""
 
 #: qml-sfos/pages/DatabaseListPage.qml:20
@@ -602,68 +659,40 @@ msgstr ""
 msgid "Deleting"
 msgstr ""
 
-#: qml-sfos/pages/ViewModePage.qml:17
-msgid "All entries"
-msgstr ""
-
-#: qml-sfos/pages/ViewModePage.qml:18 qml-sfos/pages/EntriesPage.qml:30
-msgid "Special categories"
-msgstr ""
-
-#: qml-sfos/pages/ViewModePage.qml:19 qml-sfos/pages/EntriesPage.qml:31
-msgid "2FA codes"
-msgstr ""
-
-#: qml-sfos/pages/ViewModePage.qml:21 qml-sfos/pages/EntriesPage.qml:33
-msgid "Saved searches"
-msgstr ""
-
-#: qml-sfos/pages/EntriesPage.qml:127
-msgid "Search entries"
-msgstr ""
-
-#: qml-sfos/pages/EntriesPage.qml:171
+#: qml-sfos/pages/EntriesPage.qml:181
 msgid "No entries"
 msgstr ""
 
-#: qml-sfos/pages/UnlockPage.qml:25
-msgid "There is no locked database"
+#: qml-sfos/pages/SettingsPage.qml:30
+msgid "Database accent colors"
 msgstr ""
 
-#: qml-sfos/pages/UnlockPage.qml:44
-msgid "Error: %1. Wrong passcode?"
+#: qml-sfos/pages/SettingsPage.qml:31
+msgid "Tint entries with the color assigned to them in the database."
 msgstr ""
 
-#: qml-sfos/pages/EntryDetailsPage.qml:54
-msgid "Unable to open attachment."
+#: qml-sfos/pages/SettingsPage.qml:37
+msgid "Show recycle bin"
 msgstr ""
 
-#: qml-sfos/pages/EntryDetailsPage.qml:141
-msgid "Untitled entry"
+#: qml-sfos/pages/SettingsPage.qml:38
+msgid "Include entries from the database's recycle bin group while browsing."
 msgstr ""
 
-#: qml-sfos/pages/EntryDetailsPage.qml:182
-msgid "TOTP (valid for %1)"
+#: qml-sfos/pages/SettingsPage.qml:45
+msgid ""
+"Offer a Lock action that locks the database with your master password "
+"instead of closing it."
 msgstr ""
 
-#: qml-sfos/pages/EntryDetailsPage.qml:205
-msgid "Other fields"
+#: qml-sfos/pages/SettingsPage.qml:51
+msgid "Lock or close when idle"
 msgstr ""
 
-#: qml-sfos/pages/ViewAttachmentPage.qml:38
-msgid "Saved %1"
-msgstr ""
-
-#: qml-sfos/pages/ViewAttachmentPage.qml:54
-msgid "Export to"
-msgstr ""
-
-#: qml-sfos/pages/ViewAttachmentPage.qml:116
-msgid "Cannot preview this file type"
-msgstr ""
-
-#: qml-sfos/pages/ViewAttachmentPage.qml:117
-msgid "Pull down to export the attachment."
+#: qml-sfos/pages/SettingsPage.qml:52
+msgid ""
+"Lock the open database (or close it, when locking is disabled) 30 seconds "
+"after the app is minimized."
 msgstr ""
 
 #: qml-sfos/components/DetailField.qml:64
@@ -694,10 +723,26 @@ msgstr ""
 msgid "Copy 2FA code"
 msgstr ""
 
-#: qml-sfos/harbour-keepassrx.qml:99
+#: qml-sfos/cover/CoverPage.qml:52
+msgid "Database locked"
+msgstr ""
+
+#: qml-sfos/cover/CoverPage.qml:74
+msgid "Password copied"
+msgstr ""
+
+#: qml-sfos/cover/CoverPage.qml:75
+msgid "2FA code copied"
+msgstr ""
+
+#: qml-sfos/cover/CoverPage.qml:76
+msgid "Username copied"
+msgstr ""
+
+#: qml-sfos/harbour-keepassrx.qml:128
 msgid "Clipboard cleared."
 msgstr ""
 
-#: qml-sfos/harbour-keepassrx.qml:169
+#: qml-sfos/harbour-keepassrx.qml:220
 msgid "Token '%1' copied. Valid for %2"
 msgstr ""

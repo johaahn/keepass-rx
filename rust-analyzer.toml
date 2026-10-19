@@ -1,0 +1,5 @@
+[cargo]
+extraEnv = { GETTEXT_SYSTEM = "1" }
+
+[check]
+extraEnv = { GETTEXT_SYSTEM = "1" }

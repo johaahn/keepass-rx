@@ -1,6 +1,6 @@
 use std::str::FromStr;
 
-use palette::{FromColor, Lab, LinSrgb, Mix, Srgb};
+use palette::{FromColor, Lab, LinSrgb, Mix, Srgb, rgb::FromHexError};
 use qmetaobject::{QEnum, QMetaType, QString, QVariantMap};
 
 #[repr(C)]
@@ -50,7 +50,7 @@ pub struct ColorPacket {
 /// Blend a color toward white in linear light by `amount` in [0, 1].
 /// Returns a lowercase `#rrggbb` hex string.
 pub fn wash_out_by_blending(hex: &str, amount: f32) -> Result<ColorPacket, String> {
-    let srgb_u8: Srgb<u8> = Srgb::from_str(hex).map_err(|e| e.to_string())?;
+    let srgb_u8: Srgb<u8> = Srgb::from_str(hex).map_err(|e: FromHexError| e.to_string())?;
     let srgb_f32: Srgb<f32> = srgb_u8.into_format();
     let lin: LinSrgb<f32> = srgb_f32.into_linear();
 
@@ -77,7 +77,7 @@ pub fn wash_out_by_blending(hex: &str, amount: f32) -> Result<ColorPacket, Strin
 
 pub fn text_color_for_background(hex: &str) -> Result<RxColorType, String> {
     // Parse background color as Srgb<u8> → Srgb<f32>
-    let srgb_u8: Srgb<u8> = Srgb::from_str(hex).map_err(|e| e.to_string())?;
+    let srgb_u8: Srgb<u8> = Srgb::from_str(hex).map_err(|e: FromHexError| e.to_string())?;
     let srgb_f32: Srgb<f32> = srgb_u8.into_format();
 
     // Convert to Lab to access perceptual lightness

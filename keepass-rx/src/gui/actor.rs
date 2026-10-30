@@ -81,6 +81,20 @@ impl KeepassRxActor {
             _ => Ok(key_file.and_then(|kf| kf.bytes_unencrypted())),
         }
     }
+
+    /// Common pattern: borrow gui + app_state, get curr_db, call `f`,
+    /// or forward the error to the GUI.
+    fn with_db<F: FnOnce(&KeepassRx, &RxDatabase)>(&self, f: F) {
+        let gui_binding = self.gui.pinned();
+        let gui = gui_binding.borrow();
+        let app_state_binding = self.app_state.pinned();
+        let app_state = app_state_binding.borrow();
+        let db = match app_state.curr_db_ref() {
+            Ok(db) => db,
+            Err(err) => return gui.errorReceived(format!("{}", err)),
+        };
+        f(&gui, &db);
+    }
 }
 
 impl Supervised for KeepassRxActor {}
@@ -434,19 +448,9 @@ impl Handler<GetMetadata> for KeepassRxActor {
     type Result = ();
 
     fn handle(&mut self, _: GetMetadata, _: &mut Self::Context) -> Self::Result {
-        let binding = self.gui.pinned();
-        let gui = binding.borrow();
-
-        let app_state = self.app_state.pinned();
-        let app_state = app_state.borrow();
-        let db_binding = app_state.curr_db_ref();
-
-        let db = match db_binding {
-            Ok(db) => db,
-            Err(err) => return gui.errorReceived(format!("{}", err)),
-        };
-
-        gui.metadataReceived(QVariantMap::from(db.metadata()));
+        self.with_db(|gui, db| {
+            gui.metadataReceived(QVariantMap::from(db.metadata()));
+        });
     }
 }
 
@@ -521,26 +525,16 @@ impl Handler<GetEntries> for KeepassRxActor {
 impl Handler<GetSingleEntry> for KeepassRxActor {
     type Result = ();
     fn handle(&mut self, msg: GetSingleEntry, _: &mut Self::Context) -> Self::Result {
-        let binding = self.gui.pinned();
-        let gui = binding.borrow();
+        self.with_db(|gui, db| {
+            let entry = db.get_entry(msg.entry_uuid);
 
-        let app_state = self.app_state.pinned();
-        let app_state = app_state.borrow();
-        let db_binding = app_state.curr_db_ref();
+            let q_entry = match entry.as_deref().map(QVariantMap::from) {
+                Some(map) => map.to_qvariant(),
+                None => QVariant::default(), // null
+            };
 
-        let db = match db_binding {
-            Ok(db) => db,
-            Err(err) => return gui.errorReceived(format!("{}", err)),
-        };
-
-        let entry = db.get_entry(msg.entry_uuid);
-
-        let q_entry = match entry.as_deref().map(QVariantMap::from) {
-            Some(map) => map.to_qvariant(),
-            None => QVariant::default(), // null
-        };
-
-        gui.singleEntryReceived(q_entry);
+            gui.singleEntryReceived(q_entry);
+        });
     }
 }
 
@@ -559,64 +553,44 @@ fn get_value(db: &RxDatabase, entry_uuid: Uuid, field_name: &RxFieldName) -> QSt
 impl Handler<GetFieldValue> for KeepassRxActor {
     type Result = ();
     fn handle(&mut self, msg: GetFieldValue, _: &mut Self::Context) -> Self::Result {
-        let binding = self.gui.pinned();
-        let gui = binding.borrow();
+        self.with_db(|gui, db| {
+            let value = get_value(db, msg.entry_uuid, &msg.field_name);
 
-        let app_state = self.app_state.pinned();
-        let app_state = app_state.borrow();
-        let db_binding = app_state.curr_db_ref();
-
-        let db = match db_binding {
-            Ok(db) => db,
-            Err(err) => return gui.errorReceived(format!("{}", err)),
-        };
-
-        let value = get_value(db, msg.entry_uuid, &msg.field_name);
-
-        gui.fieldValueReceived(
-            QString::from(msg.entry_uuid.to_string()),
-            QString::from(msg.field_name.to_string()),
-            value,
-            QString::from(msg.purpose),
-        );
+            gui.fieldValueReceived(
+                QString::from(msg.entry_uuid.to_string()),
+                QString::from(msg.field_name.to_string()),
+                value,
+                QString::from(msg.purpose),
+            );
+        });
     }
 }
 
 impl Handler<GetTotp> for KeepassRxActor {
     type Result = ();
     fn handle(&mut self, msg: GetTotp, _: &mut Self::Context) -> Self::Result {
-        let binding = self.gui.pinned();
-        let gui = binding.borrow();
+        self.with_db(|gui, db| {
+            let totp = db.get_totp(&msg.entry_uuid);
 
-        let app_state = self.app_state.pinned();
-        let app_state = app_state.borrow();
-        let db_binding = app_state.curr_db_ref();
+            let mut map: HashMap<String, QVariant> = HashMap::new();
+            match totp {
+                Ok(otp) => {
+                    let digits = QString::from(otp.code);
+                    let valid_for = QString::from(otp.valid_for);
 
-        let db = match db_binding {
-            Ok(db) => db,
-            Err(err) => return gui.errorReceived(format!("{}", err)),
-        };
-
-        let totp = db.get_totp(&msg.entry_uuid);
-
-        let mut map: HashMap<String, QVariant> = HashMap::new();
-        match totp {
-            Ok(otp) => {
-                let digits = QString::from(otp.code);
-                let valid_for = QString::from(otp.valid_for);
-
-                map.insert("digits".to_string(), digits.into());
-                map.insert("validFor".to_string(), valid_for.into());
+                    map.insert("digits".to_string(), digits.into());
+                    map.insert("validFor".to_string(), valid_for.into());
+                }
+                Err(err) => {
+                    map.insert(
+                        "error".to_string(),
+                        QString::from(format!("{}", err)).into(),
+                    );
+                }
             }
-            Err(err) => {
-                map.insert(
-                    "error".to_string(),
-                    QString::from(format!("{}", err)).into(),
-                );
-            }
-        }
 
-        gui.totpReceived(QVariantMap::from(map));
+            gui.totpReceived(QVariantMap::from(map));
+        });
     }
 }
 

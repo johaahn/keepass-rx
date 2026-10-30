@@ -711,8 +711,6 @@ impl RxAttachments {
         master_key: &Rc<MasterKey>,
         entry: &mut EntryMut<'db>,
     ) -> Result<Self> {
-        let entry_uuid = entry.id().uuid();
-
         let named_attachments: Vec<_> = entry
             .as_ref()
             .attachments_named()

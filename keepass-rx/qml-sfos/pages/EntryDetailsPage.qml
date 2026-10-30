@@ -22,11 +22,33 @@ Page {
     property string entryNotes: ""
     property bool entryHasUsername: false
     property bool entryHasPassword: false
+    property var entryEntropy: null
     property bool entryHasUrl: false
     property bool entryHasNotes: false
     property bool entryHasTotp: false
     property var entryCustomFields: null
     property string entryIconUrl: ""
+
+    function hasEntropy() {
+        return entryHasPassword && entryEntropy !== undefined
+            && entryEntropy !== null && !isNaN(Number(entryEntropy));
+    }
+
+    function passwordLabel() {
+        if (!hasEntropy()) {
+            return Tr.tr("Password");
+        }
+        return Tr.tr("Password (Entropy: %1 bits)").arg(Number(entryEntropy).toFixed(2));
+    }
+
+    function entropyColor() {
+        if (Number(entryEntropy) < 40) {
+            return Theme.errorColor;
+        } else if (Number(entryEntropy) < 75) {
+            return Theme.secondaryHighlightColor;
+        }
+        return Theme.highlightColor;
+    }
 
     onStatusChanged: {
         if (status === PageStatus.Active) {
@@ -172,7 +194,8 @@ Page {
 
             DetailField {
                 visible: entryHasPassword
-                label: Tr.tr("Password")
+                label: entryPage.passwordLabel()
+                labelColor: entryPage.hasEntropy() ? entryPage.entropyColor() : Theme.secondaryColor
                 sensitive: true
                 revealed: passwordRevealed.length > 0
                 value: passwordRevealed

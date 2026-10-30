@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-17 07:50+0000\n"
+"POT-Creation-Date: 2026-10-30 08:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,7 +48,7 @@ msgstr ""
 #: qml/pages/DBList.qml:77 qml/pages/EntriesPage.qml:203
 #: qml/pages/SettingsPage.qml:10 qml/pages/OpenDBPage.qml:111
 #: qml/pages/UnlockPage.qml:46 qml-sfos/pages/DatabaseListPage.qml:88
-#: qml-sfos/pages/EntriesPage.qml:169 qml-sfos/pages/SettingsPage.qml:26
+#: qml-sfos/pages/SettingsPage.qml:26 qml-sfos/pages/EntriesPage.qml:176
 msgid "Settings"
 msgstr ""
 
@@ -101,15 +101,15 @@ msgstr ""
 msgid "Cancel Search"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:117 qml-sfos/pages/EntriesPage.qml:136
+#: qml/pages/EntriesPage.qml:117 qml-sfos/pages/EntriesPage.qml:143
 msgid "Search all entries"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:117 qml-sfos/pages/EntriesPage.qml:136
+#: qml/pages/EntriesPage.qml:117 qml-sfos/pages/EntriesPage.qml:143
 msgid "Search all entries under this group"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:118 qml-sfos/pages/EntriesPage.qml:137
+#: qml/pages/EntriesPage.qml:118 qml-sfos/pages/EntriesPage.qml:144
 msgid "Search entries in this group"
 msgstr ""
 
@@ -135,17 +135,17 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: qml/pages/EntriesPage.qml:224 qml-sfos/pages/EntriesPage.qml:160
+#: qml/pages/EntriesPage.qml:224 qml-sfos/pages/EntriesPage.qml:167
 msgid "Lock Database"
 msgstr ""
 
 #: qml/pages/EntriesPage.qml:234 qml-sfos/pages/UnlockPage.qml:62
-#: qml-sfos/pages/EntriesPage.qml:165
+#: qml-sfos/pages/EntriesPage.qml:172
 msgid "Close Database"
 msgstr ""
 
 #: qml/pages/EntriesPage.qml:254 qml-sfos/pages/ViewModePage.qml:35
-#: qml-sfos/pages/EntriesPage.qml:173
+#: qml-sfos/pages/EntriesPage.qml:180
 msgid "Change View"
 msgstr ""
 
@@ -375,7 +375,7 @@ msgstr ""
 msgid "Attachment"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:64 qml-sfos/pages/EntryDetailsPage.qml:175
+#: qml/pages/SingleEntry.qml:64 qml-sfos/pages/EntryDetailsPage.qml:39
 msgid "Password"
 msgstr ""
 
@@ -397,12 +397,12 @@ msgctxt "Page header for single entry"
 msgid "Untitled Entry"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:300 qml-sfos/pages/EntryDetailsPage.qml:237
+#: qml/pages/SingleEntry.qml:300 qml-sfos/pages/EntryDetailsPage.qml:260
 msgid "Attachments"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:370 qml-sfos/pages/EntryDetailsPage.qml:204
-#: qml-sfos/pages/EntryDetailsPage.qml:210
+#: qml/pages/SingleEntry.qml:370 qml-sfos/pages/EntryDetailsPage.qml:227
+#: qml-sfos/pages/EntryDetailsPage.qml:233
 msgid "Notes"
 msgstr ""
 
@@ -419,11 +419,11 @@ msgstr ""
 msgid "Tap reveal to view notes"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:463 qml-sfos/pages/EntryDetailsPage.qml:159
+#: qml/pages/SingleEntry.qml:463 qml-sfos/pages/EntryDetailsPage.qml:181
 msgid "Main"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:473 qml-sfos/pages/EntryDetailsPage.qml:165
+#: qml/pages/SingleEntry.qml:473 qml-sfos/pages/EntryDetailsPage.qml:187
 msgid "Username"
 msgstr ""
 
@@ -432,7 +432,7 @@ msgstr ""
 msgid "Loading…"
 msgstr ""
 
-#: qml/pages/SingleEntry.qml:518 qml-sfos/pages/EntryDetailsPage.qml:185
+#: qml/pages/SingleEntry.qml:518 qml-sfos/pages/EntryDetailsPage.qml:208
 msgid "URL"
 msgstr ""
 
@@ -441,7 +441,7 @@ msgid "TOTP (Valid for %1)"
 msgstr ""
 
 #: qml/pages/SingleEntry.qml:539 qml/pages/SingleEntry.qml:543
-#: qml-sfos/pages/EntryDetailsPage.qml:197
+#: qml-sfos/pages/EntryDetailsPage.qml:220
 msgid "TOTP"
 msgstr ""
 
@@ -560,150 +560,15 @@ msgctxt "Saved database searches"
 msgid "Saved Searches"
 msgstr ""
 
-#: qml-sfos/pages/OpenDatabasePage.qml:48 qml-sfos/pages/UnlockPage.qml:51
-msgid "Error: %1"
-msgstr ""
-
-#: qml-sfos/pages/OpenDatabasePage.qml:88
-msgid "Master password"
-msgstr ""
-
-#: qml-sfos/pages/ViewModePage.qml:17
-msgid "All entries"
-msgstr ""
-
-#: qml-sfos/pages/ViewModePage.qml:18 qml-sfos/pages/EntriesPage.qml:30
-msgid "Special categories"
-msgstr ""
-
-#: qml-sfos/pages/ViewModePage.qml:19 qml-sfos/pages/EntriesPage.qml:31
-msgid "2FA codes"
-msgstr ""
-
-#: qml-sfos/pages/ViewModePage.qml:21 qml-sfos/pages/EntriesPage.qml:33
-msgid "Saved searches"
-msgstr ""
-
-#: qml-sfos/pages/UnlockPage.qml:25
-msgid "There is no locked database"
-msgstr ""
-
-#: qml-sfos/pages/UnlockPage.qml:44
-msgid "Error: %1. Wrong passcode?"
-msgstr ""
-
-#: qml-sfos/pages/ViewAttachmentPage.qml:38
-msgid "Saved %1"
-msgstr ""
-
-#: qml-sfos/pages/ViewAttachmentPage.qml:54
-msgid "Export to"
-msgstr ""
-
-#: qml-sfos/pages/ViewAttachmentPage.qml:116
-msgid "Cannot preview this file type"
-msgstr ""
-
-#: qml-sfos/pages/ViewAttachmentPage.qml:117
-msgid "Pull down to export the attachment."
-msgstr ""
-
-#: qml-sfos/pages/AboutPage.qml:71
-msgid ""
-"KeePassRX is a password manager for KeePass databases. It is licensed under "
-"the GNU AGPL v3 license."
-msgstr ""
-
-#: qml-sfos/pages/EntryDetailsPage.qml:36
-#: qml-sfos/pages/EntryDetailsPage.qml:155
-msgid "Untitled entry"
-msgstr ""
-
-#: qml-sfos/pages/EntryDetailsPage.qml:68
-msgid "Unable to open attachment."
-msgstr ""
-
-#: qml-sfos/pages/EntryDetailsPage.qml:196
-msgid "TOTP (valid for %1)"
-msgstr ""
-
-#: qml-sfos/pages/EntryDetailsPage.qml:219
-msgid "Other fields"
-msgstr ""
-
-#: qml-sfos/pages/DatabaseListPage.qml:20
-msgid "Select database"
-msgstr ""
-
-#: qml-sfos/pages/DatabaseListPage.qml:92
-msgid "Refresh"
-msgstr ""
-
-#: qml-sfos/pages/DatabaseListPage.qml:103
-msgid "No databases"
-msgstr ""
-
-#: qml-sfos/pages/DatabaseListPage.qml:104
-msgid "Pull down to add a database."
-msgstr ""
-
-#: qml-sfos/pages/DatabaseListPage.qml:125
-msgid "Last modified: %1"
-msgstr ""
-
-#: qml-sfos/pages/DatabaseListPage.qml:141
-msgid "Delete"
-msgstr ""
-
-#: qml-sfos/pages/DatabaseListPage.qml:144
-msgid "Deleting"
-msgstr ""
-
-#: qml-sfos/pages/EntriesPage.qml:181
-msgid "No entries"
-msgstr ""
-
-#: qml-sfos/pages/SettingsPage.qml:30
-msgid "Database accent colors"
-msgstr ""
-
-#: qml-sfos/pages/SettingsPage.qml:31
-msgid "Tint entries with the color assigned to them in the database."
-msgstr ""
-
-#: qml-sfos/pages/SettingsPage.qml:37
-msgid "Show recycle bin"
-msgstr ""
-
-#: qml-sfos/pages/SettingsPage.qml:38
-msgid "Include entries from the database's recycle bin group while browsing."
-msgstr ""
-
-#: qml-sfos/pages/SettingsPage.qml:45
-msgid ""
-"Offer a Lock action that locks the database with your master password "
-"instead of closing it."
-msgstr ""
-
-#: qml-sfos/pages/SettingsPage.qml:51
-msgid "Lock or close when idle"
-msgstr ""
-
-#: qml-sfos/pages/SettingsPage.qml:52
-msgid ""
-"Lock the open database (or close it, when locking is disabled) 30 seconds "
-"after the app is minimized."
-msgstr ""
-
-#: qml-sfos/components/DetailField.qml:64
+#: qml-sfos/components/DetailField.qml:67
 msgid "Copy to clipboard"
 msgstr ""
 
-#: qml-sfos/components/DetailField.qml:69
+#: qml-sfos/components/DetailField.qml:72
 msgid "Hide"
 msgstr ""
 
-#: qml-sfos/components/DetailField.qml:69
+#: qml-sfos/components/DetailField.qml:72
 msgid "Show"
 msgstr ""
 
@@ -745,4 +610,143 @@ msgstr ""
 
 #: qml-sfos/harbour-keepassrx.qml:220
 msgid "Token '%1' copied. Valid for %2"
+msgstr ""
+
+#: qml-sfos/pages/AboutPage.qml:71
+msgid ""
+"KeePassRX is a password manager for KeePass databases. It is licensed under "
+"the GNU AGPL v3 license."
+msgstr ""
+
+#: qml-sfos/pages/DatabaseListPage.qml:20
+msgid "Select database"
+msgstr ""
+
+#: qml-sfos/pages/DatabaseListPage.qml:92
+msgid "Refresh"
+msgstr ""
+
+#: qml-sfos/pages/DatabaseListPage.qml:103
+msgid "No databases"
+msgstr ""
+
+#: qml-sfos/pages/DatabaseListPage.qml:104
+msgid "Pull down to add a database."
+msgstr ""
+
+#: qml-sfos/pages/DatabaseListPage.qml:125
+msgid "Last modified: %1"
+msgstr ""
+
+#: qml-sfos/pages/DatabaseListPage.qml:141
+msgid "Delete"
+msgstr ""
+
+#: qml-sfos/pages/DatabaseListPage.qml:144
+msgid "Deleting"
+msgstr ""
+
+#: qml-sfos/pages/EntryDetailsPage.qml:41
+msgid "Password (Entropy: %1 bits)"
+msgstr ""
+
+#: qml-sfos/pages/EntryDetailsPage.qml:58
+#: qml-sfos/pages/EntryDetailsPage.qml:177
+msgid "Untitled entry"
+msgstr ""
+
+#: qml-sfos/pages/EntryDetailsPage.qml:90
+msgid "Unable to open attachment."
+msgstr ""
+
+#: qml-sfos/pages/EntryDetailsPage.qml:219
+msgid "TOTP (valid for %1)"
+msgstr ""
+
+#: qml-sfos/pages/EntryDetailsPage.qml:242
+msgid "Other fields"
+msgstr ""
+
+#: qml-sfos/pages/OpenDatabasePage.qml:48 qml-sfos/pages/UnlockPage.qml:51
+msgid "Error: %1"
+msgstr ""
+
+#: qml-sfos/pages/OpenDatabasePage.qml:88
+msgid "Master password"
+msgstr ""
+
+#: qml-sfos/pages/SettingsPage.qml:30
+msgid "Database accent colors"
+msgstr ""
+
+#: qml-sfos/pages/SettingsPage.qml:31
+msgid "Tint entries with the color assigned to them in the database."
+msgstr ""
+
+#: qml-sfos/pages/SettingsPage.qml:37
+msgid "Show recycle bin"
+msgstr ""
+
+#: qml-sfos/pages/SettingsPage.qml:38
+msgid "Include entries from the database's recycle bin group while browsing."
+msgstr ""
+
+#: qml-sfos/pages/SettingsPage.qml:45
+msgid ""
+"Offer a Lock action that locks the database with your master password "
+"instead of closing it."
+msgstr ""
+
+#: qml-sfos/pages/SettingsPage.qml:51
+msgid "Lock or close when idle"
+msgstr ""
+
+#: qml-sfos/pages/SettingsPage.qml:52
+msgid ""
+"Lock the open database (or close it, when locking is disabled) 30 seconds "
+"after the app is minimized."
+msgstr ""
+
+#: qml-sfos/pages/UnlockPage.qml:25
+msgid "There is no locked database"
+msgstr ""
+
+#: qml-sfos/pages/UnlockPage.qml:44
+msgid "Error: %1. Wrong passcode?"
+msgstr ""
+
+#: qml-sfos/pages/ViewAttachmentPage.qml:38
+msgid "Saved %1"
+msgstr ""
+
+#: qml-sfos/pages/ViewAttachmentPage.qml:54
+msgid "Export to"
+msgstr ""
+
+#: qml-sfos/pages/ViewAttachmentPage.qml:116
+msgid "Cannot preview this file type"
+msgstr ""
+
+#: qml-sfos/pages/ViewAttachmentPage.qml:117
+msgid "Pull down to export the attachment."
+msgstr ""
+
+#: qml-sfos/pages/ViewModePage.qml:17
+msgid "All entries"
+msgstr ""
+
+#: qml-sfos/pages/ViewModePage.qml:18 qml-sfos/pages/EntriesPage.qml:30
+msgid "Special categories"
+msgstr ""
+
+#: qml-sfos/pages/ViewModePage.qml:19 qml-sfos/pages/EntriesPage.qml:31
+msgid "2FA codes"
+msgstr ""
+
+#: qml-sfos/pages/ViewModePage.qml:21 qml-sfos/pages/EntriesPage.qml:33
+msgid "Saved searches"
+msgstr ""
+
+#: qml-sfos/pages/EntriesPage.qml:188
+msgid "No entries"
 msgstr ""

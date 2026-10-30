@@ -129,11 +129,71 @@ fn output_kpxc_icons() {
     fs::write(Path::new(&out_dir).join("kpxc_icons.rs"), out).unwrap();
 }
 
+fn generate_zxcvbn_dictionary() {
+    let manifest_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap());
+    let source_dir = manifest_dir.join("src/zxcvbn");
+    let out_dir = PathBuf::from(env::var("OUT_DIR").unwrap());
+    let generator_source = source_dir.join("dict-generate.cpp");
+    let words = [
+        "words-eng_wiki.txt",
+        "words-female.txt",
+        "words-male.txt",
+        "words-passwd.txt",
+        "words-surname.txt",
+        "words-tv_film.txt",
+    ];
+    let generator = out_dir.join("zxcvbn-dictgen");
+    let header = out_dir.join("dict-src.h");
+
+    // This program runs during the build, so it must be built for the host,
+    // even when the C library is cross-compiled for the target.
+    let compiler = env::var_os("HOST_CXX").unwrap_or_else(|| "c++".into());
+    let status = Command::new(compiler)
+        .arg("-std=c++11")
+        .arg(&generator_source)
+        .arg("-o")
+        .arg(&generator)
+        .status()
+        .expect("Failed to run C++ compiler for zxcvbn dictionary generator");
+    assert!(status.success(), "Failed to compile zxcvbn dictionary generator");
+
+    let mut command = Command::new(generator);
+    command.arg("-o").arg(&header);
+    for word in words {
+        command.arg(source_dir.join(word));
+    }
+    let status = command
+        .status()
+        .expect("Failed to run zxcvbn dictionary generator");
+    assert!(status.success(), "Failed to generate zxcvbn dictionary header");
+}
+
 fn compile_kpxc_zxcvbn() {
+    let out_dir = PathBuf::from(env::var("OUT_DIR").unwrap());
     cc::Build::new()
         .file("src/zxcvbn/zxcvbn.c")
         .include("src/zxcvbn")
+        .include(out_dir)
         .compile("kpxc_zxcvbn");
+}
+
+fn build_zxcvbn() {
+    generate_zxcvbn_dictionary();
+    println!("cargo:rerun-if-changed=src/zxcvbn/dict-generate.cpp");
+    for word in [
+        "words-eng_wiki.txt",
+        "words-female.txt",
+        "words-male.txt",
+        "words-passwd.txt",
+        "words-surname.txt",
+        "words-tv_film.txt",
+    ] {
+        println!("cargo:rerun-if-changed=src/zxcvbn/{word}");
+    }
+    println!("cargo:rerun-if-env-changed=HOST_CXX");
+    println!("cargo:rerun-if-changed=src/zxcvbn/zxcvbn.c");
+    println!("cargo:rerun-if-changed=src/zxcvbn/zxcvbn.h");
+    compile_kpxc_zxcvbn();
 }
 
 /// Generate gettext translation files
@@ -254,7 +314,7 @@ fn walk_dir(dir: PathBuf, ext: &str) -> Vec<PathBuf> {
 fn main() {
     generate_licenses_rs().expect("Unable to generate licenses");
     output_kpxc_icons();
-    compile_kpxc_zxcvbn();
+    build_zxcvbn();
     update_language_files();
 
     let qmake_cmd = qmake_call();
@@ -288,8 +348,6 @@ fn main() {
     println!("cargo:rerun-if-changed=src/main.rs");
     println!("cargo:rerun-if-changed=src/rx/icons.rs");
     println!("cargo:rerun-if-changed=src/rx/virtual_hierarchy.rs");
-    println!("cargo:rerun-if-changed=src/zxcvbn/zxcvbn.c");
-    println!("cargo:rerun-if-changed=src/zxcvbn/zxcvbn.h");
     println!("cargo:rerun-if-changed=../about.hbs");
     println!("cargo:rerun-if-changed=qml/");
 
@@ -314,9 +372,7 @@ fn main() {
 #[cfg(not(feature = "gui"))]
 fn main() {
     output_kpxc_icons();
-    compile_kpxc_zxcvbn();
+    build_zxcvbn();
     generate_licenses_rs().expect("Unable to generate licenses");
-    println!("cargo:rerun-if-changed=src/zxcvbn/zxcvbn.c");
-    println!("cargo:rerun-if-changed=src/zxcvbn/zxcvbn.h");
     println!("cargo:rerun-if-changed=../about.hbs");
 }

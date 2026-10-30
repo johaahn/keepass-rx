@@ -1,0 +1,14 @@
+zxcvbn-c dictionary generator and inputs
+
+Source: tsyrogit/zxcvbn-c, tag v2.5 (commit f3f2d71)
+https://github.com/tsyrogit/zxcvbn-c/tree/v2.5
+
+The files dict-generate.cpp and words-*.txt are copied from that release.
+The generated dict-src.h is intentionally produced in Cargo's OUT_DIR during
+build. The existing generated header was byte-for-byte identical to output
+from this generator and these six word lists before they were vendored.
+
+The upstream project and these files are licensed under the MIT License;
+see LICENSE.txt in the upstream release. The generator has a local portability
+fix: it includes <cstdint> explicitly, as required for uint64_t on current
+compilers.

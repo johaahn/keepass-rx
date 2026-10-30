@@ -101,6 +101,7 @@ Page {
                 entryNotes: entry.notes ? entry.notes : "",
                 entryHasUsername: entry.hasUsername === true,
                 entryHasPassword: entry.hasPassword === true,
+                entryEntropy: entry.entropy !== undefined ? entry.entropy : null,
                 entryHasUrl: entry.hasUrl === true,
                 entryHasNotes: entry.hasNotes === true,
                 entryHasTotp: entry.hasTotp === true,

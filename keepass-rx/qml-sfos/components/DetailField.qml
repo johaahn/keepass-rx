@@ -12,7 +12,7 @@ ListItem {
     id: field
 
     property string label
-    property color labelColor: Theme.secondaryColor
+    property color labelColor: Theme.highlightColor
     property string value
     property bool sensitive: false
     property bool revealed: false

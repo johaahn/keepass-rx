@@ -41,15 +41,6 @@ Page {
         return Tr.tr("Password (Entropy: %1 bits)").arg(Number(entryEntropy).toFixed(2));
     }
 
-    function entropyColor() {
-        if (Number(entryEntropy) < 40) {
-            return Theme.errorColor;
-        } else if (Number(entryEntropy) < 75) {
-            return Theme.secondaryHighlightColor;
-        }
-        return Theme.highlightColor;
-    }
-
     onStatusChanged: {
         if (status === PageStatus.Active) {
             applicationWindow.coverEntryUuid = entryUuid;
@@ -195,7 +186,6 @@ Page {
             DetailField {
                 visible: entryHasPassword
                 label: entryPage.passwordLabel()
-                labelColor: entryPage.hasEntropy() ? entryPage.entropyColor() : Theme.secondaryColor
                 sensitive: true
                 revealed: passwordRevealed.length > 0
                 value: passwordRevealed

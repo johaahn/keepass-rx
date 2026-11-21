@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 12:02+0000\n"
+"POT-Creation-Date: 2026-10-30 15:14+0000\n"
 "PO-Revision-Date: 2026-04-01 19:10+0000\n"
 "Last-Translator: Andi Chandler <andi@gowling.com>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
@@ -53,6 +53,14 @@ msgid "Select Database"
 msgstr ""
 
 msgid "Tap + to import a database."
+msgstr ""
+
+msgctxt ""
+"The sync directory is the directory that holds \"externally managed\" kdb/"
+"kdbx files."
+msgid ""
+"Databases in <a href=\"file://~/.local/share/keepassrx.projectmoon/"
+"synced\">%1</a> will automatically show up in the list."
 msgstr ""
 
 msgid "Last Modified: %1"
@@ -285,6 +293,10 @@ msgstr ""
 msgid "%1 copied to clipboard (30 secs)"
 msgstr ""
 
+msgctxt "Page header for single entry"
+msgid "Untitled Entry"
+msgstr ""
+
 msgid "Attachments"
 msgstr ""
 
@@ -358,6 +370,10 @@ msgid ""
 "projectmoon/keepass-rx</a>"
 msgstr ""
 
+msgctxt "The totp.validFor field has an s after it. e.g. 30s (seconds)"
+msgid "Token '%1' copied. Valid for %2"
+msgstr ""
+
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."
@@ -404,4 +420,148 @@ msgstr ""
 
 msgctxt "Saved database searches"
 msgid "Saved Searches"
+msgstr ""
+
+msgid "View details"
+msgstr ""
+
+msgid "Copy username"
+msgstr ""
+
+msgid "Copy password"
+msgstr ""
+
+msgid "Copy 2FA code"
+msgstr ""
+
+msgid "Copy to clipboard"
+msgstr ""
+
+msgid "Hide"
+msgstr ""
+
+msgid "Show"
+msgstr ""
+
+msgid "Database locked"
+msgstr ""
+
+msgid "Password copied"
+msgstr ""
+
+msgid "2FA code copied"
+msgstr ""
+
+msgid "Username copied"
+msgstr ""
+
+msgid "Clipboard cleared."
+msgstr ""
+
+msgid "Token '%1' copied. Valid for %2"
+msgstr ""
+
+msgid ""
+"KeePassRX is a password manager for KeePass databases. It is licensed under "
+"the GNU AGPL v3 license."
+msgstr ""
+
+msgid "Select database"
+msgstr ""
+
+msgid "Refresh"
+msgstr ""
+
+msgid "No databases"
+msgstr ""
+
+msgid "Pull down to add a database."
+msgstr ""
+
+msgid "Last modified: %1"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "Deleting"
+msgstr ""
+
+msgid "Error: %1"
+msgstr ""
+
+msgid "Master password"
+msgstr ""
+
+msgid "Database accent colors"
+msgstr ""
+
+msgid "Tint entries with the color assigned to them in the database."
+msgstr ""
+
+msgid "Show recycle bin"
+msgstr ""
+
+msgid "Include entries from the database's recycle bin group while browsing."
+msgstr ""
+
+msgid ""
+"Offer a Lock action that locks the database with your master password "
+"instead of closing it."
+msgstr ""
+
+msgid "Lock or close when idle"
+msgstr ""
+
+msgid ""
+"Lock the open database (or close it, when locking is disabled) 30 seconds "
+"after the app is minimized."
+msgstr ""
+
+msgid "There is no locked database"
+msgstr ""
+
+msgid "Error: %1. Wrong passcode?"
+msgstr ""
+
+msgid "Saved %1"
+msgstr ""
+
+msgid "Export to"
+msgstr ""
+
+msgid "Cannot preview this file type"
+msgstr ""
+
+msgid "Pull down to export the attachment."
+msgstr ""
+
+msgid "All entries"
+msgstr ""
+
+msgid "Special categories"
+msgstr ""
+
+msgid "2FA codes"
+msgstr ""
+
+msgid "Saved searches"
+msgstr ""
+
+msgid "No entries"
+msgstr ""
+
+msgid "Password (Entropy: %1 bits)"
+msgstr ""
+
+msgid "Untitled entry"
+msgstr ""
+
+msgid "Unable to open attachment."
+msgstr ""
+
+msgid "TOTP (valid for %1)"
+msgstr ""
+
+msgid "Other fields"
 msgstr ""

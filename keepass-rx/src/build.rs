@@ -155,10 +155,7 @@ fn generate_zxcvbn_dictionary() {
         .arg(&generator)
         .status()
         .expect("Failed to run C++ compiler for zxcvbn dictionary generator");
-    assert!(
-        status.success(),
-        "Failed to compile zxcvbn dictionary generator"
-    );
+    assert!(status.success(), "Failed to compile zxcvbn dictionary generator");
 
     let mut command = Command::new(generator);
     command.arg("-o").arg(&header);
@@ -168,10 +165,7 @@ fn generate_zxcvbn_dictionary() {
     let status = command
         .status()
         .expect("Failed to run zxcvbn dictionary generator");
-    assert!(
-        status.success(),
-        "Failed to generate zxcvbn dictionary header"
-    );
+    assert!(status.success(), "Failed to generate zxcvbn dictionary header");
 }
 
 fn compile_kpxc_zxcvbn() {
@@ -236,8 +230,6 @@ fn update_language_files() {
     let exit_status = child.wait().unwrap();
     assert!(exit_status.code() == Some(0));
 
-    add_safe_html_type_comments(&PathBuf::from(&pot_file));
-
     for po_file in po_files() {
         let po_file_name = po_file
             .to_str()
@@ -267,76 +259,6 @@ fn update_language_files() {
         let exit_status = child.wait().unwrap();
         assert!(exit_status.code() == Some(0));
     }
-}
-
-fn add_safe_html_type_comments(pot_path: &Path) {
-    let text = fs::read_to_string(pot_path)
-        .unwrap_or_else(|e| panic!("failed to read {}: {}", pot_path.display(), e));
-
-    let mut units: Vec<String> = Vec::new();
-    let mut cur = String::new();
-    for line in text.split_inclusive('\n') {
-        if line.starts_with("#:") {
-            if !cur.is_empty() {
-                units.push(std::mem::take(&mut cur));
-            }
-        }
-        cur.push_str(line);
-    }
-    if !cur.is_empty() {
-        units.push(cur);
-    }
-
-    let mut out = String::new();
-    for unit in units {
-        if let Some((loc, rest)) = unit.split_once('\n') {
-            if loc.starts_with("#:")
-                && contains_html_tag(&extractmsgid(&unit))
-                && !unit.contains("#~ type: auto-safe-html")
-            {
-                out.push_str(loc);
-                out.push_str("\n");
-                out.push_str("#~ type: auto-safe-html\n");
-                out.push_str(rest);
-                continue;
-            }
-        }
-        out.push_str(&unit);
-    }
-
-    fs::write(pot_path, out)
-        .unwrap_or_else(|e| panic!("failed to write {}: {}", pot_path.display(), e));
-}
-
-/// Returns true iff `s` contains `<` immediately followed by an ASCII letter —
-/// i.e. the start of an HTML tag, mirroring Weblate's own detection.
-fn contains_html_tag(s: &str) -> bool {
-    s.split('<')
-        .skip(1)
-        .any(|r| r.chars().next().map_or(false, |c| c.is_ascii_alphabetic()))
-}
-
-/// Reconstructs a unit's `msgid` for HTML detection. We anchor on the `msgid:`
-/// line itself (skipping any preceding `msgctxt` block and its `"` continuation
-/// lines), then append every following `"` line until the `msgstr` line.
-fn extractmsgid(unit: &str) -> String {
-    let mut lines = unit.split('\n');
-    let mut msgid = String::new();
-    let mut started = false;
-    for line in lines.by_ref() {
-        if started {
-            if line.starts_with("msgstr") {
-                break;
-            }
-            if let Some(v) = line.strip_prefix('"') {
-                msgid.push_str(v);
-            }
-        } else if let Some(v) = line.strip_prefix("msgid ") {
-            msgid.push_str(v);
-            started = true;
-        }
-    }
-    msgid
 }
 
 /// Obtains a list of all QML files
@@ -453,104 +375,4 @@ fn main() {
     build_zxcvbn();
     generate_licenses_rs().expect("Unable to generate licenses");
     println!("cargo:rerun-if-changed=../about.hbs");
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use std::fs;
-    use std::path::PathBuf;
-
-    const POT: &str = "msgid \"\"\nmsgstr \"\"\n\"Content-Type: text/plain; charset=UTF-8\\n\"\n\n#: foo:1\nmsgid \"<b>hi</b>\"\nmsgstr \"\"\n\n#: bar:2\nmsgid \"plain text\"\nmsgstr \"\"\n\n#: baz:3\nmsgctxt \"foo\"\nmsgid \"<i>italic</i>\"\n\"extra\"\nmsgstr \"\"\n#~ type: auto-safe-html\n";
-
-    fn write_tmp(pot: &str) -> PathBuf {
-        let mut path = std::env::temp_dir();
-        path.push(format!("keepass_rx_build_test_{}.pot", std::process::id()));
-        fs::write(&path, pot)
-            .unwrap_or_else(|e| panic!("failed to write {}: {}", path.display(), e));
-        path
-    }
-
-    #[test]
-    fn add_safe_html_type_comments_marks_html_units() {
-        let path = write_tmp(POT);
-        add_safe_html_type_comments(&path);
-        let out = fs::read_to_string(&path)
-            .unwrap_or_else(|e| panic!("failed to read {}: {}", path.display(), e));
-
-        let count = out.matches("#~ type: auto-safe-html").count();
-        assert_eq!(count, 2, "marker count = {}; out = {}", count, out);
-
-        let lines: Vec<&str> = out.split('\n').collect();
-
-        let foo = lines.iter().position(|l| *l == "#: foo:1").unwrap();
-        assert_eq!(
-            lines[foo + 1],
-            "#~ type: auto-safe-html",
-            "marker not right after #: foo:1\nout = {}",
-            out
-        );
-
-        let baz = lines.iter().position(|l| *l == "#: baz:3").unwrap();
-        assert_eq!(
-            lines[baz + 1],
-            r#"msgid "<i>italic</i>""#,
-            "marker inserted mid-unit\nout = {}",
-            out
-        );
-        let existing = lines
-            .iter()
-            .position(|l| *l == "#~ type: auto-safe-html")
-            .unwrap();
-        let baz_msgid = lines
-            .iter()
-            .position(|l| *l == r#"msgid "<i>italic</i>""#)
-            .unwrap();
-        assert!(
-            existing > baz_msgid,
-            "existing marker should stay after msgid\nout = {}",
-            out
-        );
-
-        let bar = lines.iter().position(|l| *l == "#: bar:2").unwrap();
-        assert_eq!(
-            lines[bar + 1],
-            r#"msgid "plain text""#,
-            "plain unit changed\nout = {}",
-            out
-        );
-        assert!(
-            !out.contains("#: bar:2\n#~ type: auto-safe-html"),
-            "plain unit got a marker\nout = {}",
-            out
-        );
-
-        add_safe_html_type_comments(&path);
-        let out2 = fs::read_to_string(&path)
-            .unwrap_or_else(|e| panic!("failed to read {}: {}", path.display(), e));
-        let count2 = out2.matches("#~ type: auto-safe-html").count();
-        assert_eq!(
-            count2, 2,
-            "second run changed marker count = {}; out2 = {}",
-            count2, out2
-        );
-
-        fs::remove_file(&path)
-            .unwrap_or_else(|e| panic!("failed to delete {}: {}", path.display(), e));
-    }
-
-    #[test]
-    fn contains_html_tag() {
-        assert!(contains_html_tag("<a href='x'>"));
-        assert!(contains_html_tag("<b>bold</b>"));
-        assert!(contains_html_tag("<br/>"));
-        assert!(!contains_html_tag("C < 5"));
-        assert!(!contains_html_tag("no html"));
-    }
-
-    #[test]
-    fn extractmsgid_ignores_msgctxt() {
-        let unit = "msgctxt \"foo\"\nmsgid \"the actual id\"\n\"continuation\"\nmsgstr \"\"\n";
-        assert_eq!(extractmsgid(unit), "the actual id\"\ncontinuation\"");
-    }
 }

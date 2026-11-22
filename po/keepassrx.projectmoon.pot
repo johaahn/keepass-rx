@@ -72,7 +72,6 @@ msgid "Tap + to import a database."
 msgstr ""
 
 #: qml/pages/DBList.qml:200
-#~ type: auto-safe-html
 msgctxt ""
 "The sync directory is the directory that holds \"externally managed\" kdb/"
 "kdbx files."
@@ -475,14 +474,12 @@ msgid "Manual"
 msgstr ""
 
 #: qml/pages/AboutPage.qml:116
-#~ type: auto-safe-html
 msgid ""
 "• Gemini: <a href='gemini://agnos.is/projects/keepassrx/'>gemini://agnos.is/"
 "projects/keepassrx/</a>"
 msgstr ""
 
 #: qml/pages/AboutPage.qml:129
-#~ type: auto-safe-html
 msgid ""
 "• Web: <a href='https://agnos.is/projects/keepassrx/'>https://agnos.is/"
 "projects/keepassrx/</a>"
@@ -493,7 +490,6 @@ msgid "Source Code"
 msgstr ""
 
 #: qml/pages/AboutPage.qml:147
-#~ type: auto-safe-html
 msgid ""
 "<a href='https://git.agnos.is/projectmoon/keepass-rx'>https://git.agnos.is/"
 "projectmoon/keepass-rx</a>"
@@ -505,7 +501,6 @@ msgid "Token '%1' copied. Valid for %2"
 msgstr ""
 
 #: src/gui/instructions.rs:9
-#~ type: auto-safe-html
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
 "using its action bar."

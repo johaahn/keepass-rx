@@ -3,7 +3,7 @@ jobs:
   license-check:
     runs-on: docker
     container:
-      image: rust:1.91.0
+      image: rust:1.95.0
     steps:
       - name: Add NodeJS deb repo
         run: curl -fsSL https://deb.nodesource.com/setup_22.x | bash -

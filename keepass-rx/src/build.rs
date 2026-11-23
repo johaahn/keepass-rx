@@ -359,13 +359,12 @@ fn main() {
     println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}Quick");
     println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}Qml");
 
-    // Ubuntu Touch (Lomiri, Qt 5.15) additionally uses Widgets, the
-    // QtQuickControls2 style engine, and WebEngine. None of these exist on
+    // Ubuntu Touch (Lomiri, Qt 5.15) additionally uses Widgets and the
+    // QtQuickControls2 style engine. None of these exist on
     // Sailfish OS' Qt 5.6, and the Silica UI does not need them.
     if !cfg!(feature = "sailfish") {
         println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}Widgets");
         println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}QuickControls2");
-        println!("cargo:rustc-link-lib{macos_lib_search}=Qt{lib_framework}WebEngine");
     }
 }
 

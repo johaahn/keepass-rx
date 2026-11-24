@@ -1,0 +1,48 @@
+name: Sailfish OS Build
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: SFOS ${{ matrix.arch }}
+    runs-on: docker-large
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [aarch64]
+    container:
+      image: git.agnos.is/projectmoon/livewire-ci:sfos-${{ matrix.arch }}
+    steps:
+      - name: Own Workspace
+        run: sudo chown -R "$(id -u):$(id -g)" "$GITHUB_WORKSPACE"
+
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install License Generator
+        shell: bash
+        run: |
+          sdk-manage tooling maintain SailfishOS-$SFOS_VERSION \
+              cargo install --locked --root /usr --version 0.8.2 cargo-about
+          cp /srv/mer/toolings/SailfishOS-$SFOS_VERSION/usr/bin/cargo-about \
+              /srv/mer/targets/SailfishOS-$SFOS_VERSION-$SFOS_ARCH/usr/bin/cargo-about
+
+      - name: Build RPM
+        shell: bash
+        run: |
+          version="$(git describe --tags --always | sed -e 's/^v//' -e 's/[^A-Za-z0-9.]/./g')"
+          sudo ln -sfn "$GITHUB_WORKSPACE" /src
+          sudo mkdir -p /out
+          KEEPASSRX_VERSION="$version" bash sfos/docker-entrypoint.sh ${{ matrix.arch }}
+
+      - name: Upload RPM
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: https://data.forgejo.org/forgejo/upload-artifact@v4
+        with:
+          name: keepassrx-sfos-${{ matrix.arch }}
+          path: /out/*.rpm

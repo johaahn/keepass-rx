@@ -1,0 +1,111 @@
+name: Release KeePassRX
+
+on:
+  push:
+    tags: ['v*']
+  # Re-run a release by hand: pick the release tag (not a branch) under
+  # "Use workflow from", so the workflows run as of that tag.
+  workflow_dispatch:
+
+jobs:
+  version:
+    runs-on: docker
+    container:
+      image: code.forgejo.org/oci/node:20-bookworm
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Check Tag Matches Versions
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "${{ github.ref }}" in
+              refs/tags/v*) ;;
+              *) echo "Release must run on a v* tag, not ${{ github.ref }}" >&2; exit 1 ;;
+          esac
+          tag="$(echo "${{ github.ref_name }}" | sed -e 's/^v//' -e 's/-rc[0-9]*$//')"
+          manifest="$(node -p "require('./manifest.json').version")"
+          cargo="$(sed -n 's/^version = "\([^"]*\)"/\1/p' keepass-rx/Cargo.toml | head -1)"
+          spec="$(sed -n 's/^Version:.*!?keepassrx_version:\([^}]*\)}.*/\1/p' rpm/harbour-keepassrx.spec)"
+          for pair in "manifest.json:$manifest" "keepass-rx/Cargo.toml:$cargo" "rpm/harbour-keepassrx.spec:$spec"; do
+              if [ "$tag" != "${pair#*:}" ]; then
+                  echo "Tag ${{ github.ref_name }} does not match ${pair%%:*} (${pair#*:})" >&2
+                  exit 1
+              fi
+          done
+
+  tests:
+    needs: version
+    uses: ./.forgejo/workflows/test.yaml
+
+  clickable:
+    needs: tests
+    uses: ./.forgejo/workflows/clickable.yaml
+
+  sfos:
+    needs: tests
+    uses: ./.forgejo/workflows/sfos.yaml
+
+  release:
+    needs: [clickable, sfos]
+    runs-on: docker
+    container:
+      image: code.forgejo.org/oci/node:20-bookworm
+    steps:
+      - name: Download Packages
+        uses: https://data.forgejo.org/forgejo/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Collect Packages
+        run: |
+          mkdir -p dist
+          find artifacts -type f \( -name '*.click' -o -name '*.rpm' \) -exec mv {} dist/ \;
+          ls -l dist
+
+      - name: Publish Release
+        uses: actions/forgejo-release@v2.7.3
+        with:
+          direction: upload
+          url: https://git.agnos.is
+          repo: projectmoon/keepass-rx
+          token: ${{ secrets.RELEASE_TOKEN }}
+          tag: ${{ github.ref_name }}
+          release-dir: dist/
+
+  openstore:
+    needs: [clickable, sfos]
+    runs-on: docker
+    container:
+      image: git.agnos.is/projectmoon/livewire-ci:clickable-amd64
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Download amd64 Build
+        uses: https://data.forgejo.org/forgejo/download-artifact@v4
+        with:
+          name: keepassrx-click-amd64
+          path: build/x86_64-linux-gnu/app/
+
+      - name: Download arm64 Build
+        uses: https://data.forgejo.org/forgejo/download-artifact@v4
+        with:
+          name: keepassrx-click-arm64
+          path: build/aarch64-linux-gnu/app/
+
+      - name: Download armhf Build
+        uses: https://data.forgejo.org/forgejo/download-artifact@v4
+        with:
+          name: keepassrx-click-armhf
+          path: build/arm-linux-gnueabihf/app/
+
+      - name: Publish arm64
+        run: clickable publish --apikey=${{ secrets.OPEN_STORE_API_KEY }} --arch arm64
+
+      - name: Publish amd64
+        run: clickable publish --apikey=${{ secrets.OPEN_STORE_API_KEY }} --arch amd64
+
+      - name: Publish armhf
+        run: clickable publish --apikey=${{ secrets.OPEN_STORE_API_KEY }} --arch armhf

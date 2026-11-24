@@ -8,7 +8,7 @@ jobs:
     name: Clickable amd64
     runs-on: docker-large
     container:
-      image: clickable/ci-ut24.04-1.x-amd64
+      image: git.agnos.is/projectmoon/livewire-ci:clickable-amd64
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -51,7 +51,7 @@ jobs:
     name: Unit Tests
     runs-on: docker-large
     container:
-      image: clickable/ci-ut24.04-1.x-amd64
+      image: git.agnos.is/projectmoon/livewire-ci:clickable-amd64
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4

@@ -1,0 +1,20 @@
+name: PR CI
+
+on:
+  pull_request:
+
+jobs:
+  clickable:
+    name: Clickable amd64
+    runs-on: docker-large
+    container:
+      image: git.agnos.is/projectmoon/livewire-ci:clickable-amd64
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Build App
+        run: clickable build --arch amd64
+
+  tests:
+    uses: ./.forgejo/workflows/test.yaml

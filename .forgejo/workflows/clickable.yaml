@@ -1,0 +1,50 @@
+name: Clickable Build
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    name: Clickable ${{ matrix.arch }}
+    runs-on: docker-large
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            triplet: x86_64-linux-gnu
+            rust_target: x86_64-unknown-linux-gnu
+          - arch: arm64
+            triplet: aarch64-linux-gnu
+            rust_target: aarch64-unknown-linux-gnu
+          - arch: armhf
+            triplet: arm-linux-gnueabihf
+            rust_target: armv7-unknown-linux-gnueabihf
+    container:
+      image: git.agnos.is/projectmoon/livewire-ci:clickable-${{ matrix.arch }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Cache
+        uses: https://github.com/Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.arch }}
+
+      - name: Build
+        run: clickable build --arch ${{ matrix.arch }} --clean
+
+      # Artifacts are only kept for release tags. Branch builds just check
+      # that the app still builds.
+      - name: Remove Build Files
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          rm -rf build/${{ matrix.triplet }}/app/release/
+          rm -rf build/${{ matrix.triplet }}/app/${{ matrix.rust_target }}/
+
+      - name: Upload Click
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: https://data.forgejo.org/forgejo/upload-artifact@v4
+        with:
+          name: keepassrx-click-${{ matrix.arch }}
+          path: build/${{ matrix.triplet }}/app/

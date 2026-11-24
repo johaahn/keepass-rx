@@ -1,0 +1,29 @@
+name: Test KeePassRX
+
+on:
+  workflow_call:
+
+jobs:
+  license-check:
+    name: License Check
+    runs-on: docker
+    container:
+      image: git.agnos.is/projectmoon/livewire-ci:rust
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: License Check
+        run: cargo deny check licenses
+
+  unit-tests:
+    name: Unit Tests
+    runs-on: docker-large
+    container:
+      image: git.agnos.is/projectmoon/livewire-ci:clickable-amd64
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run Unit Tests
+        run: mkdir -p build/x86_64-linux-gnu/app && clickable test --arch amd64

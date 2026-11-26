@@ -13,6 +13,9 @@ builds = ["sailfish", "clickable"]
 [qml]
 triggers = ["keepass-rx/src/gui/", "keepass-rx/src/main.rs"]
 rust_sources = ["keepass-rx/src"]
+contexts = { keepassrx = "KeepassRx", Tr = "RxTranslator" }
+wiring_attribute = "observing_model"
+wiring_macro = "actor-macro/src/lib.rs"
 
 [qml.sailfish]
 dir = "keepass-rx/qml-sfos"

@@ -81,8 +81,10 @@ jobs:
           release-dir: dist/
           prerelease: ${{ contains(github.ref_name, '-rc') }}
 
+  # Release candidates go to the Forgejo prerelease only.
   openstore:
     needs: [clickable, sfos]
+    if: ${{ !contains(github.ref_name, '-rc') }}
     runs-on: docker
     container:
       image: git.agnos.is/projectmoon/livewire-ci:clickable-amd64

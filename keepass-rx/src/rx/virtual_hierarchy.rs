@@ -157,8 +157,7 @@ impl VirtualHierarchy for DefaultView {
         container_uuid: Uuid,
         search_term: Option<&str>,
     ) -> Vec<RxContainedRef<'_>> {
-        self
-            .root()
+        self.root()
             .get_container(container_uuid)
             .map(|container| match search_term {
                 Some(_) => container.search_children_recursive(

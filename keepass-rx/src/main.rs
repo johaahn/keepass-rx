@@ -120,7 +120,8 @@ fn init_logging() -> Result<()> {
     create_dir_all(&log_dir).context("creating log directory")?;
 
     let config = ConfigBuilder::new().build();
-    let file = File::create(log_dir.join("keepassrx.log")).context("creating keepassrx.log")?;
+    let file =
+        File::create(log_dir.join("keepassrx.log")).context("creating keepassrx.log")?;
 
     let loggers: Vec<Box<dyn SharedLogger>> = vec![
         TermLogger::new(
@@ -140,7 +141,9 @@ fn init_logging() -> Result<()> {
 
 #[cfg(feature = "gui")]
 fn load_gui() -> Result<()> {
-    use crate::gui::qml::{RxUiContainerStack, RxListItem, RxUiDatabase, RxUiEntry, RxUiLicenses};
+    use crate::gui::qml::{
+        RxListItem, RxUiContainerStack, RxUiDatabase, RxUiEntry, RxUiLicenses,
+    };
     use crate::gui::utils::move_old_dirs_and_files;
 
     init_gettext();

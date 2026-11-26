@@ -155,7 +155,10 @@ fn generate_zxcvbn_dictionary() {
         .arg(&generator)
         .status()
         .expect("Failed to run C++ compiler for zxcvbn dictionary generator");
-    assert!(status.success(), "Failed to compile zxcvbn dictionary generator");
+    assert!(
+        status.success(),
+        "Failed to compile zxcvbn dictionary generator"
+    );
 
     let mut command = Command::new(generator);
     command.arg("-o").arg(&header);
@@ -165,7 +168,10 @@ fn generate_zxcvbn_dictionary() {
     let status = command
         .status()
         .expect("Failed to run zxcvbn dictionary generator");
-    assert!(status.success(), "Failed to generate zxcvbn dictionary header");
+    assert!(
+        status.success(),
+        "Failed to generate zxcvbn dictionary header"
+    );
 }
 
 fn compile_kpxc_zxcvbn() {

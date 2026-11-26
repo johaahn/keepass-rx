@@ -27,12 +27,14 @@ pub(crate) fn sort_contained_refs(items: &mut [RxContainedRef<'_>]) {
 }
 
 pub(crate) fn sort_containers(items: &mut [RxContainer]) {
-    items.sort_by(|this, that| match (this.contained_ref(), that.contained_ref()) {
-        (Some(this), Some(that)) => compare_contained_refs(&this, &that),
-        (Some(_), None) => Ordering::Less,
-        (None, Some(_)) => Ordering::Greater,
-        (None, None) => this.uuid().cmp(&that.uuid()),
-    });
+    items.sort_by(
+        |this, that| match (this.contained_ref(), that.contained_ref()) {
+            (Some(this), Some(that)) => compare_contained_refs(&this, &that),
+            (Some(_), None) => Ordering::Less,
+            (None, Some(_)) => Ordering::Greater,
+            (None, None) => this.uuid().cmp(&that.uuid()),
+        },
+    );
 }
 
 #[derive(Clone)]
@@ -568,7 +570,10 @@ mod tests {
     use uuid::Uuid;
     use zeroize::Zeroizing;
 
-    use crate::rx::{ZeroableDatabase, virtual_hierarchy::{DefaultView, VirtualHierarchy}};
+    use crate::rx::{
+        ZeroableDatabase,
+        virtual_hierarchy::{DefaultView, VirtualHierarchy},
+    };
 
     use super::*;
 

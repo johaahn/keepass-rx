@@ -187,7 +187,11 @@ fn color_to_hex(color: Color) -> String {
     format!("#{:02X}{:02X}{:02X}", color.r, color.g, color.b)
 }
 
-fn highlighted_attachment_html(file_name: &str, text: &str, dark: bool) -> Option<(String, String)> {
+fn highlighted_attachment_html(
+    file_name: &str,
+    text: &str,
+    dark: bool,
+) -> Option<(String, String)> {
     let syntax_set = syntax_set();
     let syntax = file_extension(file_name)
         .and_then(|extension| syntax_set.find_syntax_by_extension(extension))
@@ -309,10 +313,7 @@ fn write_export_file(path: &Path, bytes: &[u8]) -> Result<()> {
 }
 
 fn write_user_file(path: &Path, bytes: &[u8]) -> Result<()> {
-    let mut file = OpenOptions::new()
-        .write(true)
-        .create_new(true)
-        .open(path)?;
+    let mut file = OpenOptions::new().write(true).create_new(true).open(path)?;
 
     file.write_all(bytes)?;
     file.flush()?;
@@ -535,7 +536,12 @@ impl RxUiEntry {
                 Some(kind) if kind.matcher_type() == MatcherType::Text => {
                     let text = std::str::from_utf8(&attachment_bytes)
                         .map_err(|err| anyhow!("Unable to decode text attachment: {}", err))?;
-                    Ok(text_view_result(&file_name, kind.mime_type(), text, self.darkTheme))
+                    Ok(text_view_result(
+                        &file_name,
+                        kind.mime_type(),
+                        text,
+                        self.darkTheme,
+                    ))
                 }
                 Some(kind) if kind.matcher_type() == MatcherType::Image => {
                     let data_url = format!(
@@ -569,7 +575,12 @@ impl RxUiEntry {
                     "",
                 )),
                 None => match std::str::from_utf8(&attachment_bytes) {
-                    Ok(text) => Ok(text_view_result(&file_name, "text/plain", text, self.darkTheme)),
+                    Ok(text) => Ok(text_view_result(
+                        &file_name,
+                        "text/plain",
+                        text,
+                        self.darkTheme,
+                    )),
                     Err(_) => Ok(view_result(
                         true, false, "", &file_name, "", "", "", "", "", "",
                     )),

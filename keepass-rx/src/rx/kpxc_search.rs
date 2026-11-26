@@ -276,9 +276,11 @@ mod tests {
             let mut root = db.root_mut();
             root.name = "Root".into();
 
-            root.add_group().edit(|group| {
-                group.name = "Email".into();
-            }).id()
+            root.add_group()
+                .edit(|group| {
+                    group.name = "Email".into();
+                })
+                .id()
         };
 
         {

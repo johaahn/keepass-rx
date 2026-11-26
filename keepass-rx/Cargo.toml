@@ -77,4 +77,4 @@ gui = []
 sailfish = ["gui", "sailors"]
 # Harbour (Jolla Store) variant of the Sailfish OS build.
 harbour = ["sailfish"]
-default = ["gui"]
+default = []

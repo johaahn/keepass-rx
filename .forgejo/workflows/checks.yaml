@@ -1,0 +1,63 @@
+name: Checks
+
+on:
+  push:
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: never
+  QMAKE: /usr/lib/qt5/bin/qmake
+
+jobs:
+  full:
+    runs-on: docker
+    container:
+      image: code.forgejo.org/oci/node:20-bookworm
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Checkout Submodules
+        run: |
+          git submodule init
+          for key in $(git config --name-only --get-regexp '^submodule\..*\.url$'); do
+            url=$(git config "$key")
+            case "$url" in
+              ssh://*) git config "$key" "${{ github.server_url }}/${url#ssh://*/}" ;;
+              *@*:*) git config "$key" "${{ github.server_url }}/${url#*:}" ;;
+            esac
+          done
+          git submodule update
+
+      - name: Install Build Tools
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            python3 g++ pkg-config docker.io \
+            qtbase5-dev qt5-qmake qtdeclarative5-dev qtdeclarative5-dev-tools
+
+      - name: Install Rust
+        uses: https://github.com/dtolnay/rust-toolchain@1.99.0
+        with:
+          components: clippy, rustfmt
+
+      - name: Setup Cache
+        uses: https://github.com/Swatinem/rust-cache@v2
+
+      - name: Cache QML Types
+        id: qml-types
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/sailfish-qml
+            ~/.cache/lomiri-qml
+          key: qml-types-${{ hashFiles('robots.toml') }}
+
+      - name: Copy QML Types
+        if: steps.qml-types.outputs.cache-hit != 'true'
+        run: python3 -I robots/qml/fetch-types
+
+      - name: Run Checks
+        run: ./check.sh full --range "${{ github.event.pull_request.base.sha || github.event.before }}"

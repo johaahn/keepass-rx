@@ -1,0 +1,32 @@
+# Settings for the robots checks in this app. Every key is optional; the
+# defaults are in robots/core/config.py.
+
+[rust]
+manifests = ["Cargo.toml"]
+
+[env]
+set = { GETTEXT_SYSTEM = "1" }
+
+[skills]
+builds = ["sailfish", "clickable"]
+
+[qml]
+triggers = ["keepass-rx/src/gui/", "keepass-rx/src/main.rs"]
+rust_sources = ["keepass-rx/src"]
+
+[qml.sailfish]
+dir = "keepass-rx/qml-sfos"
+main = "keepass-rx/qml-sfos/harbour-keepassrx.qml"
+version = "5.0.0.43"
+arch = "aarch64"
+
+[qml.lomiri]
+dir = "keepass-rx/qml"
+main = "keepass-rx/qml/Main.qml"
+image = "clickable/amd64-ut24.04-1.x-amd64"
+
+[deslop]
+exempt = ["docs/plans/*"]
+gui_dirs = ["keepass-rx/src/gui/"]
+qml_members = ["keepassrx", "AppState", "SettingsBridge"]
+qml_modules = { keepassrx = "1.0" }

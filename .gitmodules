@@ -1,0 +1,3 @@
+[submodule "robots"]
+	path = robots
+	url = ssh://git@ssh.git.agnos.is:22022/projectmoon/say-hello-to-the-robots.git

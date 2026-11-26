@@ -1,0 +1,2 @@
+#!/bin/sh
+exec python3 -I robots/deslop commit-msg "$1"

@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-30 15:14+0000\n"
-"PO-Revision-Date: 2026-05-30 14:01+0000\n"
-"Last-Translator: Serhii Horichenko <serhii@horichenko.com>\n"
+"PO-Revision-Date: 2026-11-26 23:51+0000\n"
+"Last-Translator: Serhii H <serhii@horichenko.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/ubports/"
 "keepassrx/uk/>\n"
 "Language: uk\n"
@@ -18,13 +18,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.6.dev0\n"
+"X-Generator: Weblate 2026.12.dev0\n"
 
 msgid "Copy Username"
 msgstr "Копіювати Логін"
 
 msgid "Copy Password"
-msgstr "Копіювати пароль"
+msgstr "Копіювати Пароль"
 
 msgid "Open URL"
 msgstr "Відкрити посилання"
@@ -63,9 +63,11 @@ msgid ""
 "Databases in <a href=\"file://~/.local/share/keepassrx.projectmoon/"
 "synced\">%1</a> will automatically show up in the list."
 msgstr ""
+"Бази даних з <a href=\"file://~/.local/share/keepassrx.projectmoon/synced\">"
+"%1</a> будуть показані у списку автоматично."
 
 msgid "Last Modified: %1"
-msgstr "Останнє оновлення: %1"
+msgstr "Остання зміна: %1"
 
 msgid "It will only be removed from the app, not your device."
 msgstr "Це буде вилучене лише з програми, але залишиться на пристрої."
@@ -306,7 +308,7 @@ msgstr "%1 скопійовано до буфера обміну (30 сек)"
 
 msgctxt "Page header for single entry"
 msgid "Untitled Entry"
-msgstr ""
+msgstr "Запис без назви"
 
 msgid "Attachments"
 msgstr "Вкладення"
@@ -393,7 +395,7 @@ msgstr ""
 
 msgctxt "The totp.validFor field has an s after it. e.g. 30s (seconds)"
 msgid "Token '%1' copied. Valid for %2"
-msgstr ""
+msgstr "Токен '%1' скопійовано. Дійсний для %2"
 
 msgid ""
 "<b>Showing all 2FA codes in the database.</b><br/>View an entry's details "
@@ -446,148 +448,154 @@ msgid "Saved Searches"
 msgstr "Збережені пошуки"
 
 msgid "View details"
-msgstr ""
+msgstr "Переглянути подробиці"
 
 msgid "Copy username"
-msgstr ""
+msgstr "Копіювати логін"
 
 msgid "Copy password"
-msgstr ""
+msgstr "Копіювати пароль"
 
 msgid "Copy 2FA code"
-msgstr ""
+msgstr "Копіювати код 2FA"
 
 msgid "Copy to clipboard"
-msgstr ""
+msgstr "Скопіювати до буфера обміну"
 
 msgid "Hide"
-msgstr ""
+msgstr "Приховати"
 
 msgid "Show"
-msgstr ""
+msgstr "Показати"
 
 msgid "Database locked"
-msgstr ""
+msgstr "База даних заблокована"
 
 msgid "Password copied"
-msgstr ""
+msgstr "Пароль скопійовано"
 
 msgid "2FA code copied"
-msgstr ""
+msgstr "Код 2FA скопійовано"
 
 msgid "Username copied"
-msgstr ""
+msgstr "Ім'я користувача скопійовано"
 
 msgid "Clipboard cleared."
-msgstr ""
+msgstr "Буфер обміну очищено."
 
 msgid "Token '%1' copied. Valid for %2"
-msgstr ""
+msgstr "Токен '%1' скопійовано. Дійсний для %2"
 
 msgid ""
 "KeePassRX is a password manager for KeePass databases. It is licensed under "
 "the GNU AGPL v3 license."
 msgstr ""
+"KeePassRX — менеджер паролів для баз даних KeePass. Додаток ліцензовано під "
+"ліцензією GNU AGPL v3."
 
 msgid "Select database"
-msgstr ""
+msgstr "Оберіть базу даних"
 
 msgid "Refresh"
-msgstr ""
+msgstr "Оновити"
 
 msgid "No databases"
-msgstr ""
+msgstr "Бази даних відсутні"
 
 msgid "Pull down to add a database."
-msgstr ""
+msgstr "Для додавання бази даних потягніть донизу."
 
 msgid "Last modified: %1"
-msgstr ""
+msgstr "Остання зміна: %1"
 
 msgid "Delete"
-msgstr ""
+msgstr "Видалити"
 
 msgid "Deleting"
-msgstr ""
+msgstr "Видалення"
 
 msgid "Error: %1"
-msgstr ""
+msgstr "Помилка: %1"
 
 msgid "Master password"
-msgstr ""
+msgstr "Майстер-пароль"
 
 msgid "Database accent colors"
-msgstr ""
+msgstr "Акцентовані кольори бази даних"
 
 msgid "Tint entries with the color assigned to them in the database."
-msgstr ""
+msgstr "Фарбувати записи кольором, призначеним у базі даних."
 
 msgid "Show recycle bin"
-msgstr ""
+msgstr "Показати кошик"
 
 msgid "Include entries from the database's recycle bin group while browsing."
-msgstr ""
+msgstr "Під час пошуку також показувати записи з кошика."
 
 msgid ""
 "Offer a Lock action that locks the database with your master password "
 "instead of closing it."
 msgstr ""
+"Пропонувати опцію блокування, яка блокує базу даних майстер-паролем замість "
+"її закриття."
 
 msgid "Lock or close when idle"
-msgstr ""
+msgstr "Заблокувати або закрити, коли не використовується"
 
 msgid ""
 "Lock the open database (or close it, when locking is disabled) 30 seconds "
 "after the app is minimized."
 msgstr ""
+"Блокувати базу даних (або закривати її, якщо блокування вимкнено) через 30 "
+"секунд після згортання програми."
 
 msgid "There is no locked database"
-msgstr ""
+msgstr "Заблокованої бази даних немає"
 
 msgid "Error: %1. Wrong passcode?"
-msgstr ""
+msgstr "Помилка: %1. Неправильний код доступу?"
 
 msgid "Saved %1"
-msgstr ""
+msgstr "%1 збережено"
 
 msgid "Export to"
-msgstr ""
+msgstr "Експортувати до"
 
 msgid "Cannot preview this file type"
-msgstr ""
+msgstr "Передогляд для цього типу файлу недоступний"
 
 msgid "Pull down to export the attachment."
-msgstr ""
+msgstr "Для експорту вкладення потягніть донизу."
 
 msgid "All entries"
-msgstr ""
+msgstr "Усі записи"
 
 msgid "Special categories"
-msgstr ""
+msgstr "Особливі категорії"
 
 msgid "2FA codes"
-msgstr ""
+msgstr "Коди 2FA"
 
 msgid "Saved searches"
-msgstr ""
+msgstr "Збережені пошуки"
 
 msgid "No entries"
-msgstr ""
+msgstr "Записів немає"
 
 msgid "Password (Entropy: %1 bits)"
-msgstr ""
+msgstr "Пароль (Ентропія: %1 біт)"
 
 msgid "Untitled entry"
-msgstr ""
+msgstr "Запис без назви"
 
 msgid "Unable to open attachment."
-msgstr ""
+msgstr "Не вдалося відкрити вкладення."
 
 msgid "TOTP (valid for %1)"
-msgstr ""
+msgstr "TOTP (дійсний для %1)"
 
 msgid "Other fields"
-msgstr ""
+msgstr "Інші поля"
 
 #~ msgid "Tap to copy"
 #~ msgstr "Торкніться, щоб скопіювати"

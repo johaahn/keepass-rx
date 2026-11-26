@@ -20,11 +20,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          case "${{ github.ref }}" in
-              refs/tags/v*) ;;
-              *) echo "Release must run on a v* tag, not ${{ github.ref }}" >&2; exit 1 ;;
-          esac
-          tag="$(echo "${{ github.ref_name }}" | sed -e 's/^v//' -e 's/-rc[0-9]*$//')"
+          [[ "$GITHUB_REF" =~ ^refs/tags/v[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?$ ]] || {
+              echo "Release must run on a vX.Y.Z or vX.Y.Z-rcN tag, not $GITHUB_REF" >&2
+              exit 1
+          }
+          tag="${GITHUB_REF_NAME#v}"
+          tag="${tag%%-rc*}"
           manifest="$(node -p "require('./manifest.json').version")"
           cargo="$(sed -n 's/^version = "\([^"]*\)"/\1/p' keepass-rx/Cargo.toml | head -1)"
           spec="$(sed -n 's/^Version:.*!?keepassrx_version:\([^}]*\)}.*/\1/p' rpm/harbour-keepassrx.spec)"
@@ -46,6 +47,7 @@ jobs:
   sfos:
     needs: tests
     uses: ./.forgejo/workflows/sfos.yaml
+    secrets: inherit
 
   release:
     needs: [clickable, sfos]
@@ -59,9 +61,13 @@ jobs:
           path: artifacts
 
       - name: Collect Packages
+        shell: bash
         run: |
+          set -euo pipefail
           mkdir -p dist
           find artifacts -type f \( -name '*.click' -o -name '*.rpm' \) -exec mv {} dist/ \;
+          test "$(find dist -maxdepth 1 -name '*.rpm' | wc -l)" -eq 2
+          test "$(find dist -maxdepth 1 -name '*.click' | wc -l)" -eq 3
           ls -l dist
 
       - name: Publish Release
@@ -73,6 +79,7 @@ jobs:
           token: ${{ secrets.RELEASE_TOKEN }}
           tag: ${{ github.ref_name }}
           release-dir: dist/
+          prerelease: ${{ contains(github.ref_name, '-rc') }}
 
   openstore:
     needs: [clickable, sfos]

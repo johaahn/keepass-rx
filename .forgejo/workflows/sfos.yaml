@@ -11,8 +11,9 @@ jobs:
     timeout-minutes: 360
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix:
-        arch: [aarch64]
+        arch: [aarch64, armv7hl]
     container:
       image: git.agnos.is/projectmoon/livewire-ci:sfos-${{ matrix.arch }}
     steps:
@@ -24,24 +25,45 @@ jobs:
         with:
           fetch-depth: 0
 
+      # The livewire-ci image has no cargo-about, which the spec runs to
+      # write the license page.
       - name: Install License Generator
         shell: bash
         run: |
           sdk-manage tooling maintain SailfishOS-$SFOS_VERSION \
               cargo install --locked --root /usr --version 0.8.2 cargo-about
           cp /srv/mer/toolings/SailfishOS-$SFOS_VERSION/usr/bin/cargo-about \
-              /srv/mer/targets/SailfishOS-$SFOS_VERSION-$SFOS_ARCH/usr/bin/cargo-about
+              /srv/mer/targets/SailfishOS-$SFOS_VERSION-${{ matrix.arch }}/usr/bin/cargo-about
+
+      - name: Cache Cargo Home
+        uses: actions/cache@v4
+        with:
+          path: /home/mersdk/.cargo
+          key: sfos-cargo-${{ hashFiles('Cargo.lock') }}
+          restore-keys: sfos-cargo-
 
       - name: Build RPM
         shell: bash
         run: |
-          version="$(git describe --tags --always | sed -e 's/^v//' -e 's/[^A-Za-z0-9.]/./g')"
+          set -euo pipefail
+          # SFOS_VERSION comes from the image (Sailfish platform version);
+          # KEEPASSRX_VERSION is the app version, taken from git.
+          version="$(git describe --tags --dirty 2>/dev/null | sed -E -e 's/^v//' -e 's/-rc([0-9]+)/~rc\1/' -e 's/[^A-Za-z0-9.~]/./g' || true)"
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+              version="${GITHUB_REF_NAME#v}"
+              version="${version/-rc/~rc}"
+          fi
+          # No reachable tag: use the crate version.
+          [ -n "$version" ] || version="$(sed -n 's/^version = "\([^"]*\)"/\1/p' keepass-rx/Cargo.toml | head -1)"
           sudo ln -sfn "$GITHUB_WORKSPACE" /src
           sudo mkdir -p /out
-          KEEPASSRX_VERSION="$version" bash sfos/docker-entrypoint.sh ${{ matrix.arch }}
+          sudo chown "$(id -u):$(id -g)" /out
+          KEEPASSRX_VERSION="$version" \
+              bash sfos/docker-entrypoint.sh "${{ matrix.arch }}" 2>&1 \
+              | grep --line-buffered -v 'Path not found for FD .*statx()'
+          test "$(find /out -maxdepth 1 -name '*.rpm' | wc -l)" -eq 1
 
       - name: Upload RPM
-        if: startsWith(github.ref, 'refs/tags/v')
         uses: https://data.forgejo.org/forgejo/upload-artifact@v4
         with:
           name: keepassrx-sfos-${{ matrix.arch }}

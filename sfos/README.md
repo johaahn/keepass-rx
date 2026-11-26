@@ -41,3 +41,14 @@ tree under SB2, including libsodium from source.
 `--features sailfish`, then install the binary, the Silica QML from
 `keepass-rx/qml-sfos/`, the shared assets, the gettext catalogs, and the desktop
 file.
+
+## CI
+
+`.forgejo/workflows/sfos.yaml` builds the aarch64 and armv7hl RPMs in the
+`git.agnos.is/projectmoon/livewire-ci:sfos-<arch>` images, which Livewire
+publishes. Those images have no cargo-about, so the job installs it before the
+build.
+
+A `vX.Y.Z` or `vX.Y.Z-rcN` tag runs `.forgejo/workflows/release.yaml`. The
+RPM version for a release candidate is `X.Y.Z~rcN`, so the final release sorts
+after it, and the Forgejo release is marked as a prerelease.

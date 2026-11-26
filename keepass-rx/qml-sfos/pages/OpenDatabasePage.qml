@@ -7,6 +7,7 @@
  */
 import QtQuick 2.6
 import Sailfish.Silica 1.0
+import Sailfish.Pickers 1.0
 import keepassrx 1.0
 
 Page {
@@ -15,6 +16,7 @@ Page {
 
     property bool busy: false
     property string errorMsg: ""
+    property bool credentialsRejected: false
 
     function clearSensitiveUiState() {
         password.text = "";
@@ -26,11 +28,38 @@ Page {
         }
         busy = true;
         errorMsg = "";
+        credentialsRejected = false;
         keepassrx.storeMasterPassword(password.text);
         password.text = "";
     }
 
+    function keyFileDescription() {
+        if (!applicationWindow.uiDatabase.isKeyFileSet) {
+            return "";
+        }
+        return applicationWindow.uiDatabase.isKeyFileDetected
+            ? Tr.tr("Automatically detected a key file for this database.")
+            : Tr.tr("A key file will be used to open this database.");
+    }
+
+    function credentialsMessage() {
+        return applicationWindow.uiDatabase.isKeyFileSet
+            ? Tr.tr("Incorrect password or key file.")
+            : Tr.tr("Incorrect password, or this database needs a key file. Pull down to add one.");
+    }
+
     Component.onDestruction: clearSensitiveUiState()
+
+    Component {
+        id: keyFilePicker
+        FilePickerPage {
+            title: Tr.tr("Select Key File")
+            onSelectedContentPropertiesChanged: {
+                openDbPage.credentialsRejected = false;
+                applicationWindow.uiDatabase.useKeyFile(selectedContentProperties.filePath);
+            }
+        }
+    }
 
     Connections {
         target: keepassrx
@@ -42,10 +71,12 @@ Page {
             }
         }
 
-        // `message` is the declared signal arg name (Qt 5.6 block form).
+        // `message` and `credentialsRejected` are the declared signal arg names (Qt 5.6 block form).
         onDatabaseOpenFailed: {
             openDbPage.busy = false;
-            openDbPage.errorMsg = Tr.tr("Error: %1").arg(message);
+            openDbPage.credentialsRejected = credentialsRejected;
+            openDbPage.errorMsg = credentialsRejected
+                ? "" : Tr.tr("Error: %1").arg(message);
             openDbPage.clearSensitiveUiState();
         }
     }
@@ -53,6 +84,23 @@ Page {
     SilicaFlickable {
         anchors.fill: parent
         contentHeight: content.height
+
+        PullDownMenu {
+            visible: !applicationWindow.uiDatabase.isKeyFileDetected
+
+            MenuItem {
+                text: applicationWindow.uiDatabase.isKeyFileSet
+                    ? Tr.tr("Remove Key File") : Tr.tr("Use Key File")
+                onClicked: {
+                    openDbPage.credentialsRejected = false;
+                    if (applicationWindow.uiDatabase.isKeyFileSet) {
+                        applicationWindow.uiDatabase.clearKeyFile();
+                    } else {
+                        pageStack.push(keyFilePicker);
+                    }
+                }
+            }
+        }
 
         Column {
             id: content
@@ -90,7 +138,16 @@ Page {
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-accept"
                 EnterKey.onClicked: openDbPage.openDatabase()
-                onTextChanged: openDbPage.errorMsg = ""
+                errorHighlight: openDbPage.credentialsRejected
+                description: openDbPage.credentialsRejected
+                    ? openDbPage.credentialsMessage()
+                    : openDbPage.keyFileDescription()
+                onTextChanged: {
+                    if (text.length > 0) {
+                        openDbPage.errorMsg = "";
+                        openDbPage.credentialsRejected = false;
+                    }
+                }
             }
 
             Button {

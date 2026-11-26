@@ -363,9 +363,8 @@ impl RxUiDatabase {
         let key_file_path = key_file_path.to_string();
         self.set_key_file(&key_file_path);
 
-        // Remove the file, if it exists. Only do this when importing
-        // from ContentHub; we don't want to keep the key file on disk
-        // in data dir.
+        // Removes the ContentHub copy. The Sailfish picker returns the user's own file.
+        #[cfg(not(feature = "sailfish"))]
         if let Err(err) = std::fs::remove_file(&key_file_path) {
             warn!("Could not remove imported key file: {}", err);
         }

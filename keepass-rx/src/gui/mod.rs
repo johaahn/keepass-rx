@@ -236,7 +236,7 @@ pub struct KeepassRx {
     databaseOpened: qt_signal!(),
     databaseClosed: qt_signal!(),
     databaseDeleted: qt_signal!(db_name: QString),
-    databaseOpenFailed: qt_signal!(message: String),
+    databaseOpenFailed: qt_signal!(message: String, credentialsRejected: bool),
     keyFileSet: qt_signal!(),
 
     // data signals
@@ -395,7 +395,7 @@ impl KeepassRx {
                 RxDbType::Imported,
                 last_modified,
             ),
-            Err(err) => self.databaseOpenFailed(format!("{}", err)),
+            Err(err) => self.databaseOpenFailed(format!("{}", err), false),
         }
     }
 

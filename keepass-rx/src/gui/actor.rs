@@ -37,6 +37,19 @@ fn panic_payload_to_string(payload: &(dyn std::any::Any + Send)) -> String {
     }
 }
 
+/// KDBX 3 decrypts before checking the key, so a wrong key fails as `InvalidPadding`.
+fn is_credentials_error(err: &anyhow::Error) -> bool {
+    use keepass::error::{CryptographyError, DatabaseKeyError, DatabaseOpenError};
+
+    matches!(
+        err.downcast_ref::<DatabaseOpenError>(),
+        Some(DatabaseOpenError::Key(DatabaseKeyError::IncorrectKey))
+            | Some(DatabaseOpenError::Cryptography(
+                CryptographyError::InvalidPadding(_)
+            ))
+    )
+}
+
 #[derive(Default)]
 pub struct KeepassRxActor {
     app_state: Rc<QObjectBox<AppState>>,
@@ -335,7 +348,7 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                                 error!("Database materialization failed: {err:?}");
                                 gui.databaseOpenFailed(format!(
                                     "Unable to load database contents: {err}. See log file."
-                                ));
+                                ), false);
                                 return Ok(());
                             }
                             Err(payload) => {
@@ -346,7 +359,7 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                                 );
                                 gui.databaseOpenFailed(format!(
                                     "Internal error while loading database: {payload}. See log file."
-                                ));
+                                ), false);
                                 return Ok(());
                             }
                         };
@@ -382,7 +395,7 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                     }
                     Err(err) => {
                         error!("Database open failed: {err:?}");
-                        gui.databaseOpenFailed(format!("{}", err));
+                        gui.databaseOpenFailed(format!("{}", err), is_credentials_error(&err));
                     }
                 }
 

@@ -2,7 +2,17 @@ name: Sailfish OS Build
 
 on:
   workflow_call:
+    inputs:
+      upload:
+        description: Upload the RPMs as workflow artifacts.
+        type: boolean
+        default: true
   workflow_dispatch:
+    inputs:
+      upload:
+        description: Upload the RPMs as workflow artifacts.
+        type: boolean
+        default: true
 
 jobs:
   build:
@@ -64,6 +74,7 @@ jobs:
           test "$(find /out -maxdepth 1 -name '*.rpm' | wc -l)" -eq 1
 
       - name: Upload RPM
+        if: inputs.upload
         uses: https://data.forgejo.org/forgejo/upload-artifact@v4
         with:
           name: keepassrx-sfos-${{ matrix.arch }}

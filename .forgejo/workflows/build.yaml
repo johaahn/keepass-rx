@@ -11,7 +11,11 @@ jobs:
   clickable:
     needs: tests
     uses: ./.forgejo/workflows/clickable.yaml
+    with:
+      upload: false
 
   sfos:
     needs: tests
     uses: ./.forgejo/workflows/sfos.yaml
+    with:
+      upload: false

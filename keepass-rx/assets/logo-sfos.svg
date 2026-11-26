@@ -18,9 +18,9 @@
       <stop offset="100%" stop-color="#000000" stop-opacity="0.18"/>
     </linearGradient>
     <linearGradient id="frame" gradientUnits="userSpaceOnUse" x1="172" y1="158" x2="880" y2="866">
-      <stop offset="0%" stop-color="#EEEEEB"/>
-      <stop offset="50%" stop-color="#E0E4E2"/>
-      <stop offset="100%" stop-color="#C5CCD6"/>
+      <stop offset="0%" stop-color="#DFE0DC"/>
+      <stop offset="50%" stop-color="#D3D7D5"/>
+      <stop offset="100%" stop-color="#B9C0C9"/>
     </linearGradient>
     <linearGradient id="panel" gradientUnits="userSpaceOnUse" x1="172" y1="158" x2="880" y2="866">
       <stop offset="0%" stop-color="#FAFBF7"/>
@@ -29,9 +29,9 @@
     </linearGradient>
   </defs>
   <path d="M526 158H880V866H172V512A354 354 0 0 1 526 158Z" fill="url(#frame)"/>
-  <path d="M526 158H880V866H172V512A354 354 0 0 1 526 158Z" fill="none" stroke="#CDD1CF" stroke-width="2"/>
+  <path d="M526 158H880V866H172V512A354 354 0 0 1 526 158Z" fill="none" stroke="#C1C5C3" stroke-width="2"/>
   <path d="M526 246H792V778H260V512A266 266 0 0 1 526 246Z" fill="url(#panel)"/>
-  <path d="M526 246H792V778H260V512A266 266 0 0 1 526 246Z" fill="none" stroke="#D7DAD9" stroke-width="2"/>
+  <path d="M526 246H792V778H260V512A266 266 0 0 1 526 246Z" fill="none" stroke="#CACECC" stroke-width="2"/>
   <g transform="translate(536 479) scale(0.70)">
     <path d="M-132 24V-108A132 132 0 0 1 132 -108V24" fill="none" stroke="url(#lockShackle)" stroke-width="68" stroke-linecap="round"/>
     <path d="M-132 24V-108A132 132 0 0 1 132 -108V24" fill="none" stroke="url(#shackleShade)" stroke-width="16" stroke-linecap="round" opacity="0.34"/>

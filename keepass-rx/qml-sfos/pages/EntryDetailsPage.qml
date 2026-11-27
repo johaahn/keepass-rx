@@ -28,6 +28,7 @@ Page {
     property bool entryHasTotp: false
     property var entryCustomFields: null
     property string entryIconUrl: ""
+    property bool openEditor: false
 
     function hasEntropy() {
         return entryHasPassword && entryEntropy !== undefined
@@ -42,6 +43,10 @@ Page {
     }
 
     onStatusChanged: {
+        if (status === PageStatus.Active && openEditor) {
+            openEditor = false;
+            keepassrx.getEntryForEdit(entryUuid);
+        }
         if (status === PageStatus.Active) {
             applicationWindow.coverEntryUuid = entryUuid;
             applicationWindow.coverEntryTitle = entryTitle && entryTitle.length > 0

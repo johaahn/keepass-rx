@@ -1,5 +1,8 @@
 use crate::harness::*;
+use base64::{Engine, prelude::BASE64_STANDARD};
 use keepass::db::EntryId;
+use keepassrx::rx::RxEdit;
+use keepassrx::rx::staged::{StagedEdit, open_staging_key, staging_key_path, write_staged};
 use std::io::Write;
 use std::path::Path;
 use std::process::{Command, Stdio};
@@ -16,11 +19,14 @@ fn cli_available() -> bool {
 }
 
 fn run(args: &[&str], db: &Path) -> String {
+    cli(args, db, &[ENTRY])
+}
+
+fn cli(args: &[&str], db: &Path, rest: &[&str]) -> String {
     let mut child = Command::new(CLI)
-        .args(&args[..1])
-        .args(&args[1..])
+        .args(args)
         .arg(db)
-        .arg(ENTRY)
+        .args(rest)
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
@@ -82,4 +88,34 @@ fn edits_alternate_between_the_app_and_keepassxc() {
 
     assert_eq!(show(&vault.path(), "UserName"), "kpxc-user");
     assert_eq!(show(&vault.path(), "Password"), "second-app-pass");
+}
+
+#[test]
+fn keepassxc_opens_the_staging_key() {
+    if !cli_available() {
+        return;
+    }
+    let vault = TestVault::from_fixture(V4_40);
+    let raw = vault.reopen_raw();
+    let uuid = entry_uuid(&raw, ENTRY);
+    let RxEdit::UpdateEntry(edit) = password_edit(&raw, uuid, "staged-pass");
+    let src = vault.source();
+    let staged = StagedEdit {
+        edit,
+        base_sha256: src.sha256,
+        base: Default::default(),
+        draft: false,
+    };
+    let path = vault.path().with_extension("edit");
+    libsodium_rs::ensure_init().expect("libsodium");
+    let staging =
+        open_staging_key(&path, key(), &src.staging_config).expect("write staging key");
+    write_staged(&path, &staging, &staged).expect("write staged");
+
+    let csv = cli(&["export", "-f", "csv"], &staging_key_path(&path), &[]);
+    assert!(
+        csv.contains(&BASE64_STANDARD.encode(staging.as_bytes())),
+        "{csv}"
+    );
+    assert!(!csv.contains("staged-pass"), "{csv}");
 }

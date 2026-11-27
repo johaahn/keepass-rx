@@ -90,10 +90,18 @@ Page {
         }
 
         onSingleEntryReceived: {
-            if (entriesPage.status !== PageStatus.Active || !entry) {
+            if (!entry) {
+                return;
+            }
+            var draft = entry.uuid === applicationWindow.draftUuid;
+            if (draft) {
+                applicationWindow.draftUuid = "";
+                pageStack.completeAnimation();
+            } else if (entriesPage.status !== PageStatus.Active) {
                 return;
             }
             pageStack.push(Qt.resolvedUrl("EntryDetailsPage.qml"), {
+                openEditor: draft,
                 entryUuid: entry.uuid ? entry.uuid : "",
                 entryTitle: entry.title ? entry.title : "",
                 entryUsername: entry.username ? entry.username : "",

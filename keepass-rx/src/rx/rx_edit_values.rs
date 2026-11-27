@@ -95,6 +95,50 @@ impl RxEntryEdit {
     pub fn from_values(uuid: Uuid, values: &EditValues) -> Result<Self, EditError> {
         Self::from_values_with_rows(uuid, values).map(|(edit, _)| edit)
     }
+
+    pub fn values_over(&self, mut values: EditValues) -> EditValues {
+        let text = |value: &str| EditValue::Text(value.to_string());
+        for (key, value) in [
+            ("title", &self.title),
+            ("username", &self.username),
+            ("password", &self.password),
+            ("url", &self.url),
+            ("notes", &self.notes),
+        ] {
+            values.insert(key.to_string(), text(value));
+        }
+        let read_only = match values.remove("customFields") {
+            Some(EditValue::List(fields)) => fields
+                .into_iter()
+                .filter(|field| {
+                    matches!(field, EditValue::Map(map)
+                        if map.get("editable") == Some(&EditValue::Flag(false)))
+                })
+                .collect(),
+            _ => Vec::new(),
+        };
+        let edited = self.custom_fields.iter().map(|field| {
+            EditValue::Map(HashMap::from([
+                (
+                    "originalName".to_string(),
+                    text(field.original_name.as_deref().unwrap_or_default()),
+                ),
+                ("name".to_string(), text(&field.name)),
+                ("value".to_string(), text(&field.value)),
+                ("protected".to_string(), EditValue::Flag(field.protected)),
+                ("editable".to_string(), EditValue::Flag(true)),
+            ]))
+        });
+        values.insert(
+            "customFields".to_string(),
+            EditValue::List(edited.chain(read_only).collect()),
+        );
+        values.insert(
+            "removedFields".to_string(),
+            EditValue::List(self.removed_fields.iter().map(|name| text(name)).collect()),
+        );
+        values
+    }
 }
 
 pub fn validate_edit_values(values: &EditValues) -> Vec<EditProblem> {
@@ -201,6 +245,44 @@ mod tests {
         assert!(edit.custom_fields[0].protected);
         assert_eq!(edit.custom_fields[1].original_name, None);
         assert!(!edit.custom_fields[1].protected);
+    }
+
+    #[test]
+    fn values_over_restores_the_edit() {
+        let mut values = base();
+        let mut read_only = field("", "otp", "x", false);
+        if let EditValue::Map(map) = &mut read_only {
+            map.insert("editable".to_string(), EditValue::Flag(false));
+        }
+        values.insert(
+            "customFields".into(),
+            EditValue::List(vec![field("", "PIN", "1", true), read_only.clone()]),
+        );
+        let mut edited = base();
+        edited.insert("password".into(), t("changed"));
+        edited.insert(
+            "customFields".into(),
+            EditValue::List(vec![field("PIN", "Code", "2", true)]),
+        );
+        edited.insert("removedFields".into(), EditValue::List(vec![t("Old")]));
+        let edit = RxEntryEdit::from_values(Uuid::nil(), &edited).unwrap();
+
+        let over = edit.values_over(values);
+        assert_eq!(over.get("password"), Some(&t("changed")));
+        assert_eq!(
+            over.get("removedFields"),
+            Some(&EditValue::List(vec![t("Old")]))
+        );
+        let Some(EditValue::List(fields)) = over.get("customFields") else {
+            panic!("no custom fields");
+        };
+        assert_eq!(fields.len(), 2);
+        assert_eq!(fields[1], read_only);
+        let mut expected = field("PIN", "Code", "2", true);
+        if let EditValue::Map(map) = &mut expected {
+            map.insert("editable".to_string(), EditValue::Flag(true));
+        }
+        assert_eq!(fields[0], expected);
     }
 
     #[test]

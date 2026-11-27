@@ -3,6 +3,7 @@ use std::fmt;
 
 use gettextrs::gettext;
 use keepass::db::{Database, EntryId, History, Times, Value};
+use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 use zeroize::Zeroizing;
 
@@ -23,7 +24,7 @@ pub enum RxEdit {
     UpdateEntry(RxEntryEdit),
 }
 
-#[derive(Clone)]
+#[derive(Clone, Serialize, Deserialize)]
 pub struct RxEntryEdit {
     pub uuid: Uuid,
     pub title: Zeroizing<String>,
@@ -35,7 +36,7 @@ pub struct RxEntryEdit {
     pub removed_fields: Vec<String>,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Serialize, Deserialize)]
 pub struct RxFieldEdit {
     pub original_name: Option<String>,
     pub name: String,
@@ -549,6 +550,7 @@ mod tests {
             path: path.clone(),
             format: RxDbFormat::from_version(&db.config.version),
             sha256: sha256_of(&bytes),
+            staging_config: db.config.clone(),
         };
         let entry = db
             .iter_all_entries()

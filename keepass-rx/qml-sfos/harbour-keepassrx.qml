@@ -24,6 +24,9 @@ ApplicationWindow {
     signal systemUnlockRequested()
     readonly property bool lockingAvailable: SettingsBridge.databaseLocking && keepassrx.saveAuthMethod === "system"
 
+    property var entryEditor: null
+    property string draftUuid: ""
+
     property string coverEntryUuid: ""
     property string coverEntryTitle: ""
     property string coverEntryIcon: ""
@@ -138,7 +141,14 @@ ApplicationWindow {
         }
     }
 
+    function saveDraft() {
+        if (entryEditor) {
+            entryEditor.saveDraft();
+        }
+    }
+
     function closeDatabase() {
+        saveDraft();
         clearSensitiveUiState();
         keepassrx.invalidateMasterPassword();
         keepassrx.guiState = 'NotOpen';
@@ -146,6 +156,7 @@ ApplicationWindow {
     }
 
     function lockDatabase() {
+        saveDraft();
         clearSensitiveUiState();
         keepassrx.closeDatabase();
         keepassrx.guiState = 'Locked';
@@ -192,11 +203,30 @@ ApplicationWindow {
         onDatabaseOpened: {
             keepassrx.guiState = 'Open';
             keepassrx.encryptMasterPassword();
+            pageStack.completeAnimation();
             pageStack.replaceAbove(null, Qt.resolvedUrl("pages/EntriesPage.qml"));
         }
 
+        onStagedEditFound: {
+            pageStack.completeAnimation();
+            pageStack.replaceAbove(null, Qt.resolvedUrl("pages/StagedEditPage.qml"), {
+                entryTitle: title,
+                entryChanged: entryChanged,
+                error: error
+            });
+        }
+
+        onStagedDraftFound: {
+            applicationWindow.draftUuid = entryUuid;
+            keepassrx.getSingleEntry(entryUuid);
+        }
+
+        onStagedEditFailed: {
+            applicationWindow.notify(Tr.tr("The unsaved edit could not be applied or discarded: %1").arg(message));
+        }
+
         onViewModeChanged: {
-            if (keepassrx.databaseOpen) {
+            if (keepassrx.databaseOpen && keepassrx.guiState === 'Open') {
                 pageStack.replaceAbove(null, Qt.resolvedUrl("pages/EntriesPage.qml"));
             }
         }

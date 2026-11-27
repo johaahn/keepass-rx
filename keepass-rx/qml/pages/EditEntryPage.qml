@@ -9,6 +9,7 @@ Page {
     id: editEntryPage
     property var entry
     property bool saveRequested: false
+    property bool draftSaved: false
     property bool passwordShown: false
     property string notesText: entry.notes
     property int newFieldIndex: -1
@@ -124,6 +125,11 @@ Page {
         });
     }
 
+    function saveDraft() {
+        draftSaved = true;
+        keepassrx.saveDraft(entry.uuid, collectValues());
+    }
+
     function submit(shortCode) {
         saveRequested = true;
         keepassrx.saveEntry(entry.uuid, collectValues(), shortCode);
@@ -141,7 +147,7 @@ Page {
         for (const field of entry.customFields || []) {
             if (field.editable) {
                 editableFieldsModel.append({
-                    originalName: field.name,
+                    originalName: field.originalName ?? field.name,
                     fieldName: field.name,
                     fieldValue: field.value,
                     fieldProtected: field.protected,
@@ -154,6 +160,17 @@ Page {
                     fieldValue: field.protected ? "••••••••••••" : field.value
                 });
             }
+        }
+        removedFields = entry.removedFields || [];
+        root.entryEditor = editEntryPage;
+    }
+
+    Component.onDestruction: {
+        if (root.entryEditor === editEntryPage) {
+            root.entryEditor = null;
+        }
+        if (!draftSaved && entry) {
+            keepassrx.discardDraft(entry.uuid);
         }
     }
 

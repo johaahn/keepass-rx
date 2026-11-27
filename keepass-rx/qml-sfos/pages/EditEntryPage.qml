@@ -9,6 +9,7 @@ Page {
     property var entry: null
     property var readOnlyFields: []
     property bool saveRequested: false
+    property bool draftSaved: false
     property string notesText: entry ? entry.notes : ""
     readonly property bool notesModified: entry !== null && notesText !== entry.notes
 
@@ -21,7 +22,7 @@ Page {
             var f = entry.customFields[i];
             if (f.editable) {
                 fieldsModel.append({
-                    originalName: f.name,
+                    originalName: f.originalName !== undefined ? f.originalName : f.name,
                     fieldName: f.name,
                     fieldValue: f.value ? f.value : "",
                     isProtected: f.protected === true,
@@ -32,6 +33,10 @@ Page {
             }
         }
         readOnlyFields = fields;
+        var removed = entry.removedFields ? entry.removedFields : [];
+        for (var j = 0; j < removed.length; j++) {
+            removedModel.append({ fieldName: removed[j] });
+        }
     }
 
     function collectValues() {
@@ -115,12 +120,29 @@ Page {
         });
     }
 
+    function saveDraft() {
+        draftSaved = true;
+        keepassrx.saveDraft(entry.uuid, collectValues());
+    }
+
     function submit(credential) {
         saveRequested = true;
         keepassrx.saveEntry(entry.uuid, collectValues(), credential);
     }
 
-    Component.onCompleted: loadFields()
+    Component.onCompleted: {
+        loadFields();
+        applicationWindow.entryEditor = editPage;
+    }
+
+    Component.onDestruction: {
+        if (applicationWindow.entryEditor === editPage) {
+            applicationWindow.entryEditor = null;
+        }
+        if (!draftSaved && entry) {
+            keepassrx.discardDraft(entry.uuid);
+        }
+    }
 
     ListModel { id: fieldsModel }
     ListModel { id: removedModel }

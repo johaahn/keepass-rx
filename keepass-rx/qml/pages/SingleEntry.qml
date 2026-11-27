@@ -175,6 +175,9 @@ Page {
     }
 
     Component.onCompleted: {
+        if (editRequested) {
+            keepassrx.getEntryForEdit(entryUuid);
+        }
         const metadata = keepassrx.metadata;
 
         if (metadata.publicColor) {

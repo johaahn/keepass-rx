@@ -1,7 +1,7 @@
 use atomic_write_file::AtomicWriteFile;
 use keepass::{
     Database, DatabaseKey,
-    config::DatabaseVersion,
+    config::{DatabaseConfig, DatabaseVersion},
     error::{DatabaseOpenError, DatabaseSaveError},
 };
 use rustix::{
@@ -9,11 +9,14 @@ use rustix::{
     io::Errno,
 };
 use sha2::{Digest, Sha256};
+
 use std::fs;
 use std::io::{self, Write};
 use std::path::{Path, PathBuf};
 use tempfile::TempPath;
 use zeroize::Zeroizing;
+
+use super::staged::StageError;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum RxDbFormat {
@@ -37,6 +40,7 @@ pub struct RxSourceFile {
     pub path: PathBuf,
     pub format: RxDbFormat,
     pub sha256: [u8; 32],
+    pub staging_config: DatabaseConfig,
 }
 
 pub fn sha256_of(bytes: &[u8]) -> [u8; 32] {
@@ -59,6 +63,8 @@ pub enum SaveError {
     Save(#[from] DatabaseSaveError),
     #[error("{0}")]
     Edit(String),
+    #[error("{0}")]
+    Stage(#[from] StageError),
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -300,6 +306,7 @@ mod tests {
                 path: self.path(),
                 format: RxDbFormat::from_version(&db.config.version),
                 sha256: sha256_of(&bytes),
+                staging_config: db.config.clone(),
             }
         }
         fn save(

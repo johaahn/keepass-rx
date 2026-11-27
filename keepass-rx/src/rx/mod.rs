@@ -12,6 +12,7 @@ mod rx_group;
 mod rx_loader;
 pub mod save;
 mod search;
+pub mod staged;
 pub mod virtual_hierarchy;
 mod zeroable_db;
 

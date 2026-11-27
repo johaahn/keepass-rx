@@ -1,18 +1,18 @@
 use actix::prelude::*;
 use anyhow::{Result, anyhow};
-use chrono::{DateTime, Datelike, Local, Timelike};
 use colors::wash_out_by_blending;
 use gettextrs::pgettext;
 use log::{debug, info, warn};
 use qmeta_async::with_executor;
 use qmetaobject::{
-    QDate, QDateTime, QMetaType, QStringList, QTime, QVariantList, QVariantMap, prelude::*,
+    QDateTime, QMetaType, QStringList, QVariantList, QVariantMap, SimpleListModel, prelude::*,
 };
+use qml::RxUiStagedChange;
 use secstr::SecUtf8;
+use std::cell::RefCell;
 use std::fs::{create_dir_all, remove_dir_all};
 use std::path::Path;
 use std::str::FromStr;
-use std::time::SystemTime;
 use unicase::UniCase;
 use uuid::Uuid;
 use zeroize::Zeroize;
@@ -180,19 +180,6 @@ impl QMetaType for RxViewMode {
     const CONVERSION_TO_STRING: Option<fn(&Self) -> QString> = Some(view_mode_to_string);
 }
 
-fn qdatetime_from_system_time(time: SystemTime) -> QDateTime {
-    let local: DateTime<Local> = time.into();
-    let date = QDate::from_y_m_d(local.year(), local.month() as i32, local.day() as i32);
-    let time = QTime::from_h_m_s_ms(
-        local.hour() as i32,
-        local.minute() as i32,
-        Some(local.second() as i32),
-        Some(local.timestamp_subsec_millis() as i32),
-    );
-
-    QDateTime::from_date_time_local_timezone(date, time)
-}
-
 #[derive(QObject, Default)]
 #[allow(non_snake_case, dead_code)]
 pub struct KeepassRx {
@@ -233,6 +220,23 @@ pub struct KeepassRx {
     saveEntry: qt_method!(
         fn saveEntry(&self, entry_uuid: QString, values: QVariantMap, credential: QString) {
             self.save_entry(entry_uuid, values, credential);
+        }
+    ),
+
+    saveDraft: qt_method!(
+        fn saveDraft(&self, entry_uuid: QString, values: QVariantMap) {
+            self.save_draft(entry_uuid, values);
+        }
+    ),
+    discardDraft: qt_method!(
+        fn discardDraft(&self, entry_uuid: QString) {
+            self.discard_draft(entry_uuid);
+        }
+    ),
+
+    resolveStagedEdit: qt_method!(
+        fn resolveStagedEdit(&self, choice: QString) {
+            self.resolve_staged_edit(choice);
         }
     ),
 
@@ -277,6 +281,10 @@ pub struct KeepassRx {
     unlockCodeRequired: qt_signal!(),
     unlockAuthRejected: qt_signal!(left: i32),
     entryEditInvalid: qt_signal!(problems: QVariantList),
+    stagedEditFound: qt_signal!(title: QString, entryChanged: bool, error: QString),
+    stagedChanges: qt_property!(RefCell<SimpleListModel<RxUiStagedChange>>; CONST),
+    stagedEditFailed: qt_signal!(message: QString),
+    stagedDraftFound: qt_signal!(entryUuid: QString),
 
     // data signals
     metadataChanged: qt_signal!(),
@@ -499,16 +507,6 @@ impl KeepassRx {
         match maybe_uuid {
             Ok(entry_uuid) => {
                 actix::spawn(actor.send(GetSingleEntry { entry_uuid }));
-            }
-            Err(err) => self.errorReceived(format!("{}", err)),
-        }
-    }
-
-    #[with_executor]
-    fn get_entry_for_edit(&self, entry_uuid: QString) {
-        match Uuid::from_str(&entry_uuid.to_string()) {
-            Ok(entry_uuid) => {
-                actix::spawn(self.actor_ref().send(GetEntryForEdit { entry_uuid }));
             }
             Err(err) => self.errorReceived(format!("{}", err)),
         }

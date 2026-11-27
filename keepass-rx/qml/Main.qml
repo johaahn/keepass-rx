@@ -30,6 +30,9 @@ MainView {
     objectName: 'mainView'
     anchorToKeyboard: true
 
+    property var entryEditor: null
+    property string draftUuid: ""
+
     visible: true
     width: units.gu(45)
     height: units.gu(75)
@@ -95,6 +98,49 @@ MainView {
             showCodeLimit();
         }
 
+        function onStagedEditFound(title, entryChanged, error) {
+            LomiriPopups.PopupUtils.open(stagedEditDialog, root, {
+                entryTitle: title,
+                entryChanged: entryChanged,
+                error: error
+            });
+        }
+
+        function onStagedDraftFound(entryUuid) {
+            draftUuid = entryUuid;
+            keepassrx.getSingleEntry(entryUuid);
+        }
+
+        function onSingleEntryReceived(entry) {
+            if (entry && entry.uuid === draftUuid) {
+                draftUuid = "";
+                Qt.callLater(() => adaptiveLayout.addPageToNextColumn(
+                    entriesPage,
+                    Qt.resolvedUrl("pages/SingleEntry.qml"),
+                    {
+                        entryUuid: entry.uuid,
+                        entryTitle: entry.title ? entry.title : "",
+                        entryUsername: entry.username ? entry.username : "",
+                        entryUrl: entry.url ? entry.url : "",
+                        entryNotes: entry.notes ? entry.notes : "",
+                        entryHasUsername: entry.hasUsername === true,
+                        entryHasPassword: entry.hasPassword === true,
+                        entryHasUrl: entry.hasUrl === true,
+                        entryHasNotes: entry.hasNotes === true,
+                        entryCustomFields: entry.customFields ? entry.customFields : null,
+                        entryHasTotp: entry.hasTotp === true,
+                        entryEntropy: entry.entropy !== undefined ? entry.entropy : null,
+                        entryEntropyQuality: entry.entropyQuality ? entry.entropyQuality : "",
+                        editRequested: true
+                    }
+                ));
+            }
+        }
+
+        function onStagedEditFailed(message) {
+            toast.show(i18n.tr("The unsaved edit could not be applied or discarded: %1").arg(message));
+        }
+
         // When the UI requests getting a single value from an entry.
         function onFieldValueReceived(entryUuid, fieldName, fieldValue, fieldExtra) {
             if (fieldExtra !== "copy" || !fieldValue) {
@@ -135,6 +181,12 @@ MainView {
 
     Component.onCompleted: {
         reload();
+    }
+
+    function saveDraft() {
+        if (entryEditor) {
+            entryEditor.saveDraft();
+        }
     }
 
     function clearSensitiveUiState() {
@@ -195,6 +247,108 @@ MainView {
             Button {
                 text: i18n.tr("OK")
                 onClicked: LomiriPopups.PopupUtils.close(codeLimitDialogue)
+            }
+        }
+    }
+
+    Component {
+        id: stagedEditDialog
+
+        LomiriPopups.Dialog {
+            id: stagedEditDialogue
+            property string entryTitle
+            property bool entryChanged: false
+            property string error
+            property bool busy: false
+
+            function fieldLabel(name, custom) {
+                const labels = {
+                    title: i18n.tr("Title"),
+                    username: i18n.tr("Username"),
+                    password: i18n.tr("Password"),
+                    url: i18n.tr("URL"),
+                    notes: i18n.tr("Notes")
+                };
+                return custom ? name : labels[name];
+            }
+
+            function kindLabel(kind) {
+                const labels = {
+                    added: i18n.tr("Added"),
+                    modified: i18n.tr("Modified"),
+                    deleted: i18n.tr("Deleted")
+                };
+                return labels[kind];
+            }
+
+            function resolve(choice) {
+                busy = true;
+                keepassrx.resolveStagedEdit(choice);
+            }
+
+            Connections {
+                target: keepassrx
+
+                function onDatabaseOpened() {
+                    LomiriPopups.PopupUtils.close(stagedEditDialogue);
+                }
+
+                function onStagedEditFailed(message) {
+                    stagedEditDialogue.busy = false;
+                }
+            }
+
+            title: error ? i18n.tr("Keep unsaved changes?") : i18n.tr("Apply unsaved changes?")
+            text: error
+                ? i18n.tr("Your unsaved changes could not be read: %1. Do you want to keep them and try again later, or discard them?").arg(error)
+                : i18n.tr("KeePassRX closed before your changes to %1 were saved. Do you want to apply them now?").arg(entryTitle)
+
+            Repeater {
+                model: stagedEditDialogue.error ? null : keepassrx.stagedChanges
+
+                delegate: ListItem {
+                    height: changeLayout.height
+                    divider.visible: false
+
+                    ListItemLayout {
+                        id: changeLayout
+                        title.text: stagedEditDialogue.fieldLabel(model.name, model.custom)
+                        subtitle.text: stagedEditDialogue.kindLabel(model.kind)
+                    }
+                }
+            }
+
+            Label {
+                visible: stagedEditDialogue.entryChanged
+                wrapMode: Text.Wrap
+                color: theme.palette.normal.negative
+                text: i18n.tr("This entry was also changed somewhere else after your edit. Applying replaces those changes, and the replaced values stay in the entry history.")
+            }
+
+            Button {
+                text: stagedEditDialogue.error ? i18n.tr("Keep") : i18n.tr("Apply")
+                color: theme.palette.normal.positive
+                enabled: !stagedEditDialogue.busy
+                onClicked: stagedEditDialogue.resolve(stagedEditDialogue.error ? "keep" : "apply")
+            }
+
+            Button {
+                text: i18n.tr("Discard")
+                enabled: !stagedEditDialogue.busy
+                onClicked: stagedEditDialogue.resolve("discard")
+            }
+
+            ActivityIndicator {
+                anchors.horizontalCenter: parent.horizontalCenter
+                running: stagedEditDialogue.busy
+                visible: running
+            }
+
+            Label {
+                visible: keepassrx.saving
+                horizontalAlignment: Text.AlignHCenter
+                wrapMode: Text.Wrap
+                text: i18n.tr("Saving... Do not close the app.")
             }
         }
     }

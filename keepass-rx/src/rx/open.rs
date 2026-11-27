@@ -12,6 +12,7 @@ pub fn read_database(path: &Path, key: DatabaseKey) -> Result<(Database, RxSourc
         path: path.to_path_buf(),
         format: RxDbFormat::from_version(&db.config.version),
         sha256,
+        staging_config: db.config.clone(),
     };
     Ok((db, source))
 }

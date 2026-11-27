@@ -1,6 +1,9 @@
 use anyhow::Result;
+use chrono::{DateTime, Datelike, Local, Timelike};
 use log::{debug, error, info, warn};
+use qmeta_async::with_executor;
 use std::path::PathBuf;
+use std::time::SystemTime;
 
 use dirs::data_dir;
 
@@ -10,10 +13,13 @@ use uuid::Uuid;
 use secstr::SecUtf8;
 use zeroize::Zeroize;
 
-use super::RxDbType;
-use super::actor::{SaveCredential, SaveEntry};
+use super::actor::{
+    DiscardDraft, GetEntryForEdit, ResolveStagedEdit, SaveCredential, SaveDraft, SaveEntry,
+    StagedChoice,
+};
+use super::{KeepassRx, RxDbType};
 use crate::rx::{RxEntryEdit, edit_values_from_map, validate_edit_values};
-use qmetaobject::{QString, QVariant, QVariantList, QVariantMap};
+use qmetaobject::{QDate, QDateTime, QString, QTime, QVariant, QVariantList, QVariantMap};
 
 #[cfg(not(feature = "sailfish"))]
 const APP_ID: &'static str = "keepassrx.projectmoon";
@@ -166,4 +172,53 @@ pub fn qstring_to_secure_utf8(value: &QString) -> SecUtf8 {
 
     utf8.zeroize();
     secure
+}
+
+pub fn qdatetime_from_system_time(time: SystemTime) -> QDateTime {
+    let local: DateTime<Local> = time.into();
+    let date = QDate::from_y_m_d(local.year(), local.month() as i32, local.day() as i32);
+    let time = QTime::from_h_m_s_ms(
+        local.hour() as i32,
+        local.minute() as i32,
+        Some(local.second() as i32),
+        Some(local.timestamp_subsec_millis() as i32),
+    );
+
+    QDateTime::from_date_time_local_timezone(date, time)
+}
+
+impl KeepassRx {
+    #[with_executor]
+    pub(super) fn resolve_staged_edit(&self, choice: QString) {
+        match StagedChoice::parse(&choice.to_string()) {
+            Ok(choice) => {
+                actix::spawn(self.actor_ref().send(ResolveStagedEdit(choice)));
+            }
+            Err(err) => self.stagedEditFailed(QString::from(err.to_string())),
+        }
+    }
+
+    #[with_executor]
+    pub(super) fn get_entry_for_edit(&self, entry_uuid: QString) {
+        match Uuid::from_str(&entry_uuid.to_string()) {
+            Ok(entry_uuid) => {
+                actix::spawn(self.actor_ref().send(GetEntryForEdit { entry_uuid }));
+            }
+            Err(err) => self.errorReceived(err.to_string()),
+        }
+    }
+
+    pub(super) fn save_draft(&self, entry_uuid: QString, values: QVariantMap) {
+        match save_entry_message(&entry_uuid, values, &QString::default()) {
+            Ok(message) => self.actor_ref().do_send(SaveDraft(message.edit)),
+            Err(err) => warn!("Could not keep the unsaved changes: {err}"),
+        }
+    }
+
+    pub(super) fn discard_draft(&self, entry_uuid: QString) {
+        match Uuid::from_str(&entry_uuid.to_string()) {
+            Ok(uuid) => self.actor_ref().do_send(DiscardDraft(uuid)),
+            Err(err) => warn!("Could not discard the unsaved changes: {err}"),
+        }
+    }
 }

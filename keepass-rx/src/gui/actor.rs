@@ -9,8 +9,9 @@ use secstr::SecUtf8;
 use std::cell::{Cell, RefCell};
 use std::collections::HashMap;
 use std::fs::File;
+use std::mem::take;
 use std::panic::{AssertUnwindSafe, catch_unwind};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::rc::Rc;
 use tokio::task::AbortHandle;
 use uuid::Uuid;
@@ -21,6 +22,7 @@ use crate::app::{AppState, KeyFile};
 #[cfg(feature = "sailfish")]
 use crate::crypto::sailfish_secrets;
 use crate::crypto::{EncryptedPassword, IncorrectShortCode, MasterKey};
+use crate::gui::qml::RxUiStagedChange;
 use crate::gui::save_auth::{
     AuthPurpose, SaveAuthMethod, SaveAuthorizer, SystemAuthUnavailable, default_authorizer,
 };
@@ -41,7 +43,11 @@ use crate::{
         closing::{APP_CLOSING, StopWhenClosing},
         edit_values_to_map,
         open::{build_rx_database, read_database},
-        save_database,
+        staged::{
+            EntrySnapshot, StageError, StagedEdit, Staging, StagingKey, next_staging_key_path,
+            open_staging_key, read_staged, remove_staged, replace_staging_key,
+            save_and_unstage, snapshot, staging_key_path, write_staged, write_staging_key,
+        },
     },
 };
 
@@ -83,6 +89,9 @@ pub struct KeepassRxActor {
     wrong_codes: Cell<u8>,
     deferred: Vec<DeferredLock>,
     save_authorizer: Box<dyn SaveAuthorizer>,
+    staged_entry: Option<Uuid>,
+    pending_restore: Option<RxEntryEdit>,
+    staging: Staging,
 }
 
 impl Default for KeepassRxActor {
@@ -97,6 +106,9 @@ impl Default for KeepassRxActor {
             wrong_codes: Cell::new(0),
             deferred: Vec::new(),
             save_authorizer: default_authorizer(),
+            staged_entry: None,
+            pending_restore: None,
+            staging: Staging::None,
         }
     }
 }
@@ -112,6 +124,7 @@ struct SavePlan {
     source: RxSourceFile,
     key: DatabaseKey,
     backup: PathBuf,
+    staged: PathBuf,
 }
 
 const MAX_WRONG_CODES: u8 = 3;
@@ -180,22 +193,29 @@ fn build_database_key(
     }
 }
 
-fn backup_path_for(source: &RxSourceFile) -> Result<PathBuf> {
-    let file_name = source
-        .path
+fn data_path_for(database: &Path, folder: &str, extension: &str) -> Result<PathBuf> {
+    let file_name = database
         .file_name()
         .ok_or(anyhow!("Database path has no file name"))?
         .to_string_lossy();
-    let kind = if source.path.starts_with(synced_databases_path()) {
+    let kind = if database.starts_with(synced_databases_path()) {
         "synced"
     } else {
         "imported"
     };
 
     Ok(app_data_path()
-        .join("backups")
+        .join(folder)
         .join(kind)
-        .join(format!("{file_name}.bak")))
+        .join(format!("{file_name}.{extension}")))
+}
+
+fn backup_path_for(source: &RxSourceFile) -> Result<PathBuf> {
+    data_path_for(&source.path, "backups", "bak")
+}
+
+fn staged_path_for(database: &Path) -> Result<PathBuf> {
+    data_path_for(database, "staged", "edit")
 }
 
 fn view_for_mode(mode: RxViewMode, db: &RxDatabase) -> VirtualHierarchyType {
@@ -306,32 +326,55 @@ impl KeepassRxActor {
         WrongCode::LockedOut
     }
 
+    fn current_source(&self) -> Result<RxSourceFile> {
+        let app_state = self.app_state.pinned();
+        let app_state = app_state.borrow();
+        app_state
+            .curr_db_ref()?
+            .source()
+            .cloned()
+            .ok_or(anyhow!("This database cannot be saved"))
+    }
+
     fn prepare_save(&self, credential: SaveCredential) -> Result<SavePlan> {
         if self.saving {
             return Err(anyhow!("A save is already in progress"));
         }
 
-        let source = {
-            let app_state = self.app_state.pinned();
-            let app_state = app_state.borrow();
-            app_state
-                .curr_db_ref()?
-                .source()
-                .cloned()
-                .ok_or(anyhow!("This database cannot be saved"))?
-        };
-
-        let has_key_file = self.app_state.pinned().borrow().db_key_ref().is_some();
+        let source = self.current_source()?;
         let password = self.release_master_password(credential)?;
+        self.plan_save(source, password)
+    }
+
+    fn plan_save(&self, source: RxSourceFile, password: SecUtf8) -> Result<SavePlan> {
+        let has_key_file = self.app_state.pinned().borrow().db_key_ref().is_some();
         let key = build_database_key(&password, has_key_file, self.key_file_bytes())?;
-        drop(password);
-        let backup = backup_path_for(&source)?;
 
         Ok(SavePlan {
+            backup: backup_path_for(&source)?,
+            staged: staged_path_for(&source.path)?,
             source,
             key,
-            backup,
         })
+    }
+
+    fn check_staged(&self, uuid: Uuid) -> Result<()> {
+        let Some(waiting) = self.staged_entry else {
+            return Ok(());
+        };
+        if waiting == uuid || !staged_path_for(&self.current_source()?.path)?.exists() {
+            return Ok(());
+        }
+        Err(anyhow!(
+            "An unsaved edit from an earlier save is waiting. Close and reopen the database to apply or discard it first."
+        ))
+    }
+
+    fn entry_snapshot(&self, uuid: Uuid) -> Option<EntrySnapshot> {
+        let app_state = self.app_state.pinned();
+        let app_state = app_state.borrow();
+        let entry = app_state.curr_db_ref().ok()?.get_entry(uuid)?;
+        Some(snapshot(&entry.edit_values()))
     }
 
     fn finish_save(&mut self, ctx: &mut Context<Self>) {
@@ -343,7 +386,8 @@ impl KeepassRxActor {
             gui.savingChanged();
         }
 
-        for action in std::mem::take(&mut self.deferred) {
+        ctx.notify(CommitStagingKey);
+        for action in take(&mut self.deferred) {
             match action {
                 DeferredLock::Encrypt => ctx.notify(EncryptMasterPassword),
                 DeferredLock::Invalidate => ctx.notify(InvalidateMasterPassword),
@@ -440,6 +484,51 @@ pub struct OpenDatabase {
     pub db_type: RxDbType,
 }
 
+struct OpenedDatabase {
+    db: Database,
+    source: RxSourceFile,
+    staging: Result<OpenedStaging>,
+}
+
+struct OpenedStaging {
+    key: StagingKey,
+    staged: Option<StagedEdit>,
+    renew_key: DatabaseKey,
+}
+
+#[derive(Message)]
+#[rtype(result = "()")]
+struct OfferStagedEdit(Result<Option<StagedEdit>>);
+
+#[derive(Message)]
+#[rtype(result = "()")]
+struct RenewStagingKey(DatabaseKey);
+
+#[derive(Message)]
+#[rtype(result = "()")]
+struct CommitStagingKey;
+
+#[derive(Message)]
+#[rtype(result = "()")]
+pub struct ResolveStagedEdit(pub StagedChoice);
+
+pub enum StagedChoice {
+    Apply,
+    Discard,
+    Keep,
+}
+
+impl StagedChoice {
+    pub fn parse(choice: &str) -> Result<Self> {
+        match choice {
+            "apply" => Ok(Self::Apply),
+            "discard" => Ok(Self::Discard),
+            "keep" => Ok(Self::Keep),
+            _ => Err(anyhow!("Unknown choice {choice:?} for the unsaved edit")),
+        }
+    }
+}
+
 #[derive(Message)]
 #[rtype(result = "anyhow::Result<()>")]
 pub struct DeleteDatabase {
@@ -490,6 +579,14 @@ impl GetEntries {
 pub struct GetEntryForEdit {
     pub entry_uuid: Uuid,
 }
+
+#[derive(Message)]
+#[rtype(result = "()")]
+pub struct SaveDraft(pub RxEntryEdit);
+
+#[derive(Message)]
+#[rtype(result = "()")]
+pub struct DiscardDraft(pub Uuid);
 
 #[derive(Message)]
 #[rtype(result = "()")]
@@ -632,6 +729,7 @@ impl Handler<OpenDatabase> for KeepassRxActor {
         // Clone here so we can encrypt later.
         let stored_pw = self.stored_master_password.clone();
         let maybe_key_file_bytes = self.key_file_bytes();
+        let staged_path = staged_path_for(&db_path);
 
         info!("Opening {} DB: {}", msg.db_type, db_path.display());
 
@@ -644,12 +742,28 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                     .ok_or(anyhow!("[OpenDB] No master password stored"))?;
 
                 let db_key = build_database_key(pw_binding, has_key_file, maybe_key_file_bytes)?;
+                let read_key = db_key.clone();
 
                 // Opening the database is synchronous I/O, which means it
                 // must be done on a separate thread.
                 let open_result =
                     actix_rt::task::spawn_blocking(move || -> Result<_> {
-                        read_database(&db_path, db_key)
+                        let (db, source) = read_database(&db_path, db_key)?;
+                        let staging = staged_path.and_then(|path| {
+                            let renew_key = read_key.clone();
+                            let key = open_staging_key(&path, read_key, &source.staging_config)?;
+                            let staged = read_staged(&path, &key)?;
+                            Ok(OpenedStaging {
+                                key,
+                                staged,
+                                renew_key,
+                            })
+                        });
+                        Ok(OpenedDatabase {
+                            db,
+                            source,
+                            staging,
+                        })
                     })
                     .await
                     .map_err(|err| anyhow!(err))??;
@@ -657,12 +771,16 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                 Ok(open_result)
             }
             .into_actor(self)
-            .map(|result: Result<(Database, RxSourceFile)>, this, _| {
+            .map(|result: Result<OpenedDatabase>, this, ctx| {
                 let binding = this.gui.pinned();
                 let mut gui = binding.borrow_mut();
 
                 match result {
-                    Ok((keepass_db, source)) => {
+                    Ok(OpenedDatabase {
+                        db: keepass_db,
+                        source,
+                        staging,
+                    }) => {
                         let conversion = catch_unwind(AssertUnwindSafe(|| -> Result<_> {
                             let rx_db = build_rx_database(keepass_db, source)?;
                             let view = VirtualHierarchyType::DefaultView(DefaultView::new(&rx_db));
@@ -720,7 +838,12 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                         gui.databaseOpen = true;
                         gui.canEdit = can_edit;
                         gui.canEditChanged();
-                        gui.databaseOpened();
+                        let staged = staging.map(|staging| {
+                            this.staging = Staging::Loaded(staging.key);
+                            ctx.notify(RenewStagingKey(staging.renew_key));
+                            staging.staged
+                        });
+                        ctx.notify(OfferStagedEdit(staged));
 
                         gui.viewMode = RxViewMode::All;
                         gui.viewModeChanged(RxViewMode::All);
@@ -745,6 +868,10 @@ impl Handler<CloseDatabase> for KeepassRxActor {
             self.defer(DeferredLock::Close);
             return AtomicResponse::new(Box::pin(async {}.into_actor(self)));
         }
+
+        self.pending_restore = None;
+        self.staged_entry = None;
+        self.staging = Staging::None;
 
         // Remove from cell
         let app_state = self.app_state.pinned();
@@ -893,10 +1020,171 @@ impl Handler<GetSingleEntry> for KeepassRxActor {
 impl Handler<GetEntryForEdit> for KeepassRxActor {
     type Result = ();
     fn handle(&mut self, msg: GetEntryForEdit, _: &mut Self::Context) -> Self::Result {
+        let draft = self
+            .pending_restore
+            .take_if(|edit| edit.uuid == msg.entry_uuid);
         self.with_db(|gui, db| match db.get_entry(msg.entry_uuid) {
-            Some(entry) => gui.entryForEditReceived(edit_values_to_map(&entry.edit_values())),
+            Some(entry) => {
+                let values = entry.edit_values();
+                let values = match &draft {
+                    Some(draft) => draft.values_over(values),
+                    None => values,
+                };
+                gui.entryForEditReceived(edit_values_to_map(&values))
+            }
             None => gui.errorReceived(format!("Entry {} not found", msg.entry_uuid)),
         });
+    }
+}
+
+impl Handler<SaveDraft> for KeepassRxActor {
+    type Result = ();
+    fn handle(&mut self, msg: SaveDraft, _: &mut Self::Context) -> Self::Result {
+        if self.saving {
+            return;
+        }
+        let uuid = msg.0.uuid;
+        match self.save_draft(msg.0) {
+            Ok(()) => info!("Kept the unsaved changes of entry {uuid}"),
+            Err(err) => warn!("Could not keep the unsaved changes of entry {uuid}: {err}"),
+        }
+    }
+}
+
+impl Handler<DiscardDraft> for KeepassRxActor {
+    type Result = ();
+    fn handle(&mut self, msg: DiscardDraft, ctx: &mut Self::Context) -> Self::Result {
+        if let Err(err) = self.discard_draft(msg.0) {
+            warn!(
+                "Could not discard the unsaved changes of entry {}: {err}",
+                msg.0
+            );
+        }
+        ctx.notify(CommitStagingKey);
+    }
+}
+
+impl Handler<RenewStagingKey> for KeepassRxActor {
+    type Result = ();
+    fn handle(&mut self, msg: RenewStagingKey, ctx: &mut Self::Context) -> Self::Result {
+        let source = match self.current_source() {
+            Ok(source) => source,
+            Err(err) => return warn!("Could not renew the key for unsaved edits: {err}"),
+        };
+        let staged = match staged_path_for(&source.path) {
+            Ok(staged) => staged,
+            Err(err) => return warn!("Could not renew the key for unsaved edits: {err}"),
+        };
+        if !self.staging.start_renewal() {
+            return;
+        }
+        let next_path = next_staging_key_path(&staged);
+        let handle = actix_rt::task::spawn_blocking(move || {
+            write_staging_key(&next_path, msg.0, &source.staging_config)
+        });
+        ctx.spawn(async move { handle.await }.into_actor(self).map(
+            move |result, this, ctx| {
+                let same_database = this
+                    .current_source()
+                    .and_then(|source| staged_path_for(&source.path))
+                    .is_ok_and(|path| path == staged);
+                if !same_database || !matches!(this.staging, Staging::Renewing(_)) {
+                    let _ = remove_staged(&next_staging_key_path(&staged));
+                    return;
+                }
+                match result
+                    .map_err(anyhow::Error::from)
+                    .and_then(|next| Ok(next?))
+                {
+                    Ok(next) => {
+                        this.staging.hold(next);
+                        ctx.notify(CommitStagingKey);
+                    }
+                    Err(err) => {
+                        this.staging.abandon();
+                        warn!("Kept the key for unsaved edits: {err}");
+                    }
+                }
+            },
+        ));
+    }
+}
+
+impl Handler<CommitStagingKey> for KeepassRxActor {
+    type Result = ();
+    fn handle(&mut self, _: CommitStagingKey, _: &mut Self::Context) -> Self::Result {
+        if self.saving || !matches!(self.staging, Staging::Pending { .. }) {
+            return;
+        }
+        let staged = match self
+            .current_source()
+            .and_then(|source| staged_path_for(&source.path))
+        {
+            Ok(staged) if !staged.exists() => staged,
+            Ok(_) => return,
+            Err(err) => return warn!("Could not renew the key for unsaved edits: {err}"),
+        };
+        match replace_staging_key(&staged) {
+            Ok(()) => {
+                self.staging.commit();
+                info!("Renewed the key for unsaved edits.");
+            }
+            Err(err) => {
+                self.staging.abandon();
+                warn!("Kept the key for unsaved edits: {err}");
+            }
+        }
+    }
+}
+
+impl KeepassRxActor {
+    fn save_draft(&mut self, edit: RxEntryEdit) -> Result<()> {
+        let uuid = edit.uuid;
+        self.check_staged(uuid)?;
+        let source = self.current_source()?;
+        let staging = self.staging.key().ok_or(StageError::MissingKey)?;
+        let staged = StagedEdit {
+            edit,
+            base_sha256: source.sha256,
+            base: self.entry_snapshot(uuid).unwrap_or_default(),
+            draft: true,
+        };
+        write_staged(&staged_path_for(&source.path)?, staging, &staged)?;
+        Ok(())
+    }
+
+    fn discard_draft(&mut self, uuid: Uuid) -> Result<()> {
+        let Some(staging) = self.staging.key() else {
+            return Ok(());
+        };
+        let path = staged_path_for(&self.current_source()?.path)?;
+        if read_staged(&path, staging)?
+            .is_some_and(|staged| staged.draft && staged.edit.uuid == uuid)
+        {
+            remove_staged(&path)?;
+            self.staged_entry = None;
+            self.pending_restore = None;
+        }
+        Ok(())
+    }
+
+    fn restore_draft(&mut self, staged: StagedEdit) {
+        let uuid = staged.edit.uuid;
+        let exists = self.entry_snapshot(uuid).is_some();
+        if exists {
+            info!("Reopening the unsaved changes of entry {uuid}");
+            self.staged_entry = Some(uuid);
+            self.pending_restore = Some(staged.edit);
+        } else {
+            warn!("Discarding the unsaved changes of entry {uuid}, which no longer exists");
+            self.discard_staged();
+        }
+        let gui = self.gui.pinned();
+        let gui = gui.borrow();
+        gui.databaseOpened();
+        if exists {
+            gui.stagedDraftFound(QString::from(uuid.to_string()));
+        }
     }
 }
 
@@ -948,7 +1236,10 @@ impl KeepassRxActor {
         ctx: &mut Context<Self>,
     ) -> ResponseActFuture<Self, ()> {
         let uuid = msg.edit.uuid;
-        let plan = match self.prepare_save(msg.credential) {
+        let plan = match self
+            .check_staged(uuid)
+            .and_then(|()| self.prepare_save(msg.credential))
+        {
             Ok(plan) => plan,
             Err(err) => {
                 self.save_failed(&err, ctx);
@@ -956,7 +1247,32 @@ impl KeepassRxActor {
             }
         };
 
+        let staged = StagedEdit {
+            edit: msg.edit.clone(),
+            base_sha256: plan.source.sha256,
+            base: self.entry_snapshot(uuid).unwrap_or_default(),
+            draft: false,
+        };
+        let source = plan.source.clone();
+        info!("Saving entry {uuid}");
+
+        Box::pin(
+            self.run_save(plan, msg.edit, Some(staged))
+                .map(move |result, this, ctx| {
+                    this.finish_save(ctx);
+                    this.report_save(result, source, uuid);
+                }),
+        )
+    }
+
+    fn run_save(
+        &mut self,
+        plan: SavePlan,
+        edit: RxEntryEdit,
+        staged: Option<StagedEdit>,
+    ) -> impl ActorFuture<Self, Output = Result<SaveOutcome, SaveError>> + 'static {
         self.saving = true;
+        self.staged_entry = Some(edit.uuid);
         {
             let binding = self.gui.pinned();
             let mut gui = binding.borrow_mut();
@@ -964,75 +1280,93 @@ impl KeepassRxActor {
             gui.savingChanged();
         }
 
-        let source = plan.source.clone();
-        let edit = RxEdit::UpdateEntry(msg.edit);
-        info!("Saving entry {uuid}");
+        let SavePlan {
+            source,
+            key,
+            backup,
+            staged: staged_path,
+        } = plan;
+        let edit = RxEdit::UpdateEntry(edit);
+        let join_failed = |err: tokio::task::JoinError| SaveError::Edit(err.to_string());
+        let staging = self.staging.key().cloned();
 
-        Box::pin(
-            async move {
-                actix_rt::task::spawn_blocking(move || {
-                    save_database(
-                        &plan.source,
-                        plan.key,
-                        &plan.backup,
-                        |db| edit.apply(db).map_err(Into::into),
-                        |db| edit.verify(db).map_err(Into::into),
-                        &StopWhenClosing(&APP_CLOSING),
-                    )
-                })
-                .await
-                .map_err(|err| SaveError::Edit(err.to_string()))?
+        async move {
+            if let Some(staged) = staged {
+                let staging = staging.ok_or(StageError::MissingKey)?;
+                write_staged(&staged_path, &staging, &staged)?;
             }
-            .into_actor(self)
-            .map(move |result: Result<SaveOutcome, SaveError>, this, ctx| {
-                this.finish_save(ctx);
+            actix_rt::task::spawn_blocking(move || {
+                save_and_unstage(
+                    &source,
+                    key,
+                    &backup,
+                    &staged_path,
+                    &edit,
+                    &StopWhenClosing(&APP_CLOSING),
+                )
+            })
+            .await
+            .map_err(join_failed)?
+        }
+        .into_actor(self)
+        .map(|result, this, _| {
+            if result.is_ok() {
+                this.staged_entry = None;
+            }
+            result
+        })
+    }
 
-                let outcome = match result {
-                    Ok(outcome) => outcome,
-                    Err(err) => {
-                        error!("Entry save failed: {err}");
-                        let gui = this.gui.pinned();
-                        let gui = gui.borrow();
-                        return match err {
-                            SaveError::Open(ref open)
-                                if this.save_authorizer.method() != SaveAuthMethod::ShortCode
-                                    && is_credentials_failure(open) =>
-                            {
-                                gui.entrySavePasswordRejected()
-                            }
-                            _ => gui.entrySaveFailed(
-                                QString::from(err.to_string()),
-                                matches!(err, SaveError::Conflict),
-                            ),
-                        };
+    fn report_save(
+        &self,
+        result: Result<SaveOutcome, SaveError>,
+        source: RxSourceFile,
+        uuid: Uuid,
+    ) {
+        let outcome = match result {
+            Ok(outcome) => outcome,
+            Err(err) => {
+                error!("Entry save failed: {err}");
+                let gui = self.gui.pinned();
+                let gui = gui.borrow();
+                return match err {
+                    SaveError::Open(ref open)
+                        if self.save_authorizer.method() != SaveAuthMethod::ShortCode
+                            && is_credentials_failure(open) =>
+                    {
+                        gui.entrySavePasswordRejected()
                     }
+                    _ => gui.entrySaveFailed(
+                        QString::from(err.to_string()),
+                        matches!(err, SaveError::Conflict),
+                    ),
                 };
+            }
+        };
 
-                let conflict_name = outcome
-                    .conflict_copy
-                    .as_ref()
-                    .and_then(|path| path.file_name())
-                    .map(|name| QString::from(name.to_string_lossy().as_ref()));
-                let gui = this.gui.pinned();
-                match this.replace_database(outcome, source) {
-                    Ok(()) => {
-                        if let Some(name) = conflict_name {
-                            gui.borrow().entrySavedWithConflictCopy(name);
-                        }
-                        gui.borrow().entrySaved(QString::from(uuid.to_string()));
-                    }
-                    Err(err) => {
-                        error!("Reloading saved database failed: {err:?}");
-                        gui.borrow().entrySaveFailed(
-                            QString::from(format!(
-                                "Saved, but the database could not be reloaded: {err}. Reopen it."
-                            )),
-                            false,
-                        );
-                    }
+        let conflict_name = outcome
+            .conflict_copy
+            .as_ref()
+            .and_then(|path| path.file_name())
+            .map(|name| QString::from(name.to_string_lossy().as_ref()));
+        let gui = self.gui.pinned();
+        match self.replace_database(outcome, source) {
+            Ok(()) => {
+                if let Some(name) = conflict_name {
+                    gui.borrow().entrySavedWithConflictCopy(name);
                 }
-            }),
-        )
+                gui.borrow().entrySaved(QString::from(uuid.to_string()));
+            }
+            Err(err) => {
+                error!("Reloading saved database failed: {err:?}");
+                gui.borrow().entrySaveFailed(
+                    QString::from(format!(
+                        "Saved, but the database could not be reloaded: {err}. Reopen it."
+                    )),
+                    false,
+                );
+            }
+        }
     }
 }
 
@@ -1296,5 +1630,136 @@ impl KeepassRxActor {
                 }
             },
         ))
+    }
+}
+
+impl Handler<OfferStagedEdit> for KeepassRxActor {
+    type Result = ();
+    fn handle(&mut self, msg: OfferStagedEdit, _: &mut Self::Context) -> Self::Result {
+        let staged = match msg.0 {
+            Ok(Some(staged)) if staged.draft => return self.restore_draft(staged),
+            other => other,
+        };
+        let gui = self.gui.pinned();
+        let gui = gui.borrow();
+        match staged {
+            Ok(None) => {
+                self.staged_entry = None;
+                gui.databaseOpened();
+            }
+            Ok(Some(staged)) => {
+                let uuid = staged.edit.uuid;
+                let sha256 = self.current_source().map(|source| source.sha256);
+                let current = self.entry_snapshot(uuid);
+                let changed = sha256.map_or(true, |sha256| {
+                    staged.entry_changed(&sha256, current.as_ref())
+                });
+                info!("Found an unsaved edit of entry {uuid}");
+                self.staged_entry = Some(uuid);
+                let title = QString::from(staged.edit.title.as_str());
+                let changes = staged
+                    .changes()
+                    .iter()
+                    .map(RxUiStagedChange::from)
+                    .collect();
+                gui.stagedChanges.borrow_mut().reset_data(changes);
+                self.pending_restore = Some(staged.edit);
+                gui.stagedEditFound(title, changed, QString::default());
+            }
+            Err(err) => {
+                warn!("Could not read the unsaved edit: {err}");
+                self.staged_entry = Some(Uuid::nil());
+                gui.stagedChanges.borrow_mut().reset_data(Vec::new());
+                gui.stagedEditFound(QString::default(), false, QString::from(err.to_string()));
+            }
+        }
+    }
+}
+
+impl Handler<ResolveStagedEdit> for KeepassRxActor {
+    type Result = ResponseActFuture<Self, ()>;
+    fn handle(&mut self, msg: ResolveStagedEdit, ctx: &mut Self::Context) -> Self::Result {
+        let edit = self.pending_restore.take();
+        match (msg.0, edit) {
+            (StagedChoice::Apply, Some(edit)) => return self.apply_staged(edit),
+            (StagedChoice::Discard, _) => {
+                self.discard_staged();
+                ctx.notify(CommitStagingKey);
+            }
+            _ => {}
+        }
+        self.gui.pinned().borrow().databaseOpened();
+        Box::pin(async {}.into_actor(self))
+    }
+}
+
+impl KeepassRxActor {
+    fn discard_staged(&mut self) {
+        let removed = self
+            .current_source()
+            .and_then(|source| staged_path_for(&source.path))
+            .and_then(|path| {
+                if self.staging.key().is_none() {
+                    remove_staged(&staging_key_path(&path))?;
+                }
+                Ok(remove_staged(&path)?)
+            });
+        match removed {
+            Ok(()) => {
+                info!("Discarded the unsaved edit.");
+                self.staged_entry = None;
+            }
+            Err(err) => {
+                error!("Could not discard the unsaved edit: {err}");
+                let gui = self.gui.pinned();
+                gui.borrow()
+                    .stagedEditFailed(QString::from(err.to_string()));
+            }
+        }
+    }
+
+    fn apply_staged(&mut self, edit: RxEntryEdit) -> ResponseActFuture<Self, ()> {
+        let password = self.stored_master_password.borrow().clone();
+        let plan = password
+            .ok_or(anyhow!("No master password stored"))
+            .and_then(|password| self.plan_save(self.current_source()?, password));
+        let plan = match plan {
+            Ok(plan) => plan,
+            Err(err) => {
+                let gui = self.gui.pinned();
+                gui.borrow()
+                    .stagedEditFailed(QString::from(err.to_string()));
+                gui.borrow().databaseOpened();
+                return Box::pin(async {}.into_actor(self));
+            }
+        };
+
+        let source = plan.source.clone();
+        info!("Applying the unsaved edit of entry {}", edit.uuid);
+        Box::pin(
+            self.run_save(plan, edit, None)
+                .map(move |result, this, ctx| {
+                    this.finish_save(ctx);
+                    let applied = result.map_err(anyhow::Error::from).and_then(|outcome| {
+                        let conflict = outcome.conflict_copy.clone();
+                        this.replace_database(outcome, source).map(|()| conflict)
+                    });
+                    let gui = this.gui.pinned();
+                    match applied {
+                        Ok(conflict) => {
+                            if let Some(name) = conflict.as_deref().and_then(Path::file_name) {
+                                let name = QString::from(name.to_string_lossy().as_ref());
+                                gui.borrow().entrySavedWithConflictCopy(name);
+                            }
+                        }
+                        Err(err) => {
+                            error!("Applying the unsaved edit failed: {err}");
+                            gui.borrow()
+                                .stagedEditFailed(QString::from(err.to_string()));
+                        }
+                    }
+                    gui.borrow().databaseOpened();
+                }),
+        )
     }
 }

@@ -20,11 +20,13 @@ Page {
     property var colorWashout
 
     function lockDatabase() {
+        root.saveDraft();
         keepassrx.closeDatabase();
         root.lockUI();
     }
 
     function closeDatabase() {
+        root.saveDraft();
         keepassrx.invalidateMasterPassword();
         uiDatabase.clearKeyFile();
         keepassrx.closeDatabase();

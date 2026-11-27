@@ -114,7 +114,9 @@ Page {
                 horizontalAlignment: Text.AlignHCenter
                 wrapMode: Text.Wrap
                 color: Theme.highlightColor
-                text: applicationWindow.lockingAvailable && keepassrx.isMasterPasswordEncrypted
+                text: unlockPage.busy
+                    ? Tr.tr("Unlocking...")
+                    : applicationWindow.lockingAvailable && keepassrx.isMasterPasswordEncrypted
                     ? Tr.tr("The database is locked. Enter the password, or tap Authenticate to unlock it with your fingerprint or security code.")
                     : Tr.tr("The database is locked. Enter the password to unlock it.")
             }

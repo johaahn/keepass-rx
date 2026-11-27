@@ -185,11 +185,8 @@ impl RxEntry {
         };
 
         // Expiration: self-explanatory.
-        let is_expired = entry
-            .times
-            .expiry
-            .map(|expiry| expiry <= keepass::db::Times::now())
-            .unwrap_or(false);
+        let is_expired = entry.times.expires == Some(true)
+            && entry.times.expiry <= keepass::db::Times::now();
 
         // Has to come after the above, otherwise those fields end up
         // in the custom fields.

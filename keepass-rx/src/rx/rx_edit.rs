@@ -1,6 +1,7 @@
 use std::collections::HashSet;
 use std::fmt;
 
+use gettextrs::gettext;
 use keepass::db::{Database, EntryId, History, Times, Value};
 use uuid::Uuid;
 use zeroize::Zeroizing;
@@ -40,6 +41,12 @@ pub struct RxFieldEdit {
     pub name: String,
     pub value: Zeroizing<String>,
     pub protected: bool,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct EditProblem {
+    pub index: Option<usize>,
+    pub message: String,
 }
 
 #[derive(Debug)]
@@ -106,51 +113,53 @@ impl RxEntryEdit {
     }
 
     fn validate(&self) -> Result<(), EditError> {
+        match self.problems().into_iter().next() {
+            Some(problem) => Err(EditError::Invalid(problem.message)),
+            None => Ok(()),
+        }
+    }
+
+    pub fn problems(&self) -> Vec<EditProblem> {
+        let mut problems = Vec::new();
         let mut seen = HashSet::new();
-        for field in &self.custom_fields {
+        for (index, field) in self.custom_fields.iter().enumerate() {
+            let mut problem = |message: String| {
+                problems.push(EditProblem {
+                    index: Some(index),
+                    message,
+                })
+            };
             if field.name.is_empty() {
-                return Err(EditError::Invalid("field name is empty".into()));
-            }
-            if is_reserved(&field.name) {
-                return Err(EditError::Invalid(format!(
-                    "field name {:?} is reserved",
-                    field.name
-                )));
+                problem(gettext("Field name is empty"));
+            } else if is_reserved(&field.name) {
+                problem(gettext("Field name {} is reserved").replace("{}", &field.name));
+            } else if !seen.insert(field.name.as_str()) {
+                problem(gettext("Duplicate field name {}").replace("{}", &field.name));
             }
             if let Some(original) = &field.original_name
                 && is_reserved(original)
             {
-                return Err(EditError::Invalid(format!(
-                    "field {original:?} cannot be edited"
-                )));
-            }
-            if !seen.insert(field.name.as_str()) {
-                return Err(EditError::Invalid(format!(
-                    "duplicate field name {:?}",
-                    field.name
-                )));
+                problem(gettext("Field {} cannot be edited").replace("{}", original));
             }
         }
 
         let mut removed = HashSet::new();
         for name in &self.removed_fields {
-            if is_reserved(name) {
-                return Err(EditError::Invalid(format!(
-                    "field {name:?} cannot be removed"
-                )));
-            }
-            if !removed.insert(name.as_str()) {
-                return Err(EditError::Invalid(format!(
-                    "field {name:?} is removed twice"
-                )));
-            }
-            if seen.contains(name.as_str()) {
-                return Err(EditError::Invalid(format!(
-                    "field {name:?} is both removed and set"
-                )));
-            }
+            let message = if is_reserved(name) {
+                gettext("Field {} cannot be removed")
+            } else if !removed.insert(name.as_str()) {
+                gettext("Field {} is removed twice")
+            } else if seen.contains(name.as_str()) {
+                gettext("Field {} is both removed and set")
+            } else {
+                continue;
+            };
+            problems.push(EditProblem {
+                index: None,
+                message: message.replace("{}", name),
+            });
         }
-        Ok(())
+        problems
     }
 
     fn apply(&self, db: &mut Database) -> Result<(), EditError> {

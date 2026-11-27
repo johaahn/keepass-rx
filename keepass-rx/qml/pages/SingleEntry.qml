@@ -30,6 +30,7 @@ Page {
     property string entryUrlValue: ""
     property string entryNotesValue: ""
     property bool notesShown: false
+    property bool editRequested: false
 
     function valueIsDefined(value) {
         return value !== undefined && value !== null && value !== ''
@@ -257,6 +258,19 @@ Page {
             }
         }
 
+        function onEntryForEditReceived(entry) {
+            if (!editRequested || entry.uuid !== singleEntryPage.entryUuid) {
+                return;
+            }
+
+            editRequested = false;
+            pageStack.addPageToNextColumn(
+                singleEntryPage,
+                Qt.resolvedUrl("EditEntryPage.qml"),
+                { entry: entry }
+            );
+        }
+
         function onDatabaseClosed() {
             clearTransientValues();
         }
@@ -295,6 +309,16 @@ Page {
         ]
 
         trailingActionBar.actions: [
+            Action {
+                name: "Edit"
+                text: i18n.tr("Edit")
+                iconName: "edit"
+                visible: keepassrx.canEdit
+                onTriggered: {
+                    editRequested = true;
+                    keepassrx.getEntryForEdit(entryUuid);
+                }
+            },
             Action {
                 name: "Attachments"
                 text: i18n.tr("Attachments")

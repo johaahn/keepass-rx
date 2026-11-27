@@ -4,7 +4,14 @@ use std::path::PathBuf;
 
 use dirs::data_dir;
 
+use std::str::FromStr;
+
+use secstr::SecUtf8;
+use zeroize::Zeroize;
+
 use super::RxDbType;
+use crate::rx::{edit_values_from_map, validate_edit_values};
+use qmetaobject::{QString, QVariant, QVariantList, QVariantMap};
 
 #[cfg(not(feature = "sailfish"))]
 const APP_ID: &'static str = "keepassrx.projectmoon";
@@ -107,4 +114,40 @@ pub fn move_old_dirs_and_files() -> Result<()> {
     }
 
     Ok(())
+}
+
+pub fn entry_edit_problems(values: QVariantMap) -> QVariantList {
+    validate_edit_values(&edit_values_from_map(values))
+        .into_iter()
+        .filter_map(|problem| {
+            let index = i32::try_from(problem.index?).ok()?;
+            let mut map = QVariantMap::default();
+            map.insert("index".into(), QVariant::from(index));
+            map.insert("part".into(), QVariant::from(QString::from("name")));
+            map.insert(
+                "message".into(),
+                QVariant::from(QString::from(problem.message)),
+            );
+            Some(QVariant::from(map))
+        })
+        .collect()
+}
+
+pub fn qstring_to_secure_utf8(value: &QString) -> SecUtf8 {
+    let utf16 = value.to_slice();
+    let mut utf8 = Vec::with_capacity(utf16.len());
+
+    for ch in char::decode_utf16(utf16.iter().copied()) {
+        let ch = ch.unwrap_or(char::REPLACEMENT_CHARACTER);
+        let mut buf = [0u8; 4];
+        utf8.extend_from_slice(ch.encode_utf8(&mut buf).as_bytes());
+    }
+
+    let secure = std::str::from_utf8(&utf8)
+        .ok()
+        .and_then(|s| SecUtf8::from_str(s).ok())
+        .unwrap_or_else(|| SecUtf8::from(""));
+
+    utf8.zeroize();
+    secure
 }

@@ -11,6 +11,7 @@ import "../components"
 Page {
     property bool searchMode: false
     property bool resetListView: false
+    property bool listRefreshPending: false
 
     // These are set by metadata fetching
     property string publicDatabaseName
@@ -403,6 +404,18 @@ Page {
 
     Connections {
         target: keepassrx
+
+        function onEntrySaved(entryUuid) {
+            listRefreshPending = true;
+            keepassrx.getSingleEntry(entryUuid);
+        }
+
+        function onSingleEntryReceived(entry) {
+            if (listRefreshPending) {
+                listRefreshPending = false;
+                Qt.callLater(containerStack.refresh);
+            }
+        }
 
         function onDatabaseOpened() {
             // This will trigger the cascade of async operations that

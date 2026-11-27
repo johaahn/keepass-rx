@@ -5,7 +5,9 @@ use colors::wash_out_by_blending;
 use gettextrs::pgettext;
 use log::{debug, info, warn};
 use qmeta_async::with_executor;
-use qmetaobject::{QDate, QDateTime, QMetaType, QStringList, QTime, QVariantMap, prelude::*};
+use qmetaobject::{
+    QDate, QDateTime, QMetaType, QStringList, QTime, QVariantList, QVariantMap, prelude::*,
+};
 use secstr::SecUtf8;
 use std::fs::{create_dir_all, remove_dir_all};
 use std::path::Path;
@@ -229,6 +231,12 @@ pub struct KeepassRx {
         }
     ),
 
+    validateEntryEdit: qt_method!(
+        fn validateEntryEdit(&self, values: QVariantMap) -> QVariantList {
+            entry_edit_problems(values)
+        }
+    ),
+
     // easy-open management
     storeMasterPassword: qt_method!(fn(&self, master_password: QString)),
     encryptMasterPassword: qt_method!(fn(&self)),
@@ -256,6 +264,7 @@ pub struct KeepassRx {
     entrySaved: qt_signal!(entryUuid: QString),
     entrySavedWithConflictCopy: qt_signal!(fileName: QString),
     entrySaveFailed: qt_signal!(message: QString, conflict: bool),
+    entryEditInvalid: qt_signal!(problems: QVariantList),
 
     // data signals
     metadataChanged: qt_signal!(),
@@ -497,6 +506,11 @@ impl KeepassRx {
 
     #[with_executor]
     fn save_entry(&self, entry_uuid: QString, values: QVariantMap) {
+        let problems = entry_edit_problems(values.clone());
+        if problems.len() > 0 {
+            self.entryEditInvalid(problems);
+            return;
+        }
         let edit = Uuid::from_str(&entry_uuid.to_string())
             .map_err(|err| err.to_string())
             .and_then(|uuid| {
@@ -585,23 +599,4 @@ impl KeepassRx {
             .expect("No color generated")
             .into()
     }
-}
-
-fn qstring_to_secure_utf8(value: &QString) -> SecUtf8 {
-    let utf16 = value.to_slice();
-    let mut utf8 = Vec::with_capacity(utf16.len());
-
-    for ch in char::decode_utf16(utf16.iter().copied()) {
-        let ch = ch.unwrap_or(char::REPLACEMENT_CHARACTER);
-        let mut buf = [0u8; 4];
-        utf8.extend_from_slice(ch.encode_utf8(&mut buf).as_bytes());
-    }
-
-    let secure = std::str::from_utf8(&utf8)
-        .ok()
-        .and_then(|s| SecUtf8::from_str(s).ok())
-        .unwrap_or_else(|| SecUtf8::from(""));
-
-    utf8.zeroize();
-    secure
 }

@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use uuid::Uuid;
 use zeroize::Zeroizing;
 
-use super::rx_edit::{EditError, RxEntryEdit, RxFieldEdit};
+use super::rx_edit::{EditError, EditProblem, RxEntryEdit, RxFieldEdit};
 use super::rx_entry::{RxEntry, RxFieldSource};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -52,12 +52,23 @@ fn field_edit(item: &EditValue) -> Result<RxFieldEdit, EditError> {
     })
 }
 
+fn is_blank_new_row(field: &RxFieldEdit) -> bool {
+    field.original_name.is_none() && field.name.trim().is_empty() && field.value.is_empty()
+}
+
 impl RxEntryEdit {
-    pub fn from_values(uuid: Uuid, values: &EditValues) -> Result<Self, EditError> {
-        let custom_fields = list(values, "customFields")?
+    fn from_values_with_rows(
+        uuid: Uuid,
+        values: &EditValues,
+    ) -> Result<(Self, Vec<usize>), EditError> {
+        let rows = list(values, "customFields")?
             .iter()
             .map(field_edit)
-            .collect::<Result<Vec<_>, _>>()?;
+            .collect::<Result<Vec<_>, _>>()?
+            .into_iter()
+            .enumerate()
+            .filter(|(_, field)| !is_blank_new_row(field))
+            .collect::<Vec<_>>();
         let removed_fields = list(values, "removedFields")?
             .iter()
             .map(|item| match item {
@@ -66,7 +77,9 @@ impl RxEntryEdit {
             })
             .collect::<Result<Vec<_>, _>>()?;
 
-        Ok(Self {
+        let indexes = rows.iter().map(|(index, _)| *index).collect();
+        let custom_fields = rows.into_iter().map(|(_, field)| field).collect();
+        let edit = Self {
             uuid,
             title: Zeroizing::new(text(values, "title")?),
             username: Zeroizing::new(text(values, "username")?),
@@ -75,8 +88,29 @@ impl RxEntryEdit {
             notes: Zeroizing::new(text(values, "notes")?),
             custom_fields,
             removed_fields,
-        })
+        };
+        Ok((edit, indexes))
     }
+
+    pub fn from_values(uuid: Uuid, values: &EditValues) -> Result<Self, EditError> {
+        Self::from_values_with_rows(uuid, values).map(|(edit, _)| edit)
+    }
+}
+
+pub fn validate_edit_values(values: &EditValues) -> Vec<EditProblem> {
+    let Ok((edit, indexes)) = RxEntryEdit::from_values_with_rows(Uuid::nil(), values) else {
+        return Vec::new();
+    };
+    edit.problems()
+        .into_iter()
+        .filter_map(|problem| {
+            let row = indexes.get(problem.index?)?;
+            Some(EditProblem {
+                index: Some(*row),
+                message: problem.message,
+            })
+        })
+        .collect()
 }
 
 fn value_text(value: Option<super::rx_entry::RxValueKeyRef<'_>>) -> EditValue {
@@ -194,5 +228,64 @@ mod tests {
             )]))]),
         );
         assert!(RxEntryEdit::from_values(Uuid::new_v4(), &values).is_err());
+    }
+
+    fn problems_of(fields: Vec<EditValue>) -> Vec<(usize, String)> {
+        let mut values = base();
+        values.insert("customFields".into(), EditValue::List(fields));
+        validate_edit_values(&values)
+            .into_iter()
+            .map(|p| (p.index.unwrap(), p.message))
+            .collect()
+    }
+
+    #[test]
+    fn blank_new_row_is_dropped() {
+        let mut values = base();
+        values.insert(
+            "customFields".into(),
+            EditValue::List(vec![
+                field("", "  ", "", false),
+                field("", "Kept", "x", false),
+                field("PIN", "", "", false),
+            ]),
+        );
+        let edit = RxEntryEdit::from_values(Uuid::new_v4(), &values).unwrap();
+        assert_eq!(edit.custom_fields.len(), 2);
+        assert_eq!(edit.custom_fields[0].name, "Kept");
+        assert_eq!(edit.custom_fields[1].original_name.as_deref(), Some("PIN"));
+        assert!(problems_of(vec![field("", "", "", false)]).is_empty());
+    }
+
+    #[test]
+    fn value_without_name_is_a_problem_at_its_row() {
+        let problems = problems_of(vec![
+            field("", "", "", false),
+            field("", "Ok", "1", false),
+            field("", "", "secret", false),
+        ]);
+        assert_eq!(problems.len(), 1);
+        assert_eq!(problems[0].0, 2);
+    }
+
+    #[test]
+    fn duplicate_name_is_a_problem_on_the_second_row() {
+        let problems = problems_of(vec![
+            field("", "Dup", "1", false),
+            field("", "Dup", "2", false),
+        ]);
+        assert_eq!(problems.len(), 1);
+        assert_eq!(problems[0].0, 1);
+    }
+
+    #[test]
+    fn reserved_names_are_problems() {
+        let problems = problems_of(vec![
+            field("", "Password", "1", false),
+            field("", "ok", "1", false),
+            field("", "_etm_template_uuid", "1", false),
+        ]);
+        let rows: Vec<usize> = problems.iter().map(|p| p.0).collect();
+        assert_eq!(rows, vec![0, 2]);
     }
 }

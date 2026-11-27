@@ -111,7 +111,8 @@ Page {
         }
     }
 
-    Component.onCompleted: {
+    function loadCustomFields() {
+        customFieldsModel.clear();
         if (entryCustomFields) {
             var keys = Object.keys(entryCustomFields);
             for (var i = 0; i < keys.length; i++) {
@@ -125,6 +126,28 @@ Page {
             }
         }
     }
+
+    function applyEntry(entry) {
+        entryTitle = entry.title ? entry.title : "";
+        entryUsername = entry.username ? entry.username : "";
+        entryUrl = entry.url ? entry.url : "";
+        entryNotes = entry.notes ? entry.notes : "";
+        entryHasUsername = entry.hasUsername === true;
+        entryHasPassword = entry.hasPassword === true;
+        entryEntropy = entry.entropy !== undefined ? entry.entropy : null;
+        entryHasUrl = entry.hasUrl === true;
+        entryHasNotes = entry.hasNotes === true;
+        entryHasTotp = entry.hasTotp === true;
+        entryCustomFields = entry.customFields ? entry.customFields : null;
+        entryIconUrl = entry.iconPath ? entry.iconPath : "";
+        usernameRevealed = "";
+        passwordRevealed = "";
+        urlRevealed = "";
+        notesRevealed = "";
+        loadCustomFields();
+    }
+
+    Component.onCompleted: loadCustomFields()
 
     RxUiEntry {
         id: entryModel
@@ -144,6 +167,25 @@ Page {
 
     Connections {
         target: keepassrx
+
+        onEntryForEditReceived: {
+            if (entry && entry.uuid === entryPage.entryUuid) {
+                pageStack.push(Qt.resolvedUrl("EditEntryPage.qml"), { entry: entry });
+            }
+        }
+
+        onEntrySaved: {
+            if (entryUuid === entryPage.entryUuid) {
+                keepassrx.getSingleEntry(entryPage.entryUuid);
+            }
+        }
+
+        onSingleEntryReceived: {
+            if (entry && entry.uuid === entryPage.entryUuid) {
+                entryPage.applyEntry(entry);
+            }
+        }
+
         onFieldValueReceived: {
             if (field_extra !== "reveal" || entry_uuid !== entryPage.entryUuid) {
                 return;
@@ -157,6 +199,14 @@ Page {
         contentHeight: content.height
 
         VerticalScrollDecorator {}
+
+        PullDownMenu {
+            MenuItem {
+                text: Tr.tr("Edit")
+                visible: keepassrx.canEdit
+                onClicked: keepassrx.getEntryForEdit(entryPage.entryUuid)
+            }
+        }
 
         Column {
             id: content

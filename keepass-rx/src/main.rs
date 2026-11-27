@@ -148,13 +148,11 @@ fn load_gui() -> Result<()> {
 
     init_gettext();
 
-    let uri = cstr!("keepassrx");
-
-    qml_register_type::<RxUiDatabase>(uri, 1, 0, cstr!("RxUiDatabase"));
-    qml_register_type::<RxUiContainerStack>(uri, 1, 0, cstr!("RxUiContainerStack"));
-    qml_register_type::<RxUiEntry>(uri, 1, 0, cstr!("RxUiEntry"));
-    qml_register_type::<RxUiLicenses>(uri, 1, 0, cstr!("RxUiLicenses"));
-    qml_register_type::<RxListItem>(uri, 1, 0, cstr!("RxListItem"));
+    qml_register_type::<RxUiDatabase>(c"keepassrx", 1, 0, c"RxUiDatabase");
+    qml_register_type::<RxUiContainerStack>(c"keepassrx", 1, 0, c"RxUiContainerStack");
+    qml_register_type::<RxUiEntry>(c"keepassrx", 1, 0, c"RxUiEntry");
+    qml_register_type::<RxUiLicenses>(c"keepassrx", 1, 0, c"RxUiLicenses");
+    qml_register_type::<RxListItem>(c"keepassrx", 1, 0, c"RxListItem");
 
     #[cfg(not(feature = "sailfish"))]
     {
@@ -163,12 +161,12 @@ fn load_gui() -> Result<()> {
         use crate::gui::{RxDbType, RxGuiState, RxViewMode};
         use crate::rx::virtual_hierarchy::RxViewFeature;
 
-        qml_register_enum::<RxItemType>(uri, 1, 0, cstr!("RxItemType"));
-        qml_register_enum::<RxGuiState>(uri, 1, 0, cstr!("RxGuiState"));
-        qml_register_enum::<RxViewMode>(uri, 1, 0, cstr!("RxViewMode"));
-        qml_register_enum::<RxDbType>(uri, 1, 0, cstr!("RxDbType"));
-        qml_register_enum::<RxViewFeature>(uri, 1, 0, cstr!("RxViewFeature"));
-        qml_register_enum::<RxColorType>(uri, 1, 0, cstr!("RxColorType"));
+        qml_register_enum::<RxItemType>(c"keepassrx", 1, 0, c"RxItemType");
+        qml_register_enum::<RxGuiState>(c"keepassrx", 1, 0, c"RxGuiState");
+        qml_register_enum::<RxViewMode>(c"keepassrx", 1, 0, c"RxViewMode");
+        qml_register_enum::<RxDbType>(c"keepassrx", 1, 0, c"RxDbType");
+        qml_register_enum::<RxViewFeature>(c"keepassrx", 1, 0, c"RxViewFeature");
+        qml_register_enum::<RxColorType>(c"keepassrx", 1, 0, c"RxColorType");
     }
 
     if let Err(err) = move_old_dirs_and_files() {

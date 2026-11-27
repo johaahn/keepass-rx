@@ -70,7 +70,7 @@ const FIELDS_TO_HIDE: [&str; 3] = [
 // value should be hidden.
 const WILDCARD_FIELDS_TO_HIDE: [&str; 3] = ["AndroidApp", "KP2A_URL", "KPEX_PASSKEY_"];
 
-fn should_hide_field(field_name: &str) -> bool {
+pub(crate) fn should_hide_field(field_name: &str) -> bool {
     FIELDS_TO_HIDE.contains(&field_name)
         || WILDCARD_FIELDS_TO_HIDE
             .iter()
@@ -156,6 +156,7 @@ impl RxEntry {
         let entry_uuid = entry.id().uuid();
         let master_key = master_key.clone();
         let custom_data = mem::take(&mut entry.custom_data);
+        entry.fields.retain(|_, value| !value.get().is_empty());
 
         let title = extract_value(&master_key, &mut entry, "Title");
         let username = extract_value(&master_key, &mut entry, "UserName");
@@ -288,7 +289,7 @@ impl RxEntry {
                 self.custom_fields
                     .data
                     .iter()
-                    .find_map(|(key, value)| match key == name {
+                    .find_map(|(key, value, _)| match key == name {
                         true => Some(RxValueKeyRef::new(value, &self.master_key)),
                         false => None,
                     })
@@ -731,11 +732,17 @@ impl RxAttachments {
     }
 }
 
+#[derive(Zeroize, Clone, Copy, Debug, PartialEq, Eq)]
+pub enum RxFieldSource {
+    Field,
+    CustomData,
+}
+
 #[derive(Zeroize, ZeroizeOnDrop, Clone)]
 pub struct RxCustomFields {
     #[zeroize(skip)]
     master_key: Rc<MasterKey>,
-    data: Vec<(String, RxValue)>,
+    data: Vec<(String, RxValue, RxFieldSource)>,
 }
 
 impl RxCustomFields {
@@ -744,7 +751,7 @@ impl RxCustomFields {
             .into_iter()
             .flat_map(|(key, item)| {
                 if !should_hide_field(&key.as_ref()) {
-                    Some((key, item))
+                    Some((key, item, RxFieldSource::Field))
                 } else {
                     None
                 }
@@ -760,7 +767,15 @@ impl RxCustomFields {
     pub fn iter(&self) -> impl Iterator<Item = (&String, RxValueKeyRef<'_>)> {
         self.data
             .iter()
-            .map(|(key, value)| (key, RxValueKeyRef::new(value, &self.master_key)))
+            .map(|(key, value, _)| (key, RxValueKeyRef::new(value, &self.master_key)))
+    }
+
+    pub fn iter_sourced(
+        &self,
+    ) -> impl Iterator<Item = (&String, RxValueKeyRef<'_>, RxFieldSource)> {
+        self.data.iter().map(|(key, value, source)| {
+            (key, RxValueKeyRef::new(value, &self.master_key), *source)
+        })
     }
 
     fn from_custom_data(
@@ -772,9 +787,9 @@ impl RxCustomFields {
             .flat_map(|(key, item)| {
                 if !should_hide_field(&key.as_ref()) {
                     item.value.and_then(|value| match value {
-                        CustomDataValue::String(val) => {
-                            RxValue::try_from(val).ok().map(|secret| (key, secret))
-                        }
+                        CustomDataValue::String(val) => RxValue::try_from(val)
+                            .ok()
+                            .map(|secret| (key, secret, RxFieldSource::CustomData)),
                         _ => None,
                     })
                 } else {

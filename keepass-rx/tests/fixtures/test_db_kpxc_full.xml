@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<KeePassFile>
+<Meta>
+<Generator>KeePassXC</Generator>
+<DatabaseName>Full KPXC</DatabaseName>
+<DatabaseNameChanged>2024-01-01T00:00:00Z</DatabaseNameChanged>
+<DatabaseDescription>Fixture with many elements</DatabaseDescription>
+<DatabaseDescriptionChanged>2024-01-01T00:00:00Z</DatabaseDescriptionChanged>
+<DefaultUserName>defuser</DefaultUserName>
+<DefaultUserNameChanged>2024-01-01T00:00:00Z</DefaultUserNameChanged>
+<MaintenanceHistoryDays>365</MaintenanceHistoryDays>
+<Color>#FF8800</Color>
+<MasterKeyChanged>2024-01-01T00:00:00Z</MasterKeyChanged>
+<MasterKeyChangeRec>-1</MasterKeyChangeRec>
+<MasterKeyChangeForce>-1</MasterKeyChangeForce>
+<MemoryProtection><ProtectTitle>False</ProtectTitle><ProtectUserName>False</ProtectUserName><ProtectPassword>True</ProtectPassword><ProtectURL>False</ProtectURL><ProtectNotes>False</ProtectNotes></MemoryProtection>
+<CustomIcons><Icon><UUID>q83vASNFZ4mrze8BI0VniQ==</UUID><Data>iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAEklEQVR4nGP4z8DwHxkzkC4AADxAH+HggXe0AAAAAElFTkSuQmCC</Data></Icon></CustomIcons>
+<RecycleBinEnabled>True</RecycleBinEnabled>
+<RecycleBinUUID>AAAAAAAAAAAAAAAAAAAAAg==</RecycleBinUUID>
+<RecycleBinChanged>2024-01-01T00:00:00Z</RecycleBinChanged>
+<EntryTemplatesGroup>AAAAAAAAAAAAAAAAAAAAAA==</EntryTemplatesGroup>
+<EntryTemplatesGroupChanged>2024-01-01T00:00:00Z</EntryTemplatesGroupChanged>
+<LastSelectedGroup>AAAAAAAAAAAAAAAAAAAAAQ==</LastSelectedGroup>
+<LastTopVisibleGroup>AAAAAAAAAAAAAAAAAAAAAQ==</LastTopVisibleGroup>
+<HistoryMaxItems>10</HistoryMaxItems>
+<HistoryMaxSize>6291456</HistoryMaxSize>
+<Binaries><Binary ID="0" Compressed="False">YXR0YWNobWVudCBwYXlsb2FkCmxpbmUgdHdvCg==</Binary></Binaries>
+<CustomData>
+<Item><Key>KPXC_BROWSER_testbrowser</Key><Value>c29tZWtleQ==</Value></Item>
+<Item><Key>KPXC_DECRYPTION_TIME_PREFERENCE</Key><Value>100</Value><LastModificationTime>2024-01-01T00:00:00Z</LastModificationTime></Item>
+<Item><Key>KPXC_RANDOM_SLUG</Key><Value>abcdef</Value></Item>
+<Item><Key>_LAST_MODIFIED</Key><Value>Mon Jan 1 00:00:00 2024 GMT</Value></Item>
+</CustomData>
+</Meta>
+<Root>
+<Group>
+<UUID>AAAAAAAAAAAAAAAAAAAAAQ==</UUID><Name>Root</Name><Notes>root notes</Notes><IconID>48</IconID>
+<Times><CreationTime>2024-01-01T00:00:00Z</CreationTime><LastModificationTime>2024-01-01T00:00:00Z</LastModificationTime><LastAccessTime>2024-01-01T00:00:00Z</LastAccessTime><ExpiryTime>2024-01-01T00:00:00Z</ExpiryTime><Expires>False</Expires><UsageCount>0</UsageCount><LocationChanged>2024-01-01T00:00:00Z</LocationChanged></Times>
+<IsExpanded>True</IsExpanded><DefaultAutoTypeSequence></DefaultAutoTypeSequence><EnableAutoType>null</EnableAutoType><EnableSearching>null</EnableSearching>
+<LastTopVisibleEntry>AAAAAAAAAAAAAAAAAAAAEA==</LastTopVisibleEntry>
+<Entry>
+<UUID>AAAAAAAAAAAAAAAAAAAAEA==</UUID><IconID>0</IconID>
+<ForegroundColor>#112233</ForegroundColor><BackgroundColor>#AABBCC</BackgroundColor>
+<OverrideURL>cmd://echo {URL}</OverrideURL>
+<Tags>alpha;beta;gamma</Tags>
+<Times><CreationTime>2024-01-01T00:00:00Z</CreationTime><LastModificationTime>2024-04-01T00:00:00Z</LastModificationTime><LastAccessTime>2024-04-02T00:00:00Z</LastAccessTime><ExpiryTime>2030-06-15T12:30:00Z</ExpiryTime><Expires>True</Expires><UsageCount>7</UsageCount><LocationChanged>2024-01-01T00:00:00Z</LocationChanged></Times>
+<String><Key>Title</Key><Value>Full Entry</Value></String>
+<String><Key>UserName</Key><Value>alice</Value></String>
+<String><Key>Password</Key><Value>hunter4</Value></String>
+<String><Key>URL</Key><Value>https://example.com</Value></String>
+<String><Key>Notes</Key><Value>some notes</Value></String>
+<String><Key>PlainField</Key><Value>plain custom</Value></String>
+<String><Key>SecretField</Key><Value>secret custom</Value></String>
+<Binary><Key>attach.txt</Key><Value Ref="0"/></Binary>
+<AutoType><Enabled>True</Enabled><DataTransferObfuscation>0</DataTransferObfuscation><DefaultSequence>{USERNAME}{TAB}{PASSWORD}{ENTER}</DefaultSequence>
+<Association><Window>Login - *</Window><KeystrokeSequence>{USERNAME}{ENTER}</KeystrokeSequence></Association></AutoType>
+<CustomData>
+<Item><Key>entry-key</Key><Value>entry-value</Value></Item>
+<Item><Key>KPXC_BROWSER_entry</Key><Value>{"Allow":["https://example.com"]}</Value></Item>
+</CustomData>
+<History>
+<Entry><UUID>AAAAAAAAAAAAAAAAAAAAEA==</UUID><IconID>0</IconID><Tags>alpha</Tags>
+<Times><CreationTime>2024-01-01T00:00:00Z</CreationTime><LastModificationTime>2024-02-01T00:00:00Z</LastModificationTime><LastAccessTime>2024-02-01T00:00:00Z</LastAccessTime><ExpiryTime>2024-01-01T00:00:00Z</ExpiryTime><Expires>False</Expires><UsageCount>1</UsageCount><LocationChanged>2024-01-01T00:00:00Z</LocationChanged></Times>
+<String><Key>Title</Key><Value>Full Entry v1</Value></String>
+<String><Key>UserName</Key><Value>alice</Value></String>
+<String><Key>Password</Key><Value>hunter1</Value></String>
+<AutoType><Enabled>True</Enabled><DataTransferObfuscation>0</DataTransferObfuscation></AutoType></Entry>
+<Entry><UUID>AAAAAAAAAAAAAAAAAAAAEA==</UUID><IconID>0</IconID><Tags>alpha;beta</Tags>
+<Times><CreationTime>2024-01-01T00:00:00Z</CreationTime><LastModificationTime>2024-03-01T00:00:00Z</LastModificationTime><LastAccessTime>2024-03-01T00:00:00Z</LastAccessTime><ExpiryTime>2024-01-01T00:00:00Z</ExpiryTime><Expires>False</Expires><UsageCount>2</UsageCount><LocationChanged>2024-01-01T00:00:00Z</LocationChanged></Times>
+<String><Key>Title</Key><Value>Full Entry v2</Value></String>
+<String><Key>UserName</Key><Value>alice</Value></String>
+<String><Key>Password</Key><Value>hunter2</Value></String>
+<AutoType><Enabled>True</Enabled><DataTransferObfuscation>0</DataTransferObfuscation></AutoType></Entry>
+<Entry><UUID>AAAAAAAAAAAAAAAAAAAAEA==</UUID><IconID>0</IconID><Tags>alpha;beta</Tags>
+<Times><CreationTime>2024-01-01T00:00:00Z</CreationTime><LastModificationTime>2024-03-15T00:00:00Z</LastModificationTime><LastAccessTime>2024-03-15T00:00:00Z</LastAccessTime><ExpiryTime>2024-01-01T00:00:00Z</ExpiryTime><Expires>False</Expires><UsageCount>3</UsageCount><LocationChanged>2024-01-01T00:00:00Z</LocationChanged></Times>
+<String><Key>Title</Key><Value>Full Entry v3</Value></String>
+<String><Key>UserName</Key><Value>alice</Value></String>
+<String><Key>Password</Key><Value>hunter3</Value></String><String><Key>PlainField</Key><Value>old plain</Value></String>
+<AutoType><Enabled>True</Enabled><DataTransferObfuscation>0</DataTransferObfuscation></AutoType></Entry>
+</History>
+</Entry>
+<Group>
+<UUID>AAAAAAAAAAAAAAAAAAAAIA==</UUID><Name>Nested One</Name><Notes>group notes</Notes><IconID>5</IconID>
+<CustomIconUUID>q83vASNFZ4mrze8BI0VniQ==</CustomIconUUID>
+<Times><CreationTime>2024-01-01T00:00:00Z</CreationTime><LastModificationTime>2024-01-01T00:00:00Z</LastModificationTime><LastAccessTime>2024-01-01T00:00:00Z</LastAccessTime><ExpiryTime>2024-01-01T00:00:00Z</ExpiryTime><Expires>False</Expires><UsageCount>0</UsageCount><LocationChanged>2024-01-01T00:00:00Z</LocationChanged></Times>
+<IsExpanded>True</IsExpanded><DefaultAutoTypeSequence>{PASSWORD}</DefaultAutoTypeSequence><EnableAutoType>False</EnableAutoType><EnableSearching>True</EnableSearching>
+<LastTopVisibleEntry>AAAAAAAAAAAAAAAAAAAAEQ==</LastTopVisibleEntry>
+<CustomData><Item><Key>group-key</Key><Value>group-value</Value></Item></CustomData>
+<Entry>
+<UUID>AAAAAAAAAAAAAAAAAAAAEQ==</UUID><IconID>3</IconID><PreviousParentGroup>AAAAAAAAAAAAAAAAAAAAAQ==</PreviousParentGroup><CustomIconUUID>q83vASNFZ4mrze8BI0VniQ==</CustomIconUUID>
+<Times><CreationTime>2024-01-01T00:00:00Z</CreationTime><LastModificationTime>2024-01-01T00:00:00Z</LastModificationTime><LastAccessTime>2024-01-01T00:00:00Z</LastAccessTime><ExpiryTime>2024-01-01T00:00:00Z</ExpiryTime><Expires>False</Expires><UsageCount>0</UsageCount><LocationChanged>2024-01-01T00:00:00Z</LocationChanged></Times>
+<String><Key>Title</Key><Value>Icon Entry</Value></String>
+<String><Key>UserName</Key><Value>bob</Value></String>
+<String><Key>Password</Key><Value>pw-bob</Value></String>
+<AutoType><Enabled>True</Enabled><DataTransferObfuscation>0</DataTransferObfuscation></AutoType>
+</Entry>
+<Group>
+<UUID>AAAAAAAAAAAAAAAAAAAAIQ==</UUID><Name>Nested Two</Name><IconID>0</IconID>
+<Times><CreationTime>2024-01-01T00:00:00Z</CreationTime><LastModificationTime>2024-01-01T00:00:00Z</LastModificationTime><LastAccessTime>2024-01-01T00:00:00Z</LastAccessTime><ExpiryTime>2024-01-01T00:00:00Z</ExpiryTime><Expires>False</Expires><UsageCount>0</UsageCount><LocationChanged>2024-01-01T00:00:00Z</LocationChanged></Times>
+<IsExpanded>False</IsExpanded><EnableAutoType>null</EnableAutoType><EnableSearching>null</EnableSearching>
+<LastTopVisibleEntry>AAAAAAAAAAAAAAAAAAAAAA==</LastTopVisibleEntry>
+<Entry>
+<UUID>AAAAAAAAAAAAAAAAAAAAEg==</UUID><IconID>0</IconID>
+<Times><CreationTime>2024-01-01T00:00:00Z</CreationTime><LastModificationTime>2024-01-01T00:00:00Z</LastModificationTime><LastAccessTime>2024-01-01T00:00:00Z</LastAccessTime><ExpiryTime>2024-01-01T00:00:00Z</ExpiryTime><Expires>False</Expires><UsageCount>0</UsageCount><LocationChanged>2024-01-01T00:00:00Z</LocationChanged></Times>
+<String><Key>Title</Key><Value>Deep Entry</Value></String>
+<String><Key>UserName</Key><Value>carol</Value></String>
+<String><Key>Password</Key><Value>pw-carol</Value></String>
+<AutoType><Enabled>True</Enabled><DataTransferObfuscation>0</DataTransferObfuscation></AutoType>
+</Entry>
+</Group>
+</Group>
+<Group>
+<UUID>AAAAAAAAAAAAAAAAAAAAAg==</UUID><Name>Recycle Bin</Name><Notes>Trash</Notes><IconID>43</IconID>
+<Times><CreationTime>2024-01-01T00:00:00Z</CreationTime><LastModificationTime>2024-01-01T00:00:00Z</LastModificationTime><LastAccessTime>2024-01-01T00:00:00Z</LastAccessTime><ExpiryTime>2024-01-01T00:00:00Z</ExpiryTime><Expires>False</Expires><UsageCount>0</UsageCount><LocationChanged>2024-01-01T00:00:00Z</LocationChanged></Times>
+<IsExpanded>True</IsExpanded><EnableAutoType>False</EnableAutoType><EnableSearching>False</EnableSearching>
+<LastTopVisibleEntry>AAAAAAAAAAAAAAAAAAAAAA==</LastTopVisibleEntry>
+</Group>
+</Group>
+<DeletedObjects>
+<DeletedObject><UUID>AAAAAAAAAAAAAAAAAAAAZA==</UUID><DeletionTime>2024-02-02T00:00:00Z</DeletionTime></DeletedObject>
+<DeletedObject><UUID>AAAAAAAAAAAAAAAAAAAAZQ==</UUID><DeletionTime>2024-02-03T00:00:00Z</DeletionTime></DeletedObject>
+</DeletedObjects>
+</Root>
+</KeePassFile>

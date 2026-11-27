@@ -176,6 +176,10 @@ ApplicationWindow {
             applicationWindow.notify(error);
         }
 
+        onEntrySavedWithConflictCopy: {
+            applicationWindow.notify(Tr.tr("Another app changed the database while saving. Its version was kept as %1.").arg(fileName));
+        }
+
         onDatabaseOpened: {
             keepassrx.guiState = 'Open';
             keepassrx.encryptMasterPassword();

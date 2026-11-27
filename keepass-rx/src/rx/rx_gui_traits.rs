@@ -1,8 +1,10 @@
 use gettextrs::{gettext, pgettext};
-use qmetaobject::{QMetaType, QString, QVariant, QVariantMap};
+use qmetaobject::{QMetaType, QString, QVariant, QVariantList, QVariantMap};
 use std::collections::HashMap;
 
-use crate::rx::{RxCustomFields, RxEntry, RxFieldName, entropy::PasswordQuality};
+use crate::rx::{
+    EditValue, EditValues, RxCustomFields, RxEntry, RxFieldName, entropy::PasswordQuality,
+};
 
 use super::{RxMetadata, RxValueKeyRef, virtual_hierarchy::RxViewFeature};
 
@@ -235,4 +237,57 @@ impl From<&RxMetadata> for QVariant {
     fn from(value: &RxMetadata) -> Self {
         QVariantMap::from(value).into()
     }
+}
+
+const QT_BOOL: i32 = 1;
+const QT_VARIANT_MAP: i32 = 8;
+const QT_VARIANT_LIST: i32 = 9;
+
+impl From<QVariant> for EditValue {
+    fn from(variant: QVariant) -> Self {
+        match variant.user_type() {
+            QT_BOOL => EditValue::Flag(variant.to_bool()),
+            QT_VARIANT_MAP => EditValue::Map(edit_values_from_map(variant.to_qvariantmap())),
+            QT_VARIANT_LIST => QVariantList::from_qvariant(variant)
+                .map(|items| {
+                    EditValue::List(
+                        (&items)
+                            .into_iter()
+                            .map(|item| EditValue::from(item.clone()))
+                            .collect(),
+                    )
+                })
+                .unwrap_or(EditValue::List(vec![])),
+            _ => EditValue::Text(variant.to_qstring().to_string()),
+        }
+    }
+}
+
+impl From<&EditValue> for QVariant {
+    fn from(value: &EditValue) -> Self {
+        match value {
+            EditValue::Text(text) => QString::from(text.as_str()).into(),
+            EditValue::Flag(flag) => (*flag).into(),
+            EditValue::List(items) => items
+                .iter()
+                .map(QVariant::from)
+                .collect::<QVariantList>()
+                .to_qvariant(),
+            EditValue::Map(map) => edit_values_to_map(map).to_qvariant(),
+        }
+    }
+}
+
+pub fn edit_values_from_map(map: QVariantMap) -> EditValues {
+    (&map)
+        .into_iter()
+        .map(|(key, value)| (key.to_string(), EditValue::from(value.clone())))
+        .collect()
+}
+
+pub fn edit_values_to_map(values: &EditValues) -> QVariantMap {
+    values
+        .iter()
+        .map(|(key, value)| (QString::from(key.as_str()), QVariant::from(value)))
+        .collect()
 }

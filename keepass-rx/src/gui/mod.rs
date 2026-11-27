@@ -22,6 +22,7 @@ pub(crate) mod qml;
 pub(crate) mod settings;
 pub(crate) mod utils;
 
+use crate::rx::{RxEntryEdit, edit_values_from_map};
 use actor::*;
 use utils::*;
 
@@ -123,7 +124,6 @@ impl QMetaType for RxDbType {
             return None;
         }
 
-        // Probably should check this here.
         match variant.to_int() {
             0 => Some(RxDbType::Imported),
             1 => Some(RxDbType::Synced),
@@ -196,6 +196,8 @@ pub struct KeepassRx {
     guiState: qt_property!(RxGuiState; NOTIFY guiStateChanged),
     viewMode: qt_property!(RxViewMode; READ getViewMode WRITE setViewMode NOTIFY viewModeChanged),
     databaseOpen: qt_property!(bool),
+    canEdit: qt_property!(bool; NOTIFY canEditChanged),
+    saving: qt_property!(bool; NOTIFY savingChanged),
     isMasterPasswordEncrypted: qt_property!(bool; NOTIFY masterPasswordStateChanged),
     rootGroupUuid: qt_property!(QString; NOTIFY rootGroupUuidChanged),
     metadata: qt_property!(QVariant; NOTIFY metadataChanged),
@@ -216,6 +218,17 @@ pub struct KeepassRx {
     getFieldValue: qt_method!(fn(&self, entry_uuid: QString, field_name: QString)),
     revealFieldValue: qt_method!(fn(&self, entry_uuid: QString, field_name: QString)),
 
+    getEntryForEdit: qt_method!(
+        fn getEntryForEdit(&self, entry_uuid: QString) {
+            self.get_entry_for_edit(entry_uuid);
+        }
+    ),
+    saveEntry: qt_method!(
+        fn saveEntry(&self, entry_uuid: QString, values: QVariantMap) {
+            self.save_entry(entry_uuid, values);
+        }
+    ),
+
     // easy-open management
     storeMasterPassword: qt_method!(fn(&self, master_password: QString)),
     encryptMasterPassword: qt_method!(fn(&self)),
@@ -223,7 +236,6 @@ pub struct KeepassRx {
     invalidateMasterPassword: qt_method!(fn(&self)),
     checkLockingStatus: qt_method!(fn(&self)),
 
-    // misc utility functions
     washOutColor: qt_method!(fn(&self, hex_color: QString) -> QVariantMap),
 
     // db management signals
@@ -238,6 +250,12 @@ pub struct KeepassRx {
     databaseDeleted: qt_signal!(db_name: QString),
     databaseOpenFailed: qt_signal!(message: String, credentialsRejected: bool),
     keyFileSet: qt_signal!(),
+    canEditChanged: qt_signal!(),
+    savingChanged: qt_signal!(),
+    entryForEditReceived: qt_signal!(entry: QVariantMap),
+    entrySaved: qt_signal!(entryUuid: QString),
+    entrySavedWithConflictCopy: qt_signal!(fileName: QString),
+    entrySaveFailed: qt_signal!(message: QString, conflict: bool),
 
     // data signals
     metadataChanged: qt_signal!(),
@@ -464,6 +482,33 @@ impl KeepassRx {
                 actix::spawn(actor.send(GetSingleEntry { entry_uuid }));
             }
             Err(err) => self.errorReceived(format!("{}", err)),
+        }
+    }
+
+    #[with_executor]
+    fn get_entry_for_edit(&self, entry_uuid: QString) {
+        match Uuid::from_str(&entry_uuid.to_string()) {
+            Ok(entry_uuid) => {
+                actix::spawn(self.actor_ref().send(GetEntryForEdit { entry_uuid }));
+            }
+            Err(err) => self.errorReceived(format!("{}", err)),
+        }
+    }
+
+    #[with_executor]
+    fn save_entry(&self, entry_uuid: QString, values: QVariantMap) {
+        let edit = Uuid::from_str(&entry_uuid.to_string())
+            .map_err(|err| err.to_string())
+            .and_then(|uuid| {
+                RxEntryEdit::from_values(uuid, &edit_values_from_map(values))
+                    .map_err(|err| err.to_string())
+            });
+
+        match edit {
+            Ok(edit) => {
+                actix::spawn(self.actor_ref().send(SaveEntry { edit }));
+            }
+            Err(message) => self.entrySaveFailed(QString::from(message), false),
         }
     }
 

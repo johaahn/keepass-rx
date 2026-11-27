@@ -86,6 +86,10 @@ MainView {
             clearSensitiveUiState();
         }
 
+        function onEntrySavedWithConflictCopy(fileName) {
+            toast.show(i18n.tr("Another app changed the database while saving. Its version was kept as %1.").arg(fileName));
+        }
+
         // When the UI requests getting a single value from an entry.
         function onFieldValueReceived(entryUuid, fieldName, fieldValue, fieldExtra) {
             if (fieldExtra !== "copy" || !fieldValue) {

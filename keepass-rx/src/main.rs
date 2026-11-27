@@ -42,8 +42,13 @@ use std::io::Write;
 use std::path::PathBuf;
 use std::rc::Rc;
 use std::sync::OnceLock;
+#[cfg(feature = "gui")]
+use std::sync::atomic::Ordering;
 
 pub use keepassrx::{crypto, license, rx};
+
+#[cfg(feature = "gui")]
+use crate::rx::closing::APP_CLOSING;
 
 #[cfg(feature = "gui")]
 mod actor;
@@ -259,6 +264,7 @@ fn boot_ubuntu_touch() {
 
         view.show();
         view.engine().exec();
+        APP_CLOSING.store(true, Ordering::SeqCst);
     })
     .expect("running application");
 }
@@ -309,6 +315,7 @@ fn boot_sailfish() {
 
         view.show_full_screen();
         view.exec();
+        APP_CLOSING.store(true, Ordering::SeqCst);
     })
     .expect("running application");
 }

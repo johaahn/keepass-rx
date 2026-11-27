@@ -1,7 +1,7 @@
 use crate::crypto::MasterKey;
 
 use super::rx_loader::RxLoader;
-use super::{RxEntry, RxGroup, RxTemplate, RxTotp, ZeroableDatabase};
+use super::{RxEntry, RxGroup, RxSourceFile, RxTemplate, RxTotp, ZeroableDatabase};
 use anyhow::{Context, Result, anyhow};
 use indexmap::IndexMap;
 use keepass::config::DatabaseConfig;
@@ -64,6 +64,7 @@ pub struct RxDatabase {
     all_groups: IndexMap<Uuid, Rc<RxGroup>>,
     all_entries: IndexMap<Uuid, Rc<RxEntry>>,
     saved_searches: Vec<RxSavedSearchDef>,
+    source: Option<RxSourceFile>,
 }
 
 impl Zeroize for RxDatabase {
@@ -122,6 +123,15 @@ impl std::fmt::Debug for RxDatabase {
 
 #[allow(dead_code)]
 impl RxDatabase {
+    pub fn with_source(mut self, source: RxSourceFile) -> Self {
+        self.source = Some(source);
+        self
+    }
+
+    pub fn source(&self) -> Option<&RxSourceFile> {
+        self.source.as_ref()
+    }
+
     pub fn new(db: Zeroizing<ZeroableDatabase>) -> Result<Self> {
         info!("Loading password database.");
         let loader = RxLoader::new(db);
@@ -135,6 +145,7 @@ impl RxDatabase {
             all_entries: loaded.state.all_entries,
             saved_searches: loaded.saved_searches,
             metadata: loaded.metadata,
+            source: None,
         };
 
         // Map templates. Easier to do when we have access to DB logic.
@@ -312,6 +323,29 @@ mod tests {
 
         assert_eq!(rx_subgroup.uuid, subgroup_id);
         assert_eq!(rx_subgroup.entries, vec![sub_entry_id]);
+    }
+
+    #[test]
+    fn empty_fields_are_dropped() {
+        set_default_credential_builder(keyring::mock::default_credential_builder());
+        let mut db = keepass::db::Database::new();
+        let entry_id = db
+            .root_mut()
+            .add_entry()
+            .edit(|entry| {
+                entry.set_unprotected("Title", "kept");
+                entry.set_unprotected("URL", "");
+                entry.set_protected("Password", "");
+                entry.set_unprotected("Extra", "");
+            })
+            .id();
+
+        let rx_db = RxDatabase::new(Zeroizing::new(ZeroableDatabase(db))).expect("load rx db");
+        let entry = rx_db.get_entry(entry_id.uuid()).expect("entry");
+        assert!(entry.title().is_some());
+        assert!(entry.url().is_none());
+        assert!(entry.password().is_none());
+        assert!(entry.custom_fields.iter().next().is_none());
     }
 
     #[test]

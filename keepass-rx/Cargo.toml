@@ -12,13 +12,16 @@ actor-macro = { path = "../actor-macro" }
 mirror_from_macro = { path = "../mirror_from_macro" }
 qmetaobject = { version = "0.2.9" }
 chrono = "0.4"
+rustix = { version = "1", features = ["fs"] }
+tempfile = "3"
 gettext-rs = "0.7"
 cstr = "0.2.11"
 cpp = "0.5"
 dirs = "6.0.0"
 anyhow = "1.0.100"
 keepass = { version = "0.17.0", features = ["totp", "serialization", "save_kdbx4"] }
-tempfile = "3"
+atomic-write-file = "0.3.1"
+thiserror = "2"
 sha2 = "0.10"
 humanize-duration = "0.0.7"
 uriparse = "0.6.4"
@@ -68,6 +71,9 @@ sailors = { git = "https://gitlab.com/whisperfish/sailo-rs.git", optional = true
 cpp_build = "0.5"
 walkdir = "2.5.0"
 cc = "1.2.43"
+
+[dev-dependencies]
+roxmltree = "0.20"
 
 [features]
 # Compile the GUI portion of the application (link QT etc). This is the shared

@@ -17,38 +17,64 @@ Page {
     property string errorMsg: ""
 
     function clearSensitiveUiState() {
-        passcode.text = "";
+        password.text = "";
     }
 
     function unlock() {
+        busy = true;
+        errorMsg = "";
+        keepassrx.storeMasterPassword(password.text);
+        password.text = "";
+    }
+
+    function unlockWithSystem() {
         if (!keepassrx.isMasterPasswordEncrypted) {
-            errorMsg = Tr.tr("There is no locked database");
             return;
         }
         busy = true;
         errorMsg = "";
-        keepassrx.decryptMasterPassword(passcode.text);
-        passcode.text = "";
+        keepassrx.decryptMasterPassword("");
     }
 
     Component.onDestruction: clearSensitiveUiState()
+
+    Connections {
+        target: applicationWindow
+        onSystemUnlockRequested: unlockPage.unlockWithSystem()
+    }
 
     Connections {
         target: keepassrx
 
         onMasterPasswordDecrypted: applicationWindow.uiDatabase.open()
 
+        onMasterPasswordStored: {
+            if (unlockPage.busy) {
+                applicationWindow.uiDatabase.open();
+            }
+        }
+
+        onUnlockCodeRequired: {
+            unlockPage.busy = false;
+            unlockPage.errorMsg = Tr.tr("Authentication did not complete. Enter the password.");
+        }
+
+        onUnlockAuthRejected: {
+            unlockPage.busy = false;
+            unlockPage.errorMsg = Tr.tr("Authentication failed. Enter the password.");
+        }
+
         // `error` is the declared signal arg name (Qt 5.6 block form).
         onDecryptionFailed: {
             unlockPage.busy = false;
-            unlockPage.errorMsg = Tr.tr("Error: %1. Wrong passcode?").arg(error);
+            unlockPage.errorMsg = Tr.tr("Error: %1").arg(error);
             unlockPage.clearSensitiveUiState();
         }
 
-        // `message` is the declared signal arg name (Qt 5.6 block form).
         onDatabaseOpenFailed: {
             unlockPage.busy = false;
-            unlockPage.errorMsg = Tr.tr("Error: %1").arg(message);
+            unlockPage.errorMsg = credentialsRejected
+                ? Tr.tr("Incorrect password.") : Tr.tr("Error: %1").arg(message);
             unlockPage.clearSensitiveUiState();
         }
     }
@@ -87,17 +113,17 @@ Page {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 horizontalAlignment: Text.AlignHCenter
                 wrapMode: Text.Wrap
-                color: Theme.secondaryColor
-                text: Tr.tr("The passcode is the first five characters of the "
-                    + "database password (or the whole password if less than "
-                    + "five characters).")
+                color: Theme.highlightColor
+                text: applicationWindow.lockingAvailable && keepassrx.isMasterPasswordEncrypted
+                    ? Tr.tr("The database is locked. Enter the password, or tap Authenticate to unlock it with your fingerprint or security code.")
+                    : Tr.tr("The database is locked. Enter the password to unlock it.")
             }
 
             PasswordField {
-                id: passcode
+                id: password
                 width: parent.width
-                enabled: keepassrx.isMasterPasswordEncrypted && !unlockPage.busy
-                label: Tr.tr("Passcode")
+                enabled: !unlockPage.busy
+                label: Tr.tr("Password")
                 placeholderText: label
                 inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
                 EnterKey.enabled: text.length > 0
@@ -108,10 +134,17 @@ Page {
 
             Button {
                 anchors.horizontalCenter: parent.horizontalCenter
-                enabled: keepassrx.isMasterPasswordEncrypted
-                    && !unlockPage.busy && passcode.text.length > 0
+                enabled: !unlockPage.busy && password.text.length > 0
                 text: Tr.tr("Unlock")
                 onClicked: unlockPage.unlock()
+            }
+
+            Button {
+                anchors.horizontalCenter: parent.horizontalCenter
+                visible: applicationWindow.lockingAvailable
+                enabled: keepassrx.isMasterPasswordEncrypted && !unlockPage.busy
+                text: Tr.tr("Authenticate")
+                onClicked: unlockPage.unlockWithSystem()
             }
 
             BusyIndicator {

@@ -7,6 +7,8 @@ mod list_item;
 
 pub use container_stack::RxUiContainerStack;
 pub use db::RxUiDatabase;
+#[cfg(feature = "sailfish")]
+pub(crate) use db::last_db_path;
 pub use entry::RxUiEntry;
 pub use i18n::RxTranslator;
 pub use licenses::RxUiLicenses;

@@ -8,6 +8,7 @@ Page {
 
     property var entry: null
     property var readOnlyFields: []
+    property bool saveRequested: false
     property string notesText: entry ? entry.notes : ""
     readonly property bool notesModified: entry !== null && notesText !== entry.notes
 
@@ -96,7 +97,27 @@ Page {
             return;
         }
 
-        keepassrx.saveEntry(entry.uuid, collectValues());
+        if (keepassrx.saveAuthMethod === "system") {
+            submit("");
+        } else {
+            askForCode(false);
+        }
+    }
+
+    function askForCode(rejected, fallback) {
+        var dialog = pageStack.push(Qt.resolvedUrl("SaveCodeDialog.qml"), {
+            rejected: rejected,
+            fallback: fallback === true,
+            entryTitle: entry.title
+        });
+        dialog.accepted.connect(function () {
+            submit(dialog.password);
+        });
+    }
+
+    function submit(credential) {
+        saveRequested = true;
+        keepassrx.saveEntry(entry.uuid, collectValues(), credential);
     }
 
     Component.onCompleted: loadFields()
@@ -114,10 +135,33 @@ Page {
         }
 
         onEntryEditInvalid: {
+            editPage.saveRequested = false;
             editPage.showProblems(problems);
         }
 
+        onEntrySaveAuthRejected: {
+            if (editPage.saveRequested) {
+                editPage.saveRequested = false;
+                editPage.askForCode(true);
+            }
+        }
+
+        onEntrySavePasswordRejected: {
+            if (editPage.saveRequested) {
+                editPage.saveRequested = false;
+                editPage.askForCode(true);
+            }
+        }
+
+        onEntrySaveCodeRequired: {
+            if (editPage.saveRequested) {
+                editPage.saveRequested = false;
+                editPage.askForCode(false, true);
+            }
+        }
+
         onEntrySaveFailed: {
+            editPage.saveRequested = false;
             Notices.show(conflict
                 ? Tr.tr("The database file changed on disk. Close and reopen the database, then edit again.")
                 : message, Notice.Long);
@@ -243,19 +287,22 @@ Page {
                 ListItem {
                     id: fieldItem
                     contentHeight: fieldColumn.height
+
+                    function deleteField() {
+                        var original = originalName;
+                        var position = index;
+                        fieldItem.remorseDelete(function () {
+                            if (original.length > 0) {
+                                removedModel.append({ fieldName: original });
+                            }
+                            fieldsModel.remove(position);
+                        });
+                    }
+
                     menu: ContextMenu {
                         MenuItem {
                             text: Tr.tr("Delete field")
-                            onClicked: {
-                                var original = originalName;
-                                var position = index;
-                                fieldItem.remorseDelete(function () {
-                                    if (original.length > 0) {
-                                        removedModel.append({ fieldName: original });
-                                    }
-                                    fieldsModel.remove(position);
-                                });
-                            }
+                            onClicked: fieldItem.deleteField()
                         }
                     }
 
@@ -287,10 +334,27 @@ Page {
                             onTextChanged: fieldsModel.setProperty(index, "fieldValue", text)
                         }
 
-                        TextSwitch {
-                            text: Tr.tr("Protected")
-                            checked: isProtected
-                            onCheckedChanged: fieldsModel.setProperty(index, "isProtected", checked)
+                        Item {
+                            width: parent.width
+                            height: protectedSwitch.height
+
+                            TextSwitch {
+                                id: protectedSwitch
+                                anchors.left: parent.left
+                                anchors.right: deleteButton.left
+                                text: Tr.tr("Protected")
+                                checked: isProtected
+                                onCheckedChanged: fieldsModel.setProperty(index, "isProtected", checked)
+                            }
+
+                            IconButton {
+                                id: deleteButton
+                                anchors.right: parent.right
+                                anchors.rightMargin: Theme.horizontalPageMargin
+                                anchors.verticalCenter: parent.verticalCenter
+                                icon.source: "image://theme/icon-m-delete"
+                                onClicked: fieldItem.deleteField()
+                            }
                         }
                     }
                 }

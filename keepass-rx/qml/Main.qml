@@ -20,6 +20,7 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.3
 import Qt.labs.settings 1.0
 import Lomiri.Components 1.3
+import Lomiri.Components.Popups 1.3 as LomiriPopups
 import keepassrx 1.0
 
 import "./pages"
@@ -90,6 +91,10 @@ MainView {
             toast.show(i18n.tr("Another app changed the database while saving. Its version was kept as %1.").arg(fileName));
         }
 
+        function onCodeLimitReached() {
+            showCodeLimit();
+        }
+
         // When the UI requests getting a single value from an entry.
         function onFieldValueReceived(entryUuid, fieldName, fieldValue, fieldExtra) {
             if (fieldExtra !== "copy" || !fieldValue) {
@@ -137,6 +142,12 @@ MainView {
         Clipboard.clear();
     }
 
+    function showCodeLimit() {
+        keepassrx.guiState = 'NotOpen';
+        reload();
+        LomiriPopups.PopupUtils.open(codeLimitDialog);
+    }
+
     function lockUI() {
         clearSensitiveUiState();
         keepassrx.guiState = 'Locked';
@@ -170,6 +181,21 @@ MainView {
         } else {
             // No last DB
             adaptiveLayout.primaryPageSource = Qt.resolvedUrl("pages/DBList.qml");
+        }
+    }
+
+    Component {
+        id: codeLimitDialog
+
+        LomiriPopups.Dialog {
+            id: codeLimitDialogue
+            title: i18n.tr("Passcode Disabled")
+            text: i18n.tr("The passcode was entered wrong too many times. Enter the full database password to open the database.")
+
+            Button {
+                text: i18n.tr("OK")
+                onClicked: LomiriPopups.PopupUtils.close(codeLimitDialogue)
+            }
         }
     }
 

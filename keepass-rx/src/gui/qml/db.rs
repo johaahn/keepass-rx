@@ -169,6 +169,15 @@ fn load_last_db() -> Result<(Option<String>, Option<String>)> {
     }
 }
 
+#[cfg(feature = "sailfish")]
+pub(crate) fn last_db_path() -> Option<std::path::PathBuf> {
+    let (name, db_type) = load_last_db().ok()?;
+    let db_type = db_type
+        .and_then(|db_type| RxDbType::try_from(db_type).ok())
+        .unwrap_or_default();
+    Some(db_path_for_type(db_type).join(name?))
+}
+
 impl Default for RxUiDatabase {
     fn default() -> Self {
         let (last_db, last_db_type) = load_last_db().unwrap();

@@ -162,8 +162,20 @@ install -Dm 644 rpm/%{name}.desktop \
 install -Dm 644 keepass-rx/assets/logo-sfos.png \
     %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{name}.png
 
+# Polkit action and the Sailjail permission that lets the sandboxed app reach
+# polkit on the system bus.
+install -Dm 644 rpm/%{name}.policy \
+    %{buildroot}%{_datadir}/polkit-1/actions/%{name}.policy
+install -Dm 644 rpm/KeePassRXPolkit.permission \
+    %{buildroot}%{_sysconfdir}/sailjail/permissions/KeePassRXPolkit.permission
+
+%preun
+rm -f /run/user/*/harbour-keepassrx/unlock || :
+
 %files
 %defattr(-,root,root,-)
+%{_datadir}/polkit-1/actions/%{name}.policy
+%{_sysconfdir}/sailjail/permissions/KeePassRXPolkit.permission
 %{_bindir}/%{name}
 %{datadir}
 %{_datadir}/applications/%{name}.desktop

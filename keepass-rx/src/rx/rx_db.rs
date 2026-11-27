@@ -248,7 +248,6 @@ mod tests {
     use std::{fs::File, path::PathBuf};
 
     use keepass::{Database, DatabaseKey};
-    use keyring::set_default_credential_builder;
 
     use crate::rx::kpxc_search::evaluate_saved_search;
 
@@ -264,7 +263,7 @@ mod tests {
 
     #[test]
     fn loads_recursively() {
-        set_default_credential_builder(keyring::mock::default_credential_builder());
+        crate::crypto::test_keyring::install();
         let mut db = keepass::db::Database::new();
         let group_id = db.root().id().uuid();
         let (subgroup_id, entry_id) = {
@@ -327,7 +326,7 @@ mod tests {
 
     #[test]
     fn empty_fields_are_dropped() {
-        set_default_credential_builder(keyring::mock::default_credential_builder());
+        crate::crypto::test_keyring::install();
         let mut db = keepass::db::Database::new();
         let entry_id = db
             .root_mut()
@@ -350,7 +349,7 @@ mod tests {
 
     #[test]
     fn parses_saved_searches_from_test_db() {
-        set_default_credential_builder(keyring::mock::default_credential_builder());
+        crate::crypto::test_keyring::install();
 
         let mut file =
             File::open(fixture_path("test_saved_searches.kdbx")).expect("open test fixture");

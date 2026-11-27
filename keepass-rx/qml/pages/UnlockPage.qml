@@ -92,7 +92,15 @@ Page {
 
         function onDecryptionFailed(error) {
             busy = false;
-            errorMsg = `Error: ${error}. Wrong passcode?`;
+            errorMsg = `Error: ${error}`;
+            clearSensitiveUiState();
+        }
+
+        function onUnlockAuthRejected(left) {
+            busy = false;
+            if (left > 0) {
+                errorMsg = i18n.tr("Incorrect passcode. %1 try left.", "Incorrect passcode. %1 tries left.", left).arg(left);
+            }
             clearSensitiveUiState();
         }
     }

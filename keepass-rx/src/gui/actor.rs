@@ -1,11 +1,12 @@
 use actix::prelude::*;
 use anyhow::{Result, anyhow};
+use keepass::error::{CryptographyError, DatabaseKeyError, DatabaseOpenError};
 use keepass::{Database, DatabaseKey};
 use libsodium_rs::utils::SecureVec;
 use log::{debug, error, info, warn};
 use qmetaobject::{QMetaType, QStringList, QVariantMap, prelude::*};
 use secstr::SecUtf8;
-use std::cell::RefCell;
+use std::cell::{Cell, RefCell};
 use std::collections::HashMap;
 use std::fs::File;
 use std::panic::{AssertUnwindSafe, catch_unwind};
@@ -17,8 +18,17 @@ use zeroize::{Zeroize, Zeroizing};
 
 use super::{KeepassRx, RxDbType};
 use crate::app::{AppState, KeyFile};
-use crate::crypto::{EncryptedPassword, MasterKey};
+#[cfg(feature = "sailfish")]
+use crate::crypto::sailfish_secrets;
+use crate::crypto::{EncryptedPassword, IncorrectShortCode, MasterKey};
+use crate::gui::save_auth::{
+    AuthPurpose, SaveAuthMethod, SaveAuthorizer, SystemAuthUnavailable, default_authorizer,
+};
 use crate::gui::utils::{app_data_path, synced_databases_path};
+#[cfg(feature = "sailfish")]
+use crate::gui::{
+    polkit_auth::lock_code_missing, qml::last_db_path, settings::database_locking,
+};
 use crate::rx::virtual_hierarchy::{
     AllTags, AllTemplates, DefaultView, SavedSearches, TotpEntries, VirtualHierarchy,
     VirtualHierarchyType,
@@ -46,19 +56,18 @@ fn panic_payload_to_string(payload: &(dyn std::any::Any + Send)) -> String {
 }
 
 /// KDBX 3 decrypts before checking the key, so a wrong key fails as `InvalidPadding`.
-fn is_credentials_error(err: &anyhow::Error) -> bool {
-    use keepass::error::{CryptographyError, DatabaseKeyError, DatabaseOpenError};
-
+fn is_credentials_failure(err: &DatabaseOpenError) -> bool {
     matches!(
-        err.downcast_ref::<DatabaseOpenError>(),
-        Some(DatabaseOpenError::Key(DatabaseKeyError::IncorrectKey))
-            | Some(DatabaseOpenError::Cryptography(
-                CryptographyError::InvalidPadding(_)
-            ))
+        err,
+        DatabaseOpenError::Key(DatabaseKeyError::IncorrectKey)
+            | DatabaseOpenError::Cryptography(CryptographyError::InvalidPadding(_))
     )
 }
 
-#[derive(Default)]
+fn is_credentials_error(err: &anyhow::Error) -> bool {
+    err.downcast_ref().is_some_and(is_credentials_failure)
+}
+
 pub struct KeepassRxActor {
     app_state: Rc<QObjectBox<AppState>>,
     gui: Rc<QObjectBox<KeepassRx>>,
@@ -71,7 +80,25 @@ pub struct KeepassRxActor {
     current_operation: Option<AbortHandle>,
 
     saving: bool,
+    wrong_codes: Cell<u8>,
     deferred: Vec<DeferredLock>,
+    save_authorizer: Box<dyn SaveAuthorizer>,
+}
+
+impl Default for KeepassRxActor {
+    fn default() -> Self {
+        Self {
+            app_state: Default::default(),
+            gui: Default::default(),
+            curr_master_pw: Default::default(),
+            stored_master_password: Default::default(),
+            current_operation: None,
+            saving: false,
+            wrong_codes: Cell::new(0),
+            deferred: Vec::new(),
+            save_authorizer: default_authorizer(),
+        }
+    }
 }
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -87,7 +114,51 @@ struct SavePlan {
     backup: PathBuf,
 }
 
-type SaveResult = Result<SaveOutcome, (String, bool)>;
+const MAX_WRONG_CODES: u8 = 3;
+
+enum WrongCode {
+    Left(i32),
+    LockedOut,
+}
+
+fn no_unlock_code() -> anyhow::Error {
+    anyhow!("No unlock code is set up for this database yet. Try again.")
+}
+
+#[cfg(not(feature = "sailfish"))]
+fn reveal_master_password(
+    encrypted: Option<&EncryptedPassword>,
+    credential: SaveCredential,
+) -> Result<SecUtf8> {
+    let encrypted = encrypted.ok_or_else(no_unlock_code)?;
+    match credential {
+        SaveCredential::ShortCode(code) => encrypted.reveal(code),
+        SaveCredential::System => Err(IncorrectShortCode.into()),
+    }
+}
+
+#[cfg(feature = "sailfish")]
+fn reveal_master_password(
+    encrypted: Option<&EncryptedPassword>,
+    credential: SaveCredential,
+) -> Result<SecUtf8> {
+    match credential {
+        SaveCredential::Password(password) => Ok(password),
+        SaveCredential::System => {
+            encrypted
+                .ok_or_else(no_unlock_code)?
+                .reveal()
+                .map_err(|err| {
+                    warn!("Could not unlock with the key from Sailfish Secrets: {err}");
+                    if err.downcast_ref::<IncorrectShortCode>().is_some() {
+                        err
+                    } else {
+                        SystemAuthUnavailable.into()
+                    }
+                })
+        }
+    }
+}
 
 fn build_database_key(
     password: &SecUtf8,
@@ -102,7 +173,8 @@ fn build_database_key(
     match key_file_bytes? {
         Some(bytes) => {
             debug!("Using a key file of {} bytes.", bytes.len());
-            Ok(db_key.with_keyfile(&mut bytes.as_ref())?)
+            let mut reader: &[u8] = &bytes;
+            Ok(db_key.with_keyfile(&mut reader)?)
         }
         None => Ok(db_key),
     }
@@ -140,10 +212,42 @@ fn view_for_mode(mode: RxViewMode, db: &RxDatabase) -> VirtualHierarchyType {
 
 impl KeepassRxActor {
     pub fn new(gui: &Rc<QObjectBox<KeepassRx>>, app_state: &Rc<QObjectBox<AppState>>) -> Self {
-        Self {
+        let actor = Self {
             gui: gui.clone(),
             app_state: app_state.clone(),
             ..Default::default()
+        };
+        #[cfg(feature = "sailfish")]
+        actor.check_system_unlock();
+        #[cfg(feature = "sailfish")]
+        actor.restore_master_password();
+        gui.pinned().borrow_mut().saveAuthMethod =
+            QString::from(actor.save_authorizer.method().as_str());
+        actor
+    }
+
+    #[cfg(feature = "sailfish")]
+    fn restore_master_password(&self) {
+        if !database_locking() {
+            EncryptedPassword::forget_saved();
+            return;
+        }
+        let database = last_db_path().unwrap_or_default();
+        match EncryptedPassword::load(&database) {
+            Ok(Some(encrypted_pw)) => {
+                self.curr_master_pw.replace(Some(encrypted_pw));
+                self.save_authorizer.remember();
+                let binding = self.gui.pinned();
+                let mut gui = binding.borrow_mut();
+                gui.isMasterPasswordEncrypted = true;
+                gui.guiState = super::RxGuiState::Locked;
+                info!("Master password restored.");
+            }
+            Ok(None) => {}
+            Err(err) => {
+                warn!("Could not restore the master password: {err}");
+                EncryptedPassword::forget_saved();
+            }
         }
     }
 
@@ -176,7 +280,33 @@ impl KeepassRxActor {
         }
     }
 
-    fn prepare_save(&self) -> Result<SavePlan> {
+    fn release_master_password(&self, credential: SaveCredential) -> Result<SecUtf8> {
+        let revealed =
+            reveal_master_password(self.curr_master_pw.borrow().as_ref(), credential)?;
+        self.wrong_codes.set(0);
+        Ok(revealed)
+    }
+
+    fn wrong_code_entered(&self, ctx: &mut Context<Self>) -> WrongCode {
+        let wrong = self.wrong_codes.get() + 1;
+        if wrong < MAX_WRONG_CODES {
+            self.wrong_codes.set(wrong);
+            return WrongCode::Left(i32::from(MAX_WRONG_CODES - wrong));
+        }
+
+        self.wrong_codes.set(0);
+        self.save_authorizer.forget();
+        if let Some(mut encrypted_pw) = self.curr_master_pw.take() {
+            encrypted_pw.zeroize();
+        }
+        ctx.notify(InvalidateMasterPassword);
+        if self.app_state.pinned().borrow().curr_db_ref().is_ok() {
+            ctx.notify(CloseDatabase);
+        }
+        WrongCode::LockedOut
+    }
+
+    fn prepare_save(&self, credential: SaveCredential) -> Result<SavePlan> {
         if self.saving {
             return Err(anyhow!("A save is already in progress"));
         }
@@ -192,11 +322,9 @@ impl KeepassRxActor {
         };
 
         let has_key_file = self.app_state.pinned().borrow().db_key_ref().is_some();
-        let stored_pw = self.stored_master_password.borrow();
-        let password = stored_pw
-            .as_ref()
-            .ok_or(anyhow!("Database is locked. Unlock it to save."))?;
-        let key = build_database_key(password, has_key_file, self.key_file_bytes())?;
+        let password = self.release_master_password(credential)?;
+        let key = build_database_key(&password, has_key_file, self.key_file_bytes())?;
+        drop(password);
         let backup = backup_path_for(&source)?;
 
         Ok(SavePlan {
@@ -279,6 +407,28 @@ impl Actor for KeepassRxActor {
     }
 }
 
+impl KeepassRxActor {
+    #[cfg(feature = "sailfish")]
+    fn check_system_unlock(&self) {
+        let available = if lock_code_missing() {
+            info!("No lock code is set, so Authenticate stays hidden.");
+            false
+        } else {
+            match sailfish_secrets::probe() {
+                Ok(()) => {
+                    info!("Sailfish Secrets has the plugins the unlock key needs.");
+                    true
+                }
+                Err(err) => {
+                    warn!("{err:#}");
+                    false
+                }
+            }
+        };
+        self.save_authorizer.set_available(available);
+    }
+}
+
 #[derive(Message)]
 #[rtype(result = "()")]
 pub struct SetViewMode(pub RxViewMode);
@@ -345,6 +495,34 @@ pub struct GetEntryForEdit {
 #[rtype(result = "()")]
 pub struct SaveEntry {
     pub edit: RxEntryEdit,
+    pub credential: SaveCredential,
+}
+
+pub enum SaveCredential {
+    System,
+    #[cfg(not(feature = "sailfish"))]
+    ShortCode(SecUtf8),
+    #[cfg(feature = "sailfish")]
+    Password(SecUtf8),
+}
+
+impl SaveCredential {
+    pub fn from_input(input: &str) -> Self {
+        if input.is_empty() {
+            return Self::System;
+        }
+        Self::typed(SecUtf8::from(input))
+    }
+
+    #[cfg(not(feature = "sailfish"))]
+    fn typed(secret: SecUtf8) -> Self {
+        Self::ShortCode(secret)
+    }
+
+    #[cfg(feature = "sailfish")]
+    fn typed(secret: SecUtf8) -> Self {
+        Self::Password(secret)
+    }
 }
 
 #[derive(Message)]
@@ -388,6 +566,18 @@ pub struct EncryptMasterPassword;
 #[rtype(result = "()")]
 pub struct DecryptMasterPassword {
     pub short_password: SecUtf8,
+}
+
+impl DecryptMasterPassword {
+    #[cfg(not(feature = "sailfish"))]
+    fn decrypter(self) -> impl FnOnce(EncryptedPassword) -> Result<SecUtf8> + Send + 'static {
+        move |encrypted| encrypted.decrypt(self.short_password)
+    }
+
+    #[cfg(feature = "sailfish")]
+    fn decrypter(self) -> impl FnOnce(EncryptedPassword) -> Result<SecUtf8> + Send + 'static {
+        EncryptedPassword::decrypt
+    }
 }
 
 #[derive(Message)]
@@ -710,17 +900,58 @@ impl Handler<GetEntryForEdit> for KeepassRxActor {
     }
 }
 
+impl KeepassRxActor {
+    fn save_failed(&self, err: &anyhow::Error, ctx: &mut Context<Self>) {
+        let gui = self.gui.pinned();
+        let gui = gui.borrow();
+        if err.downcast_ref::<IncorrectShortCode>().is_some() {
+            match self.wrong_code_entered(ctx) {
+                WrongCode::Left(left) => gui.entrySaveAuthRejected(left),
+                WrongCode::LockedOut => gui.codeLimitReached(),
+            }
+        } else if err.downcast_ref::<SystemAuthUnavailable>().is_some() {
+            gui.entrySaveCodeRequired();
+        } else {
+            gui.entrySaveFailed(QString::from(err.to_string()), false);
+        }
+    }
+}
+
 impl Handler<SaveEntry> for KeepassRxActor {
     type Result = ResponseActFuture<Self, ()>;
-    fn handle(&mut self, msg: SaveEntry, _: &mut Self::Context) -> Self::Result {
+    fn handle(&mut self, msg: SaveEntry, ctx: &mut Self::Context) -> Self::Result {
+        if matches!(msg.credential, SaveCredential::System)
+            && let Some(confirmation) = self.save_authorizer.confirm(AuthPurpose::Save)
+        {
+            return Box::pin(confirmation.into_actor(self).map(move |result, this, ctx| {
+                match result {
+                    Ok(()) => {
+                        let saving = this.begin_save(msg, ctx);
+                        ctx.spawn(saving);
+                    }
+                    Err(err) => {
+                        warn!("System authorization failed: {err}");
+                        this.gui.pinned().borrow().entrySaveCodeRequired();
+                    }
+                }
+            }));
+        }
+
+        self.begin_save(msg, ctx)
+    }
+}
+
+impl KeepassRxActor {
+    fn begin_save(
+        &mut self,
+        msg: SaveEntry,
+        ctx: &mut Context<Self>,
+    ) -> ResponseActFuture<Self, ()> {
         let uuid = msg.edit.uuid;
-        let plan = match self.prepare_save() {
+        let plan = match self.prepare_save(msg.credential) {
             Ok(plan) => plan,
             Err(err) => {
-                self.gui
-                    .pinned()
-                    .borrow()
-                    .entrySaveFailed(QString::from(err.to_string()), false);
+                self.save_failed(&err, ctx);
                 return Box::pin(async {}.into_actor(self));
             }
         };
@@ -739,7 +970,7 @@ impl Handler<SaveEntry> for KeepassRxActor {
 
         Box::pin(
             async move {
-                actix_rt::task::spawn_blocking(move || -> SaveResult {
+                actix_rt::task::spawn_blocking(move || {
                     save_database(
                         &plan.source,
                         plan.key,
@@ -748,21 +979,32 @@ impl Handler<SaveEntry> for KeepassRxActor {
                         |db| edit.verify(db).map_err(Into::into),
                         &StopWhenClosing(&APP_CLOSING),
                     )
-                    .map_err(|err| (err.to_string(), matches!(err, SaveError::Conflict)))
                 })
                 .await
-                .map_err(|err| (err.to_string(), false))?
+                .map_err(|err| SaveError::Edit(err.to_string()))?
             }
             .into_actor(self)
-            .map(move |result: SaveResult, this, ctx| {
+            .map(move |result: Result<SaveOutcome, SaveError>, this, ctx| {
                 this.finish_save(ctx);
 
                 let outcome = match result {
                     Ok(outcome) => outcome,
-                    Err((message, conflict)) => {
-                        error!("Entry save failed: {message}");
+                    Err(err) => {
+                        error!("Entry save failed: {err}");
                         let gui = this.gui.pinned();
-                        return gui.borrow().entrySaveFailed(QString::from(message), conflict);
+                        let gui = gui.borrow();
+                        return match err {
+                            SaveError::Open(ref open)
+                                if this.save_authorizer.method() != SaveAuthMethod::ShortCode
+                                    && is_credentials_failure(open) =>
+                            {
+                                gui.entrySavePasswordRejected()
+                            }
+                            _ => gui.entrySaveFailed(
+                                QString::from(err.to_string()),
+                                matches!(err, SaveError::Conflict),
+                            ),
+                        };
                     }
                 };
 
@@ -871,6 +1113,7 @@ impl Handler<InvalidateMasterPassword> for KeepassRxActor {
         }
 
         self.abort_ongoing_operations();
+        self.save_authorizer.forget();
 
         let binding = self.gui.pinned();
         let mut gui = binding.borrow_mut();
@@ -918,10 +1161,28 @@ impl Handler<EncryptMasterPassword> for KeepassRxActor {
 
         self.abort_ongoing_operations();
         let stored_pw = self.stored_master_password.take();
+        #[cfg(feature = "sailfish")]
+        let database = database_locking()
+            .then(|| {
+                self.app_state
+                    .pinned()
+                    .borrow()
+                    .curr_db_ref()
+                    .ok()
+                    .and_then(|db| db.source().map(|source| source.path.clone()))
+            })
+            .flatten();
 
         let handle = actix_rt::task::spawn_blocking(move || -> Result<EncryptedPassword> {
             let stored_pw = stored_pw.ok_or(anyhow!("[Encrypt] No master password stored"))?;
-            EncryptedPassword::new(stored_pw)
+            let encrypted_pw = EncryptedPassword::new(stored_pw)?;
+            #[cfg(feature = "sailfish")]
+            if let Some(database) = database
+                && let Err(err) = encrypted_pw.save(&database)
+            {
+                warn!("Could not save the master password: {err}");
+            }
+            Ok(encrypted_pw)
         });
 
         self.current_operation = Some(handle.abort_handle());
@@ -934,13 +1195,16 @@ impl Handler<EncryptMasterPassword> for KeepassRxActor {
                 match result {
                     Ok(encrypted_pw) => {
                         this.curr_master_pw.replace(Some(encrypted_pw));
+                        this.save_authorizer.remember();
                         gui.isMasterPasswordEncrypted = true;
                         gui.masterPasswordStateChanged(true);
                         info!("Master password encrypted.");
                     }
-                    Err(err) => {
+                    Err(err) if this.save_authorizer.method().needs_unlock_key() => {
+                        error!("Could not encrypt the master password: {err:?}");
                         gui.errorReceived(format!("{}", err));
                     }
+                    Err(err) => warn!("Could not encrypt the master password: {err:?}"),
                 }
 
                 if let Some(op) = this.current_operation.as_ref()
@@ -956,8 +1220,31 @@ impl Handler<EncryptMasterPassword> for KeepassRxActor {
 impl Handler<DecryptMasterPassword> for KeepassRxActor {
     type Result = ResponseActFuture<Self, ()>;
     fn handle(&mut self, msg: DecryptMasterPassword, _: &mut Self::Context) -> Self::Result {
-        let short_pw = msg.short_password;
+        if msg.short_password.unsecure().is_empty()
+            && let Some(confirmation) = self.save_authorizer.confirm(AuthPurpose::Unlock)
+        {
+            return Box::pin(confirmation.into_actor(self).map(move |result, this, ctx| {
+                match result {
+                    Ok(()) => {
+                        ctx.spawn(this.begin_decrypt(msg.decrypter()));
+                    }
+                    Err(err) => {
+                        warn!("System unlock failed: {err}");
+                        this.gui.pinned().borrow().unlockCodeRequired();
+                    }
+                }
+            }));
+        }
 
+        self.begin_decrypt(msg.decrypter())
+    }
+}
+
+impl KeepassRxActor {
+    fn begin_decrypt(
+        &mut self,
+        decrypt: impl FnOnce(EncryptedPassword) -> Result<SecUtf8> + Send + 'static,
+    ) -> ResponseActFuture<Self, ()> {
         self.abort_ongoing_operations();
 
         // Remove from RefCell and keep a backup in case decryption fails.
@@ -968,18 +1255,19 @@ impl Handler<DecryptMasterPassword> for KeepassRxActor {
             .ok_or(anyhow!("[Decrypt] No master password stored"));
 
         let handle = actix_rt::task::spawn_blocking(move || -> Result<SecUtf8> {
-            master_pw.and_then(|pw| pw.decrypt(short_pw))
+            master_pw.and_then(decrypt)
         });
 
         self.current_operation = Some(handle.abort_handle());
 
         Box::pin(async move { handle.await? }.into_actor(self).map(
-            move |result: Result<SecUtf8>, this, _| {
+            move |result: Result<SecUtf8>, this, ctx| {
                 let binding = this.gui.pinned();
                 let mut gui = binding.borrow_mut();
 
                 match result {
                     Ok(secure_decrypted_password) => {
+                        this.wrong_codes.set(0);
                         this.stored_master_password
                             .replace(Some(secure_decrypted_password));
                         gui.isMasterPasswordEncrypted = false;
@@ -990,7 +1278,14 @@ impl Handler<DecryptMasterPassword> for KeepassRxActor {
                     Err(err) => {
                         // Put the encrypted password back on failure.
                         this.curr_master_pw.replace(backup);
-                        gui.decryptionFailed(QString::from(format!("{}", err)));
+                        if err.downcast_ref::<IncorrectShortCode>().is_some() {
+                            match this.wrong_code_entered(ctx) {
+                                WrongCode::Left(left) => gui.unlockAuthRejected(left),
+                                WrongCode::LockedOut => gui.codeLimitReached(),
+                            }
+                        } else {
+                            gui.decryptionFailed(QString::from(format!("{}", err)));
+                        }
                     }
                 }
 

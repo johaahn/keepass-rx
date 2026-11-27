@@ -566,7 +566,6 @@ impl RxContainedRef<'_> {
 #[cfg(test)]
 mod tests {
     use keepass::db::{Database as KeePassDatabase, fields};
-    use keyring::set_default_credential_builder;
     use uuid::Uuid;
     use zeroize::Zeroizing;
 
@@ -583,7 +582,7 @@ mod tests {
 
     #[test]
     fn default_view_orders_groups_before_entries_and_names_case_insensitively() {
-        set_default_credential_builder(keyring::mock::default_credential_builder());
+        crate::crypto::test_keyring::install();
 
         let mut db = KeePassDatabase::new();
 
@@ -614,7 +613,7 @@ mod tests {
 
     #[test]
     fn default_view_uses_uuid_tiebreaker_for_duplicate_names() {
-        set_default_credential_builder(keyring::mock::default_credential_builder());
+        crate::crypto::test_keyring::install();
 
         let first = RxContainedRef::SavedSearch(Cow::Owned(RxSavedSearch::new(
             "same".into(),

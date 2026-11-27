@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<policyconfig>
+  <vendor>KeePassRX</vendor>
+  <vendor_url>https://github.com/projectmoon/keepass-rx</vendor_url>
+
+  <action id="harbour.keepassrx.save-database">
+    <description>Save a KeePass database</description>
+    <message>Confirm your identity to save changes to the database</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+  </action>
+
+  <action id="harbour.keepassrx.unlock-database">
+    <description>Unlock a KeePass database</description>
+    <message>Confirm your identity to unlock the database</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+  </action>
+</policyconfig>

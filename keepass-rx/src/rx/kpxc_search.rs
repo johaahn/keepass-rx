@@ -261,7 +261,6 @@ pub fn evaluate_saved_search(db: &RxDatabase, query: &str) -> Vec<Uuid> {
 
 #[cfg(test)]
 mod tests {
-    use keyring::set_default_credential_builder;
     use zeroize::Zeroizing;
 
     use crate::rx::ZeroableDatabase;
@@ -269,7 +268,7 @@ mod tests {
     use super::*;
 
     fn test_db() -> RxDatabase {
-        set_default_credential_builder(keyring::mock::default_credential_builder());
+        crate::crypto::test_keyring::install();
 
         let mut db = keepass::db::Database::new();
         let child_id = {

@@ -42,6 +42,7 @@ Page {
 
             TextSwitch {
                 text: Tr.tr("Enable database locking")
+                visible: keepassrx.saveAuthMethod === "system"
                 description: Tr.tr("Offer a Lock action that locks the database with your master password instead of closing it.")
                 checked: SettingsBridge.databaseLocking
                 onClicked: SettingsBridge.databaseLocking = checked

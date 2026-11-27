@@ -5,12 +5,14 @@ use std::path::PathBuf;
 use dirs::data_dir;
 
 use std::str::FromStr;
+use uuid::Uuid;
 
 use secstr::SecUtf8;
 use zeroize::Zeroize;
 
 use super::RxDbType;
-use crate::rx::{edit_values_from_map, validate_edit_values};
+use super::actor::{SaveCredential, SaveEntry};
+use crate::rx::{RxEntryEdit, edit_values_from_map, validate_edit_values};
 use qmetaobject::{QString, QVariant, QVariantList, QVariantMap};
 
 #[cfg(not(feature = "sailfish"))]
@@ -114,6 +116,20 @@ pub fn move_old_dirs_and_files() -> Result<()> {
     }
 
     Ok(())
+}
+
+pub fn save_entry_message(
+    entry_uuid: &QString,
+    values: QVariantMap,
+    credential: &QString,
+) -> Result<SaveEntry, String> {
+    let uuid = Uuid::from_str(&entry_uuid.to_string()).map_err(|err| err.to_string())?;
+    let edit = RxEntryEdit::from_values(uuid, &edit_values_from_map(values))
+        .map_err(|err| err.to_string())?;
+    Ok(SaveEntry {
+        edit,
+        credential: SaveCredential::from_input(&credential.to_string()),
+    })
 }
 
 pub fn entry_edit_problems(values: QVariantMap) -> QVariantList {

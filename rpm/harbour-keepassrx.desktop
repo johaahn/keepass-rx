@@ -8,4 +8,4 @@ Exec=harbour-keepassrx
 [X-Sailjail]
 OrganizationName=harbour-keepassrx
 ApplicationName=harbour-keepassrx
-Permissions=Documents;Downloads;RemovableMedia
+Permissions=Documents;Downloads;RemovableMedia;KeePassRXPolkit;Secrets

@@ -165,7 +165,7 @@ Page {
         PullDownMenu {
             MenuItem {
                 text: Tr.tr("Lock Database")
-                visible: SettingsBridge.databaseLocking
+                visible: applicationWindow.lockingAvailable
                 onClicked: applicationWindow.lockDatabase()
             }
             MenuItem {

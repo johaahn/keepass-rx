@@ -18,13 +18,17 @@ use uuid::Uuid;
 use zeroize::Zeroize;
 
 pub(crate) mod actor;
+#[cfg(all(test, feature = "gui"))]
+mod actor_tests;
 pub(crate) mod colors;
 pub(crate) mod instructions;
+#[cfg(feature = "sailfish")]
+pub(crate) mod polkit_auth;
 pub(crate) mod qml;
+pub(crate) mod save_auth;
 pub(crate) mod settings;
 pub(crate) mod utils;
 
-use crate::rx::{RxEntryEdit, edit_values_from_map};
 use actor::*;
 use utils::*;
 
@@ -200,6 +204,7 @@ pub struct KeepassRx {
     databaseOpen: qt_property!(bool),
     canEdit: qt_property!(bool; NOTIFY canEditChanged),
     saving: qt_property!(bool; NOTIFY savingChanged),
+    saveAuthMethod: qt_property!(QString; NOTIFY saveAuthMethodChanged),
     isMasterPasswordEncrypted: qt_property!(bool; NOTIFY masterPasswordStateChanged),
     rootGroupUuid: qt_property!(QString; NOTIFY rootGroupUuidChanged),
     metadata: qt_property!(QVariant; NOTIFY metadataChanged),
@@ -226,8 +231,8 @@ pub struct KeepassRx {
         }
     ),
     saveEntry: qt_method!(
-        fn saveEntry(&self, entry_uuid: QString, values: QVariantMap) {
-            self.save_entry(entry_uuid, values);
+        fn saveEntry(&self, entry_uuid: QString, values: QVariantMap, credential: QString) {
+            self.save_entry(entry_uuid, values, credential);
         }
     ),
 
@@ -260,10 +265,17 @@ pub struct KeepassRx {
     keyFileSet: qt_signal!(),
     canEditChanged: qt_signal!(),
     savingChanged: qt_signal!(),
+    saveAuthMethodChanged: qt_signal!(),
     entryForEditReceived: qt_signal!(entry: QVariantMap),
     entrySaved: qt_signal!(entryUuid: QString),
     entrySavedWithConflictCopy: qt_signal!(fileName: QString),
     entrySaveFailed: qt_signal!(message: QString, conflict: bool),
+    entrySaveAuthRejected: qt_signal!(left: i32),
+    entrySavePasswordRejected: qt_signal!(),
+    codeLimitReached: qt_signal!(),
+    entrySaveCodeRequired: qt_signal!(),
+    unlockCodeRequired: qt_signal!(),
+    unlockAuthRejected: qt_signal!(left: i32),
     entryEditInvalid: qt_signal!(problems: QVariantList),
 
     // data signals
@@ -399,8 +411,6 @@ impl KeepassRx {
                 dest.display()
             );
 
-            // Nuke db.kdbx if it exists and is a directory for some
-            // reason. Can result from corruption or weirdness.
             if dest.exists() && dest.is_dir() {
                 warn!(
                     "{} is a directory for some reason. Removing.",
@@ -505,22 +515,15 @@ impl KeepassRx {
     }
 
     #[with_executor]
-    fn save_entry(&self, entry_uuid: QString, values: QVariantMap) {
+    fn save_entry(&self, entry_uuid: QString, values: QVariantMap, credential: QString) {
         let problems = entry_edit_problems(values.clone());
         if problems.len() > 0 {
             self.entryEditInvalid(problems);
             return;
         }
-        let edit = Uuid::from_str(&entry_uuid.to_string())
-            .map_err(|err| err.to_string())
-            .and_then(|uuid| {
-                RxEntryEdit::from_values(uuid, &edit_values_from_map(values))
-                    .map_err(|err| err.to_string())
-            });
-
-        match edit {
-            Ok(edit) => {
-                actix::spawn(self.actor_ref().send(SaveEntry { edit }));
+        match save_entry_message(&entry_uuid, values, &credential) {
+            Ok(message) => {
+                actix::spawn(self.actor_ref().send(message));
             }
             Err(message) => self.entrySaveFailed(QString::from(message), false),
         }

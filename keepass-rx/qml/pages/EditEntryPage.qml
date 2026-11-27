@@ -110,8 +110,23 @@ Page {
             return;
         }
 
+        if (keepassrx.saveAuthMethod === "shortCode") {
+            askForCode(false, 0);
+        } else {
+            submit("");
+        }
+    }
+
+    function askForCode(rejected, triesLeft) {
+        PopupUtils.open(codeDialog, editEntryPage, {
+            rejected: rejected,
+            triesLeft: triesLeft
+        });
+    }
+
+    function submit(shortCode) {
         saveRequested = true;
-        keepassrx.saveEntry(entry.uuid, collectValues());
+        keepassrx.saveEntry(entry.uuid, collectValues(), shortCode);
     }
 
     function removeField(index) {
@@ -200,6 +215,18 @@ Page {
 
             saveRequested = false;
             showProblems(problems);
+        }
+
+        function onEntrySaveAuthRejected(left) {
+            closeSavingDialog();
+            if (!saveRequested) {
+                return;
+            }
+
+            saveRequested = false;
+            if (left > 0) {
+                askForCode(true, left);
+            }
         }
 
         function onEntrySaveFailed(message, conflict) {
@@ -513,6 +540,60 @@ Page {
                     color: theme.palette.normal.backgroundSecondaryText
                     text: i18n.tr("Do not close the app.")
                 }
+            }
+        }
+    }
+
+    Component {
+        id: codeDialog
+
+        Dialog {
+            id: codeDialogue
+            property bool rejected: false
+            property int triesLeft: 0
+
+            title: i18n.tr("Unlock to Save")
+            text: i18n.tr("Enter your passcode to save the changes to %1.").arg(entry.title) + "\n\n" + i18n.tr(
+                "The passcode is the first five characters of the database " +
+                    "password (or the whole password if less than five characters)."
+            )
+
+            function confirm() {
+                if (codeField.text.length === 0) {
+                    return;
+                }
+
+                const code = codeField.text;
+                PopupUtils.close(codeDialogue);
+                editEntryPage.submit(code);
+            }
+
+            TextField {
+                id: codeField
+                placeholderText: i18n.tr("Passcode")
+                echoMode: TextInput.Password
+                inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
+                Keys.onReturnPressed: codeDialogue.confirm()
+                Component.onCompleted: forceActiveFocus()
+            }
+
+            Label {
+                visible: codeDialogue.rejected
+                text: i18n.tr("Incorrect passcode. %1 try left.", "Incorrect passcode. %1 tries left.", codeDialogue.triesLeft).arg(codeDialogue.triesLeft)
+                color: theme.palette.normal.negative
+                wrapMode: Text.WordWrap
+            }
+
+            Button {
+                text: i18n.tr("Save")
+                color: theme.palette.normal.positive
+                enabled: codeField.text.length > 0
+                onClicked: codeDialogue.confirm()
+            }
+
+            Button {
+                text: i18n.tr("Cancel")
+                onClicked: PopupUtils.close(codeDialogue)
             }
         }
     }

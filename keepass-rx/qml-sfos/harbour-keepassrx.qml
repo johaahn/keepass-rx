@@ -21,6 +21,8 @@ ApplicationWindow {
     id: applicationWindow
 
     property alias uiDatabase: uiDatabaseObj
+    signal systemUnlockRequested()
+    readonly property bool lockingAvailable: SettingsBridge.databaseLocking && keepassrx.saveAuthMethod === "system"
 
     property string coverEntryUuid: ""
     property string coverEntryTitle: ""
@@ -42,7 +44,9 @@ ApplicationWindow {
         }
     }
 
-    initialPage: Component { DatabaseListPage {} }
+    initialPage: keepassrx.isMasterPasswordEncrypted
+        ? Qt.resolvedUrl("pages/UnlockPage.qml")
+        : Qt.resolvedUrl("pages/DatabaseListPage.qml")
     allowedOrientations: defaultAllowedOrientations
 
     // Cover can't see this window's ids; state is pushed in via the bindings below.
@@ -56,7 +60,12 @@ ApplicationWindow {
             hasPassword: applicationWindow.coverHasPassword
             hasTotp: applicationWindow.coverHasTotp
             hasUsername: applicationWindow.coverHasUsername
-            onRequestUnlock: applicationWindow.activate()
+            onRequestUnlock: {
+                applicationWindow.activate();
+                if (applicationWindow.lockingAvailable && keepassrx.isMasterPasswordEncrypted) {
+                    applicationWindow.systemUnlockRequested();
+                }
+            }
             onRequestCopy: {
                 var uuid = applicationWindow.coverEntryUuid;
                 if (kind === "password") {
@@ -160,7 +169,7 @@ ApplicationWindow {
             if (!keepassrx.databaseOpen) {
                 return;
             }
-            if (SettingsBridge.databaseLocking) {
+            if (applicationWindow.lockingAvailable) {
                 applicationWindow.lockDatabase();
             } else {
                 applicationWindow.closeDatabase();
@@ -199,6 +208,12 @@ ApplicationWindow {
 
         onDatabaseClosed: applicationWindow.clearSensitiveUiState()
         onMasterPasswordInvalidated: applicationWindow.clearSensitiveUiState()
+
+        onCodeLimitReached: {
+            keepassrx.guiState = 'NotOpen';
+            pageStack.replaceAbove(null, Qt.resolvedUrl("pages/DatabaseListPage.qml"));
+            applicationWindow.notify(Tr.tr("Authentication failed too many times. Enter the full database password to open the database."));
+        }
 
         // Qt 5.6 Connections expose signal args by their declared names.
         onFieldValueReceived: {

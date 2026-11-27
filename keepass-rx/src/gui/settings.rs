@@ -1,6 +1,8 @@
 use qmetaobject::QObject;
 use qttypes::QSettings;
 
+#[cfg(feature = "sailfish")]
+use crate::crypto::EncryptedPassword;
 use crate::rx::RxSearchType;
 
 #[derive(QObject)]
@@ -31,18 +33,27 @@ const CONFIG_DIR: &str = "keepassrx.projectmoon";
 #[cfg(feature = "sailfish")]
 const CONFIG_DIR: &str = "harbour-keepassrx";
 
+fn settings_file() -> QSettings {
+    QSettings::from_path(
+        dirs::config_dir()
+            .expect("Could not get xdg config directory path")
+            .join(CONFIG_DIR)
+            .join("keepassrx.projectmoon.conf")
+            .to_str()
+            .unwrap(),
+    )
+}
+
+#[cfg(feature = "sailfish")]
+pub fn database_locking() -> bool {
+    settings_file().value_bool("databaseLocking")
+}
+
 impl Default for SettingsBridge {
     fn default() -> Self {
         Self {
             base: Default::default(),
-            inner: QSettings::from_path(
-                dirs::config_dir()
-                    .expect("Could not get xdg config directory path")
-                    .join(CONFIG_DIR)
-                    .join("keepassrx.projectmoon.conf")
-                    .to_str()
-                    .unwrap(),
-            ),
+            inner: settings_file(),
 
             searchType: RxSearchType::CaseInsensitive,
             searchTypeChanged: Default::default(),
@@ -123,6 +134,10 @@ impl SettingsBridge {
 
     pub fn set_database_locking(&mut self, value: bool) {
         self.set_bool("databaseLocking", value);
+        #[cfg(feature = "sailfish")]
+        if !value {
+            EncryptedPassword::forget_saved();
+        }
         self.databaseLockingChanged();
     }
 

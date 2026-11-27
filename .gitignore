@@ -10,3 +10,4 @@ keepass-rx/assets/licenses.html
 .codex
 RPMS/
 .agent/
+.env

@@ -23,14 +23,21 @@ cd "$REPO_ROOT"
 
 ARCHES=()
 stable=
+sign=
 for arg in "$@"; do
     case "$arg" in
         --stable) stable=1 ;;
+        --sign) sign=1 ;;
         -*) echo "unknown option: $arg" >&2; exit 1 ;;
         *) ARCHES+=("$arg") ;;
     esac
 done
 [ ${#ARCHES[@]} -gt 0 ] || ARCHES=(i486)
+
+if [ -n "$sign" ]; then
+    . "$REPO_ROOT/sfos/sign.sh"
+    load_signing_key "$REPO_ROOT"
+fi
 
 version_env=()
 if [ -z "$stable" ]; then
@@ -68,6 +75,14 @@ for arch in "${ARCHES[@]}"; do
         rm -f "${old[@]}"
     fi
 done
+
+if [ -n "$sign" ]; then
+    signed=()
+    for arch in "${ARCHES[@]}"; do
+        signed+=("$REPO_ROOT"/RPMS/*."$arch".rpm)
+    done
+    sign_rpms "${signed[@]}"
+fi
 
 echo ">> RPMs:"
 ls -1 "$REPO_ROOT"/RPMS/*.rpm 2>/dev/null || echo "(none found in RPMS/)"

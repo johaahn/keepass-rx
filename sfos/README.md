@@ -35,6 +35,21 @@ source into the container and builds there; the cargo target dir is cached in a
 standalone run). First build is slow — it cross-compiles the whole dependency
 tree under SB2, including libsodium from source.
 
+## Signing
+
+`sfos/build.sh --sign aarch64` asks for the KeePass database password once,
+builds the RPM, then signs it with `sfos/sign.sh` and checks the signature.
+Copy `.env.example` to `.env` and set the database, the entry and the
+optional key file. The entry holds the private key as the attachment
+`keepassrx-signing.asc` and its passphrase as the entry password.
+
+Without `KEEPASSRX_SIGNING_KDBX` in `.env`, the key and passphrase come from
+`RPM_SIGNING_KEY` and `RPM_SIGNING_PASSPHRASE`, as in the release workflow.
+`sfos/sign.sh` with no arguments signs every RPM in `RPMS/`. Signing runs in
+a `debian:bookworm` container with a GnuPG folder on a tmpfs, and a set
+`RPM_SIGNING_KEY_ID` must match the key. Builds without `--sign` stay
+unsigned.
+
 ## Layout
 
 `rpm/harbour-keepassrx.spec` does the build: cross-compile `keepassrx` with

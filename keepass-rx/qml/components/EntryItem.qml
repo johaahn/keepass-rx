@@ -103,7 +103,7 @@ ListItem {
                 name: i18n.tr('Copy Username')
                 iconName: "account"
                 onTriggered: {
-                    keepassrx.getFieldValue(uuid, "Username");
+                    keepassrx.copyFieldValue(uuid, "Username");
                 }
             },
             Action {
@@ -111,7 +111,7 @@ ListItem {
                 name: i18n.tr('Copy Password')
                 iconName: "stock_key"
                 onTriggered: {
-                    keepassrx.getFieldValue(uuid, "Password");
+                    keepassrx.copyFieldValue(uuid, "Password");
                 }
             },
             Action {

@@ -178,7 +178,7 @@ async fn drive(
 
     let mut edit = first_entry_edit(&app_state)?;
     let uuid = edit.uuid;
-    edit.password = SecretText::from(NEW_PASSWORD);
+    edit.password = Some(SecretText::from(NEW_PASSWORD));
     events.borrow_mut().clear();
 
     step(

@@ -15,6 +15,16 @@ Page {
     property string dataUrl
     property var sourcePage
 
+    Connections {
+        target: root
+
+        function onSensitiveUiCleared() {
+            text = "";
+            highlightedText = "";
+            dataUrl = "";
+        }
+    }
+
     header: PageHeader {
         id: header
         title: displayName || attachmentName || i18n.tr("Attachment")

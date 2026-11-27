@@ -63,7 +63,7 @@ impl Vault {
             uuid: entry.id().uuid(),
             title: text("Title"),
             username: text("UserName"),
-            password: SecretText::new(NEW_PASSWORD.to_string()),
+            password: Some(SecretText::new(NEW_PASSWORD.to_string())),
             url: text("URL"),
             notes: SecretText::new(NEW_NOTES.to_string()),
             custom_fields: vec![],
@@ -133,7 +133,7 @@ fn staged_edit_round_trips() {
         .expect("read")
         .expect("present");
     assert_eq!(read.edit.uuid, staged.edit.uuid);
-    assert_eq!(read.edit.password.as_str(), NEW_PASSWORD);
+    assert_eq!(read.edit.password.as_deref(), Some(NEW_PASSWORD));
     assert_eq!(read.edit.notes.as_str(), NEW_NOTES);
     assert_eq!(read.edit.title, staged.edit.title);
     assert_eq!(read.base_sha256, staged.base_sha256);
@@ -162,7 +162,8 @@ fn wrong_password_fails_and_keeps_the_file() {
         DatabaseKey::new().with_password("not-the-password"),
         &src.staging_config,
     )
-    .expect_err("error");
+    .err()
+    .expect("error");
     assert!(matches!(err, StageError::Decrypt), "{err:?}");
     assert!(vault.staged().exists());
 }
@@ -225,12 +226,7 @@ fn staging_key_file_uses_the_database_config() {
 fn staged_file_needs_the_key_file() {
     let vault = Vault::new();
     let (staged, src) = vault.staged_edit();
-    let keyed = || {
-        vault
-            .key()
-            .with_keyfile(&mut { KEY_FILE })
-            .expect("key file")
-    };
+    let keyed = || vault.key().with_keyfile(&mut KEY_FILE).expect("key file");
     let staging = |key| open_staging_key(&vault.staged(), key, &src.staging_config);
     write_staged(&vault.staged(), &staging(keyed()).expect("key"), &staged).expect("write");
 
@@ -243,7 +239,7 @@ fn staged_file_needs_the_key_file() {
             .with_keyfile(&mut "other key file".as_bytes())
             .expect("key file"),
     ] {
-        let err = staging(key).expect_err("error");
+        let err = staging(key).err().expect("error");
         assert!(matches!(err, StageError::Decrypt), "{err:?}");
     }
     assert!(vault.staged().exists());
@@ -270,7 +266,8 @@ fn staging_key_is_reused_and_needed() {
     fs::remove_file(staging_key_path(&vault.staged())).expect("remove key");
     let (_, src) = vault.open();
     let err = open_staging_key(&vault.staged(), vault.key(), &src.staging_config)
-        .expect_err("error");
+        .err()
+        .expect("error");
     assert!(matches!(err, StageError::MissingKey), "{err:?}");
 }
 
@@ -347,7 +344,7 @@ fn changes_name_the_edited_fields() {
     let custom = |original: Option<&str>, name: &str, value: &str| RxFieldEdit {
         original_name: original.map(str::to_string),
         name: name.to_string(),
-        value: SecretText::new(value.to_string()),
+        value: Some(SecretText::new(value.to_string())),
         protected: false,
     };
     let staged = StagedEdit {
@@ -355,7 +352,7 @@ fn changes_name_the_edited_fields() {
             uuid: Uuid::nil(),
             title: SecretText::new("Mail".into()),
             username: SecretText::new("me".into()),
-            password: SecretText::new("new".into()),
+            password: Some(SecretText::new("new".into())),
             url: SecretText::new(String::new()),
             notes: SecretText::new("note".into()),
             custom_fields: vec![
@@ -389,6 +386,37 @@ fn changes_name_the_edited_fields() {
 }
 
 #[test]
+fn absent_secrets_are_no_changes_and_old_edits_still_read() {
+    let base = snapshot(&HashMap::from([
+        ("password".to_string(), EditValue::text("old")),
+        (
+            "customFields".to_string(),
+            EditValue::List(vec![EditValue::Map(HashMap::from([
+                ("name".to_string(), EditValue::text("PIN")),
+                ("value".to_string(), EditValue::text("1234")),
+                ("protected".to_string(), EditValue::Flag(true)),
+            ]))]),
+        ),
+    ]));
+    let json = r#"{"uuid":"00000000-0000-0000-0000-000000000000","title":"","username":"",
+        "password":"old","url":"","notes":"","removed_fields":[],
+        "custom_fields":[{"original_name":"PIN","name":"PIN","value":"1234","protected":true}]}"#;
+    let old: RxEntryEdit = serde_json::from_str(json).expect("old edit");
+    assert_eq!(old.password.as_deref(), Some("old"));
+
+    let mut edit = old.clone();
+    edit.password = None;
+    edit.custom_fields[0].value = None;
+    let staged = StagedEdit {
+        edit,
+        base_sha256: [0; 32],
+        base,
+        draft: true,
+    };
+    assert!(staged.changes().is_empty());
+}
+
+#[test]
 fn staged_file_survives_a_failure_at_every_step() {
     for step in ALL_STEPS {
         let vault = Vault::new();
@@ -400,7 +428,11 @@ fn staged_file_survives_a_failure_at_every_step() {
         let kept = read_staged(&vault.staged(), &vault.staging())
             .expect("read")
             .expect("still staged");
-        assert_eq!(kept.edit.password.as_str(), NEW_PASSWORD, "{step:?}");
+        assert_eq!(
+            kept.edit.password.as_deref(),
+            Some(NEW_PASSWORD),
+            "{step:?}"
+        );
     }
 }
 

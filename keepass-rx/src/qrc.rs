@@ -101,6 +101,10 @@ qrc!(qml_resources,
          "qml/components/TotpFeature.qml",
          "qml/components/SettingsItem.qml",
          "qml/components/TextFieldPlaceholder.qml",
+         "qml/components/SavingDialog.qml",
+         "qml/components/SaveCodeDialog.qml",
+         "qml/components/SaveFailureDialog.qml",
+         "qml/components/NotesListItem.qml",
      },
 );
 

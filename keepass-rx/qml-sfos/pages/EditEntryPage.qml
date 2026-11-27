@@ -2,6 +2,8 @@ import QtQuick 2.6
 import Sailfish.Silica 1.0
 import keepassrx 1.0
 
+import "../components"
+
 Page {
     id: editPage
     allowedOrientations: defaultAllowedOrientations
@@ -10,6 +12,7 @@ Page {
     property var readOnlyFields: []
     property bool saveRequested: false
     property bool draftSaved: false
+    property bool cleared: false
     property string notesText: entry ? entry.notes : ""
     readonly property bool notesModified: entry !== null && notesText !== entry.notes
 
@@ -63,6 +66,19 @@ Page {
             customFields: custom,
             removedFields: removed
         };
+    }
+
+    function clearValues() {
+        cleared = true;
+        titleField.text = "";
+        usernameField.text = "";
+        passwordField.text = "";
+        urlField.text = "";
+        notesText = "";
+        fieldsModel.clear();
+        removedModel.clear();
+        readOnlyFields = [];
+        entry = { uuid: entry.uuid };
     }
 
     function showProblems(problems) {
@@ -121,11 +137,17 @@ Page {
     }
 
     function saveDraft() {
+        if (cleared) {
+            return;
+        }
         draftSaved = true;
         keepassrx.saveDraft(entry.uuid, collectValues());
     }
 
     function submit(credential) {
+        if (cleared) {
+            return;
+        }
         saveRequested = true;
         keepassrx.saveEntry(entry.uuid, collectValues(), credential);
     }
@@ -254,47 +276,11 @@ Page {
                 EnterKey.onClicked: focus = false
             }
 
-            BackgroundItem {
-                id: notesItem
+            NotesSummaryItem {
                 width: parent.width
-                height: notesColumn.height + 2 * Theme.paddingMedium
+                notesText: editPage.notesText
+                modified: editPage.notesModified
                 onClicked: pageStack.push(Qt.resolvedUrl("EditNotesPage.qml"), { editor: editPage })
-
-                Icon {
-                    id: notesChevron
-                    anchors {
-                        right: parent.right
-                        rightMargin: Theme.horizontalPageMargin
-                        verticalCenter: parent.verticalCenter
-                    }
-                    source: "image://theme/icon-m-right"
-                    highlighted: notesItem.highlighted
-                }
-
-                Column {
-                    id: notesColumn
-                    x: Theme.horizontalPageMargin
-                    y: Theme.paddingMedium
-                    width: notesChevron.x - Theme.paddingMedium - x
-
-                    Label {
-                        width: parent.width
-                        text: editPage.notesModified ? Tr.tr("Notes (modified)") : Tr.tr("Notes")
-                        font.pixelSize: Theme.fontSizeSmall
-                        color: notesItem.highlighted || editPage.notesModified
-                            ? Theme.secondaryHighlightColor
-                            : Theme.secondaryColor
-                    }
-
-                    Label {
-                        width: parent.width
-                        text: editPage.notesText.length > 0 ? editPage.notesText : Tr.tr("No notes")
-                        wrapMode: Text.Wrap
-                        maximumLineCount: 3
-                        elide: Text.ElideRight
-                        color: notesItem.highlighted ? Theme.highlightColor : Theme.primaryColor
-                    }
-                }
             }
 
             SectionHeader {
@@ -351,7 +337,7 @@ Page {
                             placeholderText: Tr.tr("Field value")
                             showEchoModeToggle: isProtected
                             passwordEchoMode: isProtected ? TextInput.Password : TextInput.Normal
-                            inputMethodHints: Qt.ImhNone
+                            inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText | Qt.ImhSensitiveData
                             Component.onCompleted: text = fieldValue
                             onTextChanged: fieldsModel.setProperty(index, "fieldValue", text)
                         }
@@ -410,46 +396,7 @@ Page {
         }
     }
 
-    Rectangle {
-        id: savingOverlay
-        objectName: "savingOverlay"
+    SavingOverlay {
         anchors.fill: parent
-        color: Theme.rgba(Theme.overlayBackgroundColor, Theme.opacityOverlay)
-        visible: opacity > 0
-        opacity: keepassrx.saving ? 1 : 0
-
-        Behavior on opacity { FadeAnimation {} }
-
-        MouseArea {
-            anchors.fill: parent
-        }
-
-        Column {
-            anchors.centerIn: parent
-            width: parent.width - 2 * Theme.horizontalPageMargin
-            spacing: Theme.paddingLarge
-
-            BusyIndicator {
-                anchors.horizontalCenter: parent.horizontalCenter
-                size: BusyIndicatorSize.Large
-                running: savingOverlay.visible
-            }
-
-            Label {
-                width: parent.width
-                horizontalAlignment: Text.AlignHCenter
-                text: Tr.tr("Saving...")
-                color: Theme.highlightColor
-            }
-
-            Label {
-                width: parent.width
-                horizontalAlignment: Text.AlignHCenter
-                wrapMode: Text.Wrap
-                text: Tr.tr("Do not close the app.")
-                color: Theme.secondaryHighlightColor
-                font.pixelSize: Theme.fontSizeSmall
-            }
-        }
     }
 }

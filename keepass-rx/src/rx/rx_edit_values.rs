@@ -34,6 +34,14 @@ fn text(values: &EditValues, key: &str) -> Result<SecretText, EditError> {
     }
 }
 
+fn optional_text(values: &EditValues, key: &str) -> Result<Option<SecretText>, EditError> {
+    match values.get(key) {
+        Some(EditValue::Text(value)) => Ok(Some(value.clone())),
+        None => Ok(None),
+        _ => Err(invalid(format!("value {key:?} is not text"))),
+    }
+}
+
 fn list<'a>(values: &'a EditValues, key: &str) -> Result<&'a [EditValue], EditError> {
     match values.get(key) {
         Some(EditValue::List(items)) => Ok(items),
@@ -54,13 +62,15 @@ fn field_edit(item: &EditValue) -> Result<RxFieldEdit, EditError> {
     Ok(RxFieldEdit {
         original_name: Some(original.to_string()).filter(|name| !name.is_empty()),
         name: text(map, "name")?.to_string(),
-        value: text(map, "value")?,
+        value: optional_text(map, "value")?,
         protected,
     })
 }
 
 fn is_blank_new_row(field: &RxFieldEdit) -> bool {
-    field.original_name.is_none() && field.name.trim().is_empty() && field.value.is_empty()
+    field.original_name.is_none()
+        && field.name.trim().is_empty()
+        && field.value.as_ref().is_none_or(|value| value.is_empty())
 }
 
 impl RxEntryEdit {
@@ -90,7 +100,7 @@ impl RxEntryEdit {
             uuid,
             title: text(values, "title")?,
             username: text(values, "username")?,
-            password: text(values, "password")?,
+            password: optional_text(values, "password")?,
             url: text(values, "url")?,
             notes: text(values, "notes")?,
             custom_fields,
@@ -106,13 +116,15 @@ impl RxEntryEdit {
     pub fn values_over(&self, mut values: EditValues) -> EditValues {
         let text = |value: &str| EditValue::text(value);
         for (key, value) in [
-            ("title", &self.title),
-            ("username", &self.username),
-            ("password", &self.password),
-            ("url", &self.url),
-            ("notes", &self.notes),
+            ("title", Some(&self.title)),
+            ("username", Some(&self.username)),
+            ("password", self.password.as_ref()),
+            ("url", Some(&self.url)),
+            ("notes", Some(&self.notes)),
         ] {
-            values.insert(key.to_string(), text(value));
+            if let Some(value) = value {
+                values.insert(key.to_string(), text(value));
+            }
         }
         let read_only = match values.remove("customFields") {
             Some(EditValue::List(fields)) => fields
@@ -125,16 +137,19 @@ impl RxEntryEdit {
             _ => Vec::new(),
         };
         let edited = self.custom_fields.iter().map(|field| {
-            EditValue::Map(HashMap::from([
+            let mut map = HashMap::from([
                 (
                     "originalName".to_string(),
                     text(field.original_name.as_deref().unwrap_or_default()),
                 ),
                 ("name".to_string(), text(&field.name)),
-                ("value".to_string(), text(&field.value)),
                 ("protected".to_string(), EditValue::Flag(field.protected)),
                 ("editable".to_string(), EditValue::Flag(true)),
-            ]))
+            ]);
+            if let Some(value) = &field.value {
+                map.insert("value".to_string(), text(value));
+            }
+            EditValue::Map(map)
         });
         values.insert(
             "customFields".to_string(),
@@ -244,7 +259,7 @@ mod tests {
 
         assert_eq!(edit.uuid, uuid);
         assert_eq!(edit.title.as_str(), "Title");
-        assert_eq!(edit.password.as_str(), "secret");
+        assert_eq!(edit.password.as_deref(), Some("secret"));
         assert_eq!(edit.removed_fields, vec!["Old".to_string()]);
         assert_eq!(edit.custom_fields.len(), 2);
         assert_eq!(edit.custom_fields[0].original_name.as_deref(), Some("PIN"));
@@ -302,8 +317,26 @@ mod tests {
     #[test]
     fn missing_text_value_fails() {
         let mut values = base();
-        values.remove("password");
+        values.remove("title");
         assert!(RxEntryEdit::from_values(Uuid::new_v4(), &values).is_err());
+    }
+
+    #[test]
+    fn missing_secret_values_are_absent() {
+        let mut values = base();
+        values.remove("password");
+        let mut pin = field("PIN", "PIN", "1234", true);
+        if let EditValue::Map(map) = &mut pin {
+            map.remove("value");
+        }
+        values.insert("customFields".into(), EditValue::List(vec![pin]));
+
+        let edit = RxEntryEdit::from_values(Uuid::new_v4(), &values).unwrap();
+        assert!(edit.password.is_none());
+        assert!(edit.custom_fields[0].value.is_none());
+
+        let over = edit.values_over(base());
+        assert_eq!(over.get("password"), Some(&t("secret")));
     }
 
     #[test]

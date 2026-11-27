@@ -26,6 +26,7 @@ ApplicationWindow {
 
     property var entryEditor: null
     property string draftUuid: ""
+    signal sensitiveUiCleared()
 
     property string coverEntryUuid: ""
     property string coverEntryTitle: ""
@@ -72,11 +73,11 @@ ApplicationWindow {
             onRequestCopy: {
                 var uuid = applicationWindow.coverEntryUuid;
                 if (kind === "password") {
-                    keepassrx.getFieldValue(uuid, "Password");
+                    keepassrx.copyFieldValue(uuid, "Password");
                 } else if (kind === "totp") {
                     keepassrx.getTotp(uuid);
                 } else if (kind === "username") {
-                    keepassrx.getFieldValue(uuid, "Username");
+                    keepassrx.copyFieldValue(uuid, "Username");
                 }
             }
         }
@@ -121,7 +122,7 @@ ApplicationWindow {
 
     function clearSensitiveUiState() {
         clearClipboardTimer.stop();
-        Clipboard.text = "";
+        keepassrx.clearClipboard();
         coverEntryUuid = "";
         coverEntryTitle = "";
         coverEntryIcon = "";
@@ -129,6 +130,12 @@ ApplicationWindow {
         coverHasUsername = false;
         coverHasPassword = false;
         coverHasTotp = false;
+        draftUuid = "";
+        if (entryEditor) {
+            entryEditor.clearValues();
+        }
+        sensitiveUiCleared();
+        gc();
     }
 
     Timer {
@@ -136,7 +143,7 @@ ApplicationWindow {
         repeat: false
         interval: 30000
         onTriggered: {
-            Clipboard.text = "";
+            keepassrx.clearClipboard();
             applicationWindow.notify(Tr.tr("Clipboard cleared."));
         }
     }
@@ -263,11 +270,12 @@ ApplicationWindow {
                     ? 'http://' + field_value
                     : field_value;
                 Qt.openUrlExternally(url);
-            } else {
-                Clipboard.text = field_value;
-                applicationWindow.notify(Tr.tr("%1 copied to clipboard (30 secs)").arg(field_name));
-                clearClipboardTimer.restart();
             }
+        }
+
+        onFieldCopied: {
+            applicationWindow.notify(Tr.tr("%1 copied to clipboard (30 secs)").arg(fieldName));
+            clearClipboardTimer.restart();
         }
 
         onTotpReceived: {

@@ -191,13 +191,14 @@ impl StagedEdit {
 
     pub fn changes(&self) -> Vec<StagedChange> {
         let standard = [
-            ("title", &self.edit.title),
-            ("username", &self.edit.username),
-            ("password", &self.edit.password),
-            ("url", &self.edit.url),
-            ("notes", &self.edit.notes),
+            ("title", Some(&self.edit.title)),
+            ("username", Some(&self.edit.username)),
+            ("password", self.edit.password.as_ref()),
+            ("url", Some(&self.edit.url)),
+            ("notes", Some(&self.edit.notes)),
         ];
         let fields = standard.into_iter().filter_map(|(key, value)| {
+            let value = value?;
             let base = self.base.get(key).map_or("", |base| base.as_str());
             (!constant_time_eq(base, value)).then(|| StagedChange {
                 name: key.to_string(),
@@ -249,7 +250,10 @@ impl StagedEdit {
             || self
                 .base_custom_field(original)
                 .is_none_or(|(value, protected)| {
-                    !constant_time_eq(value, &field.value)
+                    field
+                        .value
+                        .as_ref()
+                        .is_some_and(|edited| !constant_time_eq(value, edited))
                         || protected != field.protected.to_string()
                 })
     }

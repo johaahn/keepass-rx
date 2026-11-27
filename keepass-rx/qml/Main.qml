@@ -32,6 +32,14 @@ MainView {
 
     property var entryEditor: null
     property string draftUuid: ""
+    signal sensitiveUiCleared()
+    readonly property bool appActive: Qt.application.state === Qt.ApplicationActive
+
+    onAppActiveChanged: {
+        if (!appActive) {
+            toast.hide();
+        }
+    }
 
     visible: true
     width: units.gu(45)
@@ -156,11 +164,12 @@ MainView {
                 }
 
                 Qt.openUrlExternally(fieldValue);
-            } else {
-                Clipboard.push(fieldValue);
-                toast.show(i18n.tr('%1 copied to clipboard (30 secs)').arg(fieldName));
-                clearClipboardTimer.start();
             }
+        }
+
+        function onFieldCopied(entryUuid, fieldName) {
+            toast.show(i18n.tr('%1 copied to clipboard (30 secs)').arg(fieldName));
+            clearClipboardTimer.start();
         }
 
         function onTotpReceived(totp) {
@@ -191,7 +200,14 @@ MainView {
 
     function clearSensitiveUiState() {
         clearClipboardTimer.stop();
-        Clipboard.clear();
+        keepassrx.clearClipboard();
+        toast.hide();
+        draftUuid = "";
+        if (entryEditor) {
+            entryEditor.clearValues();
+        }
+        sensitiveUiCleared();
+        gc();
     }
 
     function showCodeLimit() {
@@ -413,6 +429,25 @@ MainView {
             open()
             popupTimer.start()
         }
+
+        function hide() {
+            popupTimer.stop()
+            popupLabel.text = ""
+            close()
+        }
+    }
+
+    Rectangle {
+        anchors.fill: parent
+        z: 1000
+        visible: !root.appActive
+        color: theme.palette.normal.background
+
+        Label {
+            anchors.centerIn: parent
+            text: "KeePassRX"
+            textSize: Label.XLarge
+        }
     }
 
     Timer {
@@ -421,7 +456,7 @@ MainView {
         running: false
         interval: 30000
         onTriggered: {
-            Clipboard.clear();
+            keepassrx.clearClipboard();
             toast.show(i18n.tr('KeePassRX: Clipboard cleared.'));
         }
     }

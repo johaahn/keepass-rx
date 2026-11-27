@@ -22,6 +22,7 @@ use crate::app::{AppState, KeyFile};
 #[cfg(feature = "sailfish")]
 use crate::crypto::sailfish_secrets;
 use crate::crypto::{EncryptedPassword, IncorrectShortCode, MasterKey};
+use crate::gui::field_values::set_clipboard_text;
 use crate::gui::qml::RxUiStagedChange;
 use crate::gui::save_auth::{
     AuthPurpose, SaveAuthMethod, SaveAuthorizer, SystemAuthUnavailable, default_authorizer,
@@ -92,6 +93,7 @@ pub struct KeepassRxActor {
     save_authorizer: Box<dyn SaveAuthorizer>,
     staged_entry: Option<Uuid>,
     pending_restore: Option<RxEntryEdit>,
+    open_draft: Option<RxEntryEdit>,
     staging: Staging,
 }
 
@@ -109,6 +111,7 @@ impl Default for KeepassRxActor {
             save_authorizer: default_authorizer(),
             staged_entry: None,
             pending_restore: None,
+            open_draft: None,
             staging: Staging::None,
         }
     }
@@ -878,6 +881,7 @@ impl Handler<CloseDatabase> for KeepassRxActor {
         }
 
         self.pending_restore = None;
+        self.open_draft = None;
         self.staged_entry = None;
         self.staging = Staging::None;
 
@@ -1042,6 +1046,7 @@ impl Handler<GetEntryForEdit> for KeepassRxActor {
             }
             None => gui.errorReceived(format!("Entry {} not found", msg.entry_uuid)),
         });
+        self.open_draft = draft;
     }
 }
 
@@ -1052,7 +1057,8 @@ impl Handler<SaveDraft> for KeepassRxActor {
             return;
         }
         let uuid = msg.0.uuid;
-        match self.save_draft(msg.0) {
+        let edit = self.with_open_draft(msg.0);
+        match self.save_draft(edit) {
             Ok(()) => info!("Kept the unsaved changes of entry {uuid}"),
             Err(err) => warn!("Could not keep the unsaved changes of entry {uuid}: {err}"),
         }
@@ -1146,6 +1152,13 @@ impl Handler<CommitStagingKey> for KeepassRxActor {
 }
 
 impl KeepassRxActor {
+    fn with_open_draft(&self, mut edit: RxEntryEdit) -> RxEntryEdit {
+        if let Some(draft) = &self.open_draft {
+            edit.fill_unchanged(draft);
+        }
+        edit
+    }
+
     fn save_draft(&mut self, edit: RxEntryEdit) -> Result<()> {
         let uuid = edit.uuid;
         self.check_staged(uuid)?;
@@ -1216,6 +1229,10 @@ impl KeepassRxActor {
 impl Handler<SaveEntry> for KeepassRxActor {
     type Result = ResponseActFuture<Self, ()>;
     fn handle(&mut self, msg: SaveEntry, ctx: &mut Self::Context) -> Self::Result {
+        let msg = SaveEntry {
+            edit: self.with_open_draft(msg.edit),
+            ..msg
+        };
         if matches!(msg.credential, SaveCredential::System)
             && let Some(confirmation) = self.save_authorizer.confirm(AuthPurpose::Save)
         {
@@ -1395,6 +1412,17 @@ impl Handler<GetFieldValue> for KeepassRxActor {
     fn handle(&mut self, msg: GetFieldValue, _: &mut Self::Context) -> Self::Result {
         self.with_db(|gui, db| {
             let value = get_value(db, msg.entry_uuid, &msg.field_name);
+
+            if msg.purpose == "clipboard" {
+                if !value.is_empty() {
+                    set_clipboard_text(&value);
+                    gui.fieldCopied(
+                        QString::from(msg.entry_uuid.to_string()),
+                        QString::from(msg.field_name.to_string()),
+                    );
+                }
+                return;
+            }
 
             gui.fieldValueReceived(
                 QString::from(msg.entry_uuid.to_string()),

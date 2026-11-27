@@ -21,6 +21,7 @@ pub(crate) mod actor;
 #[cfg(all(test, feature = "gui"))]
 mod actor_tests;
 pub(crate) mod colors;
+pub(crate) mod field_values;
 pub(crate) mod instructions;
 #[cfg(feature = "sailfish")]
 pub(crate) mod polkit_auth;
@@ -212,6 +213,8 @@ pub struct KeepassRx {
     getTotp: qt_method!(fn(&self, entry_uuid: QString)),
     getFieldValue: qt_method!(fn(&self, entry_uuid: QString, field_name: QString)),
     revealFieldValue: qt_method!(fn(&self, entry_uuid: QString, field_name: QString)),
+    copyFieldValue: qt_method!(fn(&self, entry_uuid: QString, field_name: QString)),
+    clearClipboard: qt_method!(fn(&self)),
 
     getEntryForEdit: qt_method!(
         fn getEntryForEdit(&self, entry_uuid: QString) {
@@ -296,6 +299,7 @@ pub struct KeepassRx {
     totpReceived: qt_signal!(totp: QVariantMap),
     singleEntryReceived: qt_signal!(entry: QVariant),
     fieldValueReceived: qt_signal!(entry_uuid: QString, field_name: QString, field_value: QString, field_extra: QString),
+    fieldCopied: qt_signal!(entryUuid: QString, fieldName: QString),
 
     // easy-open signals
     masterPasswordStored: qt_signal!(),
@@ -568,32 +572,6 @@ impl KeepassRx {
     pub fn checkLockingStatus(&self) {
         let actor = self.actor_ref();
         actix::spawn(actor.send(CheckLockingStatus));
-    }
-
-    #[with_executor]
-    pub fn getFieldValue(&self, entry_uuid: QString, field_name: QString) {
-        self.request_field_value(entry_uuid, field_name, "copy");
-    }
-
-    #[with_executor]
-    pub fn revealFieldValue(&self, entry_uuid: QString, field_name: QString) {
-        self.request_field_value(entry_uuid, field_name, "reveal");
-    }
-
-    fn request_field_value(&self, entry_uuid: QString, field_name: QString, purpose: &str) {
-        let maybe_uuid = Uuid::from_str(&entry_uuid.to_string());
-        let actor = self.actor_ref();
-
-        match maybe_uuid {
-            Ok(entry_uuid) => {
-                actix::spawn(actor.send(GetFieldValue {
-                    entry_uuid,
-                    field_name: field_name.into(),
-                    purpose: purpose.to_string(),
-                }));
-            }
-            Err(err) => self.errorReceived(format!("{}", err)),
-        }
     }
 
     #[with_executor]

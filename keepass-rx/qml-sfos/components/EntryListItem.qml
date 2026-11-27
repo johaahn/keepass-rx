@@ -141,12 +141,12 @@ ListItem {
         MenuItem {
             text: Tr.tr("Copy username")
             visible: theEntry.hasUsername
-            onClicked: keepassrx.getFieldValue(uuid, "Username")
+            onClicked: keepassrx.copyFieldValue(uuid, "Username")
         }
         MenuItem {
             text: Tr.tr("Copy password")
             visible: theEntry.hasPassword
-            onClicked: keepassrx.getFieldValue(uuid, "Password")
+            onClicked: keepassrx.copyFieldValue(uuid, "Password")
         }
         MenuItem {
             text: Tr.tr("Open URL")

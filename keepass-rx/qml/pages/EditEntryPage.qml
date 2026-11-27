@@ -5,11 +5,14 @@ import Lomiri.Components.Popups 1.3
 import Lomiri.Components.ListItems 1.3 as ListItems
 import keepassrx 1.0
 
+import "../components"
+
 Page {
     id: editEntryPage
     property var entry
     property bool saveRequested: false
     property bool draftSaved: false
+    property bool cleared: false
     property bool passwordShown: false
     property string notesText: entry.notes
     property int newFieldIndex: -1
@@ -75,6 +78,19 @@ Page {
         };
     }
 
+    function clearValues() {
+        cleared = true;
+        titleField.text = "";
+        usernameField.text = "";
+        passwordField.text = "";
+        urlField.text = "";
+        notesText = "";
+        editableFieldsModel.clear();
+        readOnlyFieldsModel.clear();
+        removedFields = [];
+        entry = { uuid: entry.uuid };
+    }
+
     function showProblems(problems) {
         for (let i = 0; i < editableFieldsModel.count; i++) {
             editableFieldsModel.setProperty(i, "nameError", "");
@@ -126,11 +142,17 @@ Page {
     }
 
     function saveDraft() {
+        if (cleared) {
+            return;
+        }
         draftSaved = true;
         keepassrx.saveDraft(entry.uuid, collectValues());
     }
 
     function submit(shortCode) {
+        if (cleared) {
+            return;
+        }
         saveRequested = true;
         keepassrx.saveEntry(entry.uuid, collectValues(), shortCode);
     }
@@ -149,7 +171,7 @@ Page {
                 editableFieldsModel.append({
                     originalName: field.originalName ?? field.name,
                     fieldName: field.name,
-                    fieldValue: field.value,
+                    fieldValue: field.value ?? "",
                     fieldProtected: field.protected,
                     valueShown: false,
                     nameError: ""
@@ -348,33 +370,16 @@ Page {
                 inputMethodHints: Qt.ImhUrlCharactersOnly | Qt.ImhNoPredictiveText
             }
 
-            ListItem {
+            NotesListItem {
                 x: -formColumn.x
                 width: formFlickable.width
-                height: notesLayout.height
+                notesText: editEntryPage.notesText
+                modified: editEntryPage.notesText !== entry.notes
                 onClicked: pageStack.addPageToNextColumn(
                     editEntryPage,
                     Qt.resolvedUrl("EditNotesPage.qml"),
                     { editor: editEntryPage }
                 )
-
-                ListItemLayout {
-                    id: notesLayout
-                    title.text: notesText !== entry.notes ? i18n.tr("Notes (modified)") : i18n.tr("Notes")
-                    title.color: notesText !== entry.notes ? theme.palette.normal.activity : theme.palette.normal.backgroundText
-                    subtitle.text: notesText.length > 0 ? notesText : i18n.tr("No notes")
-                    subtitle.maximumLineCount: 3
-                    subtitle.wrapMode: Text.Wrap
-
-                    Icon {
-                        name: "next"
-                        SlotsLayout.overrideVerticalPositioning: true
-                        SlotsLayout.position: SlotsLayout.Trailing
-                        width: units.gu(3)
-                        height: units.gu(3)
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-                }
             }
 
             Label {
@@ -485,6 +490,7 @@ Page {
                                     placeholderText: i18n.tr("Field value")
                                     text: fieldValue
                                     echoMode: fieldProtected && !valueShown ? TextInput.Password : TextInput.Normal
+                                    inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText | Qt.ImhSensitiveData
                                     onTextChanged: fieldValue = text
 
                                     secondaryItem: AbstractButton {
@@ -531,107 +537,21 @@ Page {
     Component {
         id: savingDialogComponent
 
-        Dialog {
-            id: savingDialogue
-
-            Column {
-                width: parent.width
-                spacing: units.gu(1)
-
-                ActivityIndicator {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    running: true
-                }
-
-                Label {
-                    width: parent.width
-                    horizontalAlignment: Text.AlignHCenter
-                    textSize: Label.Large
-                    text: i18n.tr("Saving...")
-                }
-
-                Label {
-                    width: parent.width
-                    horizontalAlignment: Text.AlignHCenter
-                    wrapMode: Text.WordWrap
-                    color: theme.palette.normal.backgroundSecondaryText
-                    text: i18n.tr("Do not close the app.")
-                }
-            }
-        }
+        SavingDialog {}
     }
 
     Component {
         id: codeDialog
 
-        Dialog {
-            id: codeDialogue
-            property bool rejected: false
-            property int triesLeft: 0
-
-            title: i18n.tr("Unlock to Save")
-            text: i18n.tr("Enter your passcode to save the changes to %1.").arg(entry.title) + "\n\n" + i18n.tr(
-                "The passcode is the first five characters of the database " +
-                    "password (or the whole password if less than five characters)."
-            )
-
-            function confirm() {
-                if (codeField.text.length === 0) {
-                    return;
-                }
-
-                const code = codeField.text;
-                PopupUtils.close(codeDialogue);
-                editEntryPage.submit(code);
-            }
-
-            TextField {
-                id: codeField
-                placeholderText: i18n.tr("Passcode")
-                echoMode: TextInput.Password
-                inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
-                Keys.onReturnPressed: codeDialogue.confirm()
-                Component.onCompleted: forceActiveFocus()
-            }
-
-            Label {
-                visible: codeDialogue.rejected
-                text: i18n.tr("Incorrect passcode. %1 try left.", "Incorrect passcode. %1 tries left.", codeDialogue.triesLeft).arg(codeDialogue.triesLeft)
-                color: theme.palette.normal.negative
-                wrapMode: Text.WordWrap
-            }
-
-            Button {
-                text: i18n.tr("Save")
-                color: theme.palette.normal.positive
-                enabled: codeField.text.length > 0
-                onClicked: codeDialogue.confirm()
-            }
-
-            Button {
-                text: i18n.tr("Cancel")
-                onClicked: PopupUtils.close(codeDialogue)
-            }
+        SaveCodeDialog {
+            entryTitle: entry.title
+            onConfirmed: editEntryPage.submit(code)
         }
     }
 
     Component {
         id: failureDialog
 
-        Dialog {
-            id: failureDialogue
-            property string message
-            property bool conflict
-
-            title: i18n.tr("Could not save entry")
-            text: conflict
-                ? i18n.tr("The database file changed on disk. Close and reopen the database, then edit again.")
-                : message
-
-            Button {
-                text: i18n.tr("OK")
-                onClicked: PopupUtils.close(failureDialogue)
-            }
-        }
+        SaveFailureDialog {}
     }
 }

@@ -218,7 +218,7 @@ pub fn unchanged_edit(db: &Database, uuid: Uuid) -> RxEntryEdit {
         .map(|(name, value)| RxFieldEdit {
             original_name: Some(name.clone()),
             name: name.clone(),
-            value: s(value.get()),
+            value: Some(s(value.get())),
             protected: value.is_protected(),
         })
         .collect();
@@ -226,7 +226,7 @@ pub fn unchanged_edit(db: &Database, uuid: Uuid) -> RxEntryEdit {
         uuid,
         title: text("Title"),
         username: text("UserName"),
-        password: text("Password"),
+        password: Some(text("Password")),
         url: text("URL"),
         notes: text("Notes"),
         custom_fields,
@@ -236,7 +236,7 @@ pub fn unchanged_edit(db: &Database, uuid: Uuid) -> RxEntryEdit {
 
 pub fn password_edit(db: &Database, uuid: Uuid, password: &str) -> RxEdit {
     let mut edit = unchanged_edit(db, uuid);
-    edit.password = s(password);
+    edit.password = Some(s(password));
     RxEdit::UpdateEntry(edit)
 }
 

@@ -33,7 +33,7 @@ fn renaming_a_custom_field_keeps_its_protected_flag() {
     add.custom_fields.push(RxFieldEdit {
         original_name: None,
         name: "PIN".into(),
-        value: s("1234"),
+        value: Some(s("1234")),
         protected: true,
     });
     vault.save_now(&RxEdit::UpdateEntry(add));
@@ -135,7 +135,7 @@ fn hidden_fields_survive_an_edit_unchanged() {
 
     let raw = vault.reopen_raw();
     let mut edit = unchanged_edit(&raw, uuid);
-    edit.password = s("edited-pass");
+    edit.password = Some(s("edited-pass"));
     edit.username = s("edited-user");
     vault.save_now(&RxEdit::UpdateEntry(edit));
 

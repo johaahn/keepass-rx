@@ -78,21 +78,6 @@ Page {
         clearClipboardTimer.start();
     }
 
-    function revealedValue(fieldName) {
-        switch (fieldName) {
-        case "Username":
-            return valueIsDefined(entryUsernameValue) ? entryUsernameValue : entryUsername;
-        case "Password":
-            return valueIsDefined(entryPasswordValue) ? entryPasswordValue : entryPassword;
-        case "URL":
-            return valueIsDefined(entryUrlValue) ? entryUrlValue : entryUrl;
-        case "Notes":
-            return valueIsDefined(entryNotesValue) ? entryNotesValue : entryNotes;
-        default:
-            return "";
-        }
-    }
-
     function clearFieldValue(fieldName) {
         switch (fieldName) {
         case "Username":
@@ -112,6 +97,7 @@ Page {
             clearCustomFieldValue(fieldName);
             break;
         }
+        gc();
     }
 
     function revealFieldValue(fieldName) {
@@ -121,11 +107,13 @@ Page {
     }
 
     function copyFieldValue(fieldName) {
-        const fieldValue = revealedValue(fieldName);
-        if (valueIsDefined(fieldValue)) {
-            copyToClipboard(fieldName, fieldValue);
-        } else if (valueIsDefined(entryUuid)) {
+        if (!valueIsDefined(entryUuid)) {
+            return;
+        }
+        if (fieldName === "URL") {
             keepassrx.getFieldValue(entryUuid, fieldName);
+        } else {
+            keepassrx.copyFieldValue(entryUuid, fieldName);
         }
     }
 
@@ -169,9 +157,58 @@ Page {
         notesShown = false;
 
         for (let i = 0; i < otherFieldsModel.count; i++) {
-            otherFieldsModel.setProperty(i, "fieldValue", "");
-            otherFieldsModel.setProperty(i, "fieldShown", false);
+            if (otherFieldsModel.get(i).fieldHiddenByDefault) {
+                otherFieldsModel.setProperty(i, "fieldValue", "");
+                otherFieldsModel.setProperty(i, "fieldShown", false);
+            }
         }
+        gc();
+    }
+
+    function hideRevealedValues() {
+        revealTimer.stop();
+        clearTransientValues();
+        usernameField.isContentVisible = valueIsDefined(entryUsername);
+        passwordField.isContentVisible = valueIsDefined(entryPassword);
+        urlField.isContentVisible = valueIsDefined(entryUrl);
+        for (let i = 0; i < otherFieldsRepeater.count; i++) {
+            const row = otherFieldsRepeater.itemAt(i);
+            if (row && otherFieldsModel.get(i).fieldHiddenByDefault) {
+                row.isContentVisible = false;
+            }
+        }
+    }
+
+    function clearEntryValues() {
+        hideRevealedValues();
+        entryTitle = "";
+        entryUsername = "";
+        entryPassword = "";
+        entryUrl = "";
+        entryNotes = "";
+        entryCustomFields = null;
+        otherFieldsModel.clear();
+    }
+
+    Connections {
+        target: root
+
+        function onSensitiveUiCleared() {
+            clearEntryValues();
+        }
+    }
+
+    readonly property bool appActive: Qt.application.state === Qt.ApplicationActive
+    onAppActiveChanged: {
+        if (!appActive) {
+            hideRevealedValues();
+        }
+    }
+
+    Timer {
+        id: revealTimer
+        interval: 30000
+        onTriggered: hideRevealedValues()
     }
 
     Component.onCompleted: {
@@ -199,7 +236,7 @@ Page {
     Component.onDestruction: clearTransientValues()
     onVisibleChanged: {
         if (!visible) {
-            clearTransientValues();
+            hideRevealedValues();
         }
     }
 
@@ -230,6 +267,7 @@ Page {
                 return;
             }
 
+            revealTimer.restart();
             switch (fieldName) {
             case "Username":
                 if (usernameField.isContentVisible) {
@@ -275,16 +313,16 @@ Page {
         }
 
         function onDatabaseClosed() {
-            clearTransientValues();
+            hideRevealedValues();
         }
 
         function onMasterPasswordInvalidated() {
-            clearTransientValues();
+            hideRevealedValues();
         }
 
         function onMasterPasswordStateChanged(encrypted) {
             if (encrypted) {
-                clearTransientValues();
+                hideRevealedValues();
             }
         }
     }
@@ -436,6 +474,7 @@ Page {
                             singleEntryPage,
                             Qt.resolvedUrl("NotePage.qml"),
                             {
+                                entryUuid: entryUuid,
                                 note: entryNotes
                             }
                         )
@@ -609,15 +648,10 @@ Page {
                             revealFieldValue(fieldName)
                         } else {
                             clearCustomFieldValue(fieldName)
+                            gc()
                         }
                     }
-                    onCopyClicked: {
-                        if (valueIsDefined(fieldValue)) {
-                            copyToClipboard(fieldName, fieldValue)
-                        } else if (valueIsDefined(entryUuid)) {
-                            keepassrx.getFieldValue(entryUuid, fieldName)
-                        }
-                    }
+                    onCopyClicked: copyFieldValue(fieldName)
                 }
             }
         }
@@ -629,7 +663,7 @@ Page {
         running: false
         interval: 30000
         onTriggered: {
-            Clipboard.clear();
+            keepassrx.clearClipboard();
             toast.show(i18n.tr('KeePassRX: Clipboard cleared.'));
         }
     }

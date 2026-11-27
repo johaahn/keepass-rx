@@ -25,6 +25,15 @@ Page {
     property string backgroundColor: ""
     property string foregroundColor: ""
 
+    Connections {
+        target: applicationWindow
+        onSensitiveUiCleared: {
+            text = "";
+            highlightedText = "";
+            dataUrl = "";
+        }
+    }
+
     readonly property color textBackground: backgroundColor.length > 0
         ? backgroundColor
         : (Theme.colorScheme === Theme.LightOnDark ? "#1c1c1c" : "#ffffff")

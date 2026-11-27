@@ -69,13 +69,18 @@ Page {
     function revealOrHide(name, shown) {
         if (shown) {
             setRevealed(name, "");
+            gc();
         } else {
             keepassrx.revealFieldValue(entryUuid, name);
         }
     }
 
     function copyField(name) {
-        keepassrx.getFieldValue(entryUuid, name);
+        if (name === "URL") {
+            keepassrx.getFieldValue(entryUuid, name);
+        } else {
+            keepassrx.copyFieldValue(entryUuid, name);
+        }
     }
 
     function viewAttachment(name) {
@@ -98,6 +103,46 @@ Page {
             backgroundColor: result.backgroundColor ? result.backgroundColor : "",
             foregroundColor: result.foregroundColor ? result.foregroundColor : ""
         });
+    }
+
+    function clearRevealed() {
+        revealTimer.stop();
+        usernameRevealed = "";
+        passwordRevealed = "";
+        urlRevealed = "";
+        notesRevealed = "";
+        for (var i = 0; i < customFieldsModel.count; i++) {
+            customFieldsModel.setProperty(i, "revealedValue", "");
+        }
+        gc();
+    }
+
+    readonly property bool appActive: Qt.application.state === Qt.ApplicationActive
+    onAppActiveChanged: {
+        if (!appActive) {
+            clearRevealed();
+        }
+    }
+
+    Timer {
+        id: revealTimer
+        interval: 30000
+        onTriggered: entryPage.clearRevealed()
+    }
+
+    Component.onDestruction: clearRevealed()
+
+    Connections {
+        target: applicationWindow
+        onSensitiveUiCleared: {
+            entryPage.clearRevealed();
+            entryTitle = "";
+            entryUsername = "";
+            entryUrl = "";
+            entryNotes = "";
+            entryCustomFields = null;
+            customFieldsModel.clear();
+        }
     }
 
     function setRevealed(name, value) {
@@ -195,8 +240,12 @@ Page {
             if (field_extra !== "reveal" || entry_uuid !== entryPage.entryUuid) {
                 return;
             }
+            revealTimer.restart();
             entryPage.setRevealed(field_name, field_value);
         }
+
+        onDatabaseClosed: entryPage.clearRevealed()
+        onMasterPasswordInvalidated: entryPage.clearRevealed()
     }
 
     SilicaFlickable {

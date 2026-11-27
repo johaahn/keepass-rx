@@ -5,7 +5,16 @@ import keepassrx 1.0
 
 Page {
     id: notePage
+    property string entryUuid
     property string note
+
+    Connections {
+        target: root
+
+        function onSensitiveUiCleared() {
+            note = "";
+        }
+    }
 
     header: PageHeader {
         id: header
@@ -26,10 +35,7 @@ Page {
             Action {
                 name: "Open Source Licenses"
                 iconName: "edit-copy"
-                onTriggered: {
-                    Clipboard.push(note);
-                    toast.show(i18n.tr('Note copied to clipboard'));
-                }
+                onTriggered: keepassrx.copyFieldValue(entryUuid, "Notes")
             }
         ]
     }

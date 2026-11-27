@@ -26,6 +26,7 @@ pub(crate) mod instructions;
 pub(crate) mod polkit_auth;
 pub(crate) mod qml;
 pub(crate) mod save_auth;
+pub(crate) mod screen_lock;
 pub(crate) mod settings;
 pub(crate) mod utils;
 
@@ -285,6 +286,7 @@ pub struct KeepassRx {
     stagedChanges: qt_property!(RefCell<SimpleListModel<RxUiStagedChange>>; CONST),
     stagedEditFailed: qt_signal!(message: QString),
     stagedDraftFound: qt_signal!(entryUuid: QString),
+    screenLocked: qt_signal!(),
 
     // data signals
     metadataChanged: qt_signal!(),

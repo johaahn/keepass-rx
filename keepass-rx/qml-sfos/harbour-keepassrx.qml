@@ -155,6 +155,17 @@ ApplicationWindow {
         pageStack.replaceAbove(null, Qt.resolvedUrl("pages/DatabaseListPage.qml"));
     }
 
+    function lockOrCloseDatabase() {
+        if (!keepassrx.databaseOpen) {
+            return;
+        }
+        if (lockingAvailable) {
+            lockDatabase();
+        } else {
+            closeDatabase();
+        }
+    }
+
     function lockDatabase() {
         saveDraft();
         clearSensitiveUiState();
@@ -176,16 +187,7 @@ ApplicationWindow {
         id: idleLockTimer
         interval: 30000
         repeat: false
-        onTriggered: {
-            if (!keepassrx.databaseOpen) {
-                return;
-            }
-            if (applicationWindow.lockingAvailable) {
-                applicationWindow.lockDatabase();
-            } else {
-                applicationWindow.closeDatabase();
-            }
-        }
+        onTriggered: applicationWindow.lockOrCloseDatabase()
     }
 
     Connections {
@@ -219,6 +221,11 @@ ApplicationWindow {
         onStagedDraftFound: {
             applicationWindow.draftUuid = entryUuid;
             keepassrx.getSingleEntry(entryUuid);
+        }
+
+        onScreenLocked: {
+            idleLockTimer.stop();
+            applicationWindow.lockOrCloseDatabase();
         }
 
         onStagedEditFailed: {

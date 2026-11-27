@@ -407,6 +407,14 @@ Page {
     Connections {
         target: keepassrx
 
+        function onScreenLocked() {
+            if (SettingsBridge.databaseLocking) {
+                lockDatabase();
+            } else {
+                closeDatabase();
+            }
+        }
+
         function onEntrySaved(entryUuid) {
             listRefreshPending = true;
             keepassrx.getSingleEntry(entryUuid);

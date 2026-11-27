@@ -202,6 +202,7 @@ fn create_app_objects() -> (
     use crate::gui::actor::KeepassRxActor;
     use actix::Actor;
     use app::RxActors;
+    use gui::screen_lock::default_watcher;
     use gui::settings::SettingsBridge;
 
     let settings_bridge = Rc::new(QObjectBox::new(SettingsBridge::default()));
@@ -209,6 +210,7 @@ fn create_app_objects() -> (
     let gui = Rc::new(QObjectBox::new(KeepassRx::new()));
 
     let global_app_actor = KeepassRxActor::new(&gui, &app_state).start();
+    default_watcher().start(global_app_actor.clone());
 
     let app = Rc::new(KeepassRxApp {
         app_state,

@@ -26,6 +26,7 @@ use crate::gui::qml::RxUiStagedChange;
 use crate::gui::save_auth::{
     AuthPurpose, SaveAuthMethod, SaveAuthorizer, SystemAuthUnavailable, default_authorizer,
 };
+use crate::gui::screen_lock::ScreenLocked;
 use crate::gui::utils::{app_data_path, synced_databases_path};
 #[cfg(feature = "sailfish")]
 use crate::gui::{
@@ -1672,6 +1673,18 @@ impl Handler<OfferStagedEdit> for KeepassRxActor {
                 gui.stagedChanges.borrow_mut().reset_data(Vec::new());
                 gui.stagedEditFound(QString::default(), false, QString::from(err.to_string()));
             }
+        }
+    }
+}
+
+impl Handler<ScreenLocked> for KeepassRxActor {
+    type Result = ();
+
+    fn handle(&mut self, _: ScreenLocked, _: &mut Self::Context) {
+        let gui = self.gui.pinned();
+        let gui = gui.borrow();
+        if gui.databaseOpen {
+            gui.screenLocked();
         }
     }
 }

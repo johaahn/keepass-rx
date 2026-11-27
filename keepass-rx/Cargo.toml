@@ -71,6 +71,10 @@ sailors = { git = "https://gitlab.com/whisperfish/sailo-rs.git", optional = true
 # Polkit CheckAuthorization over the system bus for the Sailfish OS save prompt.
 zbus = { version = "5.19", default-features = false, features = ["blocking-api", "async-io", "p2p"], optional = true }
 
+[target.'cfg(target_pointer_width = "64")'.dependencies]
+hardened-malloc-sys = { version = "16.0.2026071503", features = ["tiny"], optional = true }
+libc = { version = "0.2", optional = true }
+
 [build-dependencies]
 cpp_build = "0.5"
 walkdir = "2.5.0"
@@ -84,7 +88,7 @@ keepassrx = { path = ".", features = ["test-keyring"] }
 # Compile the GUI portion of the application (link QT etc). This is the shared
 # GUI code; the platform (Ubuntu Touch vs Sailfish OS) is selected by whether
 # `sailfish` is also enabled.
-gui = []
+gui = ["dep:hardened-malloc-sys", "dep:libc"]
 test-keyring = []
 # Native Sailfish OS build: Silica UI booted via sailo-rs. Implies `gui`.
 # Without this feature (plain `gui`), the Ubuntu Touch / Lomiri build is produced.

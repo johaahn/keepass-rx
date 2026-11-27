@@ -57,6 +57,8 @@ use crate::rx::closing::APP_CLOSING;
 
 #[cfg(feature = "gui")]
 mod actor;
+#[cfg(all(feature = "gui", target_pointer_width = "64"))]
+mod allocator;
 #[cfg(feature = "gui")]
 mod app;
 #[cfg(feature = "gui")]
@@ -374,6 +376,8 @@ fn harden_process_limits() {
     }
 
     info!("Memory lock policy: {:?}", lock_policy());
+    #[cfg(all(feature = "gui", target_pointer_width = "64"))]
+    info!("Memory allocator: {:?}", allocator::active());
 
     let no_core = Rlimit {
         current: Some(0),

@@ -1228,6 +1228,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "hardened-malloc-sys"
+version = "16.0.2026071503"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8a634cdd17eb2cea9e8ab0977f9b7401a5882db9fadb594d080bc67f230b6ec2"
+dependencies = [
+ "cc",
+]
+
+[[package]]
 name = "hashbrown"
 version = "0.15.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1605,6 +1614,7 @@ dependencies = [
  "enum_dispatch",
  "fuzzy-matcher",
  "gettext-rs",
+ "hardened-malloc-sys",
  "humanize-duration",
  "indexmap",
  "infer",
@@ -1612,6 +1622,7 @@ dependencies = [
  "keepass",
  "keepassrx",
  "keyring",
+ "libc",
  "libsodium-rs",
  "linux-keyutils",
  "log",

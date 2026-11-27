@@ -55,6 +55,13 @@ Page {
                 onClicked: SettingsBridge.lockWhenIdle = checked
             }
 
+            TextSwitch {
+                text: Tr.tr("Hardened Memory Allocator")
+                description: Tr.tr("Wipe freed memory and guard against memory bugs. Images may load a little slower. Takes effect after a restart.")
+                checked: SettingsBridge.hardenedAllocator
+                onClicked: SettingsBridge.hardenedAllocator = checked
+            }
+
             Item {
                 width: parent.width
                 height: Theme.paddingLarge

@@ -6,6 +6,12 @@ qt_version: "5.15"
 rust_channel: 1.91.0
 kill: keepassrx
 src_dir: keepass-rx
+env_vars:
+  GETTEXT_SYSTEM: "1"
+  CFLAGS_aarch64_unknown_linux_gnu: "-include ${ROOT}/keepass-rx/hardened-malloc.h"
+  CFLAGS_x86_64_unknown_linux_gnu: "-include ${ROOT}/keepass-rx/hardened-malloc.h"
+prebuild:
+  - 'tag=$(sha256sum ${ROOT}/keepass-rx/hardened-malloc.h | cut -c1-16); mkdir -p ${BUILD_DIR}; test "$(cat ${BUILD_DIR}/hardened-malloc.tag 2>/dev/null)" = $tag || { cargo +1.91.0 clean --release -p hardened-malloc-sys --target ${ARCH_RUST} --target-dir ${BUILD_DIR} && echo $tag > ${BUILD_DIR}/hardened-malloc.tag; }'
 test: 'cargo test --manifest-path "${ROOT}/Cargo.toml" --workspace'
 image_setup:
   run:

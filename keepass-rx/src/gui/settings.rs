@@ -1,5 +1,10 @@
+#[cfg(target_pointer_width = "64")]
+use log::warn;
 use qmetaobject::QObject;
 use qttypes::QSettings;
+
+#[cfg(target_pointer_width = "64")]
+use crate::allocator;
 
 #[cfg(feature = "sailfish")]
 use crate::crypto::EncryptedPassword;
@@ -25,6 +30,9 @@ pub struct SettingsBridge {
 
     pub lockWhenIdle: qt_property!(bool; READ get_lock_when_idle WRITE set_lock_when_idle NOTIFY lockWhenIdleChanged),
     pub lockWhenIdleChanged: qt_signal!(),
+
+    pub hardenedAllocator: qt_property!(bool; READ get_hardened_allocator WRITE set_hardened_allocator NOTIFY hardenedAllocatorChanged),
+    pub hardenedAllocatorChanged: qt_signal!(),
 }
 
 #[allow(non_snake_case, dead_code)]
@@ -69,6 +77,9 @@ impl Default for SettingsBridge {
 
             lockWhenIdle: false,
             lockWhenIdleChanged: Default::default(),
+
+            hardenedAllocator: false,
+            hardenedAllocatorChanged: Default::default(),
         }
     }
 }
@@ -149,4 +160,25 @@ impl SettingsBridge {
         self.set_bool("lockWhenIdle", value);
         self.lockWhenIdleChanged();
     }
+
+    #[cfg(target_pointer_width = "64")]
+    pub fn get_hardened_allocator(&self) -> bool {
+        allocator::configured()
+    }
+
+    #[cfg(not(target_pointer_width = "64"))]
+    pub fn get_hardened_allocator(&self) -> bool {
+        false
+    }
+
+    #[cfg(target_pointer_width = "64")]
+    pub fn set_hardened_allocator(&mut self, value: bool) {
+        if let Err(err) = allocator::set_configured(value) {
+            warn!("could not save the allocator setting: {err}");
+        }
+        self.hardenedAllocatorChanged();
+    }
+
+    #[cfg(not(target_pointer_width = "64"))]
+    pub fn set_hardened_allocator(&mut self, _value: bool) {}
 }

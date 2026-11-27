@@ -95,6 +95,21 @@ Page {
                     onCheckedChanged: SettingsBridge.searchType = checked ? 'Fuzzy' : 'CaseInsensitive';
                 }
             }
+
+            SettingsItem {
+                title: i18n.tr("Hardened Memory Allocator")
+                description: i18n.tr(
+                    "Wipe freed memory and guard against memory bugs. Images may load a little slower. Takes effect after a restart."
+                )
+                control: Switch {
+                    checked: SettingsBridge.hardenedAllocator
+                    onCheckedChanged: {
+                        if (checked != SettingsBridge.hardenedAllocator) {
+                            SettingsBridge.hardenedAllocator = checked;
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -73,7 +73,9 @@ export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-meego-linux-gnu-gcc
 export CC_aarch64_unknown_linux_gnu=aarch64-meego-linux-gnu-gcc
 export CXX_aarch64_unknown_linux_gnu=aarch64-meego-linux-gnu-g++
 export AR_aarch64_unknown_linux_gnu=aarch64-meego-linux-gnu-ar
-export CFLAGS_aarch64_unknown_linux_gnu="$CFLAGS -march=armv8-a+crypto+fp+simd+sha2"
+HARDENED_MALLOC_H=$PWD/keepass-rx/hardened-malloc.h
+HARDENED_MALLOC_TAG=$(sha256sum "$HARDENED_MALLOC_H" | cut -c1-16)
+export CFLAGS_aarch64_unknown_linux_gnu="$CFLAGS -march=armv8-a+crypto+fp+simd+sha2 -include $HARDENED_MALLOC_H -DKEEPASSRX_HARDENED_MALLOC_TAG=$HARDENED_MALLOC_TAG"
 %endif
 %ifarch %ix86
 export SB2_RUST_TARGET_TRIPLE=i686-unknown-linux-gnu

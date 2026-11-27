@@ -114,13 +114,17 @@ impl Default for KeyFile {
 
 static KEY_FILE_COUNTER: AtomicU64 = AtomicU64::new(1);
 
+type ViewCallback = Box<dyn FnOnce(&VirtualHierarchyType)>;
+type QueuedFills = Rc<RefCell<Vec<(Rc<VirtualHierarchyType>, ViewCallback)>>>;
+
 #[derive(QObject, Default)]
 #[allow(dead_code)]
 pub struct AppState {
     base: qt_base_class!(trait QObject),
     settings: Option<Rc<QObjectBox<SettingsBridge>>>,
 
-    deferred_views: RefCell<Vec<Box<dyn FnOnce(&VirtualHierarchyType)>>>,
+    deferred_views: RefCell<Vec<ViewCallback>>,
+    queued_fills: QueuedFills,
 
     current_view: Option<Rc<VirtualHierarchyType>>,
     curr_db: Option<Rc<Zeroizing<RxDatabase>>>,
@@ -219,9 +223,7 @@ impl AppState {
     pub fn set_curr_view(&mut self, view: VirtualHierarchyType) {
         let view = Rc::new(view);
         for cb in self.deferred_views.take() {
-            let view_ref = view.clone();
-            // Reason for actix::spawn, see below
-            actix::spawn(async move { cb(view_ref.as_ref()) });
+            self.queue_fill(view.clone(), cb);
         }
 
         self.current_view.replace(view);
@@ -233,9 +235,23 @@ impl AppState {
         // panic. Spawn the closure on actix, this ensures the borrow
         // of self will have ended.
         if let Some(view) = self.curr_view() {
-            actix::spawn(async move { cb(view.as_ref()) });
+            self.queue_fill(view, Box::new(cb));
         } else {
             self.deferred_views.borrow_mut().push(Box::new(cb));
+        }
+    }
+
+    fn queue_fill(&self, view: Rc<VirtualHierarchyType>, cb: ViewCallback) {
+        let mut queued = self.queued_fills.borrow_mut();
+        let first = queued.is_empty();
+        queued.push((view, cb));
+        if first {
+            let queued_fills = self.queued_fills.clone();
+            actix::spawn(async move {
+                for (view, cb) in queued_fills.take() {
+                    cb(view.as_ref());
+                }
+            });
         }
     }
 }

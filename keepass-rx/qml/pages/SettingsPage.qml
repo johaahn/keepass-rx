@@ -36,7 +36,7 @@ Page {
 
             SettingsItem {
                 // TRANSLATORS: Enable or disable easy (and secure!) locking and unlocking of the database.
-                title: i18n.tr("Enable database locking")
+                title: i18n.tr("Enable Database Locking")
                 // TRANSLATORS: Description of the database locking setting.
                 description: i18n.tr(
                     "Securely lock and unlock database with a short passcode. Requires restart to take effect."
@@ -69,7 +69,7 @@ Page {
 
             SettingsItem {
                 // TRANSLATORS: Whether or not to show the recycling bin group of deleted password entries.
-                title: i18n.tr('Show the "Recycle bin" group')
+                title: i18n.tr('Show the "Recycle Bin" Group')
                 // TRANSLATORS: Description of the "Show recycle bin group" setting.
                 description: i18n.tr('This group contains all the deleted entries')
                 control: Switch {

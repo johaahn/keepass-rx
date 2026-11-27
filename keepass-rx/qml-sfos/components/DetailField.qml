@@ -58,8 +58,8 @@ ListItem {
             verticalCenter: parent.verticalCenter
         }
         source: field.revealed
-            ? "image://theme/icon-m-hide-password"
-            : "image://theme/icon-m-show-password"
+            ? "image://theme/icon-splus-hide-password"
+            : "image://theme/icon-splus-show-password"
     }
 
     menu: ContextMenu {

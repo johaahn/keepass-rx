@@ -1,4 +1,4 @@
-use paste::paste;
+use std::mem::take;
 use std::str::FromStr;
 
 use actor_macro::observing_model;
@@ -84,44 +84,30 @@ fn entry_count_len(len: usize) -> QString {
 #[allow(dead_code, non_snake_case)]
 pub struct RxListItem {
     pub(super) base: qt_base_class!(trait QObject),
-    pub(super) itemType: qt_property!(RxItemType; NOTIFY itemTypeChanged),
+    pub(super) itemType: qt_property!(RxItemType; NOTIFY itemChanged),
 
-    pub(super) entryUuid: qt_property!(QString; NOTIFY entryUuidChanged),
-    pub(super) parentUuid: qt_property!(QString; NOTIFY parentUuidChanged),
-    pub(super) title: qt_property!(QString; NOTIFY titleChanged),
-    pub(super) subtitle: qt_property!(QString; NOTIFY subtitleChanged),
-    pub(super) description: qt_property!(QString; NOTIFY descriptionChanged),
-    pub(super) url: qt_property!(QString; NOTIFY urlChanged),
-    pub(super) iconPath: qt_property!(QString; NOTIFY iconPathChanged),
-    pub(super) iconBuiltin: qt_property!(bool; NOTIFY iconBuiltinChanged),
-    pub(super) attachmentCount: qt_property!(i32; NOTIFY attachmentCountChanged),
+    pub(super) entryUuid: qt_property!(QString; NOTIFY itemChanged),
+    pub(super) parentUuid: qt_property!(QString; NOTIFY itemChanged),
+    pub(super) title: qt_property!(QString; NOTIFY itemChanged),
+    pub(super) subtitle: qt_property!(QString; NOTIFY itemChanged),
+    pub(super) description: qt_property!(QString; NOTIFY itemChanged),
+    pub(super) url: qt_property!(QString; NOTIFY itemChanged),
+    pub(super) iconPath: qt_property!(QString; NOTIFY itemChanged),
+    pub(super) iconBuiltin: qt_property!(bool; NOTIFY itemChanged),
+    pub(super) attachmentCount: qt_property!(i32; NOTIFY itemChanged),
 
     // A "feature" that changes how the item is rendered. For example,
     // displaying a 2FA code.
-    pub(super) feature: qt_property!(RxViewFeature; NOTIFY featureChanged),
+    pub(super) feature: qt_property!(RxViewFeature; NOTIFY itemChanged),
 
     // Mostly for password entries. Does not really apply to groups.
-    pub(super) hasUsername: qt_property!(bool; NOTIFY hasUsernameChanged),
-    pub(super) hasPassword: qt_property!(bool; NOTIFY hasPasswordChanged),
-    pub(super) hasURL: qt_property!(bool; NOTIFY hasURLChanged),
-    pub(super) hasTOTP: qt_property!(bool; NOTIFY hasTOTPChanged),
+    pub(super) hasUsername: qt_property!(bool; NOTIFY itemChanged),
+    pub(super) hasPassword: qt_property!(bool; NOTIFY itemChanged),
+    pub(super) hasURL: qt_property!(bool; NOTIFY itemChanged),
+    pub(super) hasTOTP: qt_property!(bool; NOTIFY itemChanged),
 
-    // Signals boilerplate
-    itemTypeChanged: qt_signal!(),
-    entryUuidChanged: qt_signal!(),
-    parentUuidChanged: qt_signal!(),
-    titleChanged: qt_signal!(),
-    subtitleChanged: qt_signal!(),
-    descriptionChanged: qt_signal!(),
-    urlChanged: qt_signal!(),
-    iconPathChanged: qt_signal!(),
-    iconBuiltinChanged: qt_signal!(),
-    attachmentCountChanged: qt_signal!(),
-    featureChanged: qt_signal!(),
-    hasUsernameChanged: qt_signal!(),
-    hasPasswordChanged: qt_signal!(),
-    hasURLChanged: qt_signal!(),
-    hasTOTPChanged: qt_signal!(),
+    itemChanged: qt_signal!(),
+    pending_change: bool,
 }
 
 trait InitFrom<T> {
@@ -132,9 +118,7 @@ macro_rules! set_value {
     ($self:ident.$field:ident, $value:expr) => {
         if $self.$field != $value {
             $self.$field = $value;
-            paste! {
-                $self.[<$field Changed>]();
-            }
+            $self.pending_change = true;
         }
     };
 }
@@ -155,12 +139,15 @@ impl RxListItem {
             if view.feature() != self.feature {
                 // warn!("Disabling unavailable UI feature in current container");
                 self.feature = RxViewFeature::None;
-                self.featureChanged();
+                self.pending_change = true;
             }
             Ok(())
         };
 
         loader().expect("Unable to load from current view");
+        if take(&mut self.pending_change) {
+            self.itemChanged();
+        }
     }
 
     pub fn init_from_virtual_root(&mut self, root_name: &str) {

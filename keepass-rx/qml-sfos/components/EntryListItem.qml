@@ -20,6 +20,7 @@ ListItem {
     signal entryActivated()
 
     contentHeight: Theme.itemSizeMedium
+    contentItem.opacity: theEntry.ready ? 1 : 0
 
     RxListItem {
         id: theEntry
@@ -27,18 +28,23 @@ ListItem {
         app: AppState
     }
 
-    RxUiEntry {
-        id: totpEntry
-        entryUuid: uuid
-        app: AppState
+    Loader {
+        id: totpLoader
+        active: entryItem.isTotp
+        sourceComponent: Component {
+            RxUiEntry {
+                entryUuid: uuid
+                app: AppState
+            }
+        }
     }
 
     Timer {
         interval: 1000
         repeat: true
-        running: entryItem.isTotp && uuid.length > 0
+        running: totpLoader.item !== null && uuid.length > 0
         triggeredOnStart: true
-        onTriggered: if (entryItem.isTotp) totpEntry.updateTotp()
+        onTriggered: totpLoader.item.updateTotp()
     }
 
     function isGrouping() {
@@ -73,6 +79,8 @@ ListItem {
         x: Theme.horizontalPageMargin
         width: Theme.iconSizeMedium
         height: Theme.iconSizeMedium
+        sourceSize.width: width
+        sourceSize.height: height
         fillMode: Image.PreserveAspectFit
         source: theEntry.ready ? resolveImagePath()
                                : Qt.resolvedUrl("../../assets/placeholder.png")
@@ -91,7 +99,7 @@ ListItem {
         Label {
             width: parent.width
             horizontalAlignment: Text.AlignRight
-            text: totpEntry.currentTotp
+            text: totpLoader.item ? totpLoader.item.currentTotp : ""
             color: Theme.highlightColor
             font.pixelSize: Theme.fontSizeLarge
         }
@@ -100,7 +108,7 @@ ListItem {
             width: parent.width
             horizontalAlignment: Text.AlignRight
             visible: text.length > 0
-            text: totpEntry.currentTotpValidFor
+            text: totpLoader.item ? totpLoader.item.currentTotpValidFor : ""
             color: Theme.secondaryColor
             font.pixelSize: Theme.fontSizeExtraSmall
         }

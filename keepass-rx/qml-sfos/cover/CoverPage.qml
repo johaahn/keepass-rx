@@ -115,6 +115,8 @@ CoverBackground {
             anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width * 0.5
             height: width
+            sourceSize.width: width
+            sourceSize.height: height
             fillMode: Image.PreserveAspectFit
             source: cover.inEntry && cover.entryIcon.length > 0
                 ? cover.entryIcon

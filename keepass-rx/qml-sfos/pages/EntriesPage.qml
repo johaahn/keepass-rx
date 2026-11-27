@@ -20,6 +20,7 @@ Page {
     property bool isViewRoot: containerUuid.length === 0
     property string searchTerm: ""
     property bool loaded: false
+    property string publicDatabaseName: ""
 
     function currentUuid() {
         return isViewRoot ? containerStack.containerUuid : containerUuid;
@@ -31,12 +32,30 @@ Page {
         case "Totp": return Tr.tr("2FA codes");
         case "Tags": return Tr.tr("Tags");
         case "SavedSearches": return Tr.tr("Saved searches");
-        default: return "KeePassRX";
+        default: return Tr.tr("All entries");
         }
     }
 
+    function databaseLabel() {
+        return SettingsBridge.showAccents && publicDatabaseName.length > 0
+            ? publicDatabaseName
+            : "KeePassRX";
+    }
+
     function headerTitle() {
-        return isViewRoot ? viewLabel(keepassrx.viewMode) : containerTitle;
+        return isViewRoot ? databaseLabel() : containerTitle;
+    }
+
+    function sameEntries(entries) {
+        if (entriesModel.count !== entries.length) {
+            return false;
+        }
+        for (var i = 0; i < entries.length; i++) {
+            if (entriesModel.get(i).entryUuid !== entries[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     function loadEntries() {
@@ -63,8 +82,13 @@ Page {
     Component.onCompleted: keepassrx.getMetadata()
 
     onStatusChanged: {
-        if (status === PageStatus.Active) {
+        if (status === PageStatus.Active && isViewRoot && !canNavigateForward) {
+            pageStack.pushAttached(Qt.resolvedUrl("ViewModePage.qml"));
+        }
+        if (status === PageStatus.Activating) {
             loadEntries();
+        }
+        if (status === PageStatus.Active) {
             applicationWindow.coverEntryUuid = "";
             applicationWindow.coverEntryTitle = "";
             applicationWindow.coverEntryIcon = "";
@@ -78,8 +102,17 @@ Page {
     Connections {
         target: keepassrx
 
+        onMetadataReceived: {
+            entriesPage.publicDatabaseName = metadata.publicName ? metadata.publicName : "";
+        }
+
         onEntriesReceived: {
-            if (entriesPage.status !== PageStatus.Active) {
+            if (entriesPage.status !== PageStatus.Active
+                    && entriesPage.status !== PageStatus.Activating) {
+                return;
+            }
+            if (entriesPage.sameEntries(entries)) {
+                entriesPage.loaded = true;
                 return;
             }
             entriesModel.clear();
@@ -141,6 +174,8 @@ Page {
             anchors { top: parent.top; left: parent.left }
             width: parent.width
             title: entriesPage.headerTitle()
+            titleColor: Theme.highlightColor
+            description: entriesPage.isViewRoot ? entriesPage.viewLabel(keepassrx.viewMode) : ""
         }
 
         SearchField {
@@ -183,10 +218,6 @@ Page {
             MenuItem {
                 text: Tr.tr("Settings")
                 onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
-            }
-            MenuItem {
-                text: Tr.tr("Change View")
-                onClicked: pageStack.push(Qt.resolvedUrl("ViewModePage.qml"))
             }
         }
 

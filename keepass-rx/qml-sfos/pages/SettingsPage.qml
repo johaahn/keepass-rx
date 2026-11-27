@@ -27,21 +27,21 @@ Page {
             }
 
             TextSwitch {
-                text: Tr.tr("Database accent colors")
+                text: Tr.tr("Database Accent Colors")
                 description: Tr.tr("Tint entries with the color assigned to them in the database.")
                 checked: SettingsBridge.showAccents
                 onClicked: SettingsBridge.showAccents = checked
             }
 
             TextSwitch {
-                text: Tr.tr("Show recycle bin")
+                text: Tr.tr("Show Recycle Bin")
                 description: Tr.tr("Include entries from the database's recycle bin group while browsing.")
                 checked: SettingsBridge.showRecycleBin
                 onClicked: SettingsBridge.showRecycleBin = checked
             }
 
             TextSwitch {
-                text: Tr.tr("Enable database locking")
+                text: Tr.tr("Enable Database Locking")
                 visible: keepassrx.saveAuthMethod === "system"
                 description: Tr.tr("Offer a Lock action that locks the database with your master password instead of closing it.")
                 checked: SettingsBridge.databaseLocking
@@ -49,7 +49,7 @@ Page {
             }
 
             TextSwitch {
-                text: Tr.tr("Lock or close when idle")
+                text: Tr.tr("Lock or Close When Idle")
                 description: Tr.tr("Lock the open database (or close it, when locking is disabled) 30 seconds after the app is minimized.")
                 checked: SettingsBridge.lockWhenIdle
                 onClicked: SettingsBridge.lockWhenIdle = checked

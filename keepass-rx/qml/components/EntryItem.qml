@@ -10,6 +10,7 @@ ListItem {
     property bool passwordVisible: false
     height: units.gu(10)
     id: entireItem
+    contentItem.opacity: theEntry.ready ? 1 : 0
 
     RxListItem {
         id: theEntry
@@ -190,6 +191,8 @@ ListItem {
                         source: '../../assets/placeholder.png'
                         width: units.gu(2.75)
                         height: units.gu(2.75)
+                        sourceSize.width: width
+                        sourceSize.height: height
                         y: parent.height - height * 1.5
                         x: parent.width - width / 1.25
                     }
@@ -212,6 +215,8 @@ ListItem {
                         fillMode: Image.PreserveAspectFit
                         source: '../../assets/placeholder.png'
                         width: units.gu(5)
+                        sourceSize.width: width
+                        sourceSize.height: height
                         height: parent.height
                         y: parent.height / 2 - height / 2
                     }

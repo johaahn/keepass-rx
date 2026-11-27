@@ -32,7 +32,7 @@ Page {
             width: parent.width
 
             PageHeader {
-                title: Tr.tr("Change View")
+                title: Tr.tr("Current View")
             }
 
             Repeater {
@@ -44,7 +44,10 @@ Page {
 
                     property bool current: modelData.mode === keepassrx.viewMode
 
-                    onClicked: keepassrx.viewMode = modelData.mode
+                    onClicked: {
+                        keepassrx.viewMode = modelData.mode;
+                        pageStack.navigateBack();
+                    }
 
                     Column {
                         anchors {
@@ -69,15 +72,17 @@ Page {
                         }
                     }
 
-                    Image {
+                    GlassItem {
                         id: check
                         visible: item.current
+                        width: Theme.itemSizeExtraSmall
+                        height: width
                         anchors {
                             right: parent.right
                             rightMargin: Theme.horizontalPageMargin
                             verticalCenter: parent.verticalCenter
                         }
-                        source: "image://theme/icon-m-accept"
+                        color: Theme.highlightColor
                     }
                 }
             }

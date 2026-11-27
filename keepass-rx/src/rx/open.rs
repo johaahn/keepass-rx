@@ -16,13 +16,16 @@ pub fn read_database(path: &Path, key: DatabaseKey) -> Result<(Database, RxSourc
     };
     Ok((db, source))
 }
-pub fn build_rx_database(db: Database, source: RxSourceFile) -> Result<RxDatabase> {
-    let rx_db = RxDatabase::new(Zeroizing::new(ZeroableDatabase(db)))?;
+pub fn build_rx_database(
+    db: Zeroizing<ZeroableDatabase>,
+    source: RxSourceFile,
+) -> Result<RxDatabase> {
+    let rx_db = RxDatabase::new(db)?;
     Ok(rx_db.with_source(source))
 }
 
 pub fn open_database(path: &Path, key: DatabaseKey) -> Result<(RxDatabase, RxSourceFile)> {
     let (db, source) = read_database(path, key)?;
-    let rx_db = build_rx_database(db, source.clone())?;
+    let rx_db = build_rx_database(Zeroizing::new(ZeroableDatabase(db)), source.clone())?;
     Ok((rx_db, source))
 }

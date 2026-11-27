@@ -1,17 +1,24 @@
 use std::collections::HashMap;
 
 use uuid::Uuid;
-use zeroize::Zeroizing;
+
+use crate::crypto::locking::SecretText;
 
 use super::rx_edit::{EditError, EditProblem, RxEntryEdit, RxFieldEdit};
 use super::rx_entry::{RxEntry, RxFieldSource};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum EditValue {
-    Text(String),
+    Text(SecretText),
     Flag(bool),
     List(Vec<EditValue>),
     Map(HashMap<String, EditValue>),
+}
+
+impl EditValue {
+    pub fn text(value: impl Into<String>) -> Self {
+        Self::Text(SecretText::new(value.into()))
+    }
 }
 
 pub type EditValues = HashMap<String, EditValue>;
@@ -20,7 +27,7 @@ fn invalid(reason: String) -> EditError {
     EditError::Invalid(reason)
 }
 
-fn text(values: &EditValues, key: &str) -> Result<String, EditError> {
+fn text(values: &EditValues, key: &str) -> Result<SecretText, EditError> {
     match values.get(key) {
         Some(EditValue::Text(value)) => Ok(value.clone()),
         _ => Err(invalid(format!("missing text value {key:?}"))),
@@ -45,9 +52,9 @@ fn field_edit(item: &EditValue) -> Result<RxFieldEdit, EditError> {
         _ => return Err(invalid("missing flag \"protected\"".into())),
     };
     Ok(RxFieldEdit {
-        original_name: Some(original).filter(|name| !name.is_empty()),
-        name: text(map, "name")?,
-        value: Zeroizing::new(text(map, "value")?),
+        original_name: Some(original.to_string()).filter(|name| !name.is_empty()),
+        name: text(map, "name")?.to_string(),
+        value: text(map, "value")?,
         protected,
     })
 }
@@ -72,7 +79,7 @@ impl RxEntryEdit {
         let removed_fields = list(values, "removedFields")?
             .iter()
             .map(|item| match item {
-                EditValue::Text(name) => Ok(name.clone()),
+                EditValue::Text(name) => Ok(name.to_string()),
                 _ => Err(invalid("removed field is not text".into())),
             })
             .collect::<Result<Vec<_>, _>>()?;
@@ -81,11 +88,11 @@ impl RxEntryEdit {
         let custom_fields = rows.into_iter().map(|(_, field)| field).collect();
         let edit = Self {
             uuid,
-            title: Zeroizing::new(text(values, "title")?),
-            username: Zeroizing::new(text(values, "username")?),
-            password: Zeroizing::new(text(values, "password")?),
-            url: Zeroizing::new(text(values, "url")?),
-            notes: Zeroizing::new(text(values, "notes")?),
+            title: text(values, "title")?,
+            username: text(values, "username")?,
+            password: text(values, "password")?,
+            url: text(values, "url")?,
+            notes: text(values, "notes")?,
             custom_fields,
             removed_fields,
         };
@@ -97,7 +104,7 @@ impl RxEntryEdit {
     }
 
     pub fn values_over(&self, mut values: EditValues) -> EditValues {
-        let text = |value: &str| EditValue::Text(value.to_string());
+        let text = |value: &str| EditValue::text(value);
         for (key, value) in [
             ("title", &self.title),
             ("username", &self.username),
@@ -159,7 +166,7 @@ pub fn validate_edit_values(values: &EditValues) -> Vec<EditProblem> {
 
 fn value_text(value: Option<super::rx_entry::RxValueKeyRef<'_>>) -> EditValue {
     let text = value.and_then(|v| v.value()).unwrap_or_default();
-    EditValue::Text(text.to_string())
+    EditValue::Text(SecretText::new(text.to_string()))
 }
 
 impl RxEntry {
@@ -170,7 +177,7 @@ impl RxEntry {
             .map(|(name, value, source)| {
                 let protected = value.is_hidden_by_default();
                 EditValue::Map(HashMap::from([
-                    ("name".to_string(), EditValue::Text(name.clone())),
+                    ("name".to_string(), EditValue::text(name.as_str())),
                     ("value".to_string(), value_text(Some(value))),
                     ("protected".to_string(), EditValue::Flag(protected)),
                     (
@@ -182,7 +189,7 @@ impl RxEntry {
             .collect();
 
         HashMap::from([
-            ("uuid".to_string(), EditValue::Text(self.uuid.to_string())),
+            ("uuid".to_string(), EditValue::text(self.uuid.to_string())),
             ("title".to_string(), value_text(self.title())),
             ("username".to_string(), value_text(self.username())),
             ("password".to_string(), value_text(self.password())),
@@ -198,7 +205,7 @@ mod tests {
     use super::*;
 
     fn t(value: &str) -> EditValue {
-        EditValue::Text(value.to_string())
+        EditValue::text(value)
     }
 
     fn field(original: &str, name: &str, value: &str, protected: bool) -> EditValue {

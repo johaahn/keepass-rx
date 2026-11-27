@@ -12,13 +12,14 @@ actor-macro = { path = "../actor-macro" }
 mirror_from_macro = { path = "../mirror_from_macro" }
 qmetaobject = { version = "0.2.9" }
 chrono = "0.4"
-rustix = { version = "1", features = ["fs"] }
+rustix = { version = "1", features = ["fs", "process"] }
 tempfile = "3"
 gettext-rs = "0.7"
 cstr = "0.2.11"
 cpp = "0.5"
 dirs = "6.0.0"
 anyhow = "1.0.100"
+bytesize = "2.4.2"
 keepass = { version = "0.17.0", features = ["totp", "serialization", "save_kdbx4"] }
 atomic-write-file = "0.3.1"
 thiserror = "2"

@@ -58,20 +58,20 @@ impl Vault {
     fn staged_edit(&self) -> (StagedEdit, RxSourceFile) {
         let (db, src) = self.open();
         let entry = db.iter_all_entries().next().expect("an entry");
-        let text = |key| Zeroizing::new(entry.get(key).unwrap_or_default().to_string());
+        let text = |key| SecretText::new(entry.get(key).unwrap_or_default().to_string());
         let edit = RxEntryEdit {
             uuid: entry.id().uuid(),
             title: text("Title"),
             username: text("UserName"),
-            password: Zeroizing::new(NEW_PASSWORD.to_string()),
+            password: SecretText::new(NEW_PASSWORD.to_string()),
             url: text("URL"),
-            notes: Zeroizing::new(NEW_NOTES.to_string()),
+            notes: SecretText::new(NEW_NOTES.to_string()),
             custom_fields: vec![],
             removed_fields: vec![],
         };
         let base = snapshot(&HashMap::from([(
             "password".to_string(),
-            EditValue::Text(entry.get_password().unwrap_or_default().to_string()),
+            EditValue::text(entry.get_password().unwrap_or_default()),
         )]));
         let staged = StagedEdit {
             edit,
@@ -199,7 +199,7 @@ fn entry_change_is_detected_against_the_base() {
     let other_sha = [0u8; 32];
     let changed = snapshot(&HashMap::from([(
         "password".to_string(),
-        EditValue::Text("changed elsewhere".into()),
+        EditValue::text("changed elsewhere"),
     )]));
     assert!(!staged.entry_changed(&src.sha256, None));
     assert!(!staged.entry_changed(&other_sha, Some(&staged.base)));
@@ -262,7 +262,7 @@ fn staging_key_is_reused_and_needed() {
         .expect("read")
         .expect("present");
     assert!(read.draft);
-    let err = read_staged(&vault.staged(), &StagingKey::generate())
+    let err = read_staged(&vault.staged(), &StagingKey::generate().expect("key"))
         .err()
         .expect("error");
     assert!(matches!(err, StageError::Decrypt), "{err:?}");
@@ -296,8 +296,8 @@ fn renewed_staging_key_replaces_the_old_one() {
 
 #[test]
 fn renewal_moves_through_pending_to_renewed() {
-    let old = StagingKey::generate();
-    let next = StagingKey::generate();
+    let old = StagingKey::generate().expect("key");
+    let next = StagingKey::generate().expect("key");
 
     let mut staging = Staging::Loaded(old.clone());
     assert!(staging.start_renewal());
@@ -321,7 +321,7 @@ fn renewal_moves_through_pending_to_renewed() {
 
 #[test]
 fn changes_name_the_edited_fields() {
-    let text = |value: &str| EditValue::Text(value.to_string());
+    let text = |value: &str| EditValue::text(value);
     let field = |name: &str, value: &str| {
         EditValue::Map(HashMap::from([
             ("name".to_string(), text(name)),
@@ -347,17 +347,17 @@ fn changes_name_the_edited_fields() {
     let custom = |original: Option<&str>, name: &str, value: &str| RxFieldEdit {
         original_name: original.map(str::to_string),
         name: name.to_string(),
-        value: Zeroizing::new(value.to_string()),
+        value: SecretText::new(value.to_string()),
         protected: false,
     };
     let staged = StagedEdit {
         edit: RxEntryEdit {
             uuid: Uuid::nil(),
-            title: Zeroizing::new("Mail".into()),
-            username: Zeroizing::new("me".into()),
-            password: Zeroizing::new("new".into()),
-            url: Zeroizing::new(String::new()),
-            notes: Zeroizing::new("note".into()),
+            title: SecretText::new("Mail".into()),
+            username: SecretText::new("me".into()),
+            password: SecretText::new("new".into()),
+            url: SecretText::new(String::new()),
+            notes: SecretText::new("note".into()),
             custom_fields: vec![
                 custom(Some("PIN"), "Code", "1234"),
                 custom(Some("Kept"), "Kept", "same"),

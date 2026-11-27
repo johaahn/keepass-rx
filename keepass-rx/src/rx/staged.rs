@@ -1,4 +1,5 @@
 use std::collections::BTreeMap;
+use std::fmt;
 use std::fs;
 use std::io::{self, Write};
 use std::mem::take;
@@ -11,18 +12,74 @@ use keepass::config::{DatabaseConfig, DatabaseVersion};
 use keepass::db::fields;
 use keepass::error::{DatabaseKeyError, DatabaseOpenError, DatabaseSaveError};
 use keepass::{Database, DatabaseKey};
-use libsodium_rs::crypto_secretbox::{self, NONCEBYTES, Nonce};
+use libsodium_rs::crypto_secretbox::{self, Key as SealingKey, NONCEBYTES, Nonce};
+use libsodium_rs::utils::{SecureVec, memcmp, vec_utils};
 use log::warn;
 use serde::{Deserialize, Serialize};
 use zeroize::Zeroizing;
 
+use crate::crypto::constant_time_eq;
+use crate::crypto::locking::SecretText;
+
+use super::ZeroableDatabase;
 use super::rx_edit::{RxEdit, RxEntryEdit, RxFieldEdit};
 use super::rx_edit_values::{EditValue, EditValues};
 use super::save::{RxSourceFile, SaveError, SaveHooks, SaveOutcome, save_database};
 
-pub use libsodium_rs::crypto_secretbox::Key as StagingKey;
+#[derive(Clone)]
+pub struct StagingKey(SecureVec<u8>);
 
-pub type EntrySnapshot = BTreeMap<String, Zeroizing<String>>;
+unsafe impl Send for StagingKey {}
+
+impl PartialEq for StagingKey {
+    fn eq(&self, other: &Self) -> bool {
+        memcmp(&self.0, &other.0)
+    }
+}
+
+impl fmt::Debug for StagingKey {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str("StagingKey(..)")
+    }
+}
+
+impl StagingKey {
+    pub fn generate() -> Result<Self, StageError> {
+        Self::locked(SealingKey::generate().as_bytes())
+    }
+
+    pub fn from_bytes(bytes: &[u8]) -> Result<Self, StageError> {
+        SealingKey::from_bytes(bytes).map_err(|_| StageError::MissingKey)?;
+        Self::locked(bytes)
+    }
+
+    fn locked(bytes: &[u8]) -> Result<Self, StageError> {
+        let mut locked = vec_utils::secure_vec::<u8>(bytes.len())?;
+        locked.copy_from_slice(bytes);
+        Ok(Self(locked))
+    }
+
+    pub fn as_bytes(&self) -> &[u8] {
+        &self.0
+    }
+
+    fn sealing_key(&self) -> Result<SealingKey, StageError> {
+        SealingKey::from_bytes(&self.0).map_err(|_| StageError::MissingKey)
+    }
+}
+
+fn snapshots_equal(left: &EntrySnapshot, right: &EntrySnapshot) -> bool {
+    left.len() == right.len()
+        && left.iter().zip(right).fold(
+            true,
+            |equal, ((left_key, left_value), (right_key, right_value))| {
+                let same = (left_key == right_key) & constant_time_eq(left_value, right_value);
+                equal & same
+            },
+        )
+}
+
+pub type EntrySnapshot = BTreeMap<String, SecretText>;
 
 #[derive(Default)]
 pub enum Staging {
@@ -128,7 +185,8 @@ pub struct StagedChange {
 
 impl StagedEdit {
     pub fn entry_changed(&self, sha256: &[u8; 32], current: Option<&EntrySnapshot>) -> bool {
-        *sha256 != self.base_sha256 && current != Some(&self.base)
+        *sha256 != self.base_sha256
+            && !current.is_some_and(|current| snapshots_equal(current, &self.base))
     }
 
     pub fn changes(&self) -> Vec<StagedChange> {
@@ -141,7 +199,7 @@ impl StagedEdit {
         ];
         let fields = standard.into_iter().filter_map(|(key, value)| {
             let base = self.base.get(key).map_or("", |base| base.as_str());
-            (base != value.as_str()).then(|| StagedChange {
+            (!constant_time_eq(base, value)).then(|| StagedChange {
                 name: key.to_string(),
                 custom: false,
                 kind: ChangeKind::between(base, value),
@@ -191,7 +249,8 @@ impl StagedEdit {
             || self
                 .base_custom_field(original)
                 .is_none_or(|(value, protected)| {
-                    value != field.value.as_str() || protected != field.protected.to_string()
+                    !constant_time_eq(value, &field.value)
+                        || protected != field.protected.to_string()
                 })
     }
 }
@@ -217,10 +276,10 @@ pub enum StageError {
 fn flatten(key: String, value: &EditValue, out: &mut EntrySnapshot) {
     match value {
         EditValue::Text(text) => {
-            out.insert(key, Zeroizing::new(text.clone()));
+            out.insert(key, text.clone());
         }
         EditValue::Flag(flag) => {
-            out.insert(key, Zeroizing::new(flag.to_string()));
+            out.insert(key, SecretText::new(flag.to_string()));
         }
         EditValue::List(items) => {
             for (index, item) in items.iter().enumerate() {
@@ -266,7 +325,7 @@ fn write_secret(
     secret: &str,
     config: &DatabaseConfig,
 ) -> Result<(), StageError> {
-    let mut db = Database::with_config(config.clone());
+    let mut db = Zeroizing::new(ZeroableDatabase(Database::with_config(config.clone())));
     db.config.version = DatabaseVersion::KDB4(1);
     db.root_mut().add_entry().edit(|entry| {
         entry.set_protected(fields::PASSWORD, secret);
@@ -284,10 +343,12 @@ fn read_secret(
     let Some(bytes) = read_private(path)? else {
         return Ok(None);
     };
-    let db = Database::parse(&bytes, key).map_err(|err| match err {
-        DatabaseOpenError::Key(DatabaseKeyError::IncorrectKey) => StageError::Decrypt,
-        other => StageError::Open(other),
-    })?;
+    let db = Zeroizing::new(ZeroableDatabase(Database::parse(&bytes, key).map_err(
+        |err| match err {
+            DatabaseOpenError::Key(DatabaseKeyError::IncorrectKey) => StageError::Decrypt,
+            other => StageError::Open(other),
+        },
+    )?));
     let entry = db.iter_all_entries().next().ok_or(StageError::Empty)?;
     let secret = entry.get(fields::PASSWORD).ok_or(StageError::Empty)?;
     Ok(Some(Zeroizing::new(secret.to_string())))
@@ -310,7 +371,7 @@ pub fn open_staging_key(
                     .decode(encoded.as_bytes())
                     .map_err(|_| StageError::MissingKey)?,
             );
-            return StagingKey::from_bytes(&bytes).map_err(|_| StageError::MissingKey);
+            return StagingKey::from_bytes(&bytes);
         }
         Ok(None) if staged.exists() => return Err(StageError::MissingKey),
         Err(err) if staged.exists() => return Err(err),
@@ -325,7 +386,7 @@ pub fn write_staging_key(
     key: DatabaseKey,
     config: &DatabaseConfig,
 ) -> Result<StagingKey, StageError> {
-    let staging = StagingKey::generate();
+    let staging = StagingKey::generate()?;
     let encoded = Zeroizing::new(BASE64_STANDARD.encode(staging.as_bytes()));
     write_secret(path, key, &encoded, config)?;
     Ok(staging)
@@ -351,7 +412,7 @@ pub fn write_staged(
     let json = Zeroizing::new(serde_json::to_vec(staged)?);
     let nonce = Nonce::generate();
     let mut bytes = Zeroizing::new(nonce.as_bytes().to_vec());
-    bytes.extend(crypto_secretbox::seal(&json, &nonce, key));
+    bytes.extend(crypto_secretbox::seal(&json, &nonce, &key.sealing_key()?));
     Ok(write_private(path, &bytes)?)
 }
 
@@ -365,7 +426,8 @@ pub fn read_staged(path: &Path, key: &StagingKey) -> Result<Option<StagedEdit>, 
     let (nonce, sealed) = bytes.split_at(NONCEBYTES);
     let nonce = Nonce::try_from_slice(nonce).map_err(|_| StageError::Decrypt)?;
     let json = Zeroizing::new(
-        crypto_secretbox::open(sealed, &nonce, key).map_err(|_| StageError::Decrypt)?,
+        crypto_secretbox::open(sealed, &nonce, &key.sealing_key()?)
+            .map_err(|_| StageError::Decrypt)?,
     );
     Ok(Some(serde_json::from_slice(&json)?))
 }

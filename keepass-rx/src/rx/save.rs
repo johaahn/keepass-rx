@@ -16,6 +16,7 @@ use std::path::{Path, PathBuf};
 use tempfile::TempPath;
 use zeroize::Zeroizing;
 
+use super::ZeroableDatabase;
 use super::staged::StageError;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -94,7 +95,7 @@ impl SaveHooks for NoHooks {
 }
 
 pub struct SaveOutcome {
-    pub db: Database,
+    pub db: Zeroizing<ZeroableDatabase>,
     pub sha256: [u8; 32],
     pub conflict_copy: Option<PathBuf>,
 }
@@ -211,7 +212,7 @@ pub fn save_database(
     let original = read_checked(&src.path, &src.sha256)?;
 
     hooks.before(SaveStep::Parse)?;
-    let mut db = Database::parse(&original, key.clone())?;
+    let mut db = Zeroizing::new(ZeroableDatabase(Database::parse(&original, key.clone())?));
 
     hooks.before(SaveStep::ApplyEdit)?;
     if db.config.version == DatabaseVersion::KDB4(0) {
@@ -225,7 +226,7 @@ pub fn save_database(
     drop(db);
 
     hooks.before(SaveStep::VerifyNew)?;
-    let reopened = Database::parse(&new_bytes, key)?;
+    let reopened = Zeroizing::new(ZeroableDatabase(Database::parse(&new_bytes, key)?));
     verify(&reopened)?;
     let new_hash = sha256_of(&new_bytes);
 

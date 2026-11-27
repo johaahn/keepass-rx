@@ -11,7 +11,7 @@ use std::str::FromStr;
 use uuid::Uuid;
 
 use secstr::SecUtf8;
-use zeroize::Zeroize;
+use zeroize::Zeroizing;
 
 use super::actor::{
     DiscardDraft, GetEntryForEdit, ResolveStagedEdit, SaveCredential, SaveDraft, SaveEntry,
@@ -157,21 +157,18 @@ pub fn entry_edit_problems(values: QVariantMap) -> QVariantList {
 
 pub fn qstring_to_secure_utf8(value: &QString) -> SecUtf8 {
     let utf16 = value.to_slice();
-    let mut utf8 = Vec::with_capacity(utf16.len());
+    let mut utf8 = Zeroizing::new(Vec::with_capacity(utf16.len() * 3));
 
     for ch in char::decode_utf16(utf16.iter().copied()) {
         let ch = ch.unwrap_or(char::REPLACEMENT_CHARACTER);
-        let mut buf = [0u8; 4];
-        utf8.extend_from_slice(ch.encode_utf8(&mut buf).as_bytes());
+        let mut buf = Zeroizing::new([0u8; 4]);
+        utf8.extend_from_slice(ch.encode_utf8(&mut *buf).as_bytes());
     }
 
-    let secure = std::str::from_utf8(&utf8)
+    std::str::from_utf8(&utf8)
         .ok()
         .and_then(|s| SecUtf8::from_str(s).ok())
-        .unwrap_or_else(|| SecUtf8::from(""));
-
-    utf8.zeroize();
-    secure
+        .unwrap_or_else(|| SecUtf8::from(""))
 }
 
 pub fn qdatetime_from_system_time(time: SystemTime) -> QDateTime {

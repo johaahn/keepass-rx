@@ -25,13 +25,17 @@ extern crate qmetaobject;
 
 use actix::Actor;
 use anyhow::{Context, Result};
+use bytesize::ByteSize;
 use cpp::cpp;
 use gettextrs::{bindtextdomain, textdomain};
-use log::{LevelFilter, error, info};
+use log::{LevelFilter, error, info, warn};
 use qmeta_async::with_executor;
 use qmetaobject::{QObjectBox, QString, QVariant, qml_register_type};
 #[cfg(all(feature = "gui", not(feature = "sailfish")))]
 use qmetaobject::{QQuickStyle, QQuickView, qml_register_enum};
+use rustix::process::{
+    DumpableBehavior, Resource, Rlimit, getrlimit, set_dumpable_behavior, setrlimit,
+};
 use simplelog::{
     ColorChoice, CombinedLogger, ConfigBuilder, SharedLogger, TermLogger, TerminalMode,
     WriteLogger,
@@ -47,6 +51,7 @@ use std::sync::atomic::Ordering;
 
 pub use keepassrx::{crypto, license, rx};
 
+use crate::crypto::locking::lock_policy;
 #[cfg(feature = "gui")]
 use crate::rx::closing::APP_CLOSING;
 
@@ -345,10 +350,49 @@ fn init_gettext() {
     bindtextdomain(domain, path.to_str().unwrap()).expect("Failed to bind gettext domain");
 }
 
+const MIN_MEMLOCK_BYTES: u64 = 1024 * 1024;
+
+fn harden_process_limits() {
+    let memlock = getrlimit(Resource::Memlock);
+    let readable = memlock.current.map_or_else(
+        || "unlimited".to_string(),
+        |limit| ByteSize::b(limit).to_string(),
+    );
+    if memlock
+        .current
+        .is_some_and(|limit| limit < MIN_MEMLOCK_BYTES)
+    {
+        warn!(
+            "RLIMIT_MEMLOCK soft limit is {:?} bytes ({readable}); locking secrets in memory may fail",
+            memlock.current
+        );
+    } else {
+        info!(
+            "RLIMIT_MEMLOCK soft limit is {:?} bytes ({readable})",
+            memlock.current
+        );
+    }
+
+    info!("Memory lock policy: {:?}", lock_policy());
+
+    let no_core = Rlimit {
+        current: Some(0),
+        maximum: Some(0),
+    };
+    if let Err(err) = setrlimit(Resource::Core, no_core) {
+        warn!("could not disable core files: {err}");
+    }
+}
+
 fn main() -> Result<()> {
     if let Err(err) = init_logging() {
         eprintln!("keepassrx: failed to initialize file logging: {err}");
     }
+
+    if let Err(err) = set_dumpable_behavior(DumpableBehavior::NotDumpable) {
+        warn!("could not disable core dumps and ptrace: {err}");
+    }
+    harden_process_limits();
 
     libsodium_rs::ensure_init()?;
 

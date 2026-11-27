@@ -5,7 +5,9 @@ use gettextrs::gettext;
 use keepass::db::{Database, EntryId, History, Times, Value};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
-use zeroize::Zeroizing;
+
+use crate::crypto::constant_time_eq;
+use crate::crypto::locking::SecretText;
 
 use super::rx_entry::should_hide_field;
 use super::save::SaveError;
@@ -27,11 +29,11 @@ pub enum RxEdit {
 #[derive(Clone, Serialize, Deserialize)]
 pub struct RxEntryEdit {
     pub uuid: Uuid,
-    pub title: Zeroizing<String>,
-    pub username: Zeroizing<String>,
-    pub password: Zeroizing<String>,
-    pub url: Zeroizing<String>,
-    pub notes: Zeroizing<String>,
+    pub title: SecretText,
+    pub username: SecretText,
+    pub password: SecretText,
+    pub url: SecretText,
+    pub notes: SecretText,
     pub custom_fields: Vec<RxFieldEdit>,
     pub removed_fields: Vec<String>,
 }
@@ -40,7 +42,7 @@ pub struct RxEntryEdit {
 pub struct RxFieldEdit {
     pub original_name: Option<String>,
     pub name: String,
-    pub value: Zeroizing<String>,
+    pub value: SecretText,
     pub protected: bool,
 }
 
@@ -103,7 +105,7 @@ fn value_of(text: &str, protected: bool) -> Value<String> {
 
 fn holds(current: Option<&Value<String>>, text: &str) -> bool {
     match current {
-        Some(value) => value.get() == text,
+        Some(value) => constant_time_eq(value.get(), text),
         None => text.is_empty(),
     }
 }
@@ -326,8 +328,8 @@ mod tests {
 
     const OLD_PASS: &str = "old-pass";
 
-    fn s(value: &str) -> Zeroizing<String> {
-        Zeroizing::new(value.to_string())
+    fn s(value: &str) -> SecretText {
+        SecretText::new(value.to_string())
     }
 
     fn test_db() -> (Database, Uuid) {

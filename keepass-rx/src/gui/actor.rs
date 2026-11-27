@@ -2,7 +2,7 @@ use actix::prelude::*;
 use anyhow::{Result, anyhow};
 use keepass::error::{CryptographyError, DatabaseKeyError, DatabaseOpenError};
 use keepass::{Database, DatabaseKey};
-use libsodium_rs::utils::SecureVec;
+use libsodium_rs::utils::{SecureVec, vec_utils};
 use log::{debug, error, info, warn};
 use qmetaobject::{QMetaType, QStringList, QVariantMap, prelude::*};
 use secstr::SecUtf8;
@@ -40,7 +40,7 @@ use crate::{
     gui::{RxViewMode, utils::imported_databases_path},
     rx::{
         RxDatabase, RxDbFormat, RxEdit, RxEntryEdit, RxFieldName, RxSourceFile, SaveError,
-        SaveOutcome,
+        SaveOutcome, ZeroableDatabase,
         closing::{APP_CLOSING, StopWhenClosing},
         edit_values_to_map,
         open::{build_rx_database, read_database},
@@ -80,7 +80,7 @@ pub struct KeepassRxActor {
     gui: Rc<QObjectBox<KeepassRx>>,
     //curr_db: RefCell<Option<Zeroizing<RxDatabase>>>,
     curr_master_pw: Rc<RefCell<Option<EncryptedPassword>>>,
-    stored_master_password: Rc<RefCell<Option<SecUtf8>>>,
+    stored_master_password: Rc<RefCell<Option<SecureVec<u8>>>>,
 
     // any in-progress operation on another thread pool that might
     // need to be aborted.
@@ -174,12 +174,19 @@ fn reveal_master_password(
     }
 }
 
+fn lock_password(password: &SecUtf8) -> Result<SecureVec<u8>> {
+    let bytes = password.unsecure().as_bytes();
+    let mut locked = vec_utils::secure_vec::<u8>(bytes.len())?;
+    locked.copy_from_slice(bytes);
+    Ok(locked)
+}
+
 fn build_database_key(
-    password: &SecUtf8,
+    password: &str,
     has_key_file: bool,
     key_file_bytes: Result<Option<SecureVec<u8>>>,
 ) -> Result<DatabaseKey> {
-    let db_key = DatabaseKey::new().with_password(password.unsecure());
+    let db_key = DatabaseKey::new().with_password(password);
     if !has_key_file {
         return Ok(db_key);
     }
@@ -344,12 +351,12 @@ impl KeepassRxActor {
 
         let source = self.current_source()?;
         let password = self.release_master_password(credential)?;
-        self.plan_save(source, password)
+        self.plan_save(source, password.unsecure())
     }
 
-    fn plan_save(&self, source: RxSourceFile, password: SecUtf8) -> Result<SavePlan> {
+    fn plan_save(&self, source: RxSourceFile, password: &str) -> Result<SavePlan> {
         let has_key_file = self.app_state.pinned().borrow().db_key_ref().is_some();
-        let key = build_database_key(&password, has_key_file, self.key_file_bytes())?;
+        let key = build_database_key(password, has_key_file, self.key_file_bytes())?;
 
         Ok(SavePlan {
             backup: backup_path_for(&source)?,
@@ -737,10 +744,10 @@ impl Handler<OpenDatabase> for KeepassRxActor {
         Box::pin(
             async move {
                 let pw_binding = stored_pw.borrow();
-                let pw_binding = pw_binding.as_ref();
                 let pw_binding = pw_binding
                     .as_deref()
                     .ok_or(anyhow!("[OpenDB] No master password stored"))?;
+                let pw_binding = str::from_utf8(pw_binding)?;
 
                 let db_key = build_database_key(pw_binding, has_key_file, maybe_key_file_bytes)?;
                 let read_key = db_key.clone();
@@ -783,7 +790,7 @@ impl Handler<OpenDatabase> for KeepassRxActor {
                         staging,
                     }) => {
                         let conversion = catch_unwind(AssertUnwindSafe(|| -> Result<_> {
-                            let rx_db = build_rx_database(keepass_db, source)?;
+                            let rx_db = build_rx_database(Zeroizing::new(ZeroableDatabase(keepass_db)), source)?;
                             let view = VirtualHierarchyType::DefaultView(DefaultView::new(&rx_db));
                             Ok((rx_db, view))
                         }));
@@ -1433,10 +1440,13 @@ impl Handler<StoreMasterPassword> for KeepassRxActor {
         let binding = self.gui.pinned();
         let gui = binding.borrow();
 
-        self.stored_master_password
-            .replace(Some(msg.master_password));
-
-        gui.masterPasswordStored();
+        match lock_password(&msg.master_password) {
+            Ok(locked) => {
+                self.stored_master_password.replace(Some(locked));
+                gui.masterPasswordStored();
+            }
+            Err(err) => error!("Could not lock the master password in memory: {err}"),
+        }
     }
 }
 
@@ -1495,7 +1505,10 @@ impl Handler<EncryptMasterPassword> for KeepassRxActor {
         }
 
         self.abort_ongoing_operations();
-        let stored_pw = self.stored_master_password.take();
+        let stored_pw = self
+            .stored_master_password
+            .take()
+            .map(|pw| -> Result<SecUtf8> { Ok(SecUtf8::from(str::from_utf8(&pw)?)) });
         #[cfg(feature = "sailfish")]
         let database = database_locking()
             .then(|| {
@@ -1509,7 +1522,8 @@ impl Handler<EncryptMasterPassword> for KeepassRxActor {
             .flatten();
 
         let handle = actix_rt::task::spawn_blocking(move || -> Result<EncryptedPassword> {
-            let stored_pw = stored_pw.ok_or(anyhow!("[Encrypt] No master password stored"))?;
+            let stored_pw =
+                stored_pw.ok_or(anyhow!("[Encrypt] No master password stored"))??;
             let encrypted_pw = EncryptedPassword::new(stored_pw)?;
             #[cfg(feature = "sailfish")]
             if let Some(database) = database
@@ -1597,6 +1611,7 @@ impl KeepassRxActor {
 
         Box::pin(async move { handle.await? }.into_actor(self).map(
             move |result: Result<SecUtf8>, this, ctx| {
+                let result = result.and_then(|password| lock_password(&password));
                 let binding = this.gui.pinned();
                 let mut gui = binding.borrow_mut();
 
@@ -1732,9 +1747,12 @@ impl KeepassRxActor {
     }
 
     fn apply_staged(&mut self, edit: RxEntryEdit) -> ResponseActFuture<Self, ()> {
-        let password = self.stored_master_password.borrow().clone();
-        let plan = password
+        let plan = self
+            .stored_master_password
+            .borrow()
+            .as_deref()
             .ok_or(anyhow!("No master password stored"))
+            .and_then(|password| str::from_utf8(password).map_err(Into::into))
             .and_then(|password| self.plan_save(self.current_source()?, password));
         let plan = match plan {
             Ok(plan) => plan,

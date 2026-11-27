@@ -10,7 +10,7 @@ use libsodium_rs::crypto_kdf;
 #[cfg(not(feature = "sailfish"))]
 use libsodium_rs::crypto_pwhash;
 use libsodium_rs::random;
-use libsodium_rs::utils::{SecureVec, vec_utils};
+use libsodium_rs::utils::{SecureVec, memcmp, vec_utils};
 use poison_guard::Poison;
 use secstr::SecUtf8;
 #[cfg(feature = "sailfish")]
@@ -26,7 +26,10 @@ use std::path::{Path, PathBuf};
 use std::time::{Duration, SystemTime};
 use uuid::Uuid;
 use zeroize::Zeroize;
+#[cfg(not(feature = "sailfish"))]
+use zeroize::Zeroizing;
 
+pub mod locking;
 #[cfg(feature = "sailfish")]
 pub mod sailfish_secrets;
 #[cfg(any(test, feature = "test-keyring"))]
@@ -41,6 +44,10 @@ const KERNEL_SECRET_USER: &str = "keepassrx";
 #[cfg(feature = "sailfish")]
 const SAVED_PASSWORD_LIFETIME: Duration = Duration::from_secs(8 * 60 * 60);
 
+pub fn constant_time_eq(left: &str, right: &str) -> bool {
+    memcmp(left.as_bytes(), right.as_bytes())
+}
+
 pub fn to_short_password(value: &str) -> Result<&str> {
     let short_password = {
         if value.len() > SHORT_PW_LENGTH {
@@ -54,8 +61,15 @@ pub fn to_short_password(value: &str) -> Result<&str> {
     Ok(short_password)
 }
 
+fn lock_bytes(mut bytes: Vec<u8>) -> Result<SecureVec<u8>> {
+    let mut locked = vec_utils::secure_vec::<u8>(bytes.len())?;
+    locked.copy_from_slice(&bytes);
+    bytes.zeroize();
+    Ok(locked)
+}
+
 #[cfg(not(feature = "sailfish"))]
-fn hash_password(value: &str, pw_salt: &[u8]) -> Result<Vec<u8>> {
+fn hash_password(value: &str, pw_salt: &[u8]) -> Result<SecureVec<u8>> {
     let pw_hash = crypto_pwhash::pwhash(
         32,
         value.as_bytes(),
@@ -65,7 +79,7 @@ fn hash_password(value: &str, pw_salt: &[u8]) -> Result<Vec<u8>> {
         crypto_pwhash::ALG_DEFAULT,
     )?;
 
-    Ok(pw_hash)
+    lock_bytes(pw_hash)
 }
 
 /// Stashes a secret out of the app's normal heap. On Ubuntu Touch this uses the
@@ -111,14 +125,14 @@ impl KernelBackedSecret {
         Self::new_with_id(&Uuid::new_v4().to_string(), pw)
     }
 
-    pub fn retrieve(&self) -> Result<Vec<u8>> {
+    pub fn retrieve(&self) -> Result<SecureVec<u8>> {
         let service = self
             .entry_id
             .get()
             .map_err(|poisoned| anyhow!("{poisoned}"))?;
         let keyring_entry = Self::entry_for(service.as_str())?;
 
-        Ok(keyring_entry.get_secret()?)
+        lock_bytes(keyring_entry.get_secret()?)
     }
 
     pub fn poison(&mut self) -> Result<()> {
@@ -166,12 +180,12 @@ impl KernelBackedSecret {
         Self::new_with_id(KERNEL_SECRET_USER, pw)
     }
 
-    pub fn retrieve(&self) -> Result<Vec<u8>> {
+    pub fn retrieve(&self) -> Result<SecureVec<u8>> {
         let secret = self
             .secret
             .get()
             .map_err(|poisoned| anyhow!("{poisoned}"))?;
-        Ok(secret.unsecure().to_vec())
+        lock_bytes(secret.unsecure().to_vec())
     }
 
     pub fn poison(&mut self) -> Result<()> {
@@ -229,12 +243,12 @@ impl EncryptedPassword {
     fn open(&self, key: &ChaChaKey) -> Result<SecUtf8> {
         let encrypted_password = self.secret.retrieve()?;
 
-        let master_password =
+        let master_password = Zeroizing::new(
             xchacha20poly1305::decrypt(&encrypted_password, None, &self.nonce, key)
-                .map(|master_pw| std::str::from_utf8(master_pw.as_slice()).map(SecUtf8::from))
-                .map_err(|_| IncorrectShortCode)??;
+                .map_err(|_| IncorrectShortCode)?,
+        );
 
-        Ok(master_password)
+        Ok(SecUtf8::from(std::str::from_utf8(&master_password)?))
     }
 
     pub fn new(db_password: SecUtf8) -> Result<Self> {
@@ -245,11 +259,11 @@ impl EncryptedPassword {
         random::fill_bytes(&mut pw_salt);
 
         let key_raw_bytes = hash_password(short_password, &pw_salt)?;
-        let key = ChaChaKey::from_bytes(&key_raw_bytes)?;
+        let sealed = Self::seal(db_password, &ChaChaKey::from_bytes(&key_raw_bytes)?)?;
 
         Ok(EncryptedPassword {
             pw_salt: pw_salt.to_vec(),
-            ..Self::seal(db_password, &key)?
+            ..sealed
         })
     }
 
@@ -295,7 +309,7 @@ impl EncryptedPassword {
     pub fn save(&self, database: &Path) -> Result<()> {
         let saved = SavedPassword {
             database: database.to_path_buf(),
-            ciphertext: self.secret.retrieve()?,
+            ciphertext: self.secret.retrieve()?.to_vec(),
             iv: self.iv,
             written: SystemTime::now(),
         };
@@ -377,20 +391,12 @@ impl MasterKey {
         })
     }
 
-    fn get_kdf_key(&self) -> Result<KdfKey> {
-        let raw_bytes = &self.key.borrow_mut().retrieve()?;
-        let key = KdfKey::from_slice(&raw_bytes)?;
-        Ok(key)
-    }
-
     pub fn derive_subkey(&self, id: u64) -> Result<SecureVec<u8>> {
-        let mut subkey = crypto_kdf::derive_from_key(32, id, CONTEXT, &self.get_kdf_key()?)?;
-        let mut secure_subkey = vec_utils::secure_vec(subkey.len())?;
+        let raw_bytes = self.key.borrow().retrieve()?;
+        let subkey =
+            crypto_kdf::derive_from_key(32, id, CONTEXT, &KdfKey::from_slice(&raw_bytes)?)?;
 
-        secure_subkey.copy_from_slice(&subkey);
-        subkey.zeroize();
-
-        Ok(secure_subkey)
+        lock_bytes(subkey)
     }
 
     pub fn poison(&self) -> Result<()> {
@@ -438,18 +444,14 @@ impl EncryptedValue {
         let subkey = key.derive_subkey(self.id)?;
         let encryption_key = ChaChaKey::from_bytes(&subkey)?;
 
-        let mut plaintext = xchacha20poly1305::decrypt(
+        let plaintext = xchacha20poly1305::decrypt(
             &self.value.borrow(),
             None,
             &self.nonce.borrow(),
             &encryption_key,
         )?;
 
-        let mut secure_plaintext = vec_utils::secure_vec::<u8>(plaintext.len())?;
-        secure_plaintext.copy_from_slice(plaintext.as_slice());
-        plaintext.zeroize();
-
-        Ok(secure_plaintext)
+        lock_bytes(plaintext)
     }
 
     fn reencrypt(&self, key: &MasterKey) -> Result<()> {

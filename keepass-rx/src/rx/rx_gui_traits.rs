@@ -258,7 +258,7 @@ impl From<QVariant> for EditValue {
                     )
                 })
                 .unwrap_or(EditValue::List(vec![])),
-            _ => EditValue::Text(variant.to_qstring().to_string()),
+            _ => EditValue::text(variant.to_qstring().to_string()),
         }
     }
 }

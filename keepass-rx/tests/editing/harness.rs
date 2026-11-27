@@ -1,4 +1,5 @@
 use keepass::{Database, DatabaseKey, db::EntryId};
+use keepassrx::crypto::locking::SecretText;
 use keepassrx::rx::{
     NoHooks, RxDatabase, RxEdit, RxEntryEdit, RxFieldEdit, RxSourceFile, SaveError, SaveHooks,
     SaveOutcome, SaveStep,
@@ -12,7 +13,6 @@ use std::io;
 use std::path::{Path, PathBuf};
 use std::sync::Once;
 use uuid::Uuid;
-use zeroize::Zeroizing;
 
 pub const PASSWORD: &str = "demopass";
 pub const V4_40: &str = "test_db_kdbx4_with_password_argon2.kdbx";
@@ -50,8 +50,8 @@ pub fn key() -> DatabaseKey {
     DatabaseKey::new().with_password(PASSWORD)
 }
 
-pub fn s(value: &str) -> Zeroizing<String> {
-    Zeroizing::new(value.to_string())
+pub fn s(value: &str) -> SecretText {
+    SecretText::new(value.to_string())
 }
 
 pub struct FailAt(pub SaveStep, pub io::ErrorKind);

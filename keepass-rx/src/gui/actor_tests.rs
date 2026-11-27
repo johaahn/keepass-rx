@@ -1,3 +1,4 @@
+use crate::crypto::locking::SecretText;
 use actix::prelude::*;
 use keepass::DatabaseKey;
 use keepass::db::EntryId;
@@ -10,7 +11,6 @@ use std::path::Path;
 use std::rc::Rc;
 use std::time::Duration;
 use uuid::Uuid;
-use zeroize::Zeroizing;
 
 use super::actor::{
     CheckLockingStatus, EncryptMasterPassword, KeepassRxActor, OpenDatabase, SaveCredential,
@@ -178,7 +178,7 @@ async fn drive(
 
     let mut edit = first_entry_edit(&app_state)?;
     let uuid = edit.uuid;
-    edit.password = Zeroizing::new(NEW_PASSWORD.to_string());
+    edit.password = SecretText::from(NEW_PASSWORD);
     events.borrow_mut().clear();
 
     step(
